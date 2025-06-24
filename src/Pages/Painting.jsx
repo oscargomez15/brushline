@@ -217,7 +217,7 @@ const variants = {
             <div className="column">
                 <div className="contact-mini-container cartoon-box">
                     <h1 className='section-title'> Your vision comes true with our<span> Painting Service</span></h1>
-                        <h3>Let us bring your vision to life with clean lines, vibrant finishes, and attention to detail—reach out today for your free quote.</h3>
+                        <p>Let us bring your vision to life with clean lines, vibrant finishes, and attention to detail—reach out today for your free quote.</p>
                         <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
@@ -274,7 +274,7 @@ const variants = {
 
             <div className="card-title">
                 <h1 className='section-subtitle'> Interior and Exterior — We've Got You Covered</h1>
-                <h3>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</h3>
+                <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
             </div>
             <div className="painting-list">
                 {services.map((service, index) => (
@@ -290,7 +290,7 @@ const variants = {
             viewport={{ once: true, amount: 0.5 }}>
             <div className="card-title paint-jobs-title">
                 <h1 className='section-subtitle'> Our Painting Jobs</h1>
-                <h3>See the difference we make with our professional painting services. From residential to commercial, we transform spaces with precision and care.</h3>
+                <p>See the difference we make with our professional painting services. From residential to commercial, we transform spaces with precision and care.</p>
                 <div className="arrow-slider-container">
                     <CgArrowLeftR onClick={handleNext}/>
                     <CgArrowRightR onClick={handlePrev}/>
@@ -350,8 +350,8 @@ const variants = {
             <div className="color-consultation">
                 <div className="color-consultation-text">
                     <h1 className='section-subtitle'> In need of <span>color consultation?</span> </h1>
-                    <h3> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
-                        We can help you choose the right colors for your home or business. </h3>
+                    <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
+                        We can help you choose the right colors for your home or business. </p>
                         <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
@@ -402,7 +402,7 @@ const variants = {
             viewport={{ once: true, amount: 0.5 }}>
             <div className="card-title">
                 <h1 className='section-subtitle'>Color Visualization available</h1>
-                <h3>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</h3>
+                <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
             </div>
             <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
         </motion.div>

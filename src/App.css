@@ -152,3 +152,10 @@ section{
     flex-direction: column;
   }
 }
+
+@media screen and (max-width: 500px) {
+  .sub-heading h1 {
+    line-height: 2rem;
+  }
+  
+}
