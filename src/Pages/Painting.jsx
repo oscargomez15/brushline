@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'

@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { FaPhone } from 'react-icons/fa';
 
 import '../Styling/Hero.css'
-import { Hamburger } from '../Components/Hamburger';
 
 export const Hero = () => {
 

@@ -6,10 +6,7 @@ import { Navigation } from './Components/Navigation';
 import { Footer } from './Components/Footer';
 import { Cleaning } from './Pages/Cleaning';
 import { NotFound } from './Pages/NotFound';
-import { Hamburger } from './Components/Hamburger';
 import { Privacy } from './Pages/Privacy';
-
-import logo from './Assets/logo/brushline-logo-white-letters.png';
 
 function App() {
   return (
