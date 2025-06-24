@@ -22,9 +22,11 @@ body{
   height: 100%;
 }
 
+section{
+  padding: 4rem 0;
+}
 .cool-divider-container {
   width: 100%;
-  margin: 40px 0;
 }
 
 .cool-divider-line {
@@ -108,10 +110,6 @@ body{
   position: relative;
   width: 70%;
   margin: auto;
-}
-
-section{
-  padding: 4rem;
 }
 
 .sub-heading h1{

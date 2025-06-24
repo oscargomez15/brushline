@@ -4,13 +4,12 @@
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
-    margin-bottom: 6rem;
-    background-color: #ffdfaf;
-    border-radius: 20px;
     display: flex;
     padding: 6rem;
     overflow: hidden;
     position: relative;
+    border-radius: 20px;
+    background-color: #ffdfaf;
   }
 
   .contact-page ::after{
@@ -147,7 +146,7 @@
 
     @media screen and (max-width:600px) {
     .contact-form-container{
-      padding: 4rem 2rem 12rem 2rem;
+      padding: 4rem 2rem;
     }
 
     .modal{
@@ -161,8 +160,3 @@
     }
   }
 
-      @media screen and (max-width:500px) {
-    .contact-form-container{
-      padding: 4rem 2rem 18rem 2rem;
-    }
-  }

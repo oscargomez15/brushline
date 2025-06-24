@@ -212,8 +212,8 @@ const variants = {
 
 
   return (
-    <section className='page'>
-        <div className='landing-hero'>
+    <div className='page'>
+        <section className='landing-hero'>
             <div className="column">
                 <div className="contact-mini-container cartoon-box">
                     <h1 className='section-title'> Your vision comes true with our<span> Painting Service</span></h1>
@@ -264,9 +264,9 @@ const variants = {
                     <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
                 </video>
             </div>
-        </div>
+        </section>
 
-        <motion.div className="list-container card cartoon-box"
+        <motion.section className="list-container card cartoon-box"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -281,9 +281,9 @@ const variants = {
                     <PaintingCard key={index} {...service}/>
                 ))}
             </div>
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="card paint-jobs cartoon-box"
+        <motion.section className="card paint-jobs cartoon-box"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -326,9 +326,9 @@ const variants = {
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="card cartoon-box cta-card"
+        <motion.section className="card cartoon-box cta-card"
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -340,9 +340,9 @@ const variants = {
                         <a href="#contact"><button className="button"> CONTACT US </button></a>
                     </div>
 
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="card cartoon-box"
+        <motion.section className="card cartoon-box"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -393,9 +393,9 @@ const variants = {
                 <img src={colorConsultation} alt="color-consultation" />
 
             </div>
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="card cartoon-box"
+        <motion.section className="card cartoon-box"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -405,9 +405,9 @@ const variants = {
                 <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
             </div>
             <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
-        </motion.div>
+        </motion.section>
 
-        <motion.div className="card cartoon-box cta-card"
+        <motion.section className="card cartoon-box cta-card"
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -419,11 +419,11 @@ const variants = {
                         <a href="#contact"><button className="button"> CONTACT US </button></a>
                     </div>
 
-        </motion.div>
+        </motion.section>
 
 
 
-        <motion.div className="card faq cartoon-box"
+        <motion.section className="card faq cartoon-box"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -517,8 +517,8 @@ const variants = {
                     </ol>
                 </div>
             </div>
-        </motion.div>
+        </motion.section>
         <Contact/>
-    </section>
+    </div>
   )
 }

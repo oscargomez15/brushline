@@ -67,12 +67,12 @@ export const Contact = () => {
     }, [showModal]);
 
   return (
-    <section className='contact-page' id='contact'>
-        <motion.div className="contact-form-container cartoon-box"
+    <motion.section className='contact-page' id='contact'
         initial={{ x: -100, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
         viewport={{ once: true, amount: 0.5 }}>
+        <motion.div className="contact-form-container cartoon-box">
             <div className="contact-form">
                 <div className="sub-heading">
                     <h1>Contact us and get your <span>free quote</span></h1>
@@ -145,6 +145,6 @@ export const Contact = () => {
             </motion.div>
         )}
         </AnimatePresence>
-    </section>
+    </motion.section>
   )
 }

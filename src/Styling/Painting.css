@@ -29,6 +29,7 @@
 }
 
 .cartoon-box{
+    border-radius: 20px;
     border: 4px solid black;
     box-shadow: 6px 6px 0px 0px black;
     transition: transform 0.2s ease;
@@ -494,7 +495,6 @@ button:disabled {
     }
 
     .page{
-        padding: 2rem 0 4rem 0;
         width: 100%;
     }
 
