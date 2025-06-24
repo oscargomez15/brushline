@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@font-face {
+  font-family: 'Sunborn';
+  src: url('./Assets/fonts/sunborn-sans-one.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  height: 100%;
+}
+
+.cool-divider-container {
+  width: 100%;
+  margin: 40px 0;
+}
+
+.cool-divider-line {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(270deg, #e5e7eb, #d1d5db, #f3f4f6);
+  background-size: 600% 600%;
+  opacity: 0.3;
+  animation: gradientShift 4s ease infinite;
+}
+
+.no-pointer{
+  cursor: none;
+}
+
+.button {
+  appearance: button;
+  background-color: #c58525;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: din-round,sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: .5rem 0.75rem;
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: filter .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button:after {
+  background-clip: padding-box;
+  background-color: #e09f3e;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  bottom: -4px;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.button,
+.button:focus {
+  user-select: auto;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+.button:disabled {
+  cursor: auto;
+}
+
+.button:active {
+  border-width: 4px 0 0;
+  background: none;
+}
+
+.page{
+  position: relative;
+  width: 70%;
+  margin: auto;
+}
+
+section{
+  padding: 4rem;
+}
+
+.sub-heading h1{
+  font-family: 'Sunborn', sans-serif;
+}
+
+.page::after{
+  content: '';
+  height: 2px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: absolute;
+  background-color: rgb(241, 241, 241);
+}
+
+.page:last-of-type::after{
+  content: none
+};
+
+
+/* Navbar Styling */
+
+
+@media screen and (max-width:1380px)  {
+
+  .page .sub-heading h1{
+    font-size: 2rem;
+  }
+
+  .page .sub-heading p{
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width:1070px) {
+  .footer-content{
+    flex-direction: column;
+  }
+}

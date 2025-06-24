@@ -1,0 +1,120 @@
+.service-page{
+    display: flex;
+    align-items: center;
+  }
+
+  .sub-heading h1{
+    font-size: 2rem;
+  }
+
+  .sub-heading p{
+    font-size: 1rem;
+  }
+
+  .sub-heading span{
+    color: #ffbd59;
+  }
+
+  .sub-heading img{
+    height: 600px;
+  }
+
+  .services-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4rem 8rem;
+    padding-top:3rem;
+  }
+
+  .service-item{
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 1rem;
+    width: 300px;
+    height: 350px;
+    background-color: #ffdfaf;
+  }
+
+  .service-item:hover .service-icon{
+    color: black;
+    transform: rotate(-15deg);
+  }
+
+  .service-item{
+    display: flex;
+    gap: .25rem;
+    text-decoration: none;
+    color: black;
+  }
+
+  .service-item .explore-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: .25rem;
+  }
+
+  .service-item .explore-container .explore-button{
+    font-size: .75rem;
+    padding: .5rem 0.75rem;
+  }
+
+  .icon-container{
+    border-radius: 100%;
+    padding: 1rem;
+    width: fit-content;
+  }
+
+  .service-icon{
+    width: 150px;
+    bottom: 0;
+    right: -80px;
+    transform: scaleX(-1);
+    color: rgb(187, 187, 187);
+    z-index: 0;
+    height: fit-content;
+    transition: all .5s;
+  }
+
+  .service-icon:hover{
+    transform: rotate(15px);
+    color: black;
+  }
+
+  .service-text p{
+    margin-top: .2rem;
+  }
+
+  @media screen and (max-width:1380px) {
+    .services-content{
+        flex-direction: column;
+      }
+
+      .services-content .sub-heading img{
+        width: 100%;
+        height: -webkit-fit-content;
+        height: -moz-fit-content;
+        height: fit-content;
+        -o-object-fit: contain;
+           object-fit: contain;
+      }
+    
+      .services-list{
+        width: 90%;
+        justify-content: center;
+      }
+    
+      .service-item{
+        flex-direction: column;
+      }
+    
+      .service-item .service-text h2{
+        text-align: center;
+      }
+  }
