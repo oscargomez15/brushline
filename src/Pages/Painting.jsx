@@ -273,7 +273,7 @@ const variants = {
             viewport={{ once: true, amount: 0.5 }}>
 
             <div className="card-title">
-                <h1 className='section-subtitle'> Interior and Exterior — We've Got You Covered</h1>
+                <h1 className='section-subtitle'> What We Do</h1>
                 <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
             </div>
             <div className="painting-list">

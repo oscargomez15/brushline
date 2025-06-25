@@ -34,6 +34,34 @@ export const Footer = () => {
               <li className='footer-item-mb'> <IoMdMail/> <a href="contact@brushlineservices.com">contact@brushlineservices.com</a>  </li>
             </ul>
           </div>
+
+          <div className="footer-section">
+            <ul className='footer-list'>
+              <p><span>Business Hours</span></p>
+              <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <ul className='service-area-section'>
+            <p><span>Service Areas</span></p>
+              <li>
+                <PiStarFourFill className='signature-divider'/><p>Fort Myers</p>
+              </li>
+              <li>
+                  <PiStarFourFill className='signature-divider'/><p>Cape Coral</p>
+              </li>
+              <li>
+                  <PiStarFourFill className='signature-divider'/><p>Estero</p>
+              </li>
+              <li>
+                  <PiStarFourFill className='signature-divider'/><p>Naples</p> 
+              </li>
+              <li>
+                  <PiStarFourFill className='signature-divider'/><p>Bonita Springs</p>
+              </li>
+            </ul>
+          </div>
         </div>
         {/* Footer to be displayed only on screens greater than 1380px*/}
           <div className="site-map footer-section footer-sitemap-desktop">
@@ -65,7 +93,7 @@ export const Footer = () => {
 
 
           <div className="socials footer-section footer-socials-desktop">
-            <div className='phone-contact'>
+            <div className='footer-list'>
               <p><span>Contact</span></p>
               <div className="contact-container">
                 <FaPhone/>
@@ -78,9 +106,7 @@ export const Footer = () => {
 
               <div className="socials-list">
                 <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
-                <PiStarFourFill className='signature-divider'/>
                 <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
-                <PiStarFourFill className='signature-divider'/>
                 <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
               </div>
             </div>
@@ -92,8 +118,8 @@ export const Footer = () => {
       </div>
 
       <div className='socials-wrapper'>
-        <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer' className='socials-icon'> <AiOutlineFacebook size="md"/> </a>
-        <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page'target='_blank' rel='noreferrer' className='socials-icon'> <IoLogoGoogle size="md"/></a>
+        <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
+        <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
         <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
       </div>
 

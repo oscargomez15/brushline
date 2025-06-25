@@ -57,6 +57,10 @@ footer{
     gap: .5rem;
   }
 
+  .contact-container a{
+    text-decoration: none;
+  }
+
   
   .footer-list li{
     display: flex;
@@ -131,6 +135,24 @@ footer{
     gap: .5rem;
   }
 
+  .service-area-section{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .service-area-section p span{
+    font-weight: bold;
+    color: #ffbd59;
+  }
+
+  .service-area-section li{
+    display: flex;
+    gap: .5rem;
+    font-weight: normal;
+
+  }
+
   @media screen and (max-width:1380px) {
     ul li{
       margin-right: 0;
@@ -151,6 +173,11 @@ footer{
       .footer-list{
         display: flex;
         flex-direction: column;
+      }
+
+      .footer-list h2{
+        font-size: 1rem;
+        color: #ffbd59;
       }
 
       .footer-socials-desktop{
@@ -226,7 +253,16 @@ footer{
     .footer-list{
       width: 100%;
       margin: auto;
+      align-items: center;
     }
+
+    .service-area{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      }
 
     .footer-list h2{
       width: 100%;

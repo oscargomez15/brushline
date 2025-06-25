@@ -149,8 +149,6 @@
     padding-bottom: 6rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 .paint-jobs{
@@ -163,7 +161,7 @@
     display: flex;
     align-items: stretch;
     justify-content: stretch;
-    width: 80%;
+    width: 100%;
     gap: 2rem;
     margin: 2rem 0;
 }
@@ -261,12 +259,6 @@
     align-items: center;
 }
 
-.paint-jobs-title h1{
-    font-size: 6rem;
-    line-height: 5rem;
-    font-family:'Sunborn', sans-serif ;
-}
-
 .slider-item .slider-text{
     display: flex;
     flex-direction: column;
@@ -327,11 +319,21 @@
 
 .color-consultation{
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
     gap: 4rem;
+}
+
+.card-title .section-subtitle{
+    justify-self: center;
+}
+
+.card-title{
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
 }
 
 .color-consultation-text{
@@ -356,10 +358,6 @@
     flex-direction: column;
     padding-bottom: 6rem;
     margin-bottom: 6rem;
-}
-
-.card-title{
-    text-align: center;
 }
 
 .color-visualization-img{
@@ -413,17 +411,15 @@
 }
 
 .section-title{
-    font-size: 4rem;
+    font-size: 5rem;
     font-family:'Sunborn', sans-serif ;
-    line-height: 3.75rem;
+    line-height: 4rem;
 }
 
 .section-subtitle{
-    font-size: 3.5rem;
-    line-height: 2.5rem;
+    font-size: 4rem;
     font-family:'Sunborn', sans-serif ;
-    text-align: center;
-    line-height: 3rem;
+    line-height: 3.5rem;
 }
 
 .section-subtitle span{
@@ -499,16 +495,11 @@ button:disabled {
     }
 
     .section-subtitle{
-        padding: 2rem 0 0 0 ;
         text-align: center;
     }
 
     .card{
         padding: 2rem;
-    }
-
-    .card:nth-child(2){
-        padding: 0;
     }
 
     .landing-hero{
@@ -555,10 +546,11 @@ button:disabled {
         flex-direction: column-reverse;
         align-items: center;
         justify-content: center;
+        gap: 2rem;
     }
 
     .color-consultation img{
-        width: 75%;
+        width: 90%;
         object-fit: cover;
     }
 
@@ -604,10 +596,6 @@ button:disabled {
 
     .column .column-sub{
         margin-top: 0;
-    }
-
-    .painting-list{
-        width: 80%;
     }
 
     .item-card{
