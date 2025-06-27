@@ -23,7 +23,7 @@ export const Hero = () => {
               <motion.p
               initial={{opacity:0}}
               whileInView={{opacity:1}}
-              transition={{duration:1}}> Residential and Commercial Painting with a Perfect Touch </motion.p>
+              transition={{duration:1}}> Providing residential & commercial painting service in Cape Coral, Fort Myers, Naples, Estero and Bonita Springs.</motion.p>
             </div>
               <div className="btn-group">
                 <a href="#contact"><button tabIndex='-1' className='button'>GET A FREE QUOTE</button></a>

@@ -47,11 +47,12 @@ export const Navigation = () => {
               <li>
                 <a href="#services" className='services-container'>SERVICES <IoIosArrowDown size="20"/></a>
                 <ul className='dropdown'>
+                  <li> <a href="/painting"> <MdOutlineFormatPaint/> Int/Ext Painting </a> </li>
+                  {/* <li> <a href="/"> <MdOutlineHomeRepairService/> Drywall Install/Repair </a> </li>                 */}
                   <li> <a href="/cleaning"> <MdOutlineCleaningServices/> Residential Cleaning  </a></li>
-                  <li> <a href="/"> <MdOutlineWindow/> Window Cleaning</a>  </li>
-                  <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li>
-                  <li> <a href="/painting"> <MdOutlineFormatPaint/> Painting </a> </li>
-                  <li> <a href="/"> <MdOutlineHomeRepairService/> Drywall </a> </li>                </ul>
+                  {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
+
+                </ul>
               </li>
 
               <li><a href="/#gallery">GALLERY</a></li>

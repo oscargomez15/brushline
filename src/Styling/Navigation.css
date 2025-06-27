@@ -174,6 +174,17 @@ nav{
 
   @media screen and (max-width: 1380px) {
 
+    ul li::after{
+      content: none;
+    }
+
+    .dropdown-menu li{
+      border-radius: 10px;
+      width: 100%;
+      padding: .5rem .5rem;
+      border: 1px #ffffff solid;
+    }
+
     .nav-wrapper-mb{
       display: block;
       position: absolute;
@@ -267,19 +278,10 @@ nav{
         position: fixed;
         border-radius: 0;
         height: 100%;
-        background-color: rgb(54, 54, 54);
+        background-color: #ffbd59;
         z-index: 5;
         gap: 2rem;
         transition: all .5s;
-      }
-
-
-      .hamburger-content ul{
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        align-items: stretch;
-        justify-content: center;
       }
 
       .cta{
@@ -293,7 +295,7 @@ nav{
         appearance: none;
         border: none;
         outline: none;
-        background-color: rgb(68, 68, 68);
+        background-color: #ffffff;
         width: 90%;
         height: 3px;
       }
@@ -310,26 +312,61 @@ nav{
       }
 
       .hamburger-content ul{
-        position: relative;
         display: flex;
-        align-items: center;
+        flex-direction: column; /* Or row, depending on layout */
+        align-items: stretch; /* Ensures items take full width */
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: .5rem;
       }
 
       .hamburger-content ul li a{
         display: flex;
-        gap: 1rem;
         align-items: center;
-        justify-content: space-around;
         font-size: 1.5rem;
         flex: 1 1;
         text-decoration: none;
       }
 
       .hamburger-content ul li{
-        flex: 1 1 fit-content;
-        width: 40%;
+        width: 100%;
       }
 
-    
+      .hamburger-content ul .dropdown-menu{
+      margin-top: .5rem;
+    }
+
+    .dropdown-mb{
+      transition: all .2s ease;
+    }
+
+    .dropdown-menu {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .dropdown-menu.open {
+      max-height: 500px; /* Make sure this is high enough to show all items */
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .rotated {
+      transform: rotate(180deg);
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-mb .dropdown-toggle svg{
+      transition: all .2s ease;
+    }
+
+    .dropdown-menu li a:active {
+      transform: scale(0.95);
+      background-color: rgba(0, 0, 0, 0.05); /* optional */
+    }
   }
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { IoIosArrowDown } from "react-icons/io";
+
 import logo from '../Assets/logo/brushline-logo-white-letters.png';
 import { IoHammerOutline, IoHomeOutline } from 'react-icons/io5';
 import { MdOutlineComment, MdOutlinePhotoSizeSelectActual } from 'react-icons/md';
@@ -10,6 +12,7 @@ import '../Styling/Navigation.css'
 export const Hamburger = () => {
     const [isOpen, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [serviceOpen, setServiceOpen] = useState(false);
 
     const handleClick = () => {
         setOpen(!isOpen);
@@ -79,15 +82,29 @@ export const Hamburger = () => {
             className='exit-icon'
             onClick={handleClick}/>
             <header>
-                <img src={logo} alt="gial-logo" loading='lazy' />
+                <img src={logo} alt="brushline-logo" loading='lazy' />
             </header>
             <hr />
             <ul>
-                <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}><IoHomeOutline/>Home</a></li>
-                <li><a href="/#services" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}><IoHammerOutline/>Services</a></li>
-                <li><a href="#gallery" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}><MdOutlinePhotoSizeSelectActual/>Gallery</a></li>
-                <li><a href="#reviews" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}><RiStarSLine/>Reviews</a></li>
-                <li><a href="#contact" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}><MdOutlineComment/>Contact</a></li>
+                <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}>Home</a></li>
+                <li className="dropdown-mb">
+                    <a
+                    className="dropdown-toggle"
+                    tabIndex={isOpen ? '0' : '-1'}
+                    onClick={() => setServiceOpen(!serviceOpen)}
+                    >
+                    Services <IoIosArrowDown className={serviceOpen ? 'rotated' : ''}/>
+                    </a>
+                    <ul className={`dropdown-menu ${serviceOpen ? 'open' : ''}`}>
+                    <li><a href="/painting" onClick={() => setOpen(false)}>Painting</a></li>
+                    <li><a href="/#exterior" onClick={() => setOpen(false)}>Cleaning</a></li>
+                    <li><a href="/#pressure-wash" onClick={() => setOpen(false)}>Drywall</a></li>
+                    <li><a href="/#drywall" onClick={() => setOpen(false)}>Pressure Wash</a></li>
+                    </ul>
+                </li>
+                <li><a href="#gallery" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Gallery</a></li>
+                <li><a href="#reviews" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Reviews</a></li>
+                <li><a href="#contact" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Contact</a></li>
             </ul>
 
             <hr />
@@ -107,6 +124,5 @@ export const Hamburger = () => {
             </div>
         </nav>
     </div>
-
   )
 }

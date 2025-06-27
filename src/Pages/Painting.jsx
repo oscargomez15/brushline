@@ -216,8 +216,8 @@ const variants = {
         <section className='landing-hero'>
             <div className="column">
                 <div className="contact-mini-container cartoon-box">
-                    <h1 className='section-title'> Your vision comes true with our<span> Painting Service</span></h1>
-                        <p>Let us bring your vision to life with clean lines, vibrant finishes, and attention to detail—reach out today for your free quote.</p>
+                    <h1 className='section-title'> Local <span>Painting Company</span> for Lee and Collier County</h1>
+                        <p>Bringing Reliable, High-Quality Painting to Cape Coral, Fort Myers, Bonita Springs, Estero, & Naples</p>
                         <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
@@ -290,7 +290,8 @@ const variants = {
             viewport={{ once: true, amount: 0.5 }}>
             <div className="card-title paint-jobs-title">
                 <h1 className='section-subtitle'> Our Painting Jobs</h1>
-                <p>See the difference we make with our professional painting services. From residential to commercial, we transform spaces with precision and care.</p>
+                <p>See the Quality of Our Work Across Cape Coral, Fort Myers, and Naples.
+                    From exterior repaints to interior transformations, our local painting projects speak for themselves. Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
                 <div className="arrow-slider-container">
                     <CgArrowLeftR onClick={handleNext}/>
                     <CgArrowRightR onClick={handlePrev}/>
