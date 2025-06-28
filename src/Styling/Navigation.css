@@ -321,12 +321,13 @@ nav{
         gap: .5rem;
       }
 
-      .hamburger-content ul li a{
+      .hamburger-content ul li a,.hamburger-content p{
         display: flex;
         align-items: center;
         font-size: 1.5rem;
         flex: 1 1;
         text-decoration: none;
+        color: white;
       }
 
       .hamburger-content ul li{

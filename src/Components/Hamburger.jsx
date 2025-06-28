@@ -85,13 +85,13 @@ export const Hamburger = () => {
             <ul>
                 <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}>Home</a></li>
                 <li className="dropdown-mb">
-                    <a
+                    <p
                     className="dropdown-toggle"
                     tabIndex={isOpen ? '0' : '-1'}
                     onClick={() => setServiceOpen(!serviceOpen)}
                     >
                     Services <IoIosArrowDown className={serviceOpen ? 'rotated' : ''}/>
-                    </a>
+                    </p>
                     <ul className={`dropdown-menu ${serviceOpen ? 'open' : ''}`}>
                     <li><a href="/painting" onClick={() => setOpen(false)}>Painting</a></li>
                     <li><a href="/#exterior" onClick={() => setOpen(false)}>Cleaning</a></li>
