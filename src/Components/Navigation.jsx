@@ -4,7 +4,7 @@ import '../Styling/Navigation.css'
 import { FaPhone } from 'react-icons/fa';
 import { useLocation } from 'react-router';
 import { IoIosArrowDown } from "react-icons/io";
-import { MdOutlineCleaningServices, MdOutlineFormatPaint, MdOutlineHomeRepairService, MdOutlineWaterDrop, MdOutlineWindow } from 'react-icons/md';
+import { MdOutlineCleaningServices, MdOutlineFormatPaint } from 'react-icons/md';
 import { Hamburger } from './Hamburger';
 
 export const Navigation = () => {
