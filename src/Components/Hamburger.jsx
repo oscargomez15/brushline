@@ -3,9 +3,6 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { IoIosArrowDown } from "react-icons/io";
 
 import logo from '../Assets/logo/brushline-logo-white-letters.png';
-import { IoHammerOutline, IoHomeOutline } from 'react-icons/io5';
-import { MdOutlineComment, MdOutlinePhotoSizeSelectActual } from 'react-icons/md';
-import { RiStarSLine } from 'react-icons/ri';
 import { motion } from 'framer-motion';
 import '../Styling/Navigation.css'
 
