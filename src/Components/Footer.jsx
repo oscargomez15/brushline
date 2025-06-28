@@ -3,7 +3,7 @@ import { IoIosHammer, IoLogoGoogle, IoMdMail } from 'react-icons/io'
 import { AiOutlineFacebook } from 'react-icons/ai'
 import '../Styling/Footer.css'
 import mascotLogo from '../Assets/logo/brushline-logo-white-letters.png'
-import { FaPhone, FaTiktok } from 'react-icons/fa'
+import { FaInstagram, FaPhone, FaTiktok } from 'react-icons/fa'
 import {PiStarFourFill} from 'react-icons/pi'
 
 export const Footer = () => {
@@ -121,6 +121,7 @@ export const Footer = () => {
         <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
         <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
         <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
+        <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
       </div>
 
       <p className='copyright'> © Copyright 2025. Brushline LLC. All Rights Reserved.</p>
