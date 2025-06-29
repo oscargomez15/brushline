@@ -216,7 +216,7 @@ const variants = {
         <section className='landing-hero'>
             <div className="column">
                 <div className="contact-mini-container cartoon-box">
-                    <h1 className='section-title'> Local <span>Painting Company</span> for Lee and Collier County</h1>
+                    <h1 className='section-title'> <span>Pro Painters</span> servicing Naples to Fort Myers</h1>
                         <p>Bringing Reliable, High-Quality Painting to Cape Coral, Fort Myers, Bonita Springs, Estero, & Naples</p>
                         <div className="contact-mini">
                             <div className="field-group-container">

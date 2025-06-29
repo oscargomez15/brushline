@@ -1,15 +1,31 @@
 import React from 'react'
 import '../Styling/Painting.css'
-import { IoHomeOutline } from "react-icons/io5";
-import { MdCleaningServices } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
-import { HiOutlineOfficeBuilding } from "react-icons/hi";
-import { FaPeopleCarryBox } from "react-icons/fa6";
-
+import { motion } from 'framer-motion'
 import hero from '../Assets/cleaning.MP4'
+import { PaintingCard } from '../Components/PaintingCard'
 
 export const Cleaning = () => {
+        const services = [
+        {
+          src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/residential-cleaning.mp4",
+          title: 'Residential Cleaning',
+        },
+        {
+          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning-window.mp4",
+          title: 'Window Cleaning',
+        },
+        {
+          src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning-toilet.mp4",
+          title: 'Rental Cleaning',
+        },
+        {
+          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/fan-cleaning.mp4",
+          title: 'Deep Cleaning',
+        },
+      ];
+
     const generalQuestions = [
         {
             question: "What areas do you serve?",
@@ -96,15 +112,12 @@ export const Cleaning = () => {
 
   return (
     <section className='page'>
-        <div className='landing-hero'>
+        <section className='landing-hero'>
             <div className="column">
-            <video muted autoPlay loop playsInline className='overlay-video'>
-                    <source src={hero} />  
-                </video>
                 <div className="contact-mini-container cartoon-box">
-                    <h1 className='section-title'>Trusted <span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
-                        <h3>Let us handle the mess — you focus on what matters.
-                            Reach out using the contact form below.</h3>
+                    <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
+                        <p>Let us handle the mess — you focus on what matters.
+                            Reach out using the contact form below.</p>
                         <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
@@ -151,47 +164,31 @@ export const Cleaning = () => {
                     <source src={hero} />  
                 </video>
             </div>
-        </div>
+        </section>
 
-        <div className="list-container card">
-            <h1 className='section-subtitle'> An overview of our Cleaning Services:</h1>
+        <div className="list-container card cartoon-box">
+            <h1 className='section-subtitle'>What We Do</h1>
             <div className="painting-list">
-                <div className="item-card cartoon-box">
-                    <IoHomeOutline size="100" />
-                    <h2> Residential Cleaning </h2>
-                    <p> Enjoy a tidy and comfortable home with our tailored residential cleaning services. We focus on every detail to maintain a clean and inviting living space.
-                    </p>
-                </div>
-
-                <div className="item-card cartoon-box">
-                    <MdCleaningServices size="100"/>
-                    <h2> Deep Cleaning </h2>
-                    <p> Refresh your space with our thorough deep cleaning services. We tackle every corner to eliminate dirt, dust, and grime for a spotless home or workplace.
-                    </p>
-                </div>
-                <div className="item-card cartoon-box">
-                    <FaPeopleCarryBox size="100" />
-                    <h2>Move-in/Move Out</h2>
-                    <p>Ensure a spotless transition with our detailed move-in and move-out cleaning. We’ll leave your space pristine and ready for its next chapter.
-                    </p>
-                </div>
-                <div className="item-card cartoon-box">
-                    <HiOutlineOfficeBuilding  size="100"/>
-                    <h2> Commercial Cleaning </h2>
-                    <p>Keep your business shining with our reliable commercial cleaning services. From offices to retail spaces, we ensure a clean and professional environment.
-                    </p>
-                </div>
-
-            </div>
-
-            <div className="color-consultation">
-                <h2> Ready to Experience a Cleaner Space? </h2>
-                <p> Let us transform your home or business with our professional cleaning services tailored to your needs. Contact us today for a free quote and take the first step toward a spotless environment! </p>
-                <a href="tel:+12397773713"><button> Call Now </button></a>
+                {services.map((service, index) => (
+                    <PaintingCard key={index} {...service}/>
+                ))}
             </div>
         </div>
 
-        <div className="card faq">
+        <motion.section className="card cartoon-box cta-card"
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.5 }}>
+            <h1 className='section-subtitle'>Ready to Experience a Cleaner Space? </h1>
+                    <div className="cta-button-group">
+                        <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
+                        <p>OR</p>
+                        <a href="#contact"><button className="button"> CONTACT US </button></a>
+                    </div>
+        </motion.section>
+
+        <div className="card faq cartoon-box">
             <div className="faq-title">
                 <h1 className='section-subtitle'>Frequently Asked Question</h1>
                 <p> Quick answers to questions you may have</p>
