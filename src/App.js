@@ -1,7 +1,7 @@
 import './App.css';
 import { Painting } from './Pages/Painting';
 import { Home } from './Pages/Home';
-import { BrowserRouter as Router, Routes, Route} from 'react-router';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Navigation } from './Components/Navigation';
 import { Footer } from './Components/Footer';
 import { Cleaning } from './Pages/Cleaning';
@@ -21,7 +21,7 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer/>
-      </Router>
+        </Router>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import logo from '../Assets/logo/brushline-logo-white-letters.png'
 import '../Styling/Navigation.css'
 import { FaPhone } from 'react-icons/fa';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
 import { MdOutlineCleaningServices, MdOutlineFormatPaint } from 'react-icons/md';
 import { Hamburger } from './Hamburger';

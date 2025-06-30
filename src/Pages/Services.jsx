@@ -4,8 +4,8 @@ import { motion } from 'framer-motion'
 import roller from '../Assets/icons/roller.png'
 import cleaning from '../Assets/icons/cleaning.png'
 import drywall from '../Assets/icons/drywall.png'
-import pwgun from '../Assets/icons/pressure-wash-gun.png'
-import { Link } from 'react-router'
+import pwgun from '../Assets/icons/pressure-wash.jpg'
+import { Link } from 'react-router-dom'
 import { FaArrowRight } from 'react-icons/fa'
 
 export const Services = () => {
