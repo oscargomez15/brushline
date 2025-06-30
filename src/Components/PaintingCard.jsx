@@ -22,7 +22,7 @@ export const PaintingCard = ({ src, title, description }) => {
             ref={videoRef}
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             className="video"
           >
             <source src={src} />
@@ -32,8 +32,6 @@ export const PaintingCard = ({ src, title, description }) => {
               <h2>{title}</h2>
               <h3>{description}</h3>
             </div>
-
-
         </div>
 
       </div>
