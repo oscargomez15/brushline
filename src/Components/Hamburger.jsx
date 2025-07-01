@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import logo from '../Assets/logo/brushline-logo-white-letters.png';
 import { motion } from 'framer-motion';
 import '../Styling/Navigation.css'
-import { GoHomeFill } from "react-icons/go";
 
 export const Hamburger = () => {
     const [isOpen, setOpen] = useState(false);
