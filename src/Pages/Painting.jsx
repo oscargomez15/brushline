@@ -5,7 +5,7 @@ import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
 import ReactCompareImage from 'react-compare-image';
-
+import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
 import colorVisualization from '../Assets/color-visualization.png'
 
@@ -260,6 +260,30 @@ const variants = {
 
   return (
     <div className='page'>
+        <AnimatePresence>
+                {showModal && (
+                    <motion.div
+                    className="modal-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="modal cartoon-box"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <div className="modal-text">
+                                <h2><TbSquareRoundedCheckFilled/> Message Sent</h2>
+                                <p>Thanks for reaching out! We'll get back to you within 24 hours.</p>
+                            </div>
+                            <button onClick={() => setShowModal(false)} className='button'>Close</button>
+                        </motion.div>
+                    </motion.div>
+                )}
+                </AnimatePresence>
         <section className='landing-hero'>
             <div className="column">
                 <div className="contact-mini-container cartoon-box">
