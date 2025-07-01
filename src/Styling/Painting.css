@@ -458,6 +458,10 @@ button:disabled {
 }
 @media screen and (max-width:1380px) {
 
+    .privacy-notice, .button-group p{
+        font-size: 0.8rem;
+    }
+
     .compare-image-container div{
         height: 100%;
     }
