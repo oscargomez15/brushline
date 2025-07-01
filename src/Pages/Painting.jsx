@@ -22,7 +22,8 @@ import afterBonita from '../Assets/after-paty.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
-import {CgArrowLeftR, CgArrowRightR} from 'react-icons/cg';
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+
 export const Painting = () => {
     const services = [
         {
@@ -290,16 +291,15 @@ const variants = {
             viewport={{ once: true, amount: 0.5 }}>
             <div className="card-title paint-jobs-title">
                 <h1 className='section-subtitle'> Our Painting Jobs</h1>
-                <p>See the Quality of Our Work Across Cape Coral, Fort Myers, and Naples.
-                    From exterior repaints to interior transformations, our local painting projects speak for themselves. Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
+                <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
                 <div className="arrow-slider-container">
-                    <CgArrowLeftR onClick={handleNext}/>
-                    <CgArrowRightR onClick={handlePrev}/>
+                    <FaArrowLeftLong onClick={handleNext}/>
+                    <FaArrowRightLong onClick={handlePrev}/>
                 </div>
             </div>
             <div className="slider-image-container single">
                 <div className="slider-nav">
-                    <div className="slider-item" style={{ position: 'relative'}}>
+                    <div className="slider-item">
                     <AnimatePresence custom={direction} mode="wait">
                         <motion.div
                         key={currentIndex}
@@ -309,10 +309,14 @@ const variants = {
                         animate="center"
                         exit="exit"
                         transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        className='compare-image-container'
                         >
                         <ReactCompareImage
                             leftImage={sliderData[currentIndex].left}
                             rightImage={sliderData[currentIndex].right}
+                            leftImageCss={{height:'100%'}}
+                            rightImageCss={{height:'100%'}}
+                            
                             sliderLineColor="#ffffff"
                             handleSize={40}
                         />

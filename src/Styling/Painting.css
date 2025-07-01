@@ -292,6 +292,7 @@
     overflow: hidden;
 }
 
+
 .arrow-slider-container{
     border: none;
     display: flex;
@@ -304,12 +305,17 @@
     height: 3rem;
     cursor: pointer;
     transition: all .2s;
-    color: #2561e8;
+    color: #ffffff;
+    padding: .5rem;
+    border-radius: 10px;
+    background-color: rgb(224, 159, 62);
 }
 
 .arrow-slider-container svg:hover{
     transform: scale(1.1);
-    color: #1947b4;
+    background-color: rgb(218, 148, 44);
+    box-shadow: rgba(148, 105, 41, 0.9) 1px 1px, rgba(148, 105, 41, 0.7) 3px 3px;
+
 }
 
 .slider-item > div{
@@ -452,6 +458,10 @@ button:disabled {
 }
 @media screen and (max-width:1380px) {
 
+    .compare-image-container div{
+        height: 100%;
+    }
+
     .slider-image-container{
         flex-direction: column;
     }
@@ -584,8 +594,8 @@ button:disabled {
     }
 
     .paint-jobs-title .section-subtitle{
-        font-size: 4rem;
-        line-height: 3.5rem;
+        font-size: 2rem;
+        line-height: 1.8rem;
     }
 }
 
@@ -629,8 +639,8 @@ button:disabled {
     }
 
     .section-title, .section-subtitle{
-        font-size: 2.5rem;
-        line-height: 2.5rem;
+        font-size: 2rem;
+        line-height: 1.8rem;
     }
 }
 

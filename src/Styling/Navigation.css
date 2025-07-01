@@ -110,12 +110,13 @@ nav{
     justify-content: center;
     gap: .5rem ;
   }
+  
   .dropdown{
     position: absolute;
     width: 300px;
     z-index: 999;
     display: none;
-    background-color: #ffbd59;
+    background-color: #faad3a;
     border-radius: 0 0 10px 10px;
   }
 
@@ -127,7 +128,7 @@ nav{
     width: 100%;
     padding: 0.5rem 1rem;
     transition: all .2s ease;
-    border-bottom: 2px solid #ffbd59;
+    border-bottom: 2px solid #ffa41c;
   }
 
   .dropdown li:last-child{
@@ -135,7 +136,7 @@ nav{
   }
 
   .dropdown li:hover{
-    background-color: #faad3a;
+    background-color: #ffbb55;
   }
 
   .dropdown li a{
@@ -153,14 +154,17 @@ nav{
   }
 
   .cta .cta-text{
-    display: flex;
-    align-items: center;
     font-weight: bold;
-    font-size: 1.5rem;
-    text-align: center;
     text-decoration: none;
     color: white;
   }
+
+  .cta-label{
+    text-align: center;
+  }
+
+  .cta-label span{
+    font-weight: bold;  }
 
   .exit-icon{
     position: absolute;
@@ -178,11 +182,16 @@ nav{
       content: none;
     }
 
+    .dropdown-menu{
+    }
+
     .dropdown-menu li{
+      background-color: #ffac26;
       border-radius: 10px;
       width: 100%;
       padding: .5rem .5rem;
-      background-color: #fda41e;
+      border-bottom: .25rem solid #f59402;
+      margin-top: 0.25rem;
     }
 
     .nav-wrapper-mb{
@@ -288,7 +297,9 @@ nav{
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-direction: column;
         width: 100%;
+        gap: .5rem;
       }
 
       .hamburger-content hr{
@@ -297,7 +308,7 @@ nav{
         outline: none;
         background-color: #ffffff;
         width: 90%;
-        height: 3px;
+        height: 2px;
       }
 
       .hamburger-content.open{
@@ -311,36 +322,45 @@ nav{
         overflow: hidden;
       }
 
-      .hamburger-content ul{
+      .hamburger-content .hamburger-links{
         display: flex;
         flex-direction: column; /* Or row, depending on layout */
         list-style: none;
         padding: 0;
         margin: 0;
         gap: .5rem;
+        width: 100%;
+        background-color: #df9b35;
+        padding: 2rem 0;
+        border-top: 2px solid #df9425;
+        border-bottom: 2px solid #df9425;
+;
       }
 
       .hamburger-content ul li a,.hamburger-content p{
-        display: flex;
-        align-items: center;
         font-size: 1.5rem;
-        flex: 1 1;
         text-decoration: none;
         color: white;
-        align-items: center;
-        justify-content: center;
+        justify-content: start;
       }
 
       .hamburger-content ul li{
         width: 100%;
+        padding: 0 2rem;
       }
 
-      .hamburger-content ul .dropdown-menu{
-      margin-top: .5rem;
+    .dropdown-mb{
+      display: flex;
+      flex-direction: column;
+      transition: all .2s ease;
     }
 
-    .dropdown-mb{
-      transition: all .2s ease;
+    .dropdown-label{
+      color: white;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
     }
 
     .dropdown-menu {
@@ -360,6 +380,10 @@ nav{
     .rotated {
       transform: rotate(180deg);
       transition: transform 0.3s ease;
+    }
+
+    .dropdown-mb {
+      justify-content: space-between;
     }
 
     .dropdown-mb .dropdown-toggle svg{

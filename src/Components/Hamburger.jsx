@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import logo from '../Assets/logo/brushline-logo-white-letters.png';
 import { motion } from 'framer-motion';
 import '../Styling/Navigation.css'
+import { GoHomeFill } from "react-icons/go";
 
 export const Hamburger = () => {
     const [isOpen, setOpen] = useState(false);
@@ -82,17 +83,15 @@ export const Hamburger = () => {
             <header>
                 <img src={logo} alt="brushline-logo" loading='lazy' />
             </header>
-            <hr />
-            <ul>
-                <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}>Home</a></li>
+            <ul className='hamburger-links'>
+                <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}> Home</a></li>
                 <li className="dropdown-mb">
-                    <p
-                    className="dropdown-toggle"
-                    tabIndex={isOpen ? '0' : '-1'}
-                    onClick={() => setServiceOpen(!serviceOpen)}
-                    >
-                    Services <IoIosArrowDown className={serviceOpen ? 'rotated' : ''}/>
-                    </p>
+                    <div className="dropdown-label dropdown-toggle"
+                        tabIndex={isOpen ? '0' : '-1'}
+                        onClick={() => setServiceOpen(!serviceOpen)}>
+                        <p>Services</p>
+                        <IoIosArrowDown className={serviceOpen ? 'rotated' : ''}/>
+                    </div>
                     <ul className={`dropdown-menu ${serviceOpen ? 'open' : ''}`}>
                     <li><Link to="/painting" onClick={() => setOpen(false)}>Painting</Link></li>
                     <li><a href="/cleaning" onClick={() => setOpen(false)}>Cleaning</a></li>
@@ -104,9 +103,6 @@ export const Hamburger = () => {
                 <li><a href="/#reviews" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Reviews</a></li>
                 <li><a href="#contact" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Contact</a></li>
             </ul>
-
-            <hr />
-
             <div
             className="cta"
             whileInView={{scale:[1,1.1,1]}}
@@ -115,11 +111,15 @@ export const Hamburger = () => {
                 repeatType:'loop',
                 duration:2}}
             >
-                <a
+                <p
                 tabIndex={isOpen ? '0':'-1'}
                 href='tel:2397773713'
-                className='cta-text'>Call now <br/>(239)777-3713</a>
+                className='cta-label'>Your <span>Free Estimate</span> is <br/>a Call Away</p>
+                <button className='button'><a href="tel:2397773713" className='cta-text'> Call Now</a></button>
+
             </div>
+
+
         </nav>
     </div>
   )
