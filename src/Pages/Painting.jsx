@@ -1,3 +1,4 @@
+import emailjs from 'emailjs-com'
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import '../Styling/Painting.css'
@@ -25,6 +26,51 @@ import { IoLocation } from 'react-icons/io5';
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 
 export const Painting = () => {
+
+        const defaultFormValues = {
+        name:'',
+        address:'',
+        email:'',
+        phone:'',
+        message:''
+    }
+
+    const [form, setForm] = useState(defaultFormValues)
+    const [showModal, setShowModal] = useState(false);
+
+    const handleChange = (event) => {
+        setForm( (prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value
+        }))
+    }
+
+    const resetForm = () => {
+        setForm( () => (defaultFormValues))
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        resetForm();
+
+        const templateParams = {
+            name:form.name,
+            address:form.address,
+            phone:form.phone,
+            message:form.message
+        }
+
+        emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
+            .then(() => {
+        setShowModal(true); // ✅ Show modal
+        resetForm();
+        })
+        .catch((error) => {
+        console.error('Failed to send message:', error);
+        });
+    }
+
+    const isFormValid = Object.values(form).every((value) => value.trim() !== '');
     const services = [
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/door.mp4",
@@ -222,30 +268,30 @@ const variants = {
                         <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
-                                    <label htmlFor="">Name*</label>
-                                    <input type="text" />
+                                    <label htmlFor="name">Name*</label>
+                                    <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
                                 </div>
 
                                 <div className="field-group">
                                     <label htmlFor="">Email*</label>
-                                    <input type="email" />
+                                    <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
                                 </div>
                             </div>
 
                             <div className="field-group-container">
                                 <div className="field-group">
                                     <label htmlFor="">Phone*</label>
-                                    <input type="text" />
+                                    <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
                                 </div>
 
                                 <div className="field-group">
                                     <label htmlFor="">Address*</label>
-                                    <input type="text" />
+                                    <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
                                 </div>
                             </div>
                             <div className="field-group">
                                 <label htmlFor="">Message (Optional)</label>
-                                <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
+                                <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
                             </div>
                         </div>
 
@@ -254,7 +300,7 @@ const variants = {
                         </p>
                         
                         <div className="button-group">
-                            <a href="/painting/#contact"><button className="button"> Get Free Quote </button></a>
+                            <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
                             <p>No-cost estimates, no obligation.</p>
                         </div>
                 </div>
@@ -391,7 +437,7 @@ const variants = {
                         </div>
 
                         <div className="button-group">
-                            <a href="/painting/#contact"><button className="button"> Get Free Color Consultation </button></a>
+                            <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET CONSULTATION </button>
                             <p>No-cost consultation, no obligation.</p>
                         </div>
                 </div>

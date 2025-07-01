@@ -93,7 +93,7 @@ export const Hamburger = () => {
                     </div>
                     <ul className={`dropdown-menu ${serviceOpen ? 'open' : ''}`}>
                     <li><Link to="/painting" onClick={() => setOpen(false)}>Painting</Link></li>
-                    <li><a href="/cleaning" onClick={() => setOpen(false)}>Cleaning</a></li>
+                    <li><Link to="/cleaning" onClick={() => setOpen(false)}>Cleaning</Link></li>
                     {/* <li><a href="" onClick={() => setOpen(false)}>Drywall</a></li>
                     <li><a href="" onClick={() => setOpen(false)}>Pressure Wash</a></li> */}
                     </ul>

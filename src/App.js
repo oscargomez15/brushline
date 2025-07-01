@@ -7,11 +7,13 @@ import { Footer } from './Components/Footer';
 import { Cleaning } from './Pages/Cleaning';
 import { NotFound } from './Pages/NotFound';
 import { Privacy } from './Pages/Privacy';
+import ScrollToTop from './Components/ScrollToTop';
 
 function App() {
   return (
     <div className='background-wrapper'>
       <Router>
+      <ScrollToTop/>
         <Navigation/>
         <Routes>
           <Route path="/" element={<Home />}/>

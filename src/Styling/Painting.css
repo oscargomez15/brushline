@@ -447,7 +447,7 @@ button:disabled {
     }
 
     .page{
-        width: 90%;
+        width: 100%;
     }
 }
 
@@ -491,7 +491,6 @@ button:disabled {
     }
 
     .column{
-        width: 100%;
         position: relative;
         display: flex;
         align-items: center;
@@ -503,7 +502,6 @@ button:disabled {
     }
 
     .page{
-        width: 100%;
         padding: 0;
     }
 
@@ -608,10 +606,6 @@ button:disabled {
     .landing-hero{
         flex-direction: column;
         display: flex;
-    }
-
-    .column{
-        width: 100%;
     }
 
     .column .column-sub{

@@ -144,9 +144,21 @@
     height: 100vh;
 }
 
+@media screen and (max-width: 680px) {
+  .form-row{
+    gap: 1rem;
+  }
+  
+}
+
     @media screen and (max-width:600px) {
+
+      .contact-page form{
+        width: 100%;
+      }
+      
     .contact-form-container{
-      padding: 4rem 2rem;
+      padding: 4rem 2rem 15rem 2rem;
     }
 
     .modal{
