@@ -1,6 +1,5 @@
 import React from 'react'
 import heroImage from '../Assets/image-hero-fortmyers.jpg'
-import logo from '../Assets/logo/brushline-logo-white-letters.png'
 import { motion } from 'framer-motion';
 import { FaPhone } from 'react-icons/fa';
 
