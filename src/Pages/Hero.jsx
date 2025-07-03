@@ -12,7 +12,6 @@ export const Hero = () => {
     <section className='hero-page' id='home'>
     <img src={heroImage} alt="man-standing-with-construction-belt" className='background-image' />
       <div className="hero-container">
-      <img src={logo} alt="brushline-logo" className='logo-hero-mb' />
           <div className='text-container'>
             <div className="title-container">
               <motion.h1
@@ -26,7 +25,7 @@ export const Hero = () => {
               transition={{duration:1}}> Providing residential & commercial painting service in Cape Coral, Fort Myers, Naples, Estero and Bonita Springs.</motion.p>
             </div>
               <div className="btn-group">
-                <a href="#contact"><button tabIndex='-1' className='button'>GET A FREE QUOTE</button></a>
+                <a href="#contact"><button tabIndex='-1' className='button'>GET FREE QUOTE</button></a>
                 <div className='phoneButton'>
                   <a href="tel:2397773713" > <FaPhone/> (239)777-3713</a>
                 </div>

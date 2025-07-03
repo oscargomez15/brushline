@@ -1,7 +1,8 @@
 import './App.css';
 import { Painting } from './Pages/Painting';
 import { Home } from './Pages/Home';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom';
+import { useEffect } from 'react';
 import { Navigation } from './Components/Navigation';
 import { Footer } from './Components/Footer';
 import { Cleaning } from './Pages/Cleaning';

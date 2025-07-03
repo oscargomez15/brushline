@@ -86,7 +86,6 @@
     border-radius: 10px;
     padding: 6rem 4rem;
     margin-top: 5rem;
-    background-color: #ffdfaf;
 }
 
 .cta-card{
@@ -153,7 +152,6 @@
 .paint-jobs{
     display: flex;
     align-items: center;
-    gap: 2rem;
 }
 
 .painting-list{
@@ -168,10 +166,11 @@
 .item-card{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
     width: 20%;
-    flex: 1;
+    flex: 1 1;
     position: relative;
+    background-color: #ffdfaf;
+    overflow: hidden;
 }
 
 .item-card::before {
@@ -189,51 +188,27 @@
     opacity: 1;
   }
 
-.item-card h1{
-    line-height: 3rem;
-}
-
-.item-card h2{
-    line-height: 1.5rem;
-}
-
 .item-card p{
     font-size: 1rem;
 }
 
 .item-info{
+    height: 100%;
     width: 100%;
-    position: absolute;
-    top: 5%;
     flex-direction: column;
-    color: white;
-    text-align: center;
-    mix-blend-mode: lighten;
-
-}
-
-.item-info h2, .item-info h3{
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-}
-
-.item-info h3{
-    font-weight: normal;
-    font-size: 1rem;
+    padding: 1rem;
 }
 
 .video-container{
     width: 100%;
-    height: 100%;
-    position: relative;
+    background-color: red;
 }
 
-.video-container video{
+.item-card video{
     width: 100%;
-    height: 100%;
+    height: 300px;
     object-fit: cover;
-    filter: grayscale(100%);
     transition: all .2s;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 .video-container video:hover{
@@ -252,10 +227,8 @@
 
 .paint-jobs-title{
     flex:1;
-    gap: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 .slider-item .slider-text{
@@ -298,6 +271,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    margin-top: 1rem;
 }
 
 .arrow-slider-container svg{
@@ -495,6 +469,11 @@ button:disabled {
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 6rem;
+    }
+
+    .video-column, .video-desktop{
+        margin-top: 0;
     }
 
     .column-sub, .button-group{
@@ -559,7 +538,7 @@ button:disabled {
     }
 
     .painting-list .item-card{
-        flex: 0 0 45%;
+        width: 100%;
     }
 
     .color-consultation{
@@ -602,6 +581,10 @@ button:disabled {
 }
 
 @media screen and (max-width:768px) {
+    
+    .painting-list{
+        flex-direction: column;
+    }
 
     .landing-hero{
         flex-direction: column;
@@ -643,6 +626,7 @@ button:disabled {
 }
 
 @media screen and (max-width:426px) {
+
     .section-title{
         font-size: 2.5rem;
     }

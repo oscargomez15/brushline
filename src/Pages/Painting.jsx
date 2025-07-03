@@ -24,6 +24,7 @@ import afterBonita from '../Assets/after-paty.jpg'
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+import { Helmet } from 'react-helmet';
 
 export const Painting = () => {
 
@@ -260,6 +261,11 @@ const variants = {
 
   return (
     <div className='page'>
+
+        <Helmet>
+            <title>Painting Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
+            <meta name="description" content="Brushline Services is a professional painting services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+        </Helmet>
         <AnimatePresence>
                 {showModal && (
                     <motion.div
@@ -285,8 +291,8 @@ const variants = {
                 )}
                 </AnimatePresence>
         <section className='landing-hero'>
-            <div className="column">
-                <div className="contact-mini-container cartoon-box">
+            <div className="column cartoon-box">
+                <div className="contact-mini-container">
                     <h1 className='section-title'> <span>Pro Painters</span> servicing Naples to Fort Myers</h1>
                         <p>Bringing Reliable, High-Quality Painting to Cape Coral, Fort Myers, Bonita Springs, Estero, & Naples</p>
                         <div className="contact-mini">
@@ -330,21 +336,21 @@ const variants = {
                 </div>
             </div>
 
-            <div className="column video-column">
-                <video muted autoPlay loop playsInline className=' column video-desktop cartoon-box'>
+            <div className="column video-column cartoon-box">
+                <video muted autoPlay loop playsInline className=' column video-desktop'>
                     <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
                 </video>
             </div>
         </section>
 
-        <motion.section className="list-container card cartoon-box"
+        <motion.section className="list-container card"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
 
-            <div className="card-title">
-                <h1 className='section-subtitle'> What We Do</h1>
+            <div className="sub-heading">
+                <h1><span>Painting Services</span> we offer</h1>
                 <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
             </div>
             <div className="painting-list">
@@ -354,13 +360,13 @@ const variants = {
             </div>
         </motion.section>
 
-        <motion.section className="card paint-jobs cartoon-box"
+        <motion.section className="card paint-jobs"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
-            <div className="card-title paint-jobs-title">
-                <h1 className='section-subtitle'> Our Painting Jobs</h1>
+            <div className="sub-heading paint-jobs-title">
+                <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
                 <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
                 <div className="arrow-slider-container">
                     <FaArrowLeftLong onClick={handleNext}/>
@@ -408,7 +414,7 @@ const variants = {
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true, amount: 0.5 }}>
-            <h1 className='section-subtitle'>Ready to start your next painting project?</h1>
+            <h1 className='section-subtitle'>Ready to start your painting project?</h1>
                     <div className="cta-button-group">
                         <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
                         <p>OR</p>
@@ -417,14 +423,14 @@ const variants = {
 
         </motion.section>
 
-        <motion.section className="card cartoon-box"
+        <motion.section className="card"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
             <div className="color-consultation">
-                <div className="color-consultation-text">
-                    <h1 className='section-subtitle'> In need of <span>color consultation?</span> </h1>
+                <div className="sub-heading">
+                    <h1> In need of <span>color consultation?</span> </h1>
                     <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
                         We can help you choose the right colors for your home or business. </p>
                         <div className="contact-mini">
@@ -470,13 +476,13 @@ const variants = {
             </div>
         </motion.section>
 
-        <motion.section className="card cartoon-box"
+        <motion.section className="card"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
-            <div className="card-title">
-                <h1 className='section-subtitle'>Color Visualization available</h1>
+            <div className="sub-heading">
+                <h1><span>Color Visualization</span> available</h1>
                 <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
             </div>
             <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
@@ -498,7 +504,7 @@ const variants = {
 
 
 
-        <motion.section className="card faq cartoon-box"
+        <motion.section className="card faq"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}

@@ -13,11 +13,10 @@ export const PaintingCard = ({ src, title, description }) => {
   
     return (
       <div
-        className="item-card"
+        className="item-card cartoon-box"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="video-container">
           <video
             ref={videoRef}
             muted
@@ -29,10 +28,9 @@ export const PaintingCard = ({ src, title, description }) => {
           </video>
 
             <div className="item-info">
-              <h2>{title}</h2>
-              <h3>{description}</h3>
+              <h3>{title}</h3>
+              <p>{description}</p>
             </div>
-        </div>
 
       </div>
     );

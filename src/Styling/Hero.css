@@ -175,12 +175,6 @@
 }
 
 @media screen and (max-width:1070px) {
-    .logo-hero-mb{
-        display: block;
-        width: 20%;
-        padding-top: 1rem;
-        z-index: 2;
-      }
 
       .btn-group{
         flex-direction: row;
@@ -195,9 +189,6 @@
 }
 
 @media screen and (max-width:768px) {
-    .logo-hero-mb{
-        width: 40%;
-      }
 
   .content{
     flex-direction: column;

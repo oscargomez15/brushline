@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import logo from '../Assets/logo/brushline-logo-white-letters.png'
 import '../Styling/Navigation.css'
-import { FaPhone } from 'react-icons/fa';
-import { useLocation } from 'react-router-dom';
+import { FaPhone } from 'react-icons/fa6';
+import { Link, useLocation } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
 import { MdOutlineCleaningServices, MdOutlineFormatPaint } from 'react-icons/md';
 import { Hamburger } from './Hamburger';
+import { FaPhoneAlt } from 'react-icons/fa';
 
 export const Navigation = () => {
   const [isSticky, setSticky] = useState(false);
@@ -47,9 +48,9 @@ export const Navigation = () => {
               <li>
                 <a href="#services" className='services-container'>SERVICES <IoIosArrowDown size="20"/></a>
                 <ul className='dropdown'>
-                  <li> <a href="/painting"> <MdOutlineFormatPaint/> Int/Ext Painting </a> </li>
+                  <li> <Link to="/painting"> <MdOutlineFormatPaint/> Int/Ext Painting </Link> </li>
                   {/* <li> <a href="/"> <MdOutlineHomeRepairService/> Drywall Install/Repair </a> </li>                 */}
-                  <li> <a href="/cleaning"> <MdOutlineCleaningServices/> Residential Cleaning  </a></li>
+                  <li> <Link to="/cleaning"> <MdOutlineCleaningServices/> Residential Cleaning  </Link></li>
                   {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
 
                 </ul>
@@ -60,10 +61,10 @@ export const Navigation = () => {
           </ul>
 
           <ul>
-            <li className='no-underline'>
-              <a href="#contact"><button className='button'>CONTACT</button></a>
+            <li className='no-underline nav-contact'>
+              <a href="tel:7867507518"> <FaPhoneAlt/> (239) 777-3713</a>
+              <a href="#contact"><button className='button'>CONTACT US</button></a>
             </li>
-            <li className='no-underline'><a href="tel:7867507518"> FREE QUOTE <br/><FaPhone/> 239-777-3713</a></li>
           </ul>
         </div>
     </nav>
