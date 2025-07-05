@@ -3,21 +3,22 @@ import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
 import { motion } from 'framer-motion'
-import hero from '../Assets/cleaning.MP4'
 import { PaintingCard } from '../Components/PaintingCard'
 import { FaCheck } from 'react-icons/fa';
+import emailjs from 'emailjs-com'
+
+import { useState } from 'react';
+
 export const Cleaning = () => {
         const services = [
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/residential-cleaning.mp4",
           title: 'Residential Cleaning',
           description:'Keep your home spotless and stress-free with our trusted residential cleaning services. Our professional cleaners are committed to providing thorough, reliable, and affordable home cleaning.',
-          items:[  "Dusting of furniture, shelves, baseboards, and décor",
-                    "Sweeping, vacuuming, and mopping all floors",
-                    "Cleaning and sanitizing bathrooms (toilets, tubs, sinks, mirrors)",
-                    "Kitchen cleaning (countertops, sinks, appliance exteriors, cabinet doors)",
+          items:[  "Dusting of furniture, shelves, and décor",
+                    "Sweeping, vacuuming, and mopping floors",
+                    "Kitchen and Bathroom cleaning/sanitizing",
                     "Trash removal and can liner replacement",
-                    "Wiping light switches, door handles, and other high-touch areas",
                     "Bedroom tidying (making beds, dusting, floor cleaning)"]
         },
         {
@@ -35,8 +36,6 @@ export const Cleaning = () => {
           title: 'Rental Cleaning',
           description:"Turnover made easy! Whether you're a landlord or tenant, our rental cleaning services ensure your property in Naples, Fort Myers, Bonita Springs, or Cape Coral is spotless and ready for the next move-in. ",
           items:[  "Complete bathroom and kitchen sanitization",
-                    "Inside and outside of all cabinets and drawers",
-                    "Cleaning inside the refrigerator and oven",
                     "Deep cleaning of floors (vacuuming and mopping)",
                     "Dusting blinds, baseboards, fans, and vents",
                     "Removing cobwebs",
@@ -47,12 +46,11 @@ export const Cleaning = () => {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/fan-cleaning.mp4",
           title: 'Deep Cleaning',
           description:'Looking for a thorough, top-to-bottom clean? We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
-          items:[  "Everything in Residential Cleaning, plus:",
+          items:[ 
                     "Baseboards scrubbed, not just dusted",
                     "Hand-washing of cabinet fronts and door frames",
                     "Deep cleaning of tile grout and behind appliances (as accessible)",
                     "Ceiling fans, vents, and light fixtures cleaned",
-                    "Extra attention to buildup in kitchens and bathrooms",
                     "Dusting of blinds and window ledges",
                     "Cleaning under furniture (if movable)"]
         },
@@ -129,6 +127,51 @@ export const Cleaning = () => {
         }
     ];
 
+            const defaultFormValues = {
+            name:'',
+            address:'',
+            email:'',
+            phone:'',
+            message:''
+        }
+    
+        const [form, setForm] = useState(defaultFormValues)
+        const [showModal, setShowModal] = useState(false);
+    
+        const handleChange = (event) => {
+            setForm( (prev) => ({
+                ...prev,
+                [event.target.name]: event.target.value
+            }))
+        }
+    
+        const resetForm = () => {
+            setForm( () => (defaultFormValues))
+        }
+    
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            resetForm();
+    
+            const templateParams = {
+                name:form.name,
+                address:form.address,
+                phone:form.phone,
+                message:form.message
+            }
+    
+            emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
+                .then(() => {
+            setShowModal(true); // ✅ Show modal
+            resetForm();
+            })
+            .catch((error) => {
+            console.error('Failed to send message:', error);
+            });
+        }
+    
+        const isFormValid = Object.values(form).every((value) => value.trim() !== '');
+
     const toggleAccordion = (e) => {
         e.currentTarget.classList.toggle("active");
 
@@ -184,8 +227,21 @@ export const Cleaning = () => {
                     </p>
 
                     <div className="button-group">
-                        <a href="/painting/#contact"><button className="button"> Get Free Quote </button></a>
-                        <p>No-cost estimates, no obligation.</p>
+                        <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
+                        <div className="benefits-hero">
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p> No-cost estimates.</p>
+                            </div>
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p>10+ years of experience</p>
+                            </div>
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p>5-star rated</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
