@@ -1,8 +1,12 @@
 .service-page{
     display: flex;
     align-items: center;
+    justify-content: center;
   }
-
+  
+  .services-content{
+    width: 70%;
+  }
   .sub-heading h1{
     font-size: 2rem;
   }

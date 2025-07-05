@@ -2,6 +2,13 @@
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .review-content{
+    width: 70%;
   }
 
   .widget-container{
