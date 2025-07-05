@@ -71,7 +71,7 @@ export const Contact = () => {
         initial={{ x: -100, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
-        viewport={{ once: true, amount: 0.5 }}>
+        viewport={{ once: true, amount: 0.2 }}>
         <motion.div className="contact-form-container cartoon-box">
             <div className="contact-form">
                 <div className="sub-heading">

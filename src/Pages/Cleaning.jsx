@@ -5,13 +5,13 @@ import { Contact } from './Contact'
 import { motion } from 'framer-motion'
 import hero from '../Assets/cleaning.MP4'
 import { PaintingCard } from '../Components/PaintingCard'
-
+import { FaCheck } from 'react-icons/fa';
 export const Cleaning = () => {
         const services = [
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/residential-cleaning.mp4",
           title: 'Residential Cleaning',
-          description:'Keep your home spotless and stress-free with our trusted residential cleaning services. Whether you live in Naples, Fort Myers, Bonita Springs, or Cape Coral, our professional cleaners are committed to providing thorough, reliable, and affordable home cleaning. From kitchens to bathrooms, bedrooms to living rooms, we clean every corner so you can enjoy a fresher, healthier living space.',
+          description:'Keep your home spotless and stress-free with our trusted residential cleaning services. Our professional cleaners are committed to providing thorough, reliable, and affordable home cleaning.',
           items:[  "Dusting of furniture, shelves, baseboards, and décor",
                     "Sweeping, vacuuming, and mopping all floors",
                     "Cleaning and sanitizing bathrooms (toilets, tubs, sinks, mirrors)",
@@ -23,7 +23,7 @@ export const Cleaning = () => {
         {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning-window.mp4",
           title: 'Window Cleaning',
-          description:'Bring more natural light into your home or business with streak-free window cleaning services! We proudly serve Naples, Fort Myers, Bonita Springs, and Cape Coral, delivering crystal-clear results every time. Our team uses eco-friendly products and proven techniques to clean both interior and exterior windows—perfect for residential and commercial properties.',
+          description:'Bring more natural light into your home or business with streak-free window cleaning services! ',
           items:[  "Interior and exterior window glass cleaning",
                     "Window sill and track cleaning",
                     "Wiping down window frames",
@@ -33,7 +33,7 @@ export const Cleaning = () => {
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning-toilet.mp4",
           title: 'Rental Cleaning',
-          description:"Turnover made easy! Whether you're a landlord or tenant, our rental cleaning services ensure your property in Naples, Fort Myers, Bonita Springs, or Cape Coral is spotless and ready for the next move-in. We handle kitchens, bathrooms, floors, and everything in between to meet move-out inspection standards and maximize rental appeal.",
+          description:"Turnover made easy! Whether you're a landlord or tenant, our rental cleaning services ensure your property in Naples, Fort Myers, Bonita Springs, or Cape Coral is spotless and ready for the next move-in. ",
           items:[  "Complete bathroom and kitchen sanitization",
                     "Inside and outside of all cabinets and drawers",
                     "Cleaning inside the refrigerator and oven",
@@ -46,7 +46,7 @@ export const Cleaning = () => {
         {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/fan-cleaning.mp4",
           title: 'Deep Cleaning',
-          description:'Looking for a thorough, top-to-bottom clean? Our deep cleaning services are ideal for homes and businesses in Naples, Fort Myers, Bonita Springs, and Cape Coral. We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
+          description:'Looking for a thorough, top-to-bottom clean? We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
           items:[  "Everything in Residential Cleaning, plus:",
                     "Baseboards scrubbed, not just dusted",
                     "Hand-washing of cabinet fronts and door frames",
@@ -190,10 +190,44 @@ export const Cleaning = () => {
                 </div>
             </div>
 
-            <video muted autoPlay loop playsInline className='video-desktop'>
-                <source src={hero} />  
+            <video muted autoPlay loop playsInline className=' video-desktop'>
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4"/>  
             </video>
         </section>
+
+                <section className='landing-hero-mb'>
+                    <div className="column">
+                        <div className="contact-mini-container">
+                            <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
+                                <p>Let us handle the mess — you focus on what matters.
+                            Reach out using the contact form below.</p>
+                                
+                                <div className="button-group">
+                                    <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
+                                    <div className="benefits-hero">
+                                        <div className="benefit-item">
+                                            <FaCheck/>
+                                            <p> No-cost estimates.</p>
+                                        </div>
+                                        <div className="benefit-item">
+                                            <FaCheck/>
+                                            <p>10+ years of experience</p>
+                                        </div>
+                                        <div className="benefit-item">
+                                            <FaCheck/>
+                                            <p>5-star rated</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+        
+                    <div className="column video-column">
+                        <video muted autoPlay loop playsInline className=' column video-desktop'>
+                            <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4" />  
+                        </video>
+                    </div>
+                </section>
         
         <div className="list-container-wrapper">
             <div className="list-container card">
@@ -229,7 +263,7 @@ export const Cleaning = () => {
                 </div>
                 <div className="questions-wrapper">
                     <div className="questions-container">
-                        <div className="questions-title accordion" onClick={toggleAccordion} >
+                        <div className="questions-title accordion cartoon-box " onClick={toggleAccordion} >
                             <h2>General</h2>
                             <MdKeyboardArrowDown size="30"/>
                         </div>
@@ -246,7 +280,7 @@ export const Cleaning = () => {
                     </div>
 
                     <div className="questions-container">
-                        <div className="questions-title accordion" onClick={toggleAccordion}>
+                        <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                             <h2>Service-Specific</h2>
                             <MdKeyboardArrowDown size="30"/> 
                         </div>
@@ -263,7 +297,7 @@ export const Cleaning = () => {
                     </div>
 
                     <div className="questions-container">
-                        <div className="questions-title accordion" onClick={toggleAccordion}>
+                        <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                             <h2>Booking and Scheduling</h2>
                             <MdKeyboardArrowDown size="30"/>
                         </div>
@@ -280,7 +314,7 @@ export const Cleaning = () => {
                     </div>
 
                     <div className="questions-container">
-                        <div className="questions-title accordion" onClick={toggleAccordion}>
+                        <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                             <h2>Payment and Pricing</h2>
                             <MdKeyboardArrowDown size="30"/>
                         </div>
@@ -297,7 +331,7 @@ export const Cleaning = () => {
                     </div>
 
                     <div className="questions-container">
-                        <div className="questions-title accordion" onClick={toggleAccordion}>
+                        <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                             <h2>Miscellaneous</h2>
                             <MdKeyboardArrowDown size="30"/>
                         </div>

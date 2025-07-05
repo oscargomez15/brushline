@@ -546,6 +546,10 @@ button:disabled {
 }
 @media screen and (max-width:1380px) {
 
+    .landing-hero-wrapper{
+        display: none;
+    }
+
     .privacy-notice, .button-group p{
         font-size: 0.8rem;
     }
@@ -567,9 +571,6 @@ button:disabled {
         opacity: 0.5;
     }
 
-    .video-desktop{
-        display: none;
-    }
 
     .column{
         position: relative;
@@ -584,6 +585,10 @@ button:disabled {
 
     .column-sub, .button-group{
         z-index: 2;
+    }
+
+    .button-group button{
+        align-self: center;
     }
 
     .page{

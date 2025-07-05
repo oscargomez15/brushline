@@ -19,10 +19,10 @@ export const Footer = () => {
           <div className="site-map footer-section">
             <ul className='footer-list'>
               <h2>Sitemap</h2>
-              <li> <a href="#home">Home</a></li>
-              <li><a href="#gallery">Gallery</a></li>
-              <li><a href="#services">Services</a></li>
-              <li><a href="#reviews">Reviews</a></li>
+              <li> <a href="/#home">Home</a></li>
+              <li><a href="/#gallery">Gallery</a></li>
+              <li><a href="/#services">Services</a></li>
+              <li><a href="/#reviews">Reviews</a></li>
               <li><a href="#contact">Contact us</a></li>
             </ul>
           </div>
@@ -68,9 +68,9 @@ export const Footer = () => {
             <ul className='footer-list'>
               <p><span>Sitemap</span></p>
               <li><a href="/">Home</a></li>
-              <li><a href="#gallery">Gallery</a></li>
-              <li><a href="/">Services</a></li>
-              <li><a href="#reviews">Reviews</a></li>
+              <li><a href="/#gallery">Gallery</a></li>
+              <li><a href="/#services">Services</a></li>
+              <li><a href="/#reviews">Reviews</a></li>
               <li><a href="#contact">Contact us</a></li>
             </ul>
           </div>
