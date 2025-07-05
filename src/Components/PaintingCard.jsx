@@ -1,5 +1,6 @@
 import { useRef } from "react";
-export const PaintingCard = ({ src, title, description }) => {
+import { FaCheckCircle } from "react-icons/fa";
+export const PaintingCard = ({ src, title, items, description }) => {
 
     const videoRef = useRef(null); // Unique ref per component
   
@@ -28,8 +29,15 @@ export const PaintingCard = ({ src, title, description }) => {
           </video>
 
             <div className="item-info">
-              <h3>{title}</h3>
+              <h2>{title}</h2>
               <p>{description}</p>
+              <ul className="item-description">
+                {items.map((item, index) => (
+                  <li key={index}>
+                    <FaCheckCircle style={{color:'#2561e8'}}/>
+                    <p>{item}</p>
+                  </li>))}
+              </ul>
             </div>
 
       </div>

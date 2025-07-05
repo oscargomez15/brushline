@@ -23,8 +23,9 @@ import afterBonita from '../Assets/after-paty.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
-import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import { Helmet } from 'react-helmet';
+import { FaCheck } from 'react-icons/fa';
 
 export const Painting = () => {
 
@@ -74,24 +75,31 @@ export const Painting = () => {
     const isFormValid = Object.values(form).every((value) => value.trim() !== '');
     const services = [
         {
-          src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/door.mp4",
-          title: 'Door and Trim',
-          description: 'Interior and Exterior'
-        },
-        {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/wall.mp4",
-          title: 'Walls and Ceiling',
-          description: 'Interior and Exterior'
-        },
-        {
-          src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/crown.mp4",
-          title: 'Crown Molding and Baseboard',
-          description: 'Interior'
+          title: 'Interior Painting',
+          description:' Our expert team delivers flawless walls, ceilings, trim and accent walls using premium low-VOC paints for a durable, beautiful finish.',
+          items: [
+            "Walls & Ceilings (rooms, hallways, stairwells)",
+            "Trim, Baseboards & Crown Molding",
+            "Doors & Door Frames",
+            "Window Frames & Sills",
+            "Cabinet & Built-in Refinishing",
+            "Closets & Pantry Interiors",
+            "Accent Walls & Color-Blocking",
+            "Popcorn/Texture Removal & Repaint"]
         },
         {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/exterior.mp4",
-          title: 'Walls and Soffit',
-          description: 'Exterior'
+          title: 'Exterior Painting',
+          description: 'Boost curb appeal with expert exterior painting. We use top of the line weather-resistant coatings for lasting protection and vibrant color.',
+          items: [    "Siding (Vinyl, Wood, Fiber Cement, Stucco)",
+            "Fascia, Soffits & Eaves",
+            "Trim, Shutters & Window Casings",
+            "Decks, Patios & Fences (Staining & Sealing)",
+            "Garage Doors & Carports",
+            "Porches & Railings",
+            "Stucco & Brick Painting",
+            "Pressure-Washing & Surface Prep"]
         },
       ];
 
@@ -290,12 +298,14 @@ const variants = {
                     </motion.div>
                 )}
                 </AnimatePresence>
-        <section className='landing-hero'>
-            <div className="column cartoon-box">
+        <section className='landing-hero-wrapper'>
+            <div className="landing-hero">
                 <div className="contact-mini-container">
                     <h1 className='section-title'> <span>Pro Painters</span> servicing Naples to Fort Myers</h1>
-                        <p>Bringing Reliable, High-Quality Painting to Cape Coral, Fort Myers, Bonita Springs, Estero, & Naples</p>
-                        <div className="contact-mini">
+                        <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
+                </div>
+
+                                        <div className="contact-mini">
                             <div className="field-group-container">
                                 <div className="field-group">
                                     <label htmlFor="name">Name*</label>
@@ -323,187 +333,230 @@ const variants = {
                                 <label htmlFor="">Message (Optional)</label>
                                 <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
                             </div>
+
+                            <p class="privacy-notice">
+                                By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+                            </p>
+                            
+                            <div className="button-group">
+                                <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
+                                <p>No-cost estimates, no obligation.</p>
+                            </div>
                         </div>
 
-                        <p class="privacy-notice">
-                            By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
-                        </p>
+
+            <video muted autoPlay loop playsInline className='video-desktop'>
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
+            </video>
+            </div>
+        </section>
+
+        <section className='landing-hero-mb'>
+            <div className="column">
+                <div className="contact-mini-container">
+                    <h1 className='section-title'><span>Pro Painters</span> servicing Naples to Fort Myers</h1>
+                        <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
                         
                         <div className="button-group">
-                            <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                            <p>No-cost estimates, no obligation.</p>
+                            <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
+                            <div className="benefits-hero">
+                                <div className="benefit-item">
+                                    <FaCheck/>
+                                    <p> No-cost estimates.</p>
+                                </div>
+                                <div className="benefit-item">
+                                    <FaCheck/>
+                                    <p>10+ years of experience</p>
+                                </div>
+                                <div className="benefit-item">
+                                    <FaCheck/>
+                                    <p>5-star rated</p>
+                                </div>
+                            </div>
                         </div>
                 </div>
             </div>
 
-            <div className="column video-column cartoon-box">
+            <div className="column video-column">
                 <video muted autoPlay loop playsInline className=' column video-desktop'>
                     <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
                 </video>
             </div>
         </section>
+        
+        <div className="list-container-wrapper">
+            <motion.section className="list-container card"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.2 }}>
 
-        <motion.section className="list-container card"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.2 }}>
-
-            <div className="sub-heading">
-                <h1><span>Painting Services</span> we offer</h1>
-                <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
-            </div>
-            <div className="painting-list">
-                {services.map((service, index) => (
-                    <PaintingCard key={index} {...service}/>
-                ))}
-            </div>
-        </motion.section>
-
-        <motion.section className="card paint-jobs"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.5 }}>
-            <div className="sub-heading paint-jobs-title">
-                <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
-                <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
-                <div className="arrow-slider-container">
-                    <FaArrowLeftLong onClick={handleNext}/>
-                    <FaArrowRightLong onClick={handlePrev}/>
-                </div>
-            </div>
-            <div className="slider-image-container single">
-                <div className="slider-nav">
-                    <div className="slider-item">
-                    <AnimatePresence custom={direction} mode="wait">
-                        <motion.div
-                        key={currentIndex}
-                        custom={direction}
-                        variants={variants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        transition={{ duration: 0.2, ease: 'easeInOut' }}
-                        className='compare-image-container'
-                        >
-                        <ReactCompareImage
-                            leftImage={sliderData[currentIndex].left}
-                            rightImage={sliderData[currentIndex].right}
-                            leftImageCss={{height:'100%'}}
-                            rightImageCss={{height:'100%'}}
-                            
-                            sliderLineColor="#ffffff"
-                            handleSize={40}
-                        />
-                        <div className="slider-text">
-                            <p>{sliderData[currentIndex].text}</p>
-                            <p className="slider-location">
-                            <IoLocation /> {sliderData[currentIndex].location}
-                            </p>
-                        </div>
-                        </motion.div>
-                    </AnimatePresence>
-                    </div>
-                </div>
-            </div>
-        </motion.section>
-
-        <motion.section className="card cartoon-box cta-card"
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true, amount: 0.5 }}>
-            <h1 className='section-subtitle'>Ready to start your painting project?</h1>
-                    <div className="cta-button-group">
-                        <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
-                        <p>OR</p>
-                        <a href="#contact"><button className="button"> CONTACT US </button></a>
-                    </div>
-
-        </motion.section>
-
-        <motion.section className="card"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.5 }}>
-            <div className="color-consultation">
                 <div className="sub-heading">
-                    <h1> In need of <span>color consultation?</span> </h1>
-                    <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
-                        We can help you choose the right colors for your home or business. </p>
-                        <div className="contact-mini">
-                            <div className="field-group-container">
-                                <div className="field-group">
-                                    <label htmlFor="">Name*</label>
-                                    <input type="text" />
-                                </div>
-
-                                <div className="field-group">
-                                    <label htmlFor="">Email*</label>
-                                    <input type="email" />
-                                </div>
-                            </div>
-
-                            <div className="field-group-container">
-                                <div className="field-group">
-                                    <label htmlFor="">Phone*</label>
-                                    <input type="text" />
-                                </div>
-
-                                <div className="field-group">
-                                    <label htmlFor="">Address*</label>
-                                    <input type="text" />
-                                </div>
-                            </div>
-                            <div className="field-group">
-                                <label htmlFor="">Message (Optional)</label>
-                                <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
-                            </div>
-                            <p class="privacy-notice">
-                            By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
-                        </p>
-                        </div>
-
-                        <div className="button-group">
-                            <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET CONSULTATION </button>
-                            <p>No-cost consultation, no obligation.</p>
-                        </div>
+                    <h1><span>Painting Services</span> we offer</h1>
+                    <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
                 </div>
-                <img src={colorConsultation} alt="color-consultation" />
+                <div className="painting-list">
+                    {services.map((service, index) => (
+                        <PaintingCard key={index} {...service}/>
+                    ))}
+                </div>
+            </motion.section>
+        </div>
 
-            </div>
-        </motion.section>
+        <div className="paint-jobs-wrapper">
+            <motion.section className="card paint-jobs"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.5 }}>
+                <div className="sub-heading paint-jobs-title">
+                    <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
+                    <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
 
-        <motion.section className="card"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            viewport={{ once: true, amount: 0.5 }}>
-            <div className="sub-heading">
-                <h1><span>Color Visualization</span> available</h1>
-                <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
-            </div>
-            <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
-        </motion.section>
-
-        <motion.section className="card cartoon-box cta-card"
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true, amount: 0.5 }}>
-            <h1 className='section-subtitle'>Let’s Get Rolling, We’re just a click away.</h1>
-                    <div className="cta-button-group">
-                        <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
-                        <p>OR</p>
-                        <a href="#contact"><button className="button"> CONTACT US </button></a>
+                </div>
+                <div className="slider-image-container single">
+                    <div className="slider-nav">
+                        <div className="slider-item">
+                        <AnimatePresence custom={direction} mode="wait">
+                            <motion.div
+                            key={currentIndex}
+                            custom={direction}
+                            variants={variants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{ duration: 0.2, ease: 'easeInOut' }}
+                            className='compare-image-container'
+                            >
+                            <ReactCompareImage
+                                leftImage={sliderData[currentIndex].left}
+                                rightImage={sliderData[currentIndex].right}
+                                wrapperStyle={{height:'100%'}}
+                                sliderLineColor="#ffffff"
+                                handleSize={40}
+                                className="compare-image"
+                                />
+                            <div className="slider-text">
+                                <p>{sliderData[currentIndex].text}</p>
+                                <p className="slider-location">
+                                <IoLocation /> {sliderData[currentIndex].location}
+                                </p>
+                            </div>
+                            <div className="arrow-slider-container nav-before">
+                                <MdNavigateBefore onClick={handlePrev}/>
+                            </div>
+                            <div className="arrow-slider-container nav-next">
+                                <MdNavigateNext onClick={handleNext}/>
+                            </div>
+                            </motion.div>
+                        </AnimatePresence>
+                        </div>
                     </div>
+                </div>
+            </motion.section>
+        </div>
 
-        </motion.section>
+        <div className="cta-wrapper">
+            <motion.section className="card cta-card"
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.5 }}>
+                <h1 className='section-subtitle'>Ready to start your painting project?</h1>
+                        <div className="cta-button-group">
+                            <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
+                            <p>OR</p>
+                            <a href="#contact"><button className="button"> CONTACT US </button></a>
+                        </div>
 
+            </motion.section>
+        </div>
 
+        <div className="color-consult-wrapper">
+            <motion.section className="card color-consultation-wrapper"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.5 }}>
+                <div className="color-consultation">
+                    <div className="sub-heading">
+                        <h1> In need of <span>color consultation?</span> </h1>
+                        <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
+                            We can help you choose the right colors for your home or business. </p>
+                            <div className="contact-mini">
+                                <div className="field-group-container">
+                                    <div className="field-group">
+                                        <label htmlFor="">Name*</label>
+                                        <input type="text" />
+                                    </div>
 
+                                    <div className="field-group">
+                                        <label htmlFor="">Email*</label>
+                                        <input type="email" />
+                                    </div>
+                                </div>
+
+                                <div className="field-group-container">
+                                    <div className="field-group">
+                                        <label htmlFor="">Phone*</label>
+                                        <input type="text" />
+                                    </div>
+
+                                    <div className="field-group">
+                                        <label htmlFor="">Address*</label>
+                                        <input type="text" />
+                                    </div>
+                                </div>
+                                <div className="field-group">
+                                    <label htmlFor="">Message (Optional)</label>
+                                    <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
+                                </div>
+                                <p class="privacy-notice">
+                                By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
+                            </p>
+                            </div>
+
+                            <div className="button-group">
+                                <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET CONSULTATION </button>
+                                <p><FaCheck style={{color:'#2561e8'}}/> No-cost consultation, no obligation.</p>
+                            </div>
+                    </div>
+                    <img src={colorConsultation} alt="color-consultation" />
+
+                </div>
+            </motion.section>
+        </div>
+        <div className="color-visual-wrapper">
+            <motion.section className="card"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                viewport={{ once: true, amount: 0.5 }}>
+                <div className="sub-heading">
+                    <h1><span>Color Visualization</span> available</h1>
+                    <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
+                </div>
+                <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
+            </motion.section>
+        </div>
+
+        <div className="cta-wrapper">
+            <motion.section className="card cta-card"
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.5 }}>
+                <h1 className='section-subtitle'>Let’s Get Rolling, We’re just a click away.</h1>
+                        <div className="cta-button-group">
+                            <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
+                            <p>OR</p>
+                            <a href="#contact"><button className="button"> CONTACT US </button></a>
+                        </div>
+
+            </motion.section>
+        </div>
+
+        <div className="faq-wrapper">
         <motion.section className="card faq"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -521,7 +574,7 @@ const variants = {
                     <ol className='questions-list panel'>
                         {generalQuestions.map((item, id) => {
                             return (
-                            <li className='question-item'>
+                                <li className='question-item'>
                                 <p className='question'>{item.question}</p>
                                 <p className='answer'>{item.answer}</p>
                             </li>
@@ -538,7 +591,7 @@ const variants = {
                     <ol className='questions-list panel'>
                         {preparationAndProcessQuestions.map((item, id) => {
                             return (
-                            <li className='question-item'>
+                                <li className='question-item'>
                                 <p className='question'>{item.question}</p>
                                 <p className='answer'>{item.answer}</p>
                             </li>
@@ -555,7 +608,7 @@ const variants = {
                     <ol className='questions-list panel'>
                         {pricingAndPaymentQuestions.map((item, id) => {
                             return (
-                            <li className='question-item'>
+                                <li className='question-item'>
                                 <p className='question'>{item.question}</p>
                                 <p className='answer'>{item.answer}</p>
                             </li>
@@ -572,7 +625,7 @@ const variants = {
                     <ol className='questions-list panel'>
                         {postPaintingAndMaintenanceQuestions.map((item, id) => {
                             return (
-                            <li className='question-item'>
+                                <li className='question-item'>
                                 <p className='question'>{item.question}</p>
                                 <p className='answer'>{item.answer}</p>
                             </li>
@@ -589,7 +642,7 @@ const variants = {
                     <ol className='questions-list panel'>
                         {customRequestsAndSpecialProjectsQuestions.map((item, id) => {
                             return (
-                            <li className='question-item'>
+                                <li className='question-item'>
                                 <p className='question'>{item.question}</p>
                                 <p className='answer'>{item.answer}</p>
                             </li>
@@ -599,6 +652,7 @@ const variants = {
                 </div>
             </div>
         </motion.section>
+        </div>
         <Contact/>
     </div>
   )

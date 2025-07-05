@@ -9,7 +9,6 @@ import '../Styling/Navigation.css'
 
 export const Hamburger = () => {
     const [isOpen, setOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const [serviceOpen, setServiceOpen] = useState(false);
 
     const handleClick = () => {
@@ -29,26 +28,11 @@ export const Hamburger = () => {
         }
     },[isOpen])
 
-    useEffect(()=> {
-        const handleScroll = () => {
-            const changePoint = 800;
-            const scrollPosition = window.scrollY;
-            setScrolled(scrollPosition > changePoint);
-        };
-
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll',handleScroll);
-        }
-    },[]);
-
   return (
     <div className='hamburger-menu'>
         <img src={logo} alt="brushline-logo" className='logo-hero-mb' />
         <motion.div
-        className={`menu-icon ${scrolled ? 'scrolled' : 'not-scrolled'}`}
+        className='menu-icon'
         whileTap={{scale:0.9}}
         transition={{duration:0.5}}
         onClick={handleClick}
