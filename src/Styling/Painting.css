@@ -2,6 +2,12 @@
     display: none;
 }
 
+.privacy-notice a{
+    color: #c58525;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 .contact-mini-container{
     display: flex;
     flex-direction: column;
@@ -192,7 +198,27 @@
 .button-group{
     margin-top: 1rem;
     display: flex;
+    flex-direction: column;
     align-self: start;
+}
+
+.button-group button{
+    align-self: self-start;
+}
+
+.benefits-hero{
+    display: flex;
+    gap: 1rem;
+}
+
+.benefit-item{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.benefit-item svg{
+    color: #2561e8;
 }
 
 .column video{
@@ -259,25 +285,15 @@
 .item-card{
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 50%;
     position: relative;
     background-color: #ffdfaf;
     overflow: hidden;
 }
 
-.item-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.2); /* adjust opacity/color here */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-    pointer-events: none; /* Let mouse events pass through */
-  }
 
-  .item-card:hover::before {
-    opacity: 1;
+  .item-card:hover{
+    transform: scale(1.05);
   }
 
 .item-card p{
@@ -291,6 +307,11 @@
     flex-direction: column;
     padding: 2rem 3rem;
     gap: 1rem;
+}
+
+.item-description li:hover{
+    text-decoration: none;
+    border-bottom: none;
 }
 
 .video-container{

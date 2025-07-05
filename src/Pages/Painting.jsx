@@ -305,44 +305,57 @@ const variants = {
                         <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
                 </div>
 
-                                        <div className="contact-mini">
-                            <div className="field-group-container">
-                                <div className="field-group">
-                                    <label htmlFor="name">Name*</label>
-                                    <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
-                                </div>
+                <div className="contact-mini">
+                    <div className="field-group-container">
+                        <div className="field-group">
+                            <label htmlFor="name">Name*</label>
+                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
+                        </div>
 
-                                <div className="field-group">
-                                    <label htmlFor="">Email*</label>
-                                    <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
-                                </div>
+                        <div className="field-group">
+                            <label htmlFor="">Email*</label>
+                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
+                        </div>
+                    </div>
+
+                    <div className="field-group-container">
+                        <div className="field-group">
+                            <label htmlFor="">Phone*</label>
+                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
+                        </div>
+
+                        <div className="field-group">
+                            <label htmlFor="">Address*</label>
+                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
+                        </div>
+                    </div>
+                    <div className="field-group">
+                        <label htmlFor="">Message (Optional)</label>
+                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
+                    </div>
+
+                    <p class="privacy-notice">
+                        By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+                    </p>
+                    
+                    <div className="button-group">
+                        <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
+                        <div className="benefits-hero">
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p> No-cost estimates.</p>
                             </div>
-
-                            <div className="field-group-container">
-                                <div className="field-group">
-                                    <label htmlFor="">Phone*</label>
-                                    <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
-                                </div>
-
-                                <div className="field-group">
-                                    <label htmlFor="">Address*</label>
-                                    <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
-                                </div>
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p>10+ years of experience</p>
                             </div>
-                            <div className="field-group">
-                                <label htmlFor="">Message (Optional)</label>
-                                <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
-                            </div>
-
-                            <p class="privacy-notice">
-                                By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
-                            </p>
-                            
-                            <div className="button-group">
-                                <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                                <p>No-cost estimates, no obligation.</p>
+                            <div className="benefit-item">
+                                <FaCheck/>
+                                <p>5-star rated</p>
                             </div>
                         </div>
+                    </div>
+                </div>
 
 
             <video muted autoPlay loop playsInline className='video-desktop'>
