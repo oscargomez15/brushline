@@ -14,7 +14,7 @@ export const Cleaning = () => {
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/residential-cleaning.mp4",
           title: 'Residential Cleaning',
-          description:'Keep your home spotless and stress-free with our trusted residential cleaning services. Our professional cleaners are committed to providing thorough, reliable, and affordable home cleaning.',
+          description:'Keep your home spotless and stress-free with our trusted residential cleaning services.',
           items:[  "Dusting of furniture, shelves, and décor",
                     "Sweeping, vacuuming, and mopping floors",
                     "Kitchen and Bathroom cleaning/sanitizing",
@@ -34,7 +34,7 @@ export const Cleaning = () => {
         {
           src:"https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning-toilet.mp4",
           title: 'Rental Cleaning',
-          description:"Turnover made easy! Whether you're a landlord or tenant, our rental cleaning services ensure your property in Naples, Fort Myers, Bonita Springs, or Cape Coral is spotless and ready for the next move-in. ",
+          description:"Turnover made easy! Whether you're a landlord or tenant, our rental cleaning services ensure your property is spotless and ready for the next move-in. ",
           items:[  "Complete bathroom and kitchen sanitization",
                     "Deep cleaning of floors (vacuuming and mopping)",
                     "Dusting blinds, baseboards, fans, and vents",
@@ -45,7 +45,7 @@ export const Cleaning = () => {
         {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/fan-cleaning.mp4",
           title: 'Deep Cleaning',
-          description:'Looking for a thorough, top-to-bottom clean? We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
+          description:'We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
           items:[ 
                     "Baseboards scrubbed, not just dusted",
                     "Hand-washing of cabinet fronts and door frames",

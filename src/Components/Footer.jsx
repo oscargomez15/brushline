@@ -105,9 +105,10 @@ export const Footer = () => {
               </div>
 
               <div className="socials-list">
-                <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
+                <a href="https://www.facebook.com/BrushlineServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
                 <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
                 <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
+                <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
               </div>
             </div>
           </div>
@@ -118,7 +119,7 @@ export const Footer = () => {
       </div>
 
       <div className='socials-wrapper'>
-        <a href="https://www.facebook.com/GIALServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
+        <a href="https://www.facebook.com/BrushlineServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
         <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
         <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
         <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
