@@ -108,8 +108,9 @@ section{
 
 .page{
   position: relative;
-  width: 70%;
   margin: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .sub-heading h1{
