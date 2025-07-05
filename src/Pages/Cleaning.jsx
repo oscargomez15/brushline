@@ -2,11 +2,12 @@ import React from 'react'
 import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence} from 'framer-motion'
 import { PaintingCard } from '../Components/PaintingCard'
 import { FaCheck } from 'react-icons/fa';
 import emailjs from 'emailjs-com'
-
+import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
+import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 
 export const Cleaning = () => {
@@ -185,41 +186,68 @@ export const Cleaning = () => {
 
   return (
     <section className='page'>
+        <Helmet>
+            <title>Cleaning Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
+            <meta name="description" content="Brushline Services is a professional cleaning services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+        </Helmet>
+        <AnimatePresence>
+                {showModal && (
+                    <motion.div
+                    className="modal-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="modal cartoon-box"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <div className="modal-text">
+                                <h2><TbSquareRoundedCheckFilled/> Message Sent</h2>
+                                <p>Thanks for reaching out! We'll get back to you within 24 hours.</p>
+                            </div>
+                            <button onClick={() => setShowModal(false)} className='button'>Close</button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         <section className='landing-hero-wrapper'>
             <div className="landing-hero">
                 <div className="contact-mini-container">
                     <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
-                        <p>Let us handle the mess — you focus on what matters.
-                            Reach out using the contact form below.</p>
+                    <p>Let us handle the mess — you focus on what matters. Reach out using the contact form.</p>
                 </div>
 
                 <div className="contact-mini">
                     <div className="field-group-container">
                         <div className="field-group">
-                            <label htmlFor="">Name*</label>
-                            <input type="text" />
+                            <label htmlFor="name">Name*</label>
+                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
                         </div>
 
                         <div className="field-group">
                             <label htmlFor="">Email*</label>
-                            <input type="email" />
+                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
                         </div>
                     </div>
 
                     <div className="field-group-container">
                         <div className="field-group">
                             <label htmlFor="">Phone*</label>
-                            <input type="text" />
+                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
                         </div>
 
                         <div className="field-group">
                             <label htmlFor="">Address*</label>
-                            <input type="text" />
+                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
                         </div>
                     </div>
                     <div className="field-group">
                         <label htmlFor="">Message (Optional)</label>
-                        <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
+                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
                     </div>
 
                     <p class="privacy-notice">
@@ -287,7 +315,10 @@ export const Cleaning = () => {
         
         <div className="list-container-wrapper">
             <div className="list-container card">
-                <h1 className='section-subtitle'>What We Do</h1>
+                <div className="sub-heading">
+                <h1><span>Cleaning Services</span> we offer</h1>
+                <p>No matter if you need a one-time deep clean or ongoing upkeep, our professional team delivers spotless results for homes and businesses throughout Naples, Fort Myers, Estero, Bonita Springs, and Cape Coral. </p>
+                </div>
                 <div className="painting-list">
                     {services.map((service, index) => (
                         <PaintingCard key={index} {...service}/>
@@ -313,8 +344,8 @@ export const Cleaning = () => {
 
         <div className="faq-wrapper">
             <div className="card faq ">
-                <div className="faq-title">
-                    <h1 className='section-subtitle'>Frequently Asked Question</h1>
+                <div className="sub-heading">
+                    <h1>Frequently Asked Question</h1>
                     <p> Quick answers to questions you may have</p>
                 </div>
                 <div className="questions-wrapper">

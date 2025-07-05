@@ -150,6 +150,11 @@
     color: black;
 }
 
+.color-consultation .sub-heading .button-group{
+    flex-direction: row;
+    margin-top: 1rem;
+}
+
 .card{
     height: 100%;
     width: 70%;
@@ -196,7 +201,6 @@
 }
 
 .button-group{
-    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     align-self: start;
@@ -285,12 +289,11 @@
 .item-card{
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 25%;
     position: relative;
     background-color: #ffdfaf;
     overflow: hidden;
 }
-
 
   .item-card:hover{
     transform: scale(1.05);
@@ -321,7 +324,7 @@
 
 .item-card video{
     width: 100%;
-    height: 300px;
+    height: 500px;
     object-fit: cover;
     transition: all .2s;
 }
@@ -545,6 +548,10 @@ button:disabled {
     }
 }
 @media screen and (max-width:1380px) {
+
+    .slider-text p{
+        font-size: .75rem;
+    }
 
     .landing-hero-wrapper{
         display: none;

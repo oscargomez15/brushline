@@ -1,5 +1,6 @@
 import './App.css';
 import { Painting } from './Pages/Painting';
+import { Drywall } from './Pages/Drywall';
 import { Home } from './Pages/Home';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Navigation } from './Components/Navigation';
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/painting" element={<Painting />}/>
+          <Route path='/drywall' element={<Drywall/>}/>
           <Route path='/cleaning' element={<Cleaning />} />
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='*' element={<NotFound />} />

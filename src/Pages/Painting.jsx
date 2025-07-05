@@ -8,7 +8,7 @@ import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
 import colorVisualization from '../Assets/color-visualization.png'
-
+import { Link } from 'react-router-dom';
 import beforeCommercial from '../Assets/before-commercial.jpg'
 import afterCommercial from '../Assets/after-commercial.jpg'
 
@@ -20,6 +20,9 @@ import beforeCape from '../Assets/cape-before.jpeg'
 
 import beforeBonita from '../Assets/before-paty.jpg'
 import afterBonita from '../Assets/after-paty.jpg'
+
+import beforeMike from '../Assets/mike-before.jpg'
+import afterMike from '../Assets/mike-after.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
@@ -75,7 +78,7 @@ export const Painting = () => {
     const isFormValid = Object.values(form).every((value) => value.trim() !== '');
     const services = [
         {
-          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/wall.mp4",
+          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/paint-interior.mp4",
           title: 'Interior Painting',
           description:' Our expert team delivers flawless walls, ceilings, trim and accent walls using premium low-VOC paints for a durable, beautiful finish.',
           items: [
@@ -202,19 +205,19 @@ export const Painting = () => {
   {
     left: beforeCommercial,
     right: afterCommercial,
-    text: 'Residential Exterior Paint',
+    text: 'Exterior Paint (Commercial)',
     location: 'Fort Myers',
   },
   {
     left: beforeJonathan,
     right: afterJonathan,
-    text: 'Residential Exterior Paint',
+    text: 'Exterior Paint',
     location: 'Fort Myers',
   },
   {
     left: beforeCape,
     right: afterCape,
-    text: 'Residential Exterior Paint',
+    text: 'Exterior Paint',
     location: 'Cape Coral',
   },
   {
@@ -223,6 +226,12 @@ export const Painting = () => {
     text: 'Residential Interior Paint',
     location: 'Bonita Springs',
   },
+  {
+    left: beforeMike,
+    right: afterMike,
+    text: 'Exterior Door Paint',
+    location: 'Fort Myers'
+  }
 ];
 
 const [currentIndex, setCurrentIndex] = useState(0);
@@ -335,7 +344,7 @@ const variants = {
                     </div>
 
                     <p class="privacy-notice">
-                        By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+                        By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                     </p>
                     
                     <div className="button-group">
@@ -525,7 +534,7 @@ const variants = {
                                     <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
                                 </div>
                                 <p class="privacy-notice">
-                                By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
+                                By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                             </p>
                             </div>
 

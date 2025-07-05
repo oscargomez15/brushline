@@ -49,7 +49,6 @@ export const Navigation = () => {
                 <ul className='dropdown'>
                   <li> <Link to="/painting"> <MdOutlineFormatPaint/> Painting </Link> </li>
                   <li> <Link to="/drywall"> <MdOutlineFormatPaint/> Drywall </Link> </li>
-                  {/* <li> <a href="/"> <MdOutlineHomeRepairService/> Drywall Install/Repair </a> </li>                 */}
                   <li> <Link to="/cleaning"> <MdOutlineCleaningServices/> Cleaning  </Link></li>
                   {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
 
