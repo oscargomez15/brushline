@@ -6,20 +6,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
-import beforeCommercial from '../Assets/before-commercial.jpg'
-import afterCommercial from '../Assets/after-commercial.jpg'
-
-import afterJonathan from '../Assets/after-jonathan.jpg'
-import beforeJonathan from '../Assets/before-jonathan.jpg'
-
-import afterCape from '../Assets/cape-after.jpeg'
-import beforeCape from '../Assets/cape-before.jpeg'
-
-import beforeBonita from '../Assets/before-paty.jpg'
-import afterBonita from '../Assets/after-paty.jpg'
-
-import beforeMike from '../Assets/mike-before.jpg'
-import afterMike from '../Assets/mike-after.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { Helmet } from 'react-helmet';
