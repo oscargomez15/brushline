@@ -200,39 +200,6 @@ export const Drywall = () => {
         }
     ];
 
-    const sliderData = [
-  {
-    left: beforeCommercial,
-    right: afterCommercial,
-    text: 'Exterior Paint (Commercial)',
-    location: 'Fort Myers',
-  },
-  {
-    left: beforeJonathan,
-    right: afterJonathan,
-    text: 'Exterior Paint',
-    location: 'Fort Myers',
-  },
-  {
-    left: beforeCape,
-    right: afterCape,
-    text: 'Exterior Paint',
-    location: 'Cape Coral',
-  },
-  {
-    left: beforeBonita,
-    right: afterBonita,
-    text: 'Residential Interior Paint',
-    location: 'Bonita Springs',
-  },
-  {
-    left: beforeMike,
-    right: afterMike,
-    text: 'Exterior Door Paint',
-    location: 'Fort Myers'
-  }
-];
-
     const toggleAccordion = (e) => {
         e.currentTarget.classList.toggle("active");
 
