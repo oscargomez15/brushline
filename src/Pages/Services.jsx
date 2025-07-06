@@ -18,6 +18,7 @@ export const Services = () => {
     title: <h3>Drywall Install & Repair</h3>,
     description:"We specialize in repairing holes, dents, imperfections and installing drywall panels.",
     icon: <img src={drywall} alt="drywall-icon" className='service-icon'/>,
+    route: "/drywall"
   },{
     title: <h3>Regular & Deep Cleaning</h3>,
     description: "From deep cleaning to regular maintenance, we make your space shine!",
