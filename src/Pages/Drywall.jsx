@@ -233,35 +233,6 @@ export const Drywall = () => {
   }
 ];
 
-const [currentIndex, setCurrentIndex] = useState(0);
-const [direction, setDirection] = useState(0); // -1 for left, 1 for right
-
-const handlePrev = () => {
-setDirection(-1);
-  setCurrentIndex((prev) => (prev === 0 ? sliderData.length - 1 : prev - 1));
-};
-
-const handleNext = () => {
-    setDirection(1);
-  setCurrentIndex((prev) => (prev === sliderData.length - 1 ? 0 : prev + 1));
-};
-
-const variants = {
-  enter: (direction) => ({
-    opacity: 0,
-    x: direction > 0 ? 100 : -100,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-  },
-  exit: (direction) => ({
-    opacity: 0,
-    x: direction < 0 ? 100 : -100,
-  }),
-};
-
-
     const toggleAccordion = (e) => {
         e.currentTarget.classList.toggle("active");
 
