@@ -13,43 +13,7 @@ export const SwiperGallery = () => {
   return (
     <div className="gallery-container">
         {/* traversing the images in the folder to render them automatically. Adding new images to the files automatically adds them. */}
-        <Swiper
-        slidesPerView={4}
-        navigation={true}
-        pagination={true}
-        modules={[Navigation, Pagination]}
-        observer={true}
-        observeParents={true}
-        loop={true}
-        breakpoints={{
-            1140: {
-                slidesPerView: 4
-            },
-            1024:{
-                slidesPerView:3
-            },
-            768: {
-                slidesPerView: 2
-            },
-            640:{
-                slidesPerView: 1
-            },
-            320:{
-                slidesPerView: 1
-            }
-        }}
-        className='swiper-container'>
-            {imageFiles.map((image, id) => {
-                return(
-                    <SwiperSlide className='swiper-slide' key={`image-${id}`}>
-                        <img
-                        src={image}
-                        alt={`image-${id}`}
-                        key={`image-${id}`}
-                        loading='lazy'/>
-                    </SwiperSlide>
-                )
-            })}
+        <Swiper navigation={true} modules={[Navigation]} className='drywall-swiper'>
         </Swiper>
     </div>
   )

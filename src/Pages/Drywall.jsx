@@ -4,10 +4,7 @@ import { useState } from 'react';
 import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
-import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
-import colorConsultation from '../Assets/color-consultation.jpg'
-import colorVisualization from '../Assets/color-visualization.png'
 import { Link } from 'react-router-dom';
 import beforeCommercial from '../Assets/before-commercial.jpg'
 import afterCommercial from '../Assets/after-commercial.jpg'
@@ -25,8 +22,6 @@ import beforeMike from '../Assets/mike-before.jpg'
 import afterMike from '../Assets/mike-after.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
-import { IoLocation } from 'react-icons/io5';
-import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 
@@ -77,7 +72,7 @@ export const Drywall = () => {
     const isFormValid = Object.values(form).every((value) => value.trim() !== '');
     const services = [
         {
-          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/wall.mp4",
+          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-repair.mp4",
           title: 'Drywall Repair',
           description:' From small holes to major water or fire damage, we specialize in fast, clean, and durable drywall repairs. Our services restore your walls and ceilings to like-new condition with minimal disruption. We address everything from nail pops and cracks to sagging ceilings and patch jobs of all sizes',
           items: [  "Hole and crack repair (nail pops, dents, etc.)",
@@ -88,7 +83,7 @@ export const Drywall = () => {
                     "Drywall patching"]
         },
         {
-          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/exterior.mp4",
+          src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-install.mp4",
           title: 'New Drywall Installation',
           description: "Our expert team provides professional drywall installation for both residential and commercial properties. Whether you're building new, or adding a room, we deliver smooth, precise drywall installation tailored to your space. We also offer soundproof and moisture-resistant drywall solutions to meet specialized needs.",
           items: ["New drywall installation (residential/commercial)",
@@ -98,7 +93,7 @@ export const Drywall = () => {
                 "Soundproof drywall installation",
                 "Moisture-resistant (green board) drywall installation"]
         },{
-        src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/exterior.mp4",
+        src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-finish.mp4",
           title: 'Drywall Finishing & Texturing',
           description: 'We deliver flawless drywall finishing, taping and mudding to sanding and custom textures. Choose from orange peel, knockdown, or a smooth finish to match your style. We also remove outdated popcorn ceilings and replace them with a fresh, modern look.',
           items: [  "Tape and mud (taping, joint compound)",
@@ -381,7 +376,7 @@ const variants = {
             <div className="column">
                 <div className="contact-mini-container">
                     <h1 className='section-title'><span>Drywall Repair and Installation Services</span> from Naples to Fort Myers</h1>
-<p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Serving Naples, Bonita Springs, Fort Myers and Cape Coral. Our experienced team delivers high-quality results—on time and on budget. Contact us today for a free estimate!</p>                        
+<p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Our experienced team delivers high-quality results—on time and on budget. Contact us today!</p>                        
                         <div className="button-group">
                             <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
                             <div className="benefits-hero">
@@ -428,58 +423,19 @@ const variants = {
             </motion.section>
         </div>
 
-        <div className="paint-jobs-wrapper">
+        {/* <div className="paint-jobs-wrapper">
             <motion.section className="card paint-jobs"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
                 viewport={{ once: true, amount: 0.5 }}>
                 <div className="sub-heading paint-jobs-title">
-                    <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
-                    <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
-
-                </div>
-                <div className="slider-image-container single">
-                    <div className="slider-nav">
-                        <div className="slider-item">
-                        <AnimatePresence custom={direction} mode="wait">
-                            <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={variants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.2, ease: 'easeInOut' }}
-                            className='compare-image-container'
-                            >
-                            <ReactCompareImage
-                                leftImage={sliderData[currentIndex].left}
-                                rightImage={sliderData[currentIndex].right}
-                                wrapperStyle={{height:'100%'}}
-                                sliderLineColor="#ffffff"
-                                handleSize={40}
-                                className="compare-image"
-                                />
-                            <div className="slider-text">
-                                <p>{sliderData[currentIndex].text}</p>
-                                <p className="slider-location">
-                                <IoLocation /> {sliderData[currentIndex].location}
-                                </p>
-                            </div>
-                            <div className="arrow-slider-container nav-before">
-                                <MdNavigateBefore onClick={handlePrev}/>
-                            </div>
-                            <div className="arrow-slider-container nav-next">
-                                <MdNavigateNext onClick={handleNext}/>
-                            </div>
-                            </motion.div>
-                        </AnimatePresence>
-                        </div>
-                    </div>
+                    <h1 className='section-subtitle'> Our <span>Drywall Jobs</span></h1>
+                    <p>Browse real before-and-after photos of homes and businesses we've transformed throughout Lee and Collier County</p>
+                    <SwiperGallery/>
                 </div>
             </motion.section>
-        </div>
+        </div> */}
 
         <div className="cta-wrapper">
             <motion.section className="card cta-card"
@@ -487,91 +443,7 @@ const variants = {
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Ready to start your painting project?</h1>
-                        <div className="cta-button-group">
-                            <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
-                            <p>OR</p>
-                            <a href="#contact"><button className="button"> CONTACT US </button></a>
-                        </div>
-
-            </motion.section>
-        </div>
-
-        <div className="color-consult-wrapper">
-            <motion.section className="card color-consultation-wrapper"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="color-consultation">
-                    <div className="sub-heading">
-                        <h1> In need of <span>color consultation?</span> </h1>
-                        <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
-                            We can help you choose the right colors for your home or business. </p>
-                            <div className="contact-mini">
-                                <div className="field-group-container">
-                                    <div className="field-group">
-                                        <label htmlFor="">Name*</label>
-                                        <input type="text" />
-                                    </div>
-
-                                    <div className="field-group">
-                                        <label htmlFor="">Email*</label>
-                                        <input type="email" />
-                                    </div>
-                                </div>
-
-                                <div className="field-group-container">
-                                    <div className="field-group">
-                                        <label htmlFor="">Phone*</label>
-                                        <input type="text" />
-                                    </div>
-
-                                    <div className="field-group">
-                                        <label htmlFor="">Address*</label>
-                                        <input type="text" />
-                                    </div>
-                                </div>
-                                <div className="field-group">
-                                    <label htmlFor="">Message (Optional)</label>
-                                    <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
-                                </div>
-                                <p class="privacy-notice">
-                                By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-                            </p>
-                            </div>
-
-                            <div className="button-group">
-                                <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET CONSULTATION </button>
-                                <p><FaCheck style={{color:'#2561e8'}}/> No-cost consultation, no obligation.</p>
-                            </div>
-                    </div>
-                    <img src={colorConsultation} alt="color-consultation" />
-
-                </div>
-            </motion.section>
-        </div>
-        <div className="color-visual-wrapper">
-            <motion.section className="card"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="sub-heading">
-                    <h1><span>Color Visualization</span> available</h1>
-                    <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
-                </div>
-                <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
-            </motion.section>
-        </div>
-
-        <div className="cta-wrapper">
-            <motion.section className="card cta-card"
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Let’s Get Rolling, We’re just a click away.</h1>
+                <h1 className='section-subtitle'>Restore Your Walls – Contact Us Now</h1>
                         <div className="cta-button-group">
                             <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
                             <p>OR</p>

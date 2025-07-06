@@ -384,7 +384,6 @@
     overflow: hidden;
 }
 
-
 .arrow-slider-container{
     display: flex;
     justify-content: space-between;
@@ -548,7 +547,6 @@ button:disabled {
     }
 }
 @media screen and (max-width:1380px) {
-
     .slider-text p{
         font-size: .75rem;
     }
