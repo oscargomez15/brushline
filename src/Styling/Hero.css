@@ -122,6 +122,10 @@
     color:white;
     text-decoration: none;
   }
+
+  .hero-container .text-container .btn-group{
+    margin-top: .5rem;
+  }
 @media screen and (max-width:1380px) {
       .logo-hero-mb{
         width: 20%;
@@ -204,6 +208,7 @@
 
   .text-container p{
     font-size: 1rem;
+    line-height: 1.1rem;
   }
 }
 

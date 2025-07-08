@@ -20,7 +20,7 @@ export const Services = () => {
     icon: <img src={drywall} alt="drywall-icon" className='service-icon'/>,
     route: "/drywall"
   },{
-    title: <h3>Regular & Deep Cleaning</h3>,
+    title: <h3>House Cleaning</h3>,
     description: "From deep cleaning to regular maintenance, we make your space shine!",
     icon: <img src={cleaning} alt="cleaning-icon" className='service-icon'/>,
     route: "/cleaning"

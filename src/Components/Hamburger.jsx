@@ -9,7 +9,7 @@ import '../Styling/Navigation.css'
 
 export const Hamburger = () => {
     const [isOpen, setOpen] = useState(false);
-    const [serviceOpen, setServiceOpen] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(null);
 
     const handleClick = () => {
         setOpen(!isOpen);
@@ -21,6 +21,7 @@ export const Hamburger = () => {
             document.body.classList.add('no-scroll')
         }else{
             document.body.classList.remove('no-scroll')
+            setOpenDropdown(null);
         }
 
         return () => {
@@ -72,14 +73,33 @@ export const Hamburger = () => {
                 <li className="dropdown-mb">
                     <div className="dropdown-label dropdown-toggle"
                         tabIndex={isOpen ? '0' : '-1'}
-                        onClick={() => setServiceOpen(!serviceOpen)}>
+                        onClick={() =>
+                        setOpenDropdown(openDropdown === 'services' ? null : 'services')}>
                         <p>Services</p>
-                        <IoIosArrowDown className={serviceOpen ? 'rotated' : ''}/>
+                        <IoIosArrowDown className={openDropdown === 'services' ? 'rotated' : ''}/>
                     </div>
-                    <ul className={`dropdown-menu ${serviceOpen ? 'open' : ''}`}>
-                    <li><Link to="/painting" onClick={() => setOpen(false)}>Painting</Link></li>
-                    <li><Link to="/drywall" onClick={() => setOpen(false)}>Drywall</Link></li>
-                    <li><Link to="/cleaning" onClick={() => setOpen(false)}>Cleaning</Link></li>
+                    <ul className={`dropdown-menu ${openDropdown === 'services' ? 'open' : ''}`}>
+                    <li><Link to="/painting" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Painting</Link></li>
+                    <li><Link to="/drywall" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Drywall</Link></li>
+                    <li><Link to="/cleaning" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Cleaning</Link></li>
+                    {/* <li><a href="" onClick={() => setOpen(false)}>Pressure Wash</a></li> */}
+                    </ul>
+                </li>
+                <li className="dropdown-mb">
+                    <div className="dropdown-label dropdown-toggle"
+                        tabIndex={isOpen ? '0' : '-1'}
+                        onClick={() => 
+                        setOpenDropdown(openDropdown === 'serviceArea' ? null : 'serviceArea')}>
+                        <p>Service Area</p>
+                        <IoIosArrowDown className={openDropdown === 'serviceArea' ? 'rotated' : ''}/>
+                    </div>
+                    <ul className={`dropdown-menu ${openDropdown === 'serviceArea' ? 'open' : ''}`}>
+                    <li><Link to="/service-area/cape-coral" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Cape Coral</Link></li>
+                    <li><Link to="/service-area/fort-myers" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Fort Myers</Link></li>
+                    <li><Link to="/service-area/estero" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Estero</Link></li>
+                    <li><Link to="/service-area/bonita-springs" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Bonita Springs</Link></li>
+                    <li><Link to="/service-area/naples" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Naples</Link></li>
+
                     {/* <li><a href="" onClick={() => setOpen(false)}>Pressure Wash</a></li> */}
                     </ul>
                 </li>

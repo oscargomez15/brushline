@@ -9,6 +9,7 @@ import { Cleaning } from './Pages/Cleaning';
 import { NotFound } from './Pages/NotFound';
 import { Privacy } from './Pages/Privacy';
 import ScrollToTop from './Components/ScrollToTop';
+import ServiceArea from './Pages/ServiceArea';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/drywall' element={<Drywall/>}/>
           <Route path='/cleaning' element={<Cleaning />} />
           <Route path='/privacy' element={<Privacy/>}/>
+          <Route path='/service-area/:citySlug' element={<ServiceArea/>} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer/>

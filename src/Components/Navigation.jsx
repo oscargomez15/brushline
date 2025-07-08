@@ -3,7 +3,6 @@ import logo from '../Assets/logo/brushline-logo-white-letters.png'
 import '../Styling/Navigation.css'
 import { Link, useLocation } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
-import { MdOutlineCleaningServices, MdOutlineFormatPaint } from 'react-icons/md';
 import { Hamburger } from './Hamburger';
 import { FaPhoneAlt } from 'react-icons/fa';
 
@@ -47,9 +46,23 @@ export const Navigation = () => {
               <li>
                 <a href="#services" className='services-container'>SERVICES <IoIosArrowDown size="20"/></a>
                 <ul className='dropdown'>
-                  <li> <Link to="/painting"> <MdOutlineFormatPaint/> Painting </Link> </li>
-                  <li> <Link to="/drywall"> <MdOutlineFormatPaint/> Drywall </Link> </li>
-                  <li> <Link to="/cleaning"> <MdOutlineCleaningServices/> Cleaning  </Link></li>
+                  <li> <Link to="/painting">Painting </Link> </li>
+                  <li> <Link to="/drywall"> Drywall </Link> </li>
+                  <li> <Link to="/cleaning"> Cleaning  </Link></li>
+                  {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
+
+                </ul>
+              </li>
+
+              <li>
+                <a href="#services" className='services-container'>SERVICE AREA <IoIosArrowDown size="20"/></a>
+                <ul className='dropdown'>
+                  <li> <Link to="/service-area/cape-coral">Cape Coral</Link></li>
+                  <li> <Link to="/service-area/fort-myers">Fort Myers</Link> </li>
+                  <li> <Link to="/service-area/estero">Estero</Link> </li>
+                  <li> <Link to="/service-area/bonita-springs">Bonita Springs</Link></li>
+                  <li> <Link to="/service-area/naples">Naples</Link></li>
+
                   {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
 
                 </ul>

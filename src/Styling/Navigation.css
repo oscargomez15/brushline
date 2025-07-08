@@ -319,6 +319,10 @@ nav{
         gap: .5rem;
       }
 
+      .hamburger-content .hamburger-links li a, .dropdown-mb .dropdown-label p{
+        font-size: 1.5rem;
+      }
+
       .hamburger-content hr{
         appearance: none;
         border: none;
@@ -347,7 +351,7 @@ nav{
         list-style: none;
         padding: 0;
         margin: 0;
-        gap: .5rem;
+        gap: 0;
         width: 100%;
         background-color: #df9b35;
         padding: 2rem 0;
@@ -367,6 +371,10 @@ nav{
       .hamburger-content .hamburger-links li{
         padding: 0 2rem;
         width: 100%;
+      }
+
+      .hamburger-content .hamburger-links .dropdown-mb .dropdown-menu li{
+        padding: 0 1rem;
       }
 
       .hamburger-content .hamburger-links li .dropdown-menu li{
@@ -394,7 +402,7 @@ nav{
       flex-direction: column; /*This make the dropdown work */
       overflow: hidden;
       pointer-events: none;
-      transition: all 0.3s ease;
+      transition: all .5s ease;
     }
 
     .dropdown-menu.open {
@@ -403,7 +411,6 @@ nav{
       max-height: 500px; /* Make sure this is high enough to show all items */
       opacity: 1;
       pointer-events: auto;
-      flex-wrap: wrap;
       gap: 0;
     }
 

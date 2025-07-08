@@ -4,6 +4,7 @@ import '../Styling/Contact.css'
 import fullBodyMascot from '../Assets/Transparent-03.png'
 import {AnimatePresence, motion } from 'framer-motion'
 import {TbSquareRoundedCheckFilled} from 'react-icons/tb'
+import { Link } from 'react-router'
 export const Contact = () => {
     const defaultFormValues = {
         name:'',
@@ -111,7 +112,7 @@ export const Contact = () => {
                     <div className="form-field full-width">
                         <label htmlFor="message">Message (Optional)</label>
                         <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
-                        <p className="privacy-notice"> By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+                        <p className="privacy-notice"> By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.</p>
                     </div>
 
                     <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> Send Message </button>
