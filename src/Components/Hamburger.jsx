@@ -94,11 +94,11 @@ export const Hamburger = () => {
                         <IoIosArrowDown className={openDropdown === 'serviceArea' ? 'rotated' : ''}/>
                     </div>
                     <ul className={`dropdown-menu ${openDropdown === 'serviceArea' ? 'open' : ''}`}>
-                    <li><Link to="/service-area/cape-coral" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Cape Coral</Link></li>
-                    <li><Link to="/service-area/fort-myers" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Fort Myers</Link></li>
-                    <li><Link to="/service-area/estero" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Estero</Link></li>
-                    <li><Link to="/service-area/bonita-springs" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Bonita Springs</Link></li>
-                    <li><Link to="/service-area/naples" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Naples</Link></li>
+                    <li><Link to="/service-area/cape-coral-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Cape Coral</Link></li>
+                    <li><Link to="/service-area/fort-myers-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Fort Myers</Link></li>
+                    <li><Link to="/service-area/estero-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Estero</Link></li>
+                    <li><Link to="/service-area/bonita-springs-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Bonita Springs</Link></li>
+                    <li><Link to="/service-area/naples-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Naples</Link></li>
 
                     {/* <li><a href="" onClick={() => setOpen(false)}>Pressure Wash</a></li> */}
                     </ul>

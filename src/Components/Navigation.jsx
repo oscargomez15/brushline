@@ -57,11 +57,11 @@ export const Navigation = () => {
               <li>
                 <a href="#services" className='services-container'>SERVICE AREA <IoIosArrowDown size="20"/></a>
                 <ul className='dropdown'>
-                  <li> <Link to="/service-area/cape-coral">Cape Coral</Link></li>
-                  <li> <Link to="/service-area/fort-myers">Fort Myers</Link> </li>
-                  <li> <Link to="/service-area/estero">Estero</Link> </li>
-                  <li> <Link to="/service-area/bonita-springs">Bonita Springs</Link></li>
-                  <li> <Link to="/service-area/naples">Naples</Link></li>
+                  <li> <Link to="/service-area/cape-coral-painter">Cape Coral</Link></li>
+                  <li> <Link to="/service-area/fort-myers-painter">Fort Myers</Link> </li>
+                  <li> <Link to="/service-area/estero-painter">Estero</Link> </li>
+                  <li> <Link to="/service-area/bonita-springs-painter">Bonita Springs</Link></li>
+                  <li> <Link to="/service-area/naples-painter">Naples</Link></li>
 
                   {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Main Pages -->
+  <url>
+    <loc>https://www.brushlineservices.com/</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/#gallery</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/#reviews</loc>
+  </url>
+
+  <!-- Services Pages -->
+  <url>
+    <loc>https://www.brushlineservices.com/painting</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/drywall</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/cleaning</loc>
+  </url>
+
+  <!-- Service Area Pages -->
+  <url>
+    <loc>https://www.brushlineservices.com/service-area/cape-coral</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/service-area/fort-myers</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/service-area/naples</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/service-area/estero</loc>
+  </url>
+  <url>
+    <loc>https://www.brushlineservices.com/service-area/bonita-springs</loc>
+  </url>
+
+</urlset>

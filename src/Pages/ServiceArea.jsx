@@ -5,6 +5,7 @@ import { Contact } from './Contact';
 import { Reviews } from './Reviews';
 import { PaintingCard } from '../Components/PaintingCard';
 import { WhyUs } from '../Components/WhyUs';
+import { Helmet } from 'react-helmet';
 
 const ServiceArea = () => {
         const services = [
@@ -43,6 +44,9 @@ const ServiceArea = () => {
 
   return (
     <div className="service-area-page">
+    <Helmet>
+        <title>Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
+    </Helmet>
     <section className='hero-page' id='home'>
     <img src={cityData.gallery} alt="man-standing-with-construction-belt" className='background-image' />
       <div className="hero-container">
