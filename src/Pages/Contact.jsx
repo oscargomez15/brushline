@@ -121,7 +121,7 @@ export const Contact = () => {
 
                 </form>
             </div>
-            <img src={fullBodyMascot} alt="full-body-mascot" className='mascot-contact'/>
+            <img src={fullBodyMascot} alt="brushline-full-body-mascot" className='mascot-contact'/>
         </motion.div>
 
         <AnimatePresence>

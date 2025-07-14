@@ -11,7 +11,7 @@ export const Footer = () => {
     <footer>
       <div className="footer-content">
         <div className="footer-logo footer-section">
-          <img src={mascotLogo} alt="logo" loading='lazy' height="250px"/>
+          <img src={mascotLogo} alt="brushline footer logo" loading='lazy' height="250px"/>
         </div>
         {/* Footer to be displayed only on screens less than 1380px*/}
 

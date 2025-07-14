@@ -38,7 +38,7 @@ export const Navigation = () => {
         
         <div className="nav-wrapper">
           <header>
-              <img src={logo} alt="gial-logo" />
+              <img src={logo} alt="Brushline Service Logo" />
           </header>
 
           <ul>

@@ -45,7 +45,32 @@ const ServiceArea = () => {
   return (
     <div className="service-area-page">
     <Helmet>
-        <title>Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
+      <title>Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "PaintingService",
+        "name": "Brushline Services",
+        "url": `https://www.brushlineservices.com/service-area/${citySlug}`,
+        "image": `https://www.brushlineservices.com/images/${cityData.gallery[0]}-painting.webp`,
+        "description": `Professional painting services in ${cityData.city}, FL including interior painting, exterior painting, and drywall repair.`,
+        "areaServed": {
+          "@type": "Place",
+          "name": `${cityData.city}, FL`
+        },
+        "serviceType": [
+          "Interior Painting",
+          "Exterior Painting",
+          "Drywall Repair",
+          "House Painting",
+          "Commercial Painting"
+        ],
+        "provider": {
+          "@type": "LocalBusiness",
+          "name": "Brushline Services",
+          "url": "https://www.brushlineservices.com",
+          "telephone": "239-777-3713"
+        }
+      })}} />
     </Helmet>
     <section className='hero-page' id='home'>
     <img src={cityData.gallery} alt="man-standing-with-construction-belt" className='background-image' />

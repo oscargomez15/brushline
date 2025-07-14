@@ -1,8 +1,8 @@
-import CapeCoral from '../Assets/cities/cape-coral.jpg';
-import FortMyers from '../Assets/cities/fort-myers.jpg';
-import Estero from '../Assets/cities/estero.jpg';
-import Naples from '../Assets/cities/naples.jpg';
-import BonitaSprings from '../Assets/cities/bonita-springs.jpg';
+import CapeCoral from '../Assets/cities/painter-cape-coral.jpg';
+import FortMyers from '../Assets/cities/painter-in-fort-myers.jpg';
+import Estero from '../Assets/cities/painter-in-estero.jpg';
+import Naples from '../Assets/cities/painter-in-naples.jpg';
+import BonitaSprings from '../Assets/cities/painter-bonita-springs.jpg';
 
 export const serviceAreaData = {
   "cape-coral-painter": {

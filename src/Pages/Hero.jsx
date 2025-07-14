@@ -1,5 +1,4 @@
-import React from 'react'
-import heroImage from '../Assets/image-hero-fortmyers.jpg'
+import heroImage from '../Assets/exterior-painting-fort-myers-brushlie.jpg'
 import { motion } from 'framer-motion';
 import { FaPhone } from 'react-icons/fa';
 
@@ -9,7 +8,7 @@ export const Hero = () => {
 
   return (
     <section className='hero-page' id='home'>
-    <img src={heroImage} alt="man-standing-with-construction-belt" className='background-image' />
+    <img src={heroImage} alt="exterior-paint-fort-myers" className='background-image' />
       <div className="hero-container">
           <div className='text-container'>
             <div className="title-container">

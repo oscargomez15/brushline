@@ -21,8 +21,8 @@ import beforeCape from '../Assets/cape-before.jpeg'
 import beforeBonita from '../Assets/before-paty.jpg'
 import afterBonita from '../Assets/after-paty.jpg'
 
-import beforeMike from '../Assets/mike-before.jpg'
-import afterMike from '../Assets/mike-after.jpg'
+import beforeCheryl from '../Assets/before-wallpaper-removal-fort-myers.jpg'
+import afterCheryl from '../Assets/after-wallpaper-removal-fort-myers.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
@@ -227,10 +227,10 @@ export const Painting = () => {
     location: 'Bonita Springs',
   },
   {
-    left: beforeMike,
-    right: afterMike,
-    text: 'Exterior Door Paint',
-    location: 'Fort Myers'
+    left: beforeCheryl,
+    right: afterCheryl,
+    text: 'Wallpaper Removal & Paint',
+    location: 'Estero'
   }
 ];
 
@@ -282,6 +282,32 @@ const variants = {
         <Helmet>
             <title>Painting Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
             <meta name="description" content="Brushline Services is a professional painting services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "PaintingService",
+            "name": "Brushline Services",
+            "url": "https://www.brushlineservices.com/painting",
+            "image": "https://www.brushlineservices.com/images/interior-painting-fort-myers.jpg",
+            "description": "Professional interior and exterior painting services across Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. Residential and commercial projects with lasting quality.",
+            "areaServed": [
+                { "@type": "Place", "name": "Cape Coral, FL" },
+                { "@type": "Place", "name": "Fort Myers, FL" },
+                { "@type": "Place", "name": "Naples, FL" },
+                { "@type": "Place", "name": "Estero, FL" },
+                { "@type": "Place", "name": "Bonita Springs, FL" }
+            ],
+            "serviceType": [
+                "Interior Painting",
+                "Exterior Painting",
+                "Deck & Fence Painting"
+            ],
+            "provider": {
+                "@type": "LocalBusiness",
+                "name": "Brushline Services",
+                "url": "https://www.brushlineservices.com",
+                "telephone": "239-777-3713"
+            }
+            })}} />
         </Helmet>
         <AnimatePresence>
                 {showModal && (
@@ -367,7 +393,7 @@ const variants = {
                 </div>
 
 
-            <video muted autoPlay loop playsInline className='video-desktop'>
+            <video muted autoPlay loop playsInline className='video-desktop' preload='auto'>
                 <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
             </video>
             </div>
@@ -400,8 +426,8 @@ const variants = {
             </div>
 
             <div className="column video-column">
-                <video muted autoPlay loop playsInline className=' column video-desktop'>
-                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
+                <video muted autoPlay loop playsInline className=' column video-desktop' preload='auto'>
+                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4"  />  
                 </video>
             </div>
         </section>

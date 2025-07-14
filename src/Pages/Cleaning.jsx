@@ -189,6 +189,33 @@ export const Cleaning = () => {
         <Helmet>
             <title>Cleaning Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
             <meta name="description" content="Brushline Services is a professional cleaning services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+              <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "CleaningService",
+                "name": "Brushline Services",
+                "url": "https://www.brushlineservices.com/cleaning",
+                "image": "https://www.brushlineservices.com/images/house-cleaning-fort-myers.jpg",
+                "description": "Reliable and thorough residential and commercial cleaning services in Southwest Florida. Post-construction cleaning, move-in/move-out services, and house cleaning.",
+                "areaServed": [
+                { "@type": "Place", "name": "Cape Coral, FL" },
+                { "@type": "Place", "name": "Fort Myers, FL" },
+                { "@type": "Place", "name": "Naples, FL" },
+                { "@type": "Place", "name": "Estero, FL" },
+                { "@type": "Place", "name": "Bonita Springs, FL" }
+                ],
+                "serviceType": [
+                "Residential Cleaning",
+                "Commercial Cleaning",
+                "Move-In/Move-Out Cleaning",
+                "Post-Construction Cleaning"
+                ],
+                "provider": {
+                "@type": "LocalBusiness",
+                "name": "Brushline Services",
+                "url": "https://www.brushlineservices.com",
+                "telephone": "239-777-3713"
+                }
+            })}} />
         </Helmet>
         <AnimatePresence>
                 {showModal && (

@@ -205,6 +205,33 @@ export const Drywall = () => {
         <Helmet>
             <title>Drywall Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
             <meta name="description" content="Brushline Services is a professional drywall services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "HomeAndConstructionBusiness",
+            "name": "Brushline Services",
+            "url": "https://www.brushlineservices.com/drywall",
+            "image": "https://www.brushlineservices.com/images/drywall-repair-fort-myers.jpg",
+            "description": "Drywall installation and repair services for residential and commercial properties in Southwest Florida. Smooth finishes, patching, and full-service remodeling prep.",
+            "areaServed": [
+            { "@type": "Place", "name": "Cape Coral, FL" },
+            { "@type": "Place", "name": "Fort Myers, FL" },
+            { "@type": "Place", "name": "Naples, FL" },
+            { "@type": "Place", "name": "Estero, FL" },
+            { "@type": "Place", "name": "Bonita Springs, FL" }
+            ],
+            "serviceType": [
+            "Drywall Installation",
+            "Drywall Repair",
+            "Popcorn Ceiling Removal",
+            "Patching and Finishing"
+            ],
+            "provider": {
+            "@type": "LocalBusiness",
+            "name": "Brushline Services",
+            "url": "https://www.brushlineservices.com",
+            "telephone": "239-777-3713"
+            }
+        })}} />
         </Helmet>
         <AnimatePresence>
                 {showModal && (
