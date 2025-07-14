@@ -13,8 +13,24 @@ export const SwiperGallery = () => {
     return fileName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // "Naples Painting"
   };
 
-  const images = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|JPG|jpg)$/);
-    const imageFiles = images.keys().map(images);
+  const imagesContext = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|JPG|jpg)$/);
+  const imageFiles = imagesContext.keys().map((key) => {
+  const fileName = key
+  .replace('./', '')
+  .replace(/\.(png|jpe?g|svg|JPG|jpg)$/i, '')
+  .replace(/\(\d*\)/g, '')
+  .replace(/\d+/g, '');
+  
+  const [locationPart, namePart] = fileName.split('_');
+  const location = locationPart.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  const name = namePart.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+  return {
+    src: imagesContext(key),
+    name,
+    location
+  };
+});
 
     const workInfo = [
   {
@@ -32,8 +48,8 @@ export const SwiperGallery = () => {
   {
     name: 'Drywall Installation',
     location: 'Fort Myers, FL',
-  },  {
-    name: 'Drywall Installation',
+  }, {
+    name: 'Door Repair',
     location: 'Fort Myers, FL',
   },
 ];
@@ -57,15 +73,15 @@ export const SwiperGallery = () => {
           320: { slidesPerView: 1 },
         }}
       >
-        {workInfo.map((w, i) => (
-          <SwiperSlide key={i}>
+        {imageFiles.map((job, index) => (
+          <SwiperSlide key={index}>
             <div className="card-gallery">
               <div className="image-container">
-                <img src={imageFiles[i]} alt={getAltText(imageFiles[i])}/>
+                <img src={job.src} alt={`${job.name} in ${job.location}`}/>
               </div>
               <div className="info">
-                <h3>{w.name}</h3>
-                <p>{w.location}</p>
+                <h3>{job.name}</h3>
+                <p>{job.location}</p>
               </div>
             </div>
           </SwiperSlide>
