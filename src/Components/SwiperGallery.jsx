@@ -8,10 +8,11 @@ import 'swiper/css/navigation'
 
 export const SwiperGallery = () => {
 
-    const getAltText = (imagePath) => {
+  const getAltText = (imagePath) => {
     const fileName = imagePath.split('/').pop().split('.')[0]; // "naples-painting"
     return fileName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // "Naples Painting"
   };
+
   const images = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|JPG|jpg)$/);
     const imageFiles = images.keys().map(images);
 
@@ -31,7 +32,10 @@ export const SwiperGallery = () => {
   {
     name: 'Drywall Installation',
     location: 'Fort Myers, FL',
-  }
+  },  {
+    name: 'Drywall Installation',
+    location: 'Fort Myers, FL',
+  },
 ];
   return (
     <section className="testimonial-carousel">
@@ -55,7 +59,7 @@ export const SwiperGallery = () => {
       >
         {workInfo.map((w, i) => (
           <SwiperSlide key={i}>
-            <div className="card">
+            <div className="card-gallery">
               <div className="image-container">
                 <img src={imageFiles[i]} alt={getAltText(imageFiles[i])}/>
               </div>
