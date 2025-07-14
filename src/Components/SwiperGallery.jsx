@@ -7,12 +7,6 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 export const SwiperGallery = () => {
-
-  const getAltText = (imagePath) => {
-    const fileName = imagePath.split('/').pop().split('.')[0]; // "naples-painting"
-    return fileName.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); // "Naples Painting"
-  };
-
   const imagesContext = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|JPG|jpg)$/);
   const imageFiles = imagesContext.keys().map((key) => {
   const fileName = key
@@ -32,27 +26,6 @@ export const SwiperGallery = () => {
   };
 });
 
-    const workInfo = [
-  {
-    name: 'Drywall Patch',
-    location: 'Fort Myers, FL',
-  },
-  {
-    name: 'Ceiling Paint',
-    location: 'Cape Coral, FL',
-  },
-  {
-    name: 'Ceiling Paint',
-    location: 'Fort Myers, FL',
-  },
-  {
-    name: 'Drywall Installation',
-    location: 'Fort Myers, FL',
-  }, {
-    name: 'Door Repair',
-    location: 'Fort Myers, FL',
-  },
-];
   return (
     <section className="testimonial-carousel">
     <div className="sub-heading">
