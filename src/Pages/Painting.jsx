@@ -584,7 +584,7 @@ const variants = {
         </div>
 
         <div className="cta-wrapper dark-orange">
-            <motion.section className="card cta-card"
+            <motion.section className="card cta-card cartoon-box"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
