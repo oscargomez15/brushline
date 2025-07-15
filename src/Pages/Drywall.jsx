@@ -388,7 +388,7 @@ export const Drywall = () => {
             </motion.section>
         </div> */}
 
-        <div className="cta-wrapper">
+        <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -404,7 +404,7 @@ export const Drywall = () => {
             </motion.section>
         </div>
 
-        <div className="faq-wrapper">
+        <div className="faq-wrapper dark-orange">
         <motion.section className="card faq"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}

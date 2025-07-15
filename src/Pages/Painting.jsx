@@ -29,6 +29,9 @@ import { IoLocation } from 'react-icons/io5';
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
+import ColorVisualizer from '../Components/ColorVisualizer.jsx';
+import { ReviewsWidget } from '../Components/ReviewsWidget.jsx';
+import { Reviews } from './Reviews.jsx';
 
 export const Painting = () => {
 
@@ -451,7 +454,7 @@ const variants = {
             </motion.section>
         </div>
 
-        <div className="paint-jobs-wrapper">
+        <div className="paint-jobs-wrapper light-orange">
             <motion.section className="card paint-jobs"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -459,7 +462,8 @@ const variants = {
                 viewport={{ once: true, amount: 0.5 }}>
                 <div className="sub-heading paint-jobs-title">
                     <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
-                    <p>Browse real before-and-after photos of homes and businesses we've refreshed throughout Lee and Collier County</p>
+                    <p>See the difference a professional paint job can make. Our gallery showcases real before-and-after photos from homes and commercial properties
+                        we’ve transformed throughout Lee County and Collier County, including Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. </p>
 
                 </div>
                 <div className="slider-image-container single">
@@ -503,9 +507,12 @@ const variants = {
                 </div>
             </motion.section>
         </div>
+        <div className="reviews-paint">
+            <Reviews/>
+        </div>
 
-        <div className="cta-wrapper">
-            <motion.section className="card cta-card"
+        <div className="cta-wrapper light-orange">
+            <motion.section className="card cta-card cartoon-box"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -574,21 +581,11 @@ const variants = {
                 </div>
             </motion.section>
         </div>
-        <div className="color-visual-wrapper">
-            <motion.section className="card"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="sub-heading">
-                    <h1><span>Color Visualization</span> available</h1>
-                    <p>See how your space will look with different colors before you commit. Our color visualization service helps you make informed decisions.</p>
-                </div>
-                <img src={colorVisualization} alt="color-visualization" className='color-visualization-img' />
-            </motion.section>
+        <div className="color-visual-wrapper light-orange">
+            <ColorVisualizer/>
         </div>
 
-        <div className="cta-wrapper">
+        <div className="cta-wrapper dark-orange">
             <motion.section className="card cta-card"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -604,7 +601,7 @@ const variants = {
             </motion.section>
         </div>
 
-        <div className="faq-wrapper">
+        <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}

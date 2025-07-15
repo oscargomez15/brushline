@@ -31,7 +31,7 @@ export const Services = () => {
 }]
 
   return (
-    <section className='service-page' id='services'>
+    <section className='service-page light-orange' id='services'>
         <div className="services-content">
             <div className="sub-heading">
                 <h1><span>Services</span> we offer</h1>

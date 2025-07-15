@@ -8,6 +8,10 @@
     text-decoration: none;
 }
 
+.reviews-paint{
+    background-color: #ffefd6;
+}
+
 .contact-mini-container{
     display: flex;
     flex-direction: column;
@@ -169,7 +173,23 @@
     justify-content: center;
     gap: 1rem;
     color: white;
-    width: 100%;
+    background-color: #2561e8;
+    border-radius: 50px;
+    padding: 4rem;
+    width: fit-content;
+    margin: 10rem;
+}
+
+div .white-background{
+    background-color: #ffffff;
+}
+
+.light-orange{
+    background-color: #fff7eb;  
+}
+
+.dark-orange{
+    background-color: #ffefd6;
 }
 
 .column{
@@ -525,6 +545,8 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+
 @media screen and (max-width:2100px) {
     .section-title{
         font-size: 3.5rem;
@@ -547,6 +569,8 @@ button:disabled {
     }
 }
 @media screen and (max-width:1380px) {
+
+
     .slider-text p{
         font-size: .75rem;
     }
@@ -601,8 +625,7 @@ button:disabled {
     }
 
     .card{
-        padding: 4rem 2rem;
-        border-radius: 0;
+        padding:2rem;
     }
 
     .list-container{
@@ -748,7 +771,7 @@ button:disabled {
     }
 
     .color-consultation img{
-        width: 90%;
+        width: 100%;
         object-fit: cover;
     }
 

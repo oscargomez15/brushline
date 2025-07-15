@@ -120,7 +120,7 @@ const ServiceArea = () => {
                 </div>
             </motion.section>
         </div>
-        <div className="cta-wrapper">
+        <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -136,7 +136,10 @@ const ServiceArea = () => {
             </motion.section>
         </div>
     {/* <Services/> */}
-    <Reviews/>
+
+    <div className="reviews-paint">
+      <Reviews/>
+    </div>
     <WhyUs/>
     <Contact/>
     </div>

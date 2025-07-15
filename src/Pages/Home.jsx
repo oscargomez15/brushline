@@ -22,7 +22,9 @@ export const Home = () => {
         <CoolLineDivider/>
         <OurWork/>
         <WhyUs/>
-        <Reviews/>
+        <div className="reviews-paint">
+          <Reviews/>
+        </div>
         <CoolLineDivider/>
         <Contact/>
       </div>

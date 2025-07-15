@@ -354,7 +354,7 @@ export const Cleaning = () => {
             </div>
         </div>
 
-        <div className="cta-wrapper">
+        <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -369,7 +369,7 @@ export const Cleaning = () => {
             </motion.section>
         </div>
 
-        <div className="faq-wrapper">
+        <div className="faq-wrapper dark-orange">
             <div className="card faq ">
                 <div className="sub-heading">
                     <h1>Frequently Asked Question</h1>
