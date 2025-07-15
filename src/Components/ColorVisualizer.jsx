@@ -1,5 +1,4 @@
 import '../Styling/ColorVisualizer.css'; // Ensure you have this CSS file for styling
-import color2 from '../Assets/colors/drift-of-mist.png';
 import color1 from '../Assets/colors/repose-gray.png';
 import base from '../Assets/colors/base.jpeg';
 import ReactCompareImage from 'react-compare-image';

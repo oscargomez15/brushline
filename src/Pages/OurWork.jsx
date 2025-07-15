@@ -1,6 +1,5 @@
 import React from 'react'
 import '../Styling/Gallery.css'
-import {FaArrowRight} from 'react-icons/fa'
 import { SwiperGallery } from '../Components/SwiperGallery';
 export const OurWork = () => {
   return (

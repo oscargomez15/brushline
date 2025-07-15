@@ -7,7 +7,6 @@ import { Contact } from './Contact'
 import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
-import colorVisualization from '../Assets/color-visualization.png'
 import { Link } from 'react-router-dom';
 import beforeCommercial from '../Assets/before-commercial.jpg'
 import afterCommercial from '../Assets/after-commercial.jpg'
@@ -30,7 +29,6 @@ import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 import ColorVisualizer from '../Components/ColorVisualizer.jsx';
-import { ReviewsWidget } from '../Components/ReviewsWidget.jsx';
 import { Reviews } from './Reviews.jsx';
 
 export const Painting = () => {
