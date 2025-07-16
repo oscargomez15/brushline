@@ -53,7 +53,7 @@ export const SwiperGallery = () => {
                 <img src={job.src} alt={`${job.name} in ${job.location}`}/>
               </div>
               <div className="info">
-                <h3>{job.name}</h3>
+                <h2>{job.name}</h2>
                 <p>{job.location}</p>
               </div>
             </div>
