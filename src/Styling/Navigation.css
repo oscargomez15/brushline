@@ -207,10 +207,7 @@ nav{
 
     .nav-wrapper-mb{
       display: block;
-      position: absolute;
       z-index: 999;
-      top: 0;
-      right: 0;
     }
 
     .mb-cta{

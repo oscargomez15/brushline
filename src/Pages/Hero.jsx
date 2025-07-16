@@ -8,7 +8,7 @@ export const Hero = () => {
 
   return (
     <section className='hero-page' id='home'>
-    <img src={heroImage} alt="exterior-paint-fort-myers" className='background-image' />
+    <img src={heroImage} alt="exterior-paint-fort-myers" fetchPriority='high' className='background-image' />
       <div className="hero-container">
           <div className='text-container'>
             <div className="title-container">
