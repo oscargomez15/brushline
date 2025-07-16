@@ -30,15 +30,23 @@ section{
   width: 100%;
 }
 
-.cool-divider-line {
-  height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(270deg, #e5e7eb, #d1d5db, #f3f4f6);
-  background-size: 600% 600%;
-  opacity: 0.3;
-  animation: gradientShift 4s ease infinite;
+.signature-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  background-color: #fff7eb;
+}
+.signature-divider svg{
+  font-size: 2rem;
+  color: #cfcfcf;
 }
 
+.left-line,.right-line {
+  background-color: #cfcfcf;
+  height: 2px;
+  width: 45%;
+}
 .no-pointer{
   cursor: none;
 }

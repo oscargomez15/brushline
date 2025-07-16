@@ -48,8 +48,8 @@
     border-bottom: 2px solid #c7c7c7;
 }
 
-.whyus-reasons .reason:first-of-type{
-    border-top: 2px solid #c7c7c7;
+.whyus-reasons .reason:last-of-type{
+    border-bottom: none;
 }
 
 .whyus-reasons .reason svg{
