@@ -2,7 +2,7 @@ import React from 'react'
 import { IoIosHammer, IoLogoGoogle, IoMdMail } from 'react-icons/io'
 import { AiOutlineFacebook } from 'react-icons/ai'
 import '../Styling/Footer.css'
-import mascotLogo from '../Assets/logo/brushline-logo-white-letters.png'
+import mascotLogo from '../Assets/logo/brushline-logo-white-letters.webp'
 import { FaInstagram, FaPhone, FaTiktok } from 'react-icons/fa'
 import {PiStarFourFill} from 'react-icons/pi'
 

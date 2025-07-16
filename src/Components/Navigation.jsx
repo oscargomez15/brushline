@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import logo from '../Assets/logo/brushline-logo-white-letters.png'
+import logo from '../Assets/logo/brushline-logo-white-letters.webp'
 import '../Styling/Navigation.css'
 import { Link, useLocation } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";

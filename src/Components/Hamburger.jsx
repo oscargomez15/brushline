@@ -3,7 +3,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
-import logo from '../Assets/logo/brushline-logo-white-letters.png';
+import logo from '../Assets/logo/brushline-logo-white-letters.webp';
 import { motion } from 'framer-motion';
 import '../Styling/Navigation.css'
 
