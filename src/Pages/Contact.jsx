@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import emailjs from 'emailjs-com'
 import '../Styling/Contact.css'
-import fullBodyMascot from '../Assets/Transparent-03.png'
+import fullBodyMascot from '../Assets/Transparent-03.webp'
 import {AnimatePresence, motion } from 'framer-motion'
 import {TbSquareRoundedCheckFilled} from 'react-icons/tb'
 import { Link } from 'react-router-dom'
