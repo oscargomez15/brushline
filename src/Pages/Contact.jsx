@@ -68,7 +68,7 @@ export const Contact = () => {
     }, [showModal]);
 
   return (
-    <motion.section className='contact-page' id='contact'
+    <motion.section className='contact-page light-orange' id='contact'
         initial={{ x: -100, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}

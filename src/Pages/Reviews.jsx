@@ -4,7 +4,7 @@ import '../Styling/Reviews.css'
 
 export const Reviews = () => {
   return (
-    <section className='review-page' id="reviews">
+    <section className='review-page light-orange' id="reviews">
       <div className="review-content">
 
         <div className='sub-heading'>

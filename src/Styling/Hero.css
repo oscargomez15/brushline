@@ -8,9 +8,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 98vh;
     object-fit: cover;
-    opacity: .55;
     z-index: 0;
   }
   
@@ -20,6 +19,72 @@
     padding: 0;
   }
 
+  .hero-overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 98vh;
+  background: rgba(0, 0, 0, 0.45); /* adjust opacity */
+  z-index: 1;
+}
+
+.hero-benefits{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  bottom: -35px;
+  left: 25%;
+  width: 50%;
+  background: linear-gradient(to bottom, #2561e8, #1f4db9);
+  border-radius:20px;
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.hero-benefits .benefit-item svg{
+  color: #ffbd59;
+}
+
+/* .testimonial-benefits, .testimonial-review{
+  flex: 1;
+} */
+.testimonial-review{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  gap: .5rem;
+}
+
+.testimonial-text svg{
+  color: rgb(255, 230, 0);
+}
+
+.testimonial-google svg{
+  font-size: 2rem;
+  color: white;
+}
+
+.testimonial-google{
+  display: flex;
+}
+
+.testimonial-google img{
+  width: 6rem;
+  margin-right: .5rem;
+  object-fit: contain;
+}
+
+.testimonial-benefits{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 50%;
+}
+
   .hero-page::after{
     height: 0;
   }
@@ -28,7 +93,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: black;
+    background-color: #fff7eb;
     z-index: 4;
     width: 100%;
     height: 100dvh;
@@ -55,22 +120,42 @@
   .text-container{
     display: flex;
     flex-direction: column;
-    align-items: start;
-    justify-content: end;
-    width: 70%;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
     height: 100dvh;
     z-index: 2;
     line-height: 2rem;
     margin-bottom: 5rem;
   }
+
+  .title-container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
   
   .text-container .heading{
     font-size: 8rem;
-    color: rgb(255, 255, 255);
+    color: #ffbd59;
     font-family: 'Sunborn', sans-serif;
-    /* text-align: center; */
+    text-align: center;
     line-height: 7rem;
+    text-shadow: 0 1px 0 #e9ac51, 
+               0 2px 0 #d39d4b,
+               0 3px 0 #c59246,
+               0 4px 0 #b68742,
+               0 5px 0 #a77c3d,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
   }
+
+
 
   .text-container span{
     font-weight: bold;
@@ -81,6 +166,8 @@
     font-size: 1.5rem;
     line-height: 2rem;
     color: white;
+    width: 70%;
+    text-align: center;
   }
   
   .text-container, .image-container{
@@ -127,6 +214,34 @@
     margin-top: .5rem;
   }
 @media screen and (max-width:1380px) {
+    .hero-benefits{
+      width: 95%;
+      left: 10px;
+      padding: 0.5rem 1rem;
+      gap:1rem;
+    }
+
+    .hero-benefits .benefit-item{
+      flex: 1;
+    }
+
+    .hero-container .btn-group{
+      align-items: center;
+      justify-content: center;
+    }
+
+    .text-container p{
+      width: 100%;
+    }
+
+    .testimonial-review{
+      flex-direction: column;
+    }
+
+    .hero-benefits .benefit-item:first-of-type, .testimonial-google img{
+      display: none;
+    }
+  
       .logo-hero-mb{
         width: 20%;
       }
@@ -145,7 +260,7 @@
       .text-container{
         display: flex;
         flex-direction: column;
-        justify-content: end;
+        justify-content: center;
         width: 90%;
         padding-inline: 0.75rem;
         gap: 1rem;

@@ -8,10 +8,6 @@
     text-decoration: none;
 }
 
-.reviews-paint{
-    background-color: #ffefd6;
-}
-
 .contact-mini-container{
     display: flex;
     flex-direction: column;

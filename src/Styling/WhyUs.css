@@ -1,10 +1,12 @@
 
 .chooseus-wrapper{
     width: 100%;
-    height: 250px;
     position: relative;
     overflow: hidden;
-    background-color: black;
+    background-color: #fff7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chooseus{
@@ -12,50 +14,67 @@
     height: 100%;
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
 }
 
 .chooseus h1{
     z-index: 2;
     font-size: 2rem;
-    color: white;
     text-align: center;
     padding-bottom: 1rem;
+    font-family: 'Sunborn', sans-serif;
+}
+
+.chooseus span{
+    color: #ffbd59;
 }
 
 .whyus-reasons{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     z-index: 1;
-    color: white;
 }
 
 .whyus-reasons .reason{
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: start;
     flex: 1;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 2px solid #c7c7c7;
 }
 
-.whyus-reasons .reason h2{
-    text-align: center;
+.whyus-reasons .reason:first-of-type{
+    border-top: 2px solid #c7c7c7;
 }
 
 .whyus-reasons .reason svg{
     width: 50px;
 }
 
+.reason .number-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2561e8;
+    width: 50px;
+    height: 50px;
+    border-radius:15px;
+}
+
 .chooseus-background{
     position: absolute;
-    top: 0;
-    left: 0;
     object-fit: cover;
-    object-position: -500px -950px;
     opacity: 0.3;
     z-index: 0;
+    width: 100%;
+    top: 0;
+    left: 0;
+    object-position: 0px -1700px;
 }
 
 .swiper-image{
@@ -78,6 +97,23 @@
     }
 
     .chooseus-background{
-        object-position: -1100px 0;
+        width: 100%;
+        height: 100%;
+        object-position: -50px 0;
     }
+        .chooseus{
+        width: 80%;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+}
+
+@media screen and (max-width:1024px) {
+
+
+    .whyus-reasons .reason .number-container{
+        width: 100px;
+    }
+    
 }

@@ -17,15 +17,12 @@ export const Home = () => {
     <div className='home-page'>
         <Hero/>
       <div className="home-wrapper page">
-        <CoolLineDivider/>
         <Services/>
-        <CoolLineDivider/>
         <OurWork/>
         <WhyUs/>
         <div className="reviews-paint">
           <Reviews/>
         </div>
-        <CoolLineDivider/>
         <Contact/>
       </div>
     </div>
