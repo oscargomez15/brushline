@@ -31,7 +31,7 @@ export const Hamburger = () => {
 
   return (
     <div className='hamburger-menu'>
-        <img src={logo} alt="brushline-logo" className='logo-hero-mb' />
+        <img src={logo} alt="brushline-logo" fetchPriority='high' className='logo-hero-mb' />
         <motion.div
         className='menu-icon'
         whileTap={{scale:0.9}}
