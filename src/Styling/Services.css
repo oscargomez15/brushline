@@ -3,6 +3,10 @@
     align-items: center;
     justify-content: center;
   }
+
+  .service-text h2{
+    font-size: 1.3rem;
+  }
   
   .services-content{
     width: 70%;

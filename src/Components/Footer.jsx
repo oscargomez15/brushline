@@ -18,7 +18,7 @@ export const Footer = () => {
         <div className='footer-info-mb'>
           <div className="site-map footer-section">
             <ul className='footer-list'>
-              <h2>Sitemap</h2>
+              <li><h2>Sitemap</h2></li>
               <li> <a href="/#home">Home</a></li>
               <li><a href="/#gallery">Gallery</a></li>
               <li><a href="/#services">Services</a></li>
@@ -29,7 +29,7 @@ export const Footer = () => {
 
           <div className="footer-section">
             <ul className='footer-list'>
-              <h2 className='phone-contact'> Contact </h2>
+              <li><h2 className='phone-contact'> Contact </h2></li>
               <li className='footer-item-mb'><FaPhone/> <a href='tel:+12397773713'>(239)777-3713</a></li>
               <li className='footer-item-mb'> <IoMdMail/> <a href="contact@brushlineservices.com">contact@brushlineservices.com</a>  </li>
             </ul>
@@ -37,14 +37,14 @@ export const Footer = () => {
 
           <div className="footer-section">
             <ul className='footer-list'>
-              <p><span>Business Hours</span></p>
+              <li><p><span>Business Hours</span></p></li>
               <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
             </ul>
           </div>
 
           <div className="footer-section">
             <ul className='service-area-section'>
-            <p><span>Service Areas</span></p>
+            <li><p><span>Service Areas</span></p></li>
               <li>
                 <PiStarFourFill className='signature-divider'/><p>Fort Myers</p>
               </li>

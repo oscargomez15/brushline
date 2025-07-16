@@ -10,22 +10,22 @@ import { FaArrowRight } from 'react-icons/fa'
 
 export const Services = () => {
   const servicesInfo = [{
-    title: <h3>Interior & Exterior Painting</h3>,
+    title: <h2>Interior & Exterior Painting</h2>,
     description:"Refreshing living spaces with vibrant colors indoors and enhancing curb appeal.",
     icon:<img src={roller} alt="painting service" className='service-icon'/>,
     route: "/painting"
   },{
-    title: <h3>Drywall Install & Repair</h3>,
+    title: <h2>Drywall Install & Repair</h2>,
     description:"We specialize in repairing holes, dents, imperfections and installing drywall panels.",
     icon: <img src={drywall} alt="drywall repair service" className='service-icon'/>,
     route: "/drywall"
   },{
-    title: <h3>House Cleaning</h3>,
+    title: <h2>House Cleaning</h2>,
     description: "From deep cleaning to regular maintenance, we make your space shine!",
     icon: <img src={cleaning} alt="cleaning service" className='service-icon'/>,
     route: "/cleaning"
   },{
-    title:<h3>Pressure Wash</h3>,
+    title:<h2>Pressure Wash</h2>,
     description: "Clean and restore your property's exterior, removing dirt, grime, and stains.",
     icon:<img src={pwgun} alt="pressure wash service" className='service-icon'/>
 }]
