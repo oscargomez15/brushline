@@ -1,4 +1,4 @@
-import heroImage from '../Assets/exterior-painting-fort-myers-brushlie.jpg'
+import heroImage from '../Assets/exterior-painting-fort-myers-brushlie.webp'
 import { motion } from 'framer-motion';
 import { FaPhone } from 'react-icons/fa';
 

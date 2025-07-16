@@ -7,11 +7,11 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 export const SwiperGallery = () => {
-  const imagesContext = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|JPG|jpg)$/);
+  const imagesContext = require.context('../Assets/jobs', false, /\.(png|jpe?g|svg|webp|jpg)$/);
   const imageFiles = imagesContext.keys().map((key) => {
   const fileName = key
   .replace('./', '')
-  .replace(/\.(png|jpe?g|svg|JPG|jpg)$/i, '')
+  .replace(/\.(png|jpe?g|svg|webp|jpg)$/i, '')
   .replace(/\(\d*\)/g, '')
   .replace(/\d+/g, '');
   
