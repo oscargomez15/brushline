@@ -1,11 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { serviceAreaData } from '../data/serviceAreas';import { motion } from 'framer-motion';
-import { FaPhone } from 'react-icons/fa';
+import { FaCheck, FaPhone, FaStar } from 'react-icons/fa';
 import { Contact } from './Contact';
 import { Reviews } from './Reviews';
 import { PaintingCard } from '../Components/PaintingCard';
 import { WhyUs } from '../Components/WhyUs';
 import { Helmet } from 'react-helmet';
+import { SignatureDivider } from '../Components/SignatureDivider';
+import GoogleLogo from '../Assets/google-logo.webp';
 
 const ServiceArea = () => {
         const services = [
@@ -73,6 +75,31 @@ const ServiceArea = () => {
       })}} />
     </Helmet>
     <section className='hero-page' id='home'>
+          <div className="hero-overlay">    
+            <div className="hero-benefits">
+                <div className="benefit-item">
+                    <FaCheck/>
+                    <p> No-cost estimates.</p>
+                </div>
+                <div className="benefit-item">
+                    <FaCheck/>
+                    <p>10+ years experience</p>
+                </div>
+                <div className="benefit-item">
+                    <FaCheck/>
+                    <p>5-star rated</p>
+                </div>
+                <div className="testimonial-review">
+                  <div className="testimonial-google">
+                    <img src={GoogleLogo} alt="google logo" />
+                  </div>
+                  <div className="testimonial-text">
+                    <FaStar/><FaStar/><FaStar/><FaStar/><FaStar/>
+                    <p>Over 20+ Homes Transformed</p>
+                  </div>
+                </div>
+            </div> 
+          </div>
     <img src={cityData.gallery} alt="man-standing-with-construction-belt" className='background-image' />
       <div className="hero-container">
           <div className='text-container'>
@@ -101,9 +128,10 @@ const ServiceArea = () => {
           <img src={img} alt={`${cityData.city} project ${i + 1}`} key={i} />
         ))}
       </div> */}
+
     
-        <div className="list-container-wrapper">
-            <motion.section className="list-container card"
+        <div className="list-container-wrapper light-orange light-orange">
+            <motion.section className="list-container card "
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -120,6 +148,9 @@ const ServiceArea = () => {
                 </div>
             </motion.section>
         </div>
+        
+        <SignatureDivider/>
+
         <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card cartoon-box"
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -132,15 +163,20 @@ const ServiceArea = () => {
                             <p>OR</p>
                             <a href="#contact"><button className="button"> CONTACT US </button></a>
                         </div>
-
             </motion.section>
         </div>
+              <SignatureDivider/>
+
     {/* <Services/> */}
 
     <div className="reviews-paint">
       <Reviews/>
     </div>
+          <SignatureDivider/>
+
     <WhyUs/>
+          <SignatureDivider/>
+
     <Contact/>
     </div>
   );

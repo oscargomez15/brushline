@@ -32,7 +32,6 @@ export const Hero = () => {
             </div>
           </div>
       </div> 
-
     </div>
     <img src={heroImage} alt="exterior-paint-fort-myers" fetchPriority='high' className='background-image' />
  

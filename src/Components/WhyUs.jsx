@@ -5,7 +5,13 @@ export const WhyUs = () => {
   return (
     <section className='chooseus-wrapper'>
       <div className="chooseus">
-        <h1>What makes us <span>different?</span></h1>
+        <div className="chooseus-text">
+          <h1>What makes us <span>different?</span></h1>
+          <p>Discover why homeowners and businesses trust Brushline for their painting and home service needs.
+            From exceptional quality to a customer-first approach, we go above and beyond to ensure your satisfaction.
+            Here are just a few reasons why we stand out in the industry.
+          </p>
+        </div>
         <div className="whyus-reasons">
           <div className="reason">
             <div className="number-container cartoon-box">

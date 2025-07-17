@@ -26,18 +26,21 @@ body{
 section{
   padding: 4rem 0;
 }
+
 .cool-divider-container {
   width: 100%;
 }
-
 .signature-divider {
+  background-color: #fff7eb;
+}
+
+.divider-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: .5rem;
-  background-color: #fff7eb;
 }
-.signature-divider svg{
+.divider-container svg{
   font-size: 2rem;
   color: #cfcfcf;
 }

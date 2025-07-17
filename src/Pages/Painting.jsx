@@ -30,6 +30,7 @@ import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 import ColorVisualizer from '../Components/ColorVisualizer.jsx';
 import { Reviews } from './Reviews.jsx';
+import { SignatureDivider } from '../Components/SignatureDivider.jsx';
 
 export const Painting = () => {
 
@@ -433,7 +434,7 @@ const variants = {
             </div>
         </section>
         
-        <div className="list-container-wrapper">
+        <div className="list-container-wrapper light-orange">
             <motion.section className="list-container card"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -451,6 +452,8 @@ const variants = {
                 </div>
             </motion.section>
         </div>
+
+        <SignatureDivider/>
 
         <div className="paint-jobs-wrapper light-orange">
             <motion.section className="card paint-jobs"
@@ -505,9 +508,13 @@ const variants = {
                 </div>
             </motion.section>
         </div>
+
+        <SignatureDivider/>
         <div className="reviews-paint">
             <Reviews/>
         </div>
+        <SignatureDivider/>
+
 
         <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card cartoon-box"
@@ -525,7 +532,10 @@ const variants = {
             </motion.section>
         </div>
 
-        <div className="color-consult-wrapper">
+        <SignatureDivider/>
+
+
+        <div className="color-consult-wrapper light-orange">
             <motion.section className="card color-consultation-wrapper"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -579,11 +589,15 @@ const variants = {
                 </div>
             </motion.section>
         </div>
+        <SignatureDivider/>
+
         <div className="color-visual-wrapper light-orange">
             <ColorVisualizer/>
         </div>
+        <SignatureDivider/>
 
-        <div className="cta-wrapper dark-orange">
+
+        <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card cartoon-box"
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
@@ -598,6 +612,8 @@ const variants = {
 
             </motion.section>
         </div>
+        <SignatureDivider/>
+
 
         <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
@@ -696,6 +712,8 @@ const variants = {
             </div>
         </motion.section>
         </div>
+        <SignatureDivider/>
+
         <Contact/>
     </div>
   )

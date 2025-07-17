@@ -46,19 +46,19 @@ export const Footer = () => {
             <ul className='service-area-section'>
             <li><p><span>Service Areas</span></p></li>
               <li>
-                <PiStarFourFill className='signature-divider'/><p>Fort Myers</p>
+                <PiStarFourFill className='signature-symbol'/><p>Fort Myers</p>
               </li>
               <li>
-                  <PiStarFourFill className='signature-divider'/><p>Cape Coral</p>
+                  <PiStarFourFill className='signature-symbol'/><p>Cape Coral</p>
               </li>
               <li>
-                  <PiStarFourFill className='signature-divider'/><p>Estero</p>
+                  <PiStarFourFill className='signature-symbol'/><p>Estero</p>
               </li>
               <li>
-                  <PiStarFourFill className='signature-divider'/><p>Naples</p> 
+                  <PiStarFourFill className='signature-symbol'/><p>Naples</p> 
               </li>
               <li>
-                  <PiStarFourFill className='signature-divider'/><p>Bonita Springs</p>
+                  <PiStarFourFill className='signature-symbol'/><p>Bonita Springs</p>
               </li>
             </ul>
           </div>
@@ -81,10 +81,10 @@ export const Footer = () => {
               <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
               <p><span>Service Areas</span></p>
               <li className='no-underline no-pointer service-area'>
-                <p>Fort Myers<PiStarFourFill className='signature-divider'/>
-                  Cape Coral <PiStarFourFill className='signature-divider'/>
-                  Estero <PiStarFourFill className='signature-divider'/>
-                  Naples <PiStarFourFill className='signature-divider'/>
+                <p>Fort Myers<PiStarFourFill className='signature-symbol'/>
+                  Cape Coral <PiStarFourFill className='signature-symbol'/>
+                  Estero <PiStarFourFill className='signature-symbol'/>
+                  Naples <PiStarFourFill className='signature-symbol'/>
                   Bonita Springs
                 </p>
               </li>
