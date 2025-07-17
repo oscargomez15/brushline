@@ -33,7 +33,10 @@ export const Hero = () => {
           </div>
       </div> 
     </div>
-    <img src={heroImage} alt="exterior-paint-fort-myers" fetchPriority='high' className='background-image' />
+    <picture>
+      <source srcSet={heroImage} type='image/webp'/>
+      <img src={heroImage} alt="exterior-paint-fort-myers" fetchPriority='high' loading='eager' className='background-image' />
+    </picture>
  
       <div className="hero-container">
           <div className='text-container'>

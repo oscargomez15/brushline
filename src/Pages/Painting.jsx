@@ -8,20 +8,22 @@ import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
 import { Link } from 'react-router-dom';
-import beforeCommercial from '../Assets/before-commercial.jpg'
-import afterCommercial from '../Assets/after-commercial.jpg'
+import beforeCommercial from '../Assets/before-commercial.webp'
+import afterCommercial from '../Assets/after-commercial.webp'
 
-import afterJonathan from '../Assets/after-jonathan.jpg'
-import beforeJonathan from '../Assets/before-jonathan.jpg'
+import afterJonathan from '../Assets/after-jonathan.webp'
+import beforeJonathan from '../Assets/before-jonathan.webp'
 
-import afterCape from '../Assets/cape-after.jpeg'
-import beforeCape from '../Assets/cape-before.jpeg'
+import afterCape from '../Assets/cape-after.webp'
+import beforeCape from '../Assets/cape-before.webp'
 
-import beforeBonita from '../Assets/before-paty.jpg'
-import afterBonita from '../Assets/after-paty.jpg'
+import beforeBonita from '../Assets/before-paty.webp'
+import afterBonita from '../Assets/after-paty.webp'
 
-import beforeCheryl from '../Assets/before-wallpaper-removal-fort-myers.jpg'
-import afterCheryl from '../Assets/after-wallpaper-removal-fort-myers.jpg'
+
+
+import beforeCheryl from '../Assets/before-wallpaper-removal-fort-myers.webp'
+import afterCheryl from '../Assets/after-wallpaper-removal-fort-myers.webp'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';

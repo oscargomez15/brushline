@@ -122,8 +122,5 @@
       .service-item{
         flex-direction: column;
       }
-    
-      .service-item .service-text h2{
-        text-align: center;
-      }
+  
   }

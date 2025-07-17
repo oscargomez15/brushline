@@ -623,10 +623,6 @@ button:disabled {
         padding:2rem;
     }
 
-    .list-container{
-        background-color: #ffefd6;
-    }
-
     .landing-hero{
         padding: 2rem ;
         align-items: center;
@@ -655,7 +651,6 @@ button:disabled {
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #ffefd6;
     }
 
     .contact-mini-container{
@@ -671,9 +666,6 @@ button:disabled {
         text-align: center;
     }
 
-    .color-consultation-wrapper{
-        background-color: #ffefd6;
-    }
 
     .button-group{
         flex-direction: column;

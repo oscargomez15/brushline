@@ -340,7 +340,7 @@ export const Cleaning = () => {
                     </div>
                 </section>
         
-        <div className="list-container-wrapper">
+        <div className="list-container-wrapper light-orange">
             <div className="list-container card">
                 <div className="sub-heading">
                 <h1><span>Cleaning Services</span> we offer</h1>
@@ -369,7 +369,7 @@ export const Cleaning = () => {
             </motion.section>
         </div>
 
-        <div className="faq-wrapper dark-orange">
+        <div className="faq-wrapper light-orange">
             <div className="card faq ">
                 <div className="sub-heading">
                     <h1>Frequently Asked Question</h1>

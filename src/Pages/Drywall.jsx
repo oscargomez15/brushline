@@ -355,7 +355,7 @@ export const Drywall = () => {
             </div>
         </section>
         
-        <div className="list-container-wrapper">
+        <div className="list-container-wrapper light-orange">
             <motion.section className="list-container card"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
