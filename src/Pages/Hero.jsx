@@ -1,4 +1,3 @@
-import heroImage from '../Assets/exterior-painting-fort-myers-brushlie.webp'
 import { motion } from 'framer-motion';
 import { FaCheck, FaPhone, FaStar } from 'react-icons/fa';
 import GoogleLogo from '../Assets/google-logo.webp'
