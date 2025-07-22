@@ -1,18 +1,28 @@
 import React from 'react'
 import '../Styling/WhyUs.css'
-
+import { motion } from 'framer-motion'
 export const WhyUs = () => {
   return (
     <section className='chooseus-wrapper'>
       <div className="chooseus">
-        <div className="chooseus-text">
+        <motion.div className="chooseus-text"
+          initial={{scale:1,x:-40, opacity:0}}
+          whileInView={{x:0,opacity:1}}
+          transition={{
+            x:{duration:0.5}
+          }}>
           <h1>What makes us <span>different?</span></h1>
           <p>Discover why homeowners and businesses trust Brushline for their painting and home service needs.
             From exceptional quality to a customer-first approach, we go above and beyond to ensure your satisfaction.
             Here are just a few reasons why we stand out in the industry.
           </p>
-        </div>
-        <div className="whyus-reasons">
+        </motion.div>
+        <motion.div className="whyus-reasons"
+          initial={{scale:1,x:40, opacity:0}}
+          whileInView={{x:0,opacity:1}}
+          transition={{
+            x:{duration:0.5}
+          }}>
           <div className="reason">
             <div className="number-container cartoon-box">
               <h2>1</h2>
@@ -52,7 +62,7 @@ export const WhyUs = () => {
               <p>We treat your home like our own, ensuring every edge, corner, and coat meets the highest standards.</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

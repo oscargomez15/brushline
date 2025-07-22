@@ -38,15 +38,25 @@ nav{
     gap: .25rem;
   }
 
-  .nav-contact svg{
-    color: #c58525;
+  .nav-contact-scroll{
+    color: white;
   }
 
+  .nav-contact-no-scroll{
+    color: #2561e8;
+  }
+  
   .coloredBackground{
     background-color: #ffbd59;
   }
 
+  .nav-cta{
+    background-color: black;
+  }
+  .nav-cta::after{
+  background-color: #2561e8;
 
+  }
   
   .hambuger-content-wrapper{
     height: 100dvh;

@@ -11,8 +11,11 @@ const ColorVisualizer = () => {
         <p>Take the guesswork out of choosing the perfect color. 
             Our color visualization service lets you see how different paint colors will
             look on your home—before you commit. Whether you're updating your interior,
-            refreshing your exterior, or exploring bold new styles, we’ll help you make confident, informed decisions. 
-           </p>
+            refreshing your exterior, or exploring bold new styles, we’ll help you make confident, informed decisions. <br/>
+            Get that extra help you need to visualize your space with our color visualization service.
+        </p>
+        <a href="#contact"><button className="button"> CONTACT US </button></a>
+
     </div>
       <div className="compare-wrapper">
         <ReactCompareImage

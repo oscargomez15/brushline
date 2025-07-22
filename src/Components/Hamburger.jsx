@@ -107,7 +107,7 @@ export const Hamburger = () => {
                 <li><a href="/#reviews" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Reviews</a></li>
                 <li><a href="#contact" tabIndex={isOpen ? '0' : '-1'} onClick={()=> {setOpen(false)}}>Contact</a></li>
             </ul>
-            <div
+            <motion.div
             className="cta"
             whileInView={{scale:[1,1.1,1]}}
             transition={{
@@ -119,9 +119,9 @@ export const Hamburger = () => {
                 tabIndex={isOpen ? '0':'-1'}
                 href='tel:2397773713'
                 className='cta-label'>Your <span>Free Estimate</span> is <br/>a Call Away</p>
-                <button className='button'><a href="tel:2397773713" className='cta-text'> Call Now</a></button>
+                <button className='button nav-cta'><a href="tel:2397773713" className='cta-text'> Call Now</a></button>
 
-            </div>
+            </motion.div>
 
 
         </nav>

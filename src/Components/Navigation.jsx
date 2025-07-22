@@ -74,8 +74,9 @@ export const Navigation = () => {
 
           <ul>
             <li className='no-underline nav-contact'>
-              <a href="tel:7867507518"> <FaPhoneAlt/> (239) 777-3713</a>
-              <a href="#contact"><button className='button'>CONTACT US</button></a>
+              <a href="tel:7867507518" className={`${isSticky ? 'nav-contact-no-scroll' : 'nav-contact-scroll'}`}> <FaPhoneAlt/> (239) 777-3713</a>
+              
+              <a href="#contact"><button className='button nav-cta'>CONTACT US</button></a>
             </li>
           </ul>
         </div>

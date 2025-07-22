@@ -8,6 +8,11 @@
     text-decoration: none;
 }
 
+.paint-jobs-title button, .color-visualizer button{
+    width: fit-content;
+    margin-top: 1rem;
+}
+
 .contact-mini-container{
     display: flex;
     flex-direction: column;
@@ -580,6 +585,7 @@ button:disabled {
 
     .slider-image-container{
         flex-direction: column;
+        margin-top: 1rem;
     }
     .slider-image-container > div{
         width: 80%;

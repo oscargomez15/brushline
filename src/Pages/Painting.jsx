@@ -466,7 +466,8 @@ const variants = {
                 <div className="sub-heading paint-jobs-title">
                     <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
                     <p>See the difference a professional paint job can make. Our gallery showcases real before-and-after photos from homes and commercial properties
-                        we’ve transformed throughout Lee County and Collier County, including Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. </p>
+                    we’ve transformed throughout Lee County and Collier County, including Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. <br/> Find out how much it will cost to transform your space.</p>
+                    <a href="#contact"><button className="button">GET FREE QUOTE</button></a>
 
                 </div>
                 <div className="slider-image-container single">
