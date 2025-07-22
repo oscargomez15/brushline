@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from 'react-router-dom';
-
+import { AiOutlineFacebook} from 'react-icons/ai';
+import { FaTiktok, FaInstagram } from 'react-icons/fa';
+import { IoLogoGoogle } from 'react-icons/io';
 import logo from '../Assets/logo/brushline-logo-white-letters.webp';
 import { motion } from 'framer-motion';
 import '../Styling/Navigation.css'
@@ -122,8 +124,12 @@ export const Hamburger = () => {
                 <button className='button nav-cta'><a href="tel:2397773713" className='cta-text'> Call Now</a></button>
 
             </motion.div>
-
-
+            <div className='socials-hamburger'>
+                <a href="https://www.facebook.com/BrushlineServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
+                <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
+                <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
+                <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
+            </div>
         </nav>
     </div>
   )
