@@ -117,7 +117,12 @@ const ServiceArea = () => {
               <div className="btn-group">
                 <a href="#contact"><button tabIndex='-1' className='button'>GET FREE QUOTE</button></a>
                 <div className='phoneButton'>
-                  <a href="tel:2397773713" > <FaPhone/> (239)777-3713</a>
+                  <a href="tel:2397773713" onClick={() =>{
+                            if (window.gtag) {
+                            window.gtag('event', 'conversion', {
+                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                            });
+                            }}}> <FaPhone/> (239)777-3713</a>
                 </div>
               </div>
           </div>
@@ -159,7 +164,12 @@ const ServiceArea = () => {
                 viewport={{ once: true, amount: 0.5 }}>
                 <h1 className='section-subtitle'>See What It’ll Cost – Get Free Estimate</h1>
                         <div className="cta-button-group">
-                            <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
+                            <a href="tel:2397773713" onClick={() =>{
+                            if (window.gtag) {
+                            window.gtag('event', 'conversion', {
+                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                            });
+                            }}}><button className="button"> CALL NOW </button></a>
                             <p>OR</p>
                             <a href="#contact"><button className="button"> CONTACT US </button></a>
                         </div>

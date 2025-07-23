@@ -30,7 +30,12 @@ export const Footer = () => {
           <div className="footer-section">
             <ul className='footer-list'>
               <li><h2 className='phone-contact'> Contact </h2></li>
-              <li className='footer-item-mb'><FaPhone/> <a href='tel:+12397773713'>(239)777-3713</a></li>
+              <li className='footer-item-mb'><FaPhone/> <a href='tel:+12397773713' onClick={() =>{
+                  if (window.gtag) {
+                  window.gtag('event', 'conversion', {
+                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                  });
+                  }}}>(239)777-3713</a></li>
               <li className='footer-item-mb'> <IoMdMail/> <a href="contact@brushlineservices.com">contact@brushlineservices.com</a>  </li>
             </ul>
           </div>
@@ -97,7 +102,13 @@ export const Footer = () => {
               <p><span>Contact</span></p>
               <div className="contact-container">
                 <FaPhone/>
-                <a href='tel:+12397773713'>(239)777-3713</a> <br/>
+                <a href='tel:+12397773713'
+                onClick={() =>{
+                  if (window.gtag) {
+                  window.gtag('event', 'conversion', {
+                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                  });
+                  }}}>(239)777-3713</a> <br/>
               </div>
               <div className="contact-container">
                 <IoMdMail/>

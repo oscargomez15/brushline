@@ -119,9 +119,14 @@ export const Hamburger = () => {
             >
                 <p
                 tabIndex={isOpen ? '0':'-1'}
-                href='tel:2397773713'
-                className='cta-label'>Your <span>Free Estimate</span> is <br/>a Call Away</p>
-                <button className='button nav-cta'><a href="tel:2397773713" className='cta-text'> Call Now</a></button>
+                className='cta-label'
+                >Your <span>Free Estimate</span> is <br/>a Call Away</p>
+                <button className='button nav-cta'><a href="tel:2397773713" className='cta-text' onClick={() =>{
+                            if (window.gtag) {
+                            window.gtag('event', 'conversion', {
+                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                            });
+                            }}}> Call Now</a></button>
 
             </motion.div>
             <div className='socials-hamburger'>

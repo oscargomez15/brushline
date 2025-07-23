@@ -366,7 +366,12 @@ export const Cleaning = () => {
                 viewport={{ once: true, amount: 0.5 }}>
                 <h1 className='section-subtitle'>Ready to Experience a Cleaner Space? </h1>
                         <div className="cta-button-group">
-                            <a href="tel:2397773713"><button className="button"> CALL NOW </button></a>
+                            <a href="tel:2397773713" onClick={() =>{
+                            if (window.gtag) {
+                            window.gtag('event', 'conversion', {
+                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                            });
+                            }}}><button className="button"> CALL NOW </button></a>
                             <p>OR</p>
                             <a href="#contact"><button className="button"> CONTACT US </button></a>
                         </div>

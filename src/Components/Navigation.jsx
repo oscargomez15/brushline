@@ -74,7 +74,12 @@ export const Navigation = () => {
 
           <ul>
             <li className='no-underline nav-contact'>
-              <a href="tel:7867507518"> <FaPhoneAlt/> (239) 777-3713</a>
+              <a href="tel:7867507518" onClick={() =>{
+                  if (window.gtag) {
+                  window.gtag('event', 'conversion', {
+                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                  });
+                  }}}> <FaPhoneAlt/> (239) 777-3713</a>
               
               <a href="#contact"><button className='button nav-cta'>CONTACT US</button></a>
             </li>

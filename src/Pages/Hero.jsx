@@ -53,7 +53,12 @@ export const Hero = () => {
               <div className="btn-group">
                 <a href="#contact"><button tabIndex='-1' className='button'>GET FREE QUOTE</button></a>
                 <div className='phoneButton'>
-                  <a href="tel:2397773713" > <FaPhone/> (239)777-3713</a>
+                  <a href="tel:2397773713" onClick={() =>{
+                            if (window.gtag) {
+                            window.gtag('event', 'conversion', {
+                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                            });
+                            }}} > <FaPhone/> (239)777-3713</a>
                 </div>
               </div>
           </div>
