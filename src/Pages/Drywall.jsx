@@ -12,8 +12,6 @@ import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 import { SignatureDivider } from '../Components/SignatureDivider';
 import { Reviews } from './Reviews';
-import { Service } from 'aws-sdk';
-import ServiceArea from './ServiceArea';
 import { ServiceAreaSection } from './ServiceAreaSection';
 import { WhyUs } from '../Components/WhyUs';
 
