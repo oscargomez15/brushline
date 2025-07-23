@@ -10,6 +10,12 @@ import { Link } from 'react-router-dom';
 import { PaintingCard } from '../Components/PaintingCard';
 import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
+import { SignatureDivider } from '../Components/SignatureDivider';
+import { Reviews } from './Reviews';
+import { Service } from 'aws-sdk';
+import ServiceArea from './ServiceArea';
+import { ServiceAreaSection } from './ServiceAreaSection';
+import { WhyUs } from '../Components/WhyUs';
 
 export const Drywall = () => {
         const defaultFormValues = {
@@ -374,19 +380,16 @@ export const Drywall = () => {
             </motion.section>
         </div>
 
-        {/* <div className="paint-jobs-wrapper">
-            <motion.section className="card paint-jobs"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="sub-heading paint-jobs-title">
-                    <h1 className='section-subtitle'> Our <span>Drywall Jobs</span></h1>
-                    <p>Browse real before-and-after photos of homes and businesses we've transformed throughout Lee and Collier County</p>
-                    <SwiperGallery/>
-                </div>
-            </motion.section>
-        </div> */}
+        <SignatureDivider/>
+
+        <ServiceAreaSection/>
+
+        <SignatureDivider/>
+
+        <Reviews/>
+
+        <SignatureDivider/>
+
 
         <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card cartoon-box"
@@ -404,13 +407,19 @@ export const Drywall = () => {
             </motion.section>
         </div>
 
-        <div className="faq-wrapper dark-orange">
+        <SignatureDivider/>
+
+        <WhyUs/>
+
+        <SignatureDivider/>
+
+        <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
-            <div className="card-title">
+            <div className="sub-heading">
                 <h1 className='section-subtitle'>Frequently Asked Question</h1>
             </div>
             <div className="questions-wrapper">
@@ -501,6 +510,8 @@ export const Drywall = () => {
             </div>
         </motion.section>
         </div>
+        <SignatureDivider/>
+
         <Contact/>
     </div>
   )

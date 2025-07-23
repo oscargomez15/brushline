@@ -33,6 +33,7 @@ import { FaCheck } from 'react-icons/fa';
 import ColorVisualizer from '../Components/ColorVisualizer.jsx';
 import { Reviews } from './Reviews.jsx';
 import { SignatureDivider } from '../Components/SignatureDivider.jsx';
+import { ServiceAreaSection } from './ServiceAreaSection.jsx';
 
 export const Painting = () => {
 
@@ -615,8 +616,12 @@ const variants = {
 
             </motion.section>
         </div>
+
         <SignatureDivider/>
 
+        <ServiceAreaSection/>
+
+        <SignatureDivider/>
 
         <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
@@ -624,7 +629,7 @@ const variants = {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
-            <div className="card-title">
+            <div className="sub-heading">
                 <h1 className='section-subtitle'>Frequently Asked Question</h1>
             </div>
             <div className="questions-wrapper">

@@ -5,6 +5,7 @@ import { WhyUs } from '../Components/WhyUs'
 import { Reviews } from './Reviews'
 import { Contact } from './Contact'
 import { SignatureDivider } from '../Components/SignatureDivider'
+import { ServiceAreaSection } from './ServiceAreaSection'
 
 export const Home = () => {
   return (
@@ -13,13 +14,15 @@ export const Home = () => {
       <div className="home-wrapper page">
         <Services/>
         <SignatureDivider/>
-        <OurWork/>
-        <SignatureDivider/>
-        <WhyUs/>
+        <ServiceAreaSection/>
         <SignatureDivider/>
         <div className="reviews-paint">
           <Reviews/>
         </div>
+        <SignatureDivider/>
+        <WhyUs/>
+        <SignatureDivider/>
+        <OurWork/>
         <SignatureDivider/>
         <Contact/>
       </div>

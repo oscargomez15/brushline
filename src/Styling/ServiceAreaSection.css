@@ -1,0 +1,28 @@
+.gallery-service-area{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.gallery-service-area .image-container img{
+    width: 250px;
+    height: 500px;
+    object-fit: cover;
+}
+
+.card-gallery-item{
+    position: relative;
+}
+.card-gallery-item:hover{
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.service-area-section-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

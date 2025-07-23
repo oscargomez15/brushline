@@ -2,6 +2,7 @@
     display: none;
 }
 
+
 .privacy-notice a{
     color: #c58525;
     font-weight: bold;
@@ -164,7 +165,6 @@
     height: 100%;
     width: 70%;
     border-radius: 10px;
-    padding: 6rem 4rem;
 }
 
 .cta-card{
@@ -257,7 +257,7 @@ div .white-background{
 }
 
 .list-container{
-    padding-bottom: 6rem;
+    padding: 6rem 0;
     display: flex;
     flex-direction: column;
 }
@@ -472,7 +472,6 @@ div .white-background{
     display: flex;
     flex-direction: column;
     padding-bottom: 6rem;
-    margin-bottom: 6rem;
 }
 
 .color-visualization-img{

@@ -48,8 +48,8 @@ export const WhyUs = () => {
               <h2>3</h2>
             </div>
             <div className="reason-text">
-              <h2>Color Visualization</h2>
-              <p>See how your space will look with different colors before we even lift a brush.</p>
+              <h2>All-in-One Convenience</h2>
+              <p>From painting and drywall to handyman fixes and cleaning, we handle it all — saving you time, stress, and extra bills.</p>
             </div>
           </div>
 

@@ -9,6 +9,7 @@ import emailjs from 'emailjs-com'
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
+import { SignatureDivider } from '../Components/SignatureDivider';
 
 export const Cleaning = () => {
         const services = [
@@ -354,6 +355,9 @@ export const Cleaning = () => {
             </div>
         </div>
 
+        <SignatureDivider/>
+        
+
         <div className="cta-wrapper light-orange">
             <motion.section className="card cta-card cartoon-box"
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -368,6 +372,8 @@ export const Cleaning = () => {
                         </div>
             </motion.section>
         </div>
+
+        <SignatureDivider/>
 
         <div className="faq-wrapper light-orange">
             <div className="card faq ">
@@ -463,6 +469,7 @@ export const Cleaning = () => {
                 </div>
             </div>
         </div>
+        <SignatureDivider/>
         <Contact/>
     </section>
   )
