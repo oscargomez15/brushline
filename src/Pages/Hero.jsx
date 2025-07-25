@@ -44,11 +44,11 @@ export const Hero = () => {
               className='heading'
               initial={{scale:0.5}}
               whileInView={{scale:1}}
-              transition={{duration:1}}> Trusted Painting Experts </motion.h1>
+              transition={{duration:1}}> Expert Painting, Lasting Results </motion.h1>
               <motion.p
               initial={{opacity:0}}
               whileInView={{opacity:1}}
-              transition={{duration:1}}> Beyond painting — we specialize in restoring, refining, and protecting your surfaces. We’re proud to serve Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs with honesty and excellence.  Let us show you the difference, request a free quote today!  </motion.p>
+              transition={{duration:1}}> We help homeowners and businesses across SWFL elevate their spaces with clean, precise, and lasting finishes. We’re proud to serve Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs with honesty and excellence.  Let us show you the difference, request a free quote today!  </motion.p>
             </div>
               <div className="btn-group">
                 <a href="#contact"><button tabIndex='-1' className='button'>GET FREE QUOTE</button></a>
