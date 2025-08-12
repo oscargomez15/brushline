@@ -39,7 +39,8 @@ export const Contact = () => {
             address:form.address,
             phone:form.phone,
             service:form.service,
-            message:form.message
+            message:form.message,
+            email:form.email
         }
 
         emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')

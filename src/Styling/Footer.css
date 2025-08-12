@@ -129,9 +129,14 @@ footer{
     gap: 1rem;
   }
 
-  .service-area p{
+  .service-area{
+    gap: 1rem;
+  }
+
+  .service-area li{
     display: flex;
     align-items: center;
+    flex-direction: row;
     gap: .5rem;
   }
 

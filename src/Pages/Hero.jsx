@@ -34,7 +34,7 @@ export const Hero = () => {
     </div>
     <picture>
       <source srcSet='/images/exterior-painting-fort-myers-brushlie.webp' type='image/webp'/>
-      <img src='/images/exterior-painting-fort-myers-brushlie.webp' alt="exterior-paint-fort-myers" fetchPriority='high' loading='eager' className='background-image' />
+      <img src='/images/exterior-painting-fort-myers-brushlie-resized.webp' alt="exterior-paint-fort-myers" fetchPriority='high' loading='eager' className='background-image' />
     </picture>
  
       <div className="hero-container">

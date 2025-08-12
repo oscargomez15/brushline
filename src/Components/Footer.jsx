@@ -5,6 +5,7 @@ import '../Styling/Footer.css'
 import mascotLogo from '../Assets/logo/brushline-logo-white-letters.webp'
 import { FaInstagram, FaPhone, FaTiktok } from 'react-icons/fa'
 import {PiStarFourFill} from 'react-icons/pi'
+import { Link } from 'react-router-dom'
 
 export const Footer = () => {
   return (
@@ -85,14 +86,17 @@ export const Footer = () => {
               <p><span>Business Hours</span></p>
               <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
               <p><span>Service Areas</span></p>
-              <li className='no-underline no-pointer service-area'>
-                <p>Fort Myers<PiStarFourFill className='signature-symbol'/>
-                  Cape Coral <PiStarFourFill className='signature-symbol'/>
-                  Estero <PiStarFourFill className='signature-symbol'/>
-                  Naples <PiStarFourFill className='signature-symbol'/>
-                  Bonita Springs
-                </p>
-              </li>
+              <ul className='no-underline no-pointer service-area'>
+                <li><Link to={'/service-area/fort-myers-painter'}>Fort Myers</Link></li>
+                <li><PiStarFourFill className='signature-symbol'/></li>
+                <li><Link to={'/service-area/cape-coral-painter'}>Cape Coral</Link></li>
+                <li><PiStarFourFill className='signature-symbol'/></li>
+                <li><Link to={'/service-area/estero-painter'}>Estero</Link></li>
+                <li><PiStarFourFill className='signature-symbol'/></li>
+                <li><Link to={'/service-area/naples-painter'}>Naples</Link></li>
+                <li><PiStarFourFill className='signature-symbol'/></li>
+                <li><Link to={'/service-area/bonita-springs-painter'}>Bonita Springs</Link></li>
+              </ul>
             </ul>
           </div>
 

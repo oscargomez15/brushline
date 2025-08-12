@@ -8,22 +8,26 @@ import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
 import { Link } from 'react-router-dom';
-import beforeCommercial from '../Assets/before-commercial.webp'
-import afterCommercial from '../Assets/after-commercial.webp'
+import beforeCommercial from '../Assets/commercial-exterior-painting-fort-myers-before.webp'
+import afterCommercial from '../Assets/commercial-exterior-painting-fort-myers-after.webp'
 
-import afterJonathan from '../Assets/after-jonathan.webp'
-import beforeJonathan from '../Assets/before-jonathan.webp'
+import afterJonathan from '../Assets/exterior-painting-fort-myers-after.webp'
+import beforeJonathan from '../Assets/exterior-painting-fort-myers_before.webp'
 
-import afterCape from '../Assets/cape-after.webp'
-import beforeCape from '../Assets/cape-before.webp'
+import afterCape from '../Assets/exterior-painting-cape-coral_after.webp'
+import beforeCape from '../Assets/exterior-painting-cape-coral_before.webp'
 
-import beforeBonita from '../Assets/before-paty.webp'
-import afterBonita from '../Assets/after-paty.webp'
+import beforeBonita from '../Assets/interior-painting-bonita-springs-before.webp'
+import afterBonita from '../Assets/interior-painting-bonita-springs-after.webp'
 
-
+import beforeStain from '../Assets/wood-stain-before-estero.jpg'
+import afterStain from '../Assets/wood-stain-after-estero.jpg'
 
 import beforeCheryl from '../Assets/before-wallpaper-removal-fort-myers.webp'
 import afterCheryl from '../Assets/after-wallpaper-removal-fort-myers.webp'
+
+import poolDeckBefore from '../Assets/pool-deck-paint-estero-before.jpg'
+import poolDeckAfter from '../Assets/pool-deck-paint-estero-after.jpg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
@@ -207,6 +211,27 @@ export const Painting = () => {
     ];
 
     const sliderData = [
+{
+    left: beforeCheryl,
+    right: afterCheryl,
+    text: 'Wallpaper Removal & Paint',
+    location: 'Estero'
+  },{
+    left: beforeCape,
+    right: afterCape,
+    text: 'Exterior Paint',
+    location: 'Cape Coral',
+  },{
+    left: beforeStain,
+    right: afterStain,
+    text: 'Exterior Stain',
+    location: 'San Carlos',
+  },{
+    left: poolDeckBefore,
+    right: poolDeckAfter,
+    text: 'Exterior Paint',
+    location: 'San Carlos',
+  },
   {
     left: beforeCommercial,
     right: afterCommercial,
@@ -220,22 +245,10 @@ export const Painting = () => {
     location: 'Fort Myers',
   },
   {
-    left: beforeCape,
-    right: afterCape,
-    text: 'Exterior Paint',
-    location: 'Cape Coral',
-  },
-  {
     left: beforeBonita,
     right: afterBonita,
-    text: 'Residential Interior Paint',
+    text: 'Interior Paint',
     location: 'Bonita Springs',
-  },
-  {
-    left: beforeCheryl,
-    right: afterCheryl,
-    text: 'Wallpaper Removal & Paint',
-    location: 'Estero'
   }
 ];
 

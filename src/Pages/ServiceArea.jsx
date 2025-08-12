@@ -47,7 +47,7 @@ const ServiceArea = () => {
   return (
     <div className="service-area-page">
     <Helmet>
-      <title>Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
+      <title>Interior and Exterior Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "PaintingService",
