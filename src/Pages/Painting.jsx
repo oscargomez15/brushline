@@ -8,6 +8,10 @@ import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import colorConsultation from '../Assets/color-consultation.jpg'
 import { Link } from 'react-router-dom';
+
+import beforeAccent from '../Assets/before-accent-wall-painting-fort-myers.jpg'
+import afterAccent from '../Assets/after-accent-wall-painting-fort-myers.jpg'
+
 import beforeCommercial from '../Assets/commercial-exterior-painting-fort-myers-before.webp'
 import afterCommercial from '../Assets/commercial-exterior-painting-fort-myers-after.webp'
 
@@ -28,6 +32,12 @@ import afterCheryl from '../Assets/after-wallpaper-removal-fort-myers.webp'
 
 import poolDeckBefore from '../Assets/pool-deck-paint-estero-before.jpg'
 import poolDeckAfter from '../Assets/pool-deck-paint-estero-after.jpg'
+
+import garagefloorbefore from '../Assets/garge-floor-painting-estero_before.jpg'
+import garagefloorafter from '../Assets/garge-floor-painting-estero_after.jpg'
+
+import annInteriorBefore from '../Assets/naples-interior-painting-before.jpeg'
+import annInteriorAfter from '../Assets/naples-interior-painting-after.jpeg'
 
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
@@ -212,42 +222,59 @@ export const Painting = () => {
 
     const sliderData = [
 {
+    left:beforeAccent,
+    right:afterAccent,
+    text: 'Accent Wall Painting',
+    location: 'Fort Myers'
+},
+{
     left: beforeCheryl,
     right: afterCheryl,
-    text: 'Wallpaper Removal & Paint',
+    text: 'Wallpaper Removal & Painting',
     location: 'Estero'
   },{
     left: beforeCape,
     right: afterCape,
-    text: 'Exterior Paint',
+    text: 'Exterior Painting',
     location: 'Cape Coral',
   },{
+    left: annInteriorBefore,
+    right: annInteriorAfter,
+    text: 'Interior Painting',
+    location: 'Naples',
+  },
+  {
     left: beforeStain,
     right: afterStain,
-    text: 'Exterior Stain',
+    text: 'Exterior Staining',
     location: 'San Carlos',
   },{
     left: poolDeckBefore,
     right: poolDeckAfter,
-    text: 'Exterior Paint',
+    text: 'Exterior Painting',
     location: 'San Carlos',
+  },{
+    left: garagefloorbefore,
+    right: garagefloorafter,
+    text: 'Garage Floor Painting',
+    location: 'Estero',
   },
   {
     left: beforeCommercial,
     right: afterCommercial,
-    text: 'Exterior Paint (Commercial)',
+    text: 'Exterior Painting (Commercial)',
     location: 'Fort Myers',
   },
   {
     left: beforeJonathan,
     right: afterJonathan,
-    text: 'Exterior Paint',
+    text: 'Exterior Painting',
     location: 'Fort Myers',
   },
   {
     left: beforeBonita,
     right: afterBonita,
-    text: 'Interior Paint',
+    text: 'Interior Painting',
     location: 'Bonita Springs',
   }
 ];
