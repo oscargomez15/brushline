@@ -10,7 +10,7 @@ import { NotFound } from './Pages/NotFound';
 import { Privacy } from './Pages/Privacy';
 import ScrollToTop from './Components/ScrollToTop';
 import ServiceArea from './Pages/ServiceArea';
-
+import { PaintCalculator } from './Pages/PaintCalculator';
 function App() {
   return (
     <div className='background-wrapper'>
@@ -24,6 +24,7 @@ function App() {
           <Route path='/cleaning' element={<Cleaning />} />
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='/service-area/:citySlug' element={<ServiceArea/>} />
+          <Route path='/calculator' element={<PaintCalculator/>} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer/>
