@@ -47,17 +47,17 @@ export const PaintCalculator = () => {
     });
   }, [areas]);
 
-  const totals = useMemo(() => {
-    return perArea.reduce(
-      (acc, x) => {
-        acc.wall += x.wallSqft;
-        acc.ceiling += x.ceilingSqft;
-        acc.total += x.total;
-        return acc;
-      },
-      { wall: 0, ceiling: 0, total: 0 }
-    );
-  }, [perArea]);
+//   const totals = useMemo(() => {
+//     return perArea.reduce(
+//       (acc, x) => {
+//         acc.wall += x.wallSqft;
+//         acc.ceiling += x.ceilingSqft;
+//         acc.total += x.total;
+//         return acc;
+//       },
+//       { wall: 0, ceiling: 0, total: 0 }
+//     );
+//   }, [perArea]);
 
   const fmt = (n) => new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(n || 0);
 
