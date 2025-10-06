@@ -90,3 +90,10 @@
     gap: 10px;
     flex-direction: column;
 }
+
+@media screen and (max-width: 768px) {
+    .paint-calculator-form {
+        flex-direction: column;
+        align-items: center;
+    }
+}
