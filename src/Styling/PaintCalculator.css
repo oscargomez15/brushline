@@ -1,99 +1,436 @@
-
+/* =========================
+   Layout / Page
+========================= */
 .paint-calculator-wrapper{
-    padding-top: 15rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  min-height: 100vh;
+  padding: 12rem 16px 60px;
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(59,130,246,0.12), transparent 60%),
+              radial-gradient(900px 500px at 90% 30%, rgba(16,185,129,0.10), transparent 55%),
+              radial-gradient(900px 500px at 50% 110%, rgba(245,158,11,0.10), transparent 55%),
+              #f6f7fb;
 }
 
-.paint-calculator-form {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 8px;
+.content-wrapper{
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
+/* =========================
+   Header / Intro
+========================= */
+.sub-heading{
+  margin-bottom: 18px;
+}
+
+.sub-heading h1{
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.sub-heading p{
+  margin: 8px 0 0;
+  color: rgba(15, 23, 42, 0.72);
+}
+
+/* =========================
+   Global Pricing Card
+========================= */
+.price-inputs{
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+}
+
+.price-inputs h2{
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.price-inputs p{
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+.price-input-items{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.price-input-items span{
+    color: black;
+}
+
+.price-input-items label{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.75);
+  font-weight: 700;
+}
+
+@media (max-width: 720px){
+  .price-input-items{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   Form
+========================= */
+.paint-calculator-form{
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+/* =========================
+   Area Card
+========================= */
+.area-card-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.area-card-title{
+  display: grid;
+  gap: 4px;
+}
+
+.area-name{
+  font-size: 16px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.area-sub{
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.70);
+  font-weight: 700;
+}
+
+.area-total{
+  color: #0f172a;
+}
+
+.area-card-actions{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Minimize button */
+.collapse-area-btn{
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.collapse-area-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(15,23,42,0.10);
+}
+
+/* When collapsed, tighten spacing */
+.area-card.is-collapsed{
+  padding: 14px 16px;
+}
+
+.area-card.is-collapsed .area-card-header{
+  margin-bottom: 0;
+}
 .area-card{
-    background-color: #ffd89e;
-    border-radius: 8px;
-    padding: 15px;
-    width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255,255,255,0.86);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(15,23,42,0.10);
+  padding: 16px;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
 }
 
-.delete {
-    background-color: #ff4d4d;
-    width: 100%;
+.area-card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 18px 48px rgba(15,23,42,0.14);
+  border-color: rgba(15, 23, 42, 0.14);
 }
 
-.add{
-    background-color: #4CAF50;
+/* Top row select */
+.area-selection-container{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.add-area-btn, .remove-area-btn{ 
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
+.area-selection-container select{
+  width: 100%;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  padding: 0 12px;
+  font-weight: 700;
+  color: #0f172a;
+  outline: none;
 }
 
-.area-selection-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-radius: 4px;
+.area-selection-container select:focus{
+  border-color: rgba(59,130,246,0.65);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.18);
 }
 
+/* =========================
+   Conditions
+========================= */
+.conditions-container{
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.conditions-container h3{
+  margin: 0 0 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+.conditions-container > div{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  color: rgba(15, 23, 42, 0.82);
+  font-weight: 600;
+}
+
+.conditions-container input[type="checkbox"]{
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================
+   Body split layout
+========================= */
 .area-calc-body{
-    display: flex;
-    justify-content: space-between;
-    padding-top: 20px;
-    gap: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 14px;
 }
 
-.area-selection-container select {
-    padding: 6px;
-    border-radius: 4px;
-    background-color: transparent;
-    border: none;
-    font-weight: bold;
-    font-size: 1.5rem;
+@media (max-width: 900px){
+  .area-calc-body{
+    grid-template-columns: 1fr;
+  }
 }
 
-.dimensions-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 20px;
+/* Panels */
+.dimensions-container,
+.calculations-container{
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.80);
+  padding: 12px;
+}
+
+.dimensions-container h3,
+.calculations-container h3{
+  margin: 0 0 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+/* =========================
+   Inputs
+========================= */
+.dimensions-container label{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  color: rgba(15, 23, 42, 0.78);
+  font-weight: 700;
+  font-size: 13px;
 }
 
 .dim-input{
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    background-color: white;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  padding: 0 12px;
+  outline: none;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.dim-input input{
-    padding: 6px;
-    border-radius: 4px;
-    width: 100px;
-    background-color: rgb(238, 238, 238);
+.dim-input::placeholder{
+  color: rgba(15, 23, 42, 0.35);
+  font-weight: 600;
 }
 
+.dim-input:focus{
+  border-color: rgba(59,130,246,0.65);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.18);
+}
+
+/* =========================
+   Calculations (nested cards)
+========================= */
 .calculations-container{
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
+  display: grid;
+  gap: 12px;
 }
 
-@media screen and (max-width: 768px) {
-    .paint-calculator-form {
-        flex-direction: column;
-        align-items: center;
-    }
+.calculations-card{
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255,255,255,0.92);
+  padding: 12px;
+  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+}
+
+.calculations-card h3{
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Stats grid inside each calc card */
+.calculations-items{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+@media (max-width: 520px){
+  .calculations-items{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stat component styling */
+.calculation-label{
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.58);
+  margin-bottom: 4px;
+}
+
+.calculations-items > div{
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(248, 250, 252, 0.85);
+}
+
+.calculations-items > div > div:last-child{
+  font-size: 16px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+/* Area totals at bottom of calc panel */
+.calculations-container > .calculation-label{
+  margin-top: 6px;
+}
+
+/* =========================
+   Buttons
+========================= */
+.add-area-btn,
+.remove-area-btn{
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.add-area-btn.add{
+  width: 100%;
+  margin-top: 14px;
+  background: #0f172a;
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.18);
+}
+
+.add-area-btn.add:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(15,23,42,0.24);
+}
+
+.remove-area-btn.delete{
+  width: 100%;
+  background: #fff;
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.25);
+}
+
+.remove-area-btn.delete:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(185, 28, 28, 0.12);
+}
+
+/* =========================
+   Summary Card
+========================= */
+.grand-total{
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(15,23,42,0.10);
+}
+
+.grand-total h2{
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.total-items{
+  display: grid;
+  gap: 8px;
+}
+
+.total-items h2{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(15, 23, 42, 0.88);
 }
