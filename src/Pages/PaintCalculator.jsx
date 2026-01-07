@@ -10,7 +10,7 @@ export const PaintCalculator = () => {
     "Bathroom","Dining Room","Office","Garage","Exterior",
   ];
   const HIGH_CEILING_FT = 10;
-  const FURNITURE_ADDON_WALL = 0.15; // $/sqft
+  const FURNITURE_ADDON_WALL = 0.20; // $/sqft
   const HIGH_CEILING_ADDON_WALL = 0.25; // $/sqft
   const SQFT_PER_HOUR = 124;
   const SQFT_PER_GALLON = 350;
@@ -19,14 +19,23 @@ export const PaintCalculator = () => {
 
   const [wallPricePerSqft, setWallPricePerSqft] = useState("2");
   const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState("1.5");
+  const [doorPrice, setDoorPrice] = useState("100"); 
+  const [baseboardPricePerLf, setBaseboardPricePerLf] = useState("1.25"); // example
+
+  const BASEBOARD_HEIGHT_OPTIONS = [
+  { label: '3.25"', value: "3.25" },
+  { label: '5.25"', value: "5.25" },
+  { label: '7.25"', value: "7.25" },
+  { label: "Custom", value: "custom" },
+  ];
 
   const [areas, setAreas] = useState([
-    { id: uid(), name: "", length: "", width: "", height: "", furnitureMove: false, highCeilings: false, collapsed: false },
+    { id: uid(), name: "", length: "", width: "", height: "", furnitureMove: false, highCeilings: false, collapsed: false, doorCount: "0", doorWidthIn: "36", doorHeightIn: "80", baseboardLf: "0", baseboardHeightChoice: "5.25", baseboardHeightCustomIn: "" },
   ]);
 
   // 3) no event arg; button uses type="button"
   const addArea = () => {
-    setAreas((prev) => [...prev, { id: uid(), name: "", length: "", width: "", height: "", furnitureMove: false, highCeilings: false, collapsed: false }]);
+    setAreas((prev) => [...prev, { id: uid(), name: "", length: "", width: "", height: "", furnitureMove: false, highCeilings: false, collapsed: false, doorCount: "0", doorWidthIn: "36", doorHeightIn: "80", baseboardLf: "0", baseboardHeightChoice: "5.25", baseboardHeightCustomIn: "" }]);
   };
 
   const removeArea = (id) => {
@@ -54,19 +63,31 @@ export const PaintCalculator = () => {
   return Number.isFinite(n) ? n : 0;
 };
 
+  const parseIntSafe = (v) => {
+    const n = parseInt(String(v), 10);
+    return Number.isFinite(n) ? n : 0;
+  };
+
   const perArea = useMemo(() => {
   const baseWallRate = parseMoney(wallPricePerSqft);
-  const ceilingRate = parseMoney(ceilingPricePerSqft);
+  const baseCeilingRate = parseMoney(ceilingPricePerSqft);
 
   return areas.map((a) => {
     const L = parse(a.length);
     const W = parse(a.width);
     const H = parse(a.height);
 
+    const doorCount = parseIntSafe(a.doorCount);
+
     const wallSqft = 2 * (L + W) * H;
     const ceilingSqft = L * W;
 
     const isHighCeiling = H > HIGH_CEILING_FT;
+
+    const ceilingRate =
+      baseCeilingRate +
+      (a.furnitureMove ? FURNITURE_ADDON_WALL : 0) +
+      (isHighCeiling ? HIGH_CEILING_ADDON_WALL : 0);
 
     const wallRate =
       baseWallRate +
@@ -76,17 +97,52 @@ export const PaintCalculator = () => {
     const wallCost = wallSqft * wallRate;
     const ceilingCost = ceilingSqft * ceilingRate;
 
+    // inches → feet
+    const doorWft = parse(a.doorWidthIn) / 12;
+    const doorHft = parse(a.doorHeightIn) / 12;
+
+    // paintable area: both sides of each door (change to 1 side if needed)
+    const doorSqftPerDoor = doorWft * doorHft * 2;
+    const doorSqft = doorCount * doorSqftPerDoor;
+
+    // pricing
+    const doorRate = parseMoney(doorPrice);
+    const doorCost = doorCount * doorRate;
+
+    // ===== Baseboard (auto from room perimeter) =====
+    const baseboardHeightIn =
+      a.baseboardHeightChoice === "custom"
+        ? parse(a.baseboardHeightCustomIn)
+        : parse(a.baseboardHeightChoice);
+
+    const baseboardHeightFt = baseboardHeightIn / 12;
+
+    // Baseboard LF from perimeter (no deductions)
+    const baseboardLf = 2 * (L + W);
+
+    // sqft for paint (front face)
+    const baseboardSqft = baseboardLf * baseboardHeightFt;
+
+    // pricing
+    const baseboardRate = parseMoney(baseboardPricePerLf);
+    const baseboardCost = baseboardLf * baseboardRate;
+
+    // gallons
+    const baseboardGallons = Math.ceil(baseboardSqft / SQFT_PER_GALLON);
+
     // 🎨 Paint gallons (rounded UP)
     const wallGallons = Math.ceil(wallSqft / SQFT_PER_GALLON);
     const ceilingGallons = Math.ceil(ceilingSqft / SQFT_PER_GALLON);
-    const totalGallons = wallGallons + ceilingGallons;
+    const doorGallons = Math.ceil(doorSqft / SQFT_PER_GALLON);
+
+    const totalGallons = wallGallons + ceilingGallons + doorGallons + baseboardGallons;
 
     const wallHours = Math.ceil(wallSqft / SQFT_PER_HOUR);
     const ceilingHours = Math.ceil(ceilingSqft / SQFT_PER_HOUR);
     const totalHours = wallHours + ceilingHours;
 
     const totalSqft = wallSqft + ceilingSqft;
-    const totalCost = wallCost + ceilingCost;
+    const totalCost = wallCost + ceilingCost + doorCost + baseboardCost;
 
     return {
       id: a.id,
@@ -103,11 +159,21 @@ export const PaintCalculator = () => {
       wallGallons,
       ceilingGallons,
       totalGallons,
+      doorCount,
+      doorSqft,
+      doorSqftPerDoor,
+      doorGallons,
+      doorCost,
+      baseboardLf,
+      baseboardSqft,
+      baseboardCost,
+      baseboardGallons,
+      baseboardHeightIn,
       totalCost,
       isHighCeiling,
     };
   });
-}, [areas, ceilingPricePerSqft, wallPricePerSqft]);
+}, [areas, ceilingPricePerSqft, wallPricePerSqft, doorPrice, baseboardPricePerLf]);
 
   const grandTotal = useMemo(() => {
     return perArea.reduce((sum, a) => sum + a.totalCost, 0);
@@ -122,11 +188,7 @@ const totalJobHours = useMemo(() => {
 }, [perArea]);
 
 const totalJobGallons = useMemo(() => {
-  const rawSqft = perArea.reduce(
-    (sum, a) => sum + a.wallSqft + a.ceilingSqft,
-    0
-  );
-  return Math.ceil(rawSqft / SQFT_PER_GALLON);
+    return perArea.reduce((sum, a) => sum + (a.totalGallons || 0), 0);
 }, [perArea]);
 
   const fmt = (n) => new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(n || 0);
@@ -172,6 +234,28 @@ const totalJobGallons = useMemo(() => {
                     className="dim-input"
                     value={ceilingPricePerSqft}
                     onChange={(e) => setCeilingPricePerSqft(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Baseboard ($/LF)</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="dim-input"
+                    value={baseboardPricePerLf}
+                    onChange={(e) => setBaseboardPricePerLf(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Door Price ($)</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="dim-input"
+                    value={doorPrice}
+                    onChange={(e) => setDoorPrice(e.target.value)}
                   />
                 </label>
               </div>
@@ -249,7 +333,7 @@ const totalJobGallons = useMemo(() => {
                     checked={!!area.furnitureMove}
                     onChange={(e) => updateArea(area.id, "furnitureMove", e.target.checked)}
                   />
-                  Furniture needs to be moved
+                  Furniture needs to be moved/covered
                 </div>
 
                 <div>
@@ -263,7 +347,56 @@ const totalJobGallons = useMemo(() => {
                   <DimInput label="Length" value={area.length} onChange={(v) => updateArea(area.id, "length", v)} />
                   <DimInput label="Width"  value={area.width}  onChange={(v) => updateArea(area.id, "width", v)} />
                   <DimInput label="Height" value={area.height} onChange={(v) => updateArea(area.id, "height", v)} />
+                <div className="baseboard-container">
+                  <h3>Baseboard</h3>
+
+                  <label className="flex flex-col gap-1">
+                    <span>Baseboard Height</span>
+                    <select
+                      value={area.baseboardHeightChoice}
+                      onChange={(e) => updateArea(area.id, "baseboardHeightChoice", e.target.value)}
+                      className="dim-input"
+                    >
+                      {BASEBOARD_HEIGHT_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  {area.baseboardHeightChoice === "custom" && (
+                    <DimInput
+                      label='Custom Height (in)'
+                      value={area.baseboardHeightCustomIn}
+                      onChange={(v) => updateArea(area.id, "baseboardHeightCustomIn", v)}
+                    />
+                  )}
                 </div>
+                  
+                  <div className="doors-container">
+                    <h3>Doors Info</h3>
+                    <label className="flex flex-col gap-1">
+                      <span>Door Count</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        className="dim-input"
+                        value={area.doorCount}
+                        onChange={(e) => updateArea(area.id, "doorCount", e.target.value)}
+                      />
+                    </label>
+
+                    <div className="doors-dims">
+                      <DimInput label="Door Width (in)" value={area.doorWidthIn} onChange={(v) => updateArea(area.id, "doorWidthIn", v)} />
+                      <DimInput label="Door Height (in)" value={area.doorHeightIn} onChange={(v) => updateArea(area.id, "doorHeightIn", v)} />
+                    </div>
+                  </div>               
+                
+                </div>
+
+                
+
 
                 <div className="calculations-container">
                   <h3>Calculations (sq ft)</h3>
@@ -292,6 +425,27 @@ const totalJobGallons = useMemo(() => {
                     <div className="calculations-items">
                       <Stat label="Wall Gallons" value={calc.wallGallons} />
                       <Stat label="Ceiling Gallons" value={calc.ceilingGallons} />
+                      <Stat label="Door Gallons" value={calc.doorGallons} />
+                    </div>
+                  </div>
+
+                  <div className="calculations-card">
+                    <h3>Baseboard</h3>
+                    <div className="calculations-items">
+                      <Stat label="LF" value={fmt(calc.baseboardLf)} />
+                      <Stat label="Sq. Ft." value={fmt(calc.baseboardSqft)} />
+                      <Stat label="Price" value={fmtMoney(calc.baseboardCost)} />
+                      <Stat label="Gallons" value={calc.baseboardGallons} />
+                    </div>
+                  </div>
+
+                  <div className="calculations-card">
+                  <h3>Doors</h3>
+                    <div className="calculations-items">
+                      <Stat label="Sq. Ft." value={fmt(calc.doorSqft)} />
+                      <Stat label="Count" value={calc.doorCount} />
+                      <Stat label="Price" value={fmtMoney(calc.doorCost)} />
+                      <Stat label="Gallons" value={calc.doorGallons} />
                     </div>
                   </div>
                   <Stat label="Area Total" value={fmtMoney(calc.totalCost)} />
