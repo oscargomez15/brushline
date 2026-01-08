@@ -118,13 +118,30 @@
 }
 
 .area-sub{
+    display: flex;
+    gap: 0 1rem;
   font-size: 13px;
   color: rgba(15, 23, 42, 0.70);
   font-weight: 700;
 }
 
-.area-total{
+.mini-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mini-value{
   color: #0f172a;
+}
+
+.mini-label{
+    font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.58);
 }
 
 .area-card-actions{
@@ -149,6 +166,98 @@
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(15,23,42,0.10);
 }
+/* =========================
+   Scope Toggle Buttons
+========================= */
+.surfaces-container{
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+}
+
+.surfaces-container h3{
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+/* grid for pills */
+.surfaces-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.options{
+  display: flex;
+  flex-wrap: wrap;        
+  gap: 10px;
+}
+
+/* hide native checkbox */
+.scope-option input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* pill button */
+.scope-option{
+  display: flex;
+  align-items: center;
+    flex: 1 1 110px;         /* ✅ wraps nicely; adjust 110px if you want */
+  min-width: 110px;
+}
+
+.scope-option span{
+  width: 100%;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.85);
+  cursor: pointer;
+  transition: background 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 120ms ease,
+    border-color 140ms ease;
+}
+
+/* hover */
+.scope-option span:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+/* checked (active) */
+.scope-option input:checked + span{
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+/* focus (keyboard accessibility) */
+.scope-option input:focus + span{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.35),
+    0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+/* disabled (if you ever add it) */
+.scope-option input:disabled + span{
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 
 /* When collapsed, tighten spacing */
 .area-card.is-collapsed{
@@ -159,6 +268,7 @@
   margin-bottom: 0;
 }
 .area-card{
+    overflow: hidden;
   border-radius: 20px;
   border: 1px solid rgba(15, 23, 42, 0.10);
   background: rgba(255,255,255,0.86);
@@ -331,9 +441,95 @@
   gap: 10px 14px;
 }
 
+/* Sticky wrapper */
+.summary-sticky{
+  position: sticky;
+  bottom: 16px;            /* sticks near bottom as you scroll */
+  z-index: 20;
+  margin-top: 18px;
+}
+
+/* header row inside summary card */
+.summary-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* when hidden, keep it compact */
+.summary-sticky.is-hidden .grand-total{
+  padding: 12px 16px;
+}
+
+.summary-sticky.is-hidden .summary-header{
+  margin-bottom: 0;
+}
+
+/* Allow header content to wrap instead of overflowing */
+.area-card-header{
+  flex-wrap: wrap;
+}
+
+/* Let the title block take full width on small screens */
+.area-card-title{
+  min-width: 0; /* important so long text can wrap */
+}
+
+/* Keep buttons from shrinking off-screen */
+.area-card-actions{
+  justify-content: flex-start;
+}
+
+/* Make sure buttons can shrink nicely instead of forcing overflow */
+
+.mini-row{
+  min-width: 0;
+}
+
+.mini-label{
+  white-space: nowrap;
+}
+
+.mini-value{
+  text-align: right;
+  min-width: 0;
+}
+
 @media (max-width: 520px){
   .calculations-items{
     grid-template-columns: 1fr;
+  }
+    .area-card-header{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .area-card-actions{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Expand + Remove side by side */
+    gap: 10px;
+  }
+
+  .area-card-actions .collapse-area-btn,
+  .area-card-actions .remove-area-btn{
+    width: 100%;
+  }
+
+  /* If your mini breakdown rows are wide, let them wrap */
+  .area-sub{
+    flex-wrap: wrap;
+  }
+  
+  .options{
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* ✅ 2 columns */
+    gap: 10px;
+  }
+
+  .scope-option{
+    min-width: 0; /* ✅ prevents overflow in grid */
   }
 }
 
