@@ -31,6 +31,17 @@ export const PaintCalculator = () => {
   { label: "Custom", value: "custom" },
   ];
 
+  const PAINT_GRADE_OPTIONS = [
+  { label: "Promar 200", value: "promar200", pricePerGallon: 31.95 },
+  { label: "Cashmere", value: "cashmere", pricePerGallon: 38.95 },
+  { label: "Super Paint", value: "superpaint", pricePerGallon: 43.95 },
+  { label: "Duration", value: "duration", pricePerGallon: 47.95 },
+  { label: "Emerald", value: "emerald", pricePerGallon: 60.00 },
+];
+
+const [paintGrade, setPaintGrade] = useState("promar200");
+
+
   const [areas, setAreas] = useState([
     { 
       id: uid(), 
@@ -243,6 +254,14 @@ const totalJobGallons = useMemo(() => {
     return perArea.reduce((sum, a) => sum + (a.totalGallons || 0), 0);
 }, [perArea]);
 
+const paintPricePerGallon = useMemo(() => {
+  return PAINT_GRADE_OPTIONS.find((g) => g.value === paintGrade)?.pricePerGallon || 0;
+}, [paintGrade]);
+
+const totalPaintMaterialCost = useMemo(() => {
+  return (totalJobGallons || 0) * paintPricePerGallon;
+}, [totalJobGallons, paintPricePerGallon]);
+
   const fmt = (n) => new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(n || 0);
 
   const fmtMoney = (n) =>
@@ -309,6 +328,20 @@ const totalJobGallons = useMemo(() => {
                     value={doorPrice}
                     onChange={(e) => setDoorPrice(e.target.value)}
                   />
+                </label>
+                <label>
+                  <span>Paint Grade (SW)</span>
+                  <select
+                    className="dim-input"
+                    value={paintGrade}
+                    onChange={(e) => setPaintGrade(e.target.value)}
+                  >
+                    {PAINT_GRADE_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               </div>
             </div>
@@ -618,17 +651,33 @@ const totalJobGallons = useMemo(() => {
               type="button"
               className="collapse-area-btn"
               onClick={() => setShowSummary((s) => !s)}
-              title={showSummary ? "Hide summary" : "Show summary"}
+              title={showSummary ? "Hide summary details" : "Show summary details"}
             >
-              {showSummary ? "Hide" : "Show"}
+              {showSummary ? "Minimize" : "Expand"}
             </button>
           </div>
 
+          {/* ✅ COLLAPSED: only total job cost */}
+          {!showSummary && (
+            <div className="summary-collapsed">
+              <div className="summary-big">
+                Job Total: <span className="summary-amount">{fmtMoney(grandTotal)}</span>
+              </div>
+            </div>
+          )}
+
+          {/* ✅ EXPANDED: show everything */}
           {showSummary && (
             <div className="total-items">
-              <h2>Job Total: {fmtMoney(grandTotal)}</h2>
-              <h2>Estimated Completion Time: {fmtHours(totalJobHours)}</h2>
-              <h2>Paint Needed: {totalJobGallons} gallons</h2>
+              <h2 className='mini-row-summary'><span className='mini-label'>Job Total:</span> <span className='mini-value'>{fmtMoney(grandTotal)}</span></h2>
+              <h2 className='mini-row-summary'><span className='mini-label'>Completion Time:</span> <span className='mini-value'>{fmtHours(totalJobHours)}</span></h2>
+
+
+              <span className='summary-heading'>Paint Materials</span>
+              <h2 className='mini-row-summary'><span className='mini-label'>Needed:</span> <span className='mini-value'>{totalJobGallons} gal</span></h2>
+              <h2 className='mini-row-summary'><span className='mini-label'>Grade:</span> <span className='mini-value'>{PAINT_GRADE_OPTIONS.find(g => g.value === paintGrade)?.label}</span></h2>
+              <h2 className='mini-row-summary'><span className='mini-label'>Paint Cost:</span> <span className='mini-value'>{fmtMoney(totalPaintMaterialCost)}</span></h2>
+
             </div>
           )}
         </div>
