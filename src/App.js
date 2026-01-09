@@ -11,7 +11,12 @@ import { Privacy } from './Pages/Privacy';
 import ScrollToTop from './Components/ScrollToTop';
 import ServiceArea from './Pages/ServiceArea';
 import { PaintCalculator } from './Pages/PaintCalculator';
+import { Login } from './Pages/Login';
+import netlifyIdentity from "netlify-identity-widget";
+
 function App() {
+netlifyIdentity.init();
+
   return (
     <div className='background-wrapper'>
       <Router>
@@ -24,7 +29,8 @@ function App() {
           <Route path='/cleaning' element={<Cleaning />} />
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='/service-area/:citySlug' element={<ServiceArea/>} />
-          <Route path='/calculator' element={<PaintCalculator/>} />
+          <Route path='/estimator' element={<PaintCalculator/>} />
+          <Route path='/login' element={<Login />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
         <Footer/>

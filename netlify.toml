@@ -1,0 +1,9 @@
+[build]
+  publish = "build"
+
+[[redirects]]
+  from = "/estimator/*"
+  to = "/login"
+  status = 302
+  force = true
+  conditions = { Role = ["estimator", "admin"] }
