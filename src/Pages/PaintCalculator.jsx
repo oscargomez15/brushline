@@ -478,7 +478,7 @@ const totalPaintMaterialCost = useMemo(() => {
                   </label>
                 </div>
               </div>
-              {area.paintWalls || area.paintBaseboard && (
+              {(area.paintWalls || area.paintBaseboard) && (
               <div className="conditions-container">
                 <h3>Conditions</h3>
                 <div>
