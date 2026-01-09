@@ -3,6 +3,13 @@ import { useState, useMemo } from 'react';
 import '../Styling/PaintCalculator.css'
 
 // ...imports
+  const PAINT_GRADE_OPTIONS = [
+  { label: "Promar 200", value: "promar200", pricePerGallon: 31.95 },
+  { label: "Cashmere", value: "cashmere", pricePerGallon: 38.95 },
+  { label: "Super Paint", value: "superpaint", pricePerGallon: 43.95 },
+  { label: "Duration", value: "duration", pricePerGallon: 47.95 },
+  { label: "Emerald", value: "emerald", pricePerGallon: 60.00 },
+];
 
 export const PaintCalculator = () => {
   const AREA_OPTIONS = [
@@ -31,13 +38,6 @@ export const PaintCalculator = () => {
   { label: "Custom", value: "custom" },
   ];
 
-  const PAINT_GRADE_OPTIONS = [
-  { label: "Promar 200", value: "promar200", pricePerGallon: 31.95 },
-  { label: "Cashmere", value: "cashmere", pricePerGallon: 38.95 },
-  { label: "Super Paint", value: "superpaint", pricePerGallon: 43.95 },
-  { label: "Duration", value: "duration", pricePerGallon: 47.95 },
-  { label: "Emerald", value: "emerald", pricePerGallon: 60.00 },
-];
 
 const [paintGrade, setPaintGrade] = useState("promar200");
 
