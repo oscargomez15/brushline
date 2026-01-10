@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
 import '../Styling/Login.css'
