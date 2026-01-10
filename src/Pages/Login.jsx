@@ -30,55 +30,57 @@ export const Login = () => {
     };
   }, [navigate]);
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  setMessage("");
+  setLoading(true);
+
+  try {
+    // IMPORTANT: use gotrue for custom login
+    await netlifyIdentity.gotrue.login(email, password, true);
+
+    // optional: you can navigate here OR rely on the "login" event listener
+    navigate("/estimator", { replace: true });
+  } catch (err) {
+    setError(err?.message || "Login failed. Check your email/password.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+    const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
     setLoading(true);
 
     try {
-      await netlifyIdentity.login(email, password);
-      // redirect happens via onLogin listener
+        await netlifyIdentity.gotrue.signup(email, password, {});
+        setMessage("Account created. Check your email to confirm, then log in.");
+        setMode("login");
     } catch (err) {
-      setError(err?.message || "Login failed. Check your email/password.");
+        setError(err?.message || "Signup failed.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setError("");
-    setMessage("");
-    setLoading(true);
-
-    try {
-      await netlifyIdentity.signup(email, password);
-      setMessage("Account created. Check your email to confirm, then log in.");
-      setMode("login");
-    } catch (err) {
-      setError(err?.message || "Signup failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   const handleRecovery = async (e) => {
-    e.preventDefault();
-    setError("");
-    setMessage("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setMessage("");
+  setLoading(true);
 
-    try {
-      // Sends password recovery email
-      await netlifyIdentity.requestPasswordRecovery(email);
-      setMessage("Recovery email sent. Check your inbox.");
-    } catch (err) {
-      setError(err?.message || "Recovery failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await netlifyIdentity.gotrue.requestPasswordRecovery(email);
+    setMessage("Recovery email sent. Check your inbox.");
+  } catch (err) {
+    setError(err?.message || "Recovery failed.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-page">
