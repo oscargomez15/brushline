@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Painting } from './Pages/Painting';
 import { Drywall } from './Pages/Drywall';
 import { Home } from './Pages/Home';
-import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import { BrowserRouter as Routes, Route} from 'react-router-dom';
 import { Navigation } from './Components/Navigation';
 import { Footer } from './Components/Footer';
 import { Cleaning } from './Pages/Cleaning';

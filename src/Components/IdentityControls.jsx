@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 
 export function IdentityControls() {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
