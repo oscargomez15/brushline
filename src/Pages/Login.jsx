@@ -7,15 +7,13 @@ export const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    netlifyIdentity.init();
-
     // If already logged in, go straight to estimator
     const user = netlifyIdentity.currentUser();
-    if (user) navigate("/estimator");
+    if (user) navigate("/estimator", { replace: true });
 
     const onLogin = () => {
       netlifyIdentity.close();
-      navigate("/estimator");
+      navigate("/estimator", { replace: true });
     };
 
     netlifyIdentity.on("login", onLogin);

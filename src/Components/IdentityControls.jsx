@@ -20,9 +20,8 @@ export function IdentityControls() {
     };
   }, []);
 
-  const handleLogout = () => {
-    netlifyIdentity.logout();
-    navigate("/login");
+  const handleLogout = async() => {
+    await netlifyIdentity.logout();
   };
 
   if (!user) return null;
