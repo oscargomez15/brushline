@@ -1,17 +1,32 @@
+# ✅ Allow /estimator ONLY for these roles
 [[redirects]]
-  from = "/estimator/*"
-  to = "/estimator/:splat"
+  from = "/estimator"
+  to = "/index.html"
   status = 200
   force = true
   conditions = { Role = ["estimator", "admin"] }
-  
+
+[[redirects]]
+  from = "/estimator/*"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = { Role = ["estimator", "admin"] }
+
+# 🚫 Everyone else goes to /login
+[[redirects]]
+  from = "/estimator"
+  to = "/login"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/estimator/*"
   to = "/login"
-  status = 401
+  status = 302
   force = true
 
-# SPA fallback (must be last)
+# SPA fallback MUST be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
