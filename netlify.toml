@@ -3,3 +3,14 @@
   to = "/login"
   status = 302
   force = true
+
+[[redirects]]
+  from = "/estimator/*"
+  to = "/login"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
