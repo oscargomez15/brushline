@@ -27,7 +27,6 @@ export const Login = () => {
 
   return (
     <div className="login-page">
-      <h1>Login</h1>
       <button
         type="button"
         className="collapse-area-btn"
