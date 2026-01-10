@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useMemo } from 'react';
 import '../Styling/PaintCalculator.css'
+import { IdentityControls } from "../Components/IdentityControls";
 
 // ...imports
   const PAINT_GRADE_OPTIONS = [
@@ -280,6 +281,7 @@ const totalPaintMaterialCost = useMemo(() => {
   return (
     <section className='paint-calculator-wrapper'>
       <div className="content-wrapper">
+      <IdentityControls />
       <div className='sub-heading'>
         <h1>Paint Calculator</h1>
         <p>This tool is to be used exclusively by Authorized Employees.</p>
