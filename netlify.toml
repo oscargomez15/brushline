@@ -1,5 +1,19 @@
 [[redirects]]
   from = "/estimator"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = { Role = ["estimator", "admin"] }
+
+[[redirects]]
+  from = "/estimator/*"
+  to = "/index.html"
+  status = 200
+  force = true
+  conditions = { Role = ["estimator", "admin"] }
+
+[[redirects]]
+  from = "/estimator"
   to = "/login"
   status = 302
   force = true
