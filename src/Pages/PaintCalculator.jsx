@@ -283,7 +283,7 @@ const totalPaintMaterialCost = useMemo(() => {
       <div className="content-wrapper">
       <IdentityControls />
       <div className='sub-heading'>
-        <h1>Paint Calculator</h1>
+        <h1>Estimator</h1>
         <p>This tool is to be used exclusively by Authorized Employees.</p>
             <div className="price-inputs">
               <h2>Price per Square Feet</h2>
