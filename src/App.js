@@ -1,4 +1,5 @@
 import './App.css';
+import { useEffect } from "react";
 import { Painting } from './Pages/Painting';
 import { Drywall } from './Pages/Drywall';
 import { Home } from './Pages/Home';
@@ -15,7 +16,21 @@ import { Login } from './Pages/Login';
 import netlifyIdentity from "netlify-identity-widget";
 
 function App() {
-netlifyIdentity.init();
+  useEffect(() => {
+    netlifyIdentity.init();
+
+    const hash = window.location.hash || "";
+
+    // If user clicked an invite link, open signup modal automatically
+    if (hash.includes("invite_token")) {
+      netlifyIdentity.open("signup");
+    }
+
+    // (optional) also handle password recovery links
+    if (hash.includes("recovery_token")) {
+      netlifyIdentity.open("login");
+    }
+  }, []);
 
   return (
     <div className='background-wrapper'>
