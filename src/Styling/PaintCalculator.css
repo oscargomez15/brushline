@@ -96,6 +96,19 @@
   font-weight: 700;
 }
 
+.drag-handle {
+  cursor: grab;
+  border: none;
+  background: none;
+  padding: 0.35rem 0.55rem;
+  line-height: 1;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+
 @media (max-width: 720px){
   .price-input-items{
     grid-template-columns: 1fr;
@@ -523,8 +536,6 @@
 
   .area-card-actions{
     width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Expand + Remove side by side */
     gap: 10px;
   }
 
@@ -618,6 +629,7 @@
 .remove-area-btn.delete{
   width: 100%;
   background: #fff;
+  padding: 0 1rem;
   color: #b91c1c;
   border-color: rgba(185, 28, 28, 0.25);
 }

@@ -30,7 +30,7 @@ export const PaintCalculator = () => {
   const [doorPrice, setDoorPrice] = useState("100"); 
   const [baseboardPricePerLf, setBaseboardPricePerLf] = useState("1.25"); // example
   
-  const [showSummary, setShowSummary] = useState(true);
+  const [showSummary, setShowSummary] = useState(false);
   
   const BASEBOARD_HEIGHT_OPTIONS = [
   { label: '3.25"', value: "3.25" },
@@ -43,32 +43,32 @@ export const PaintCalculator = () => {
 const [paintGrade, setPaintGrade] = useState("promar200");
 
 
-  const [areas, setAreas] = useState([
-    { 
-      id: uid(), 
-      name: "", 
-      length: "", 
-      width: "", 
-      height: "", 
-      furnitureMove: false, 
-      highCeilings: false, 
-      collapsed: false, 
-      doorCount: "0", 
-      doorWidthIn: "36", 
-      doorHeightIn: "80", 
-      baseboardLf: "0", 
-      baseboardHeightChoice: "5.25",
-      baseboardHeightCustomIn: "",
-      paintWalls: true,
-      paintCeiling: true,
-      paintDoors: false,
-      paintBaseboard: false,
-  },
-  ]);
+  const [areas, setAreas] = useState([]);
+
+  const createArea = () => ({
+    id: uid(), 
+    name: "", 
+    length: "", 
+    width: "", 
+    height: "", 
+    furnitureMove: false, 
+    highCeilings: false, 
+    collapsed: true, 
+    doorCount: "0", 
+    doorWidthIn: "36", 
+    doorHeightIn: "80", 
+    baseboardLf: "0", 
+    baseboardHeightChoice: "5.25",
+    baseboardHeightCustomIn: "",
+    paintWalls: true,
+    paintCeiling: true,
+    paintDoors: false,
+    paintBaseboard: false,
+  });
 
   // 3) no event arg; button uses type="button"
   const addArea = () => {
-    setAreas((prev) => [...prev, { id: uid(), name: "", length: "", width: "", height: "", furnitureMove: false, highCeilings: false, collapsed: false, doorCount: "0", doorWidthIn: "36", doorHeightIn: "80", baseboardLf: "0", baseboardHeightChoice: "5.25", baseboardHeightCustomIn: "" }]);
+    setAreas((prev) => [...prev, createArea()]);
   };
 
   const removeArea = (id) => {
@@ -351,7 +351,13 @@ const totalPaintMaterialCost = useMemo(() => {
 
 
       <form className='paint-calculator-form' onSubmit={(e) => e.preventDefault()}>
-        {areas.map((area) => {
+      {areas.length === 0 ? (
+        <div className="empty-state">
+          <p>No areas yet.</p>
+          <p>Click <strong>Add Area</strong> to start an estimate.</p>
+        </div>
+  ) : (
+      areas.map((area) => {
           const calc = perArea.find((x) => x.id === area.id) || {
             wallSqft: 0,
             ceilingSqft: 0,
@@ -636,7 +642,8 @@ const totalPaintMaterialCost = useMemo(() => {
               )}
             </div>
           );
-        })}
+        })
+      )}
       </form>
 
       {/* 3) non-submit add button */}

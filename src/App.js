@@ -15,6 +15,7 @@ import { Login } from './Pages/Login';
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
 import RequireAuth from './Components/RequireAuth';
+import {Estimator} from './Pages/Estimator/Estimator';
 
 function App() {
   const navigate = useNavigate();
@@ -58,7 +59,7 @@ function App() {
           <Route path='/privacy' element={<Privacy/>}/>
           <Route path='/service-area/:citySlug' element={<ServiceArea/>} />
           <Route element={<RequireAuth />}>
-            <Route path='/estimator' element={<PaintCalculator/>} />
+            <Route path='/estimator' element={<Estimator/>} />
           </Route>
           <Route path='*' element={<NotFound />} />
         </Routes>
