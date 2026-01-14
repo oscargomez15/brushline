@@ -10,7 +10,6 @@ import { NotFound } from './Pages/NotFound';
 import { Privacy } from './Pages/Privacy';
 import ScrollToTop from './Components/ScrollToTop';
 import ServiceArea from './Pages/ServiceArea';
-import { PaintCalculator } from './Pages/PaintCalculator';
 import { Login } from './Pages/Login';
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
