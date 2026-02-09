@@ -148,7 +148,9 @@ export const InteriorEstimator = () => {
 
     const handleGenerateQuote = async () => {
   const user = netlifyIdentity.currentUser();
-  const token = user?.token?.access_token;
+  console.log("user exists?", !!user);
+  console.log("user token?", user?.token);
+  const token = user ? await user.jwt() : null;
 
   if (!token) {
     alert("You must be logged in to generate a quote.");
