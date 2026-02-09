@@ -1,5 +1,10 @@
 const { getStore } = require("@netlify/blobs");
 
+const store = getStore("quotes", {
+  siteID: process.env.NETLIFY_SITE_ID,
+  token: process.env.NETLIFY_AUTH_TOKEN,
+});
+
 function json(statusCode, body) {
   return {
     statusCode,
