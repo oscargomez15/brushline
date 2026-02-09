@@ -1,3 +1,14 @@
+if (!process.env.NETLIFY_SITE_ID || !process.env.NETLIFY_AUTH_TOKEN) {
+  return {
+    statusCode: 500,
+    body: JSON.stringify({
+      error: "Missing env vars",
+      hasSiteId: !!process.env.NETLIFY_SITE_ID,
+      hasAuthToken: !!process.env.NETLIFY_AUTH_TOKEN,
+    }),
+  };
+}
+
 const { getStore } = require("@netlify/blobs");
 
 const store = getStore("quotes", {
