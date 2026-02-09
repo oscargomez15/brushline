@@ -39,8 +39,17 @@ export const PaintCalculator = () => {
   { label: "Custom", value: "custom" },
   ];
 
+  const [jobType, setJobType] = useState(() => {
+  return localStorage.getItem("jobType") || ""; // "" means not chosen yet
+  });
 
-const [paintGrade, setPaintGrade] = useState("promar200");
+const chooseJobType = (type) => {
+  setJobType(type);
+  localStorage.setItem("jobType", type);
+};  
+
+
+  const [paintGrade, setPaintGrade] = useState("promar200");
 
 
   const [areas, setAreas] = useState([]);
@@ -282,6 +291,24 @@ const totalPaintMaterialCost = useMemo(() => {
     <section className='paint-calculator-wrapper'>
       <div className="content-wrapper">
       <IdentityControls />
+        <div className="jobtype-card">
+          <h1>Start an Estimate</h1>
+          <p>Is this an interior or exterior job?</p>
+
+       <div className="jobtype-card">
+          <h1>Start an Estimate</h1>
+          <p>Is this an interior or exterior job?</p>
+
+          <div className="jobtype-actions">
+            <button type="button" className="add-area-btn add" onClick={() => chooseJobType("interior")}>
+              Interior
+            </button>
+            <button type="button" className="add-area-btn" onClick={() => chooseJobType("exterior")}>
+              Exterior
+            </button>
+          </div>
+        </div>
+
       <div className='sub-heading'>
         <h1>Estimator</h1>
         <p>This tool is to be used exclusively by Authorized Employees.</p>
@@ -568,12 +595,9 @@ const totalPaintMaterialCost = useMemo(() => {
                       <DimInput label="Door Height (in)" value={area.doorHeightIn} onChange={(v) => updateArea(area.id, "doorHeightIn", v)} />
                     </div>
                   </div>
-                )}                 
-                
+                )}
+
                 </div>
-
-                
-
 
                 <div className="calculations-container">
                   <h3>Calculations (sq ft)</h3>
@@ -692,11 +716,22 @@ const totalPaintMaterialCost = useMemo(() => {
         </div>
       </div>
 
+      <div className="jobtype-card">
+      <h2>Exterior estimator coming soon</h2>
+      <p>You selected Exterior. This calculator hasn’t been built yet.</p>
+
+      <button
+        type="button"
+        className="add-area-btn add"
+        onClick={() => chooseJobType("interior")}
+      >
+        Switch to Interior
+      </button>
       </div>
 
+      </div>
     </section>
   );
-}
 
 // DimInput without aggressive cleaning
 function DimInput({ label, value, onChange }) {

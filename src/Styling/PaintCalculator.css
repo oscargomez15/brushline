@@ -10,10 +10,85 @@
               #f6f7fb;
 }
 
+.exterior-calculator-wrapper{
+  padding-block: 1rem;
+}
+
 .content-wrapper{
   max-width: 1100px;
   margin: 0 auto;
 }
+
+.content-wrapper-jobs{
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 70vh;
+}
+
+.jobtype-card{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.jobtype-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.job-type-opt {
+  min-width: 160px;
+  padding: 0.9rem 1.4rem;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+  transition: 
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease,
+    border-color 0.2s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.job-type-opt:hover {
+  background-color: #f9fafb;
+  border-color: #2563eb;
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.18);
+  transform: translateY(-2px);
+}
+
+.job-type-opt:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.15);
+}
+
+.job-type-opt:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.4),
+    0 12px 28px rgba(37, 99, 235, 0.18);
+}
+
+/* Optional: emphasize Interior as primary */
+.job-type-opt:first-child {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.job-type-opt:first-child:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+}
+
 
 /* =========================
    Header / Intro
@@ -520,10 +595,39 @@
   white-space: nowrap;
 }
 
+.mini-row span,
+.mini-row-summary span,
+.dimensions-container span,
+.total-items span,
+.summary-big span{
+  color: black;
+}
+
 .mini-value{
   text-align: right;
   min-width: 0;
 }
+
+/* Exterior layout: reuse your existing containers; just tune grid */
+.exterior-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .exterior-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* small meta row in the price card */
+.exterior-meta {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 0.25rem;
+}
+
 
 @media (max-width: 520px){
   .calculations-items{
