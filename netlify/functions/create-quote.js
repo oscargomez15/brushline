@@ -51,7 +51,7 @@ exports.handler = async (event, context) => {
     }
 
     // ✅ Validate
-    const { jobType, grandTotal, customerr } = payload;
+    const { jobType, grandTotal, customer } = payload;
 
     if (!jobType || !["interior", "exterior"].includes(jobType)) {
       return json(400, { error: "jobType must be 'interior' or 'exterior'" });
