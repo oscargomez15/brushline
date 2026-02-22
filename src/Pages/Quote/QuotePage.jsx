@@ -37,8 +37,8 @@ export default function QuotePage() {
           <div className="quote-header-left">
             <div className="quote-logo">P</div>
             <div>
-              <div className="quote-company">{quote.companyName || "Premium Painting"}</div>
-              <div className="quote-tagline">Professional Interior & Exterior</div>
+              <div className="quote-company">{quote.companyName}</div>
+              <div className="quote-tagline">Painting and Home Improvement</div>
             </div>
           </div>
 
@@ -71,12 +71,12 @@ export default function QuotePage() {
           <div className="quote-details">
             <div className="quote-detail-card">
               <div className="quote-detail-label">PREPARED FOR</div>
-              <div className="quote-detail-value">{quote.clientName || "Client"}</div>
+              <div className="quote-detail-value">{quote.clientName}</div>
             </div>
 
             <div className="quote-detail-card">
               <div className="quote-detail-label">PROJECT LOCATION</div>
-              <div className="quote-detail-value">{quote.projectAddress || "—"}</div>
+              <div className="quote-detail-value">{quote.projectAddress}</div>
             </div>
 
             <div className="quote-detail-card">

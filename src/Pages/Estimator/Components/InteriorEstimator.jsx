@@ -38,7 +38,7 @@ import {
   return next;
 };
 
-export const InteriorEstimator = () => {
+export const InteriorEstimator = ({customer}) => {
     const navigate = useNavigate();
 
     // --- Pricing inputs (strings kept raw; parsed inside calc)
@@ -167,8 +167,7 @@ export const InteriorEstimator = () => {
     validForDays: 30,
 
     // Optional fields from inputs you can add later:
-    clientName: "Oscar",
-    projectAddress:"321 Painter Ave, Art City, AC 12345",
+    customer,
     note: "Thanks for having us out — excited about this project!",
   };
 

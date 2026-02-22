@@ -51,11 +51,28 @@ exports.handler = async (event, context) => {
     }
 
     // ✅ Validate
-    const { jobType, grandTotal } = payload;
+    const { jobType, grandTotal, customerr } = payload;
 
     if (!jobType || !["interior", "exterior"].includes(jobType)) {
       return json(400, { error: "jobType must be 'interior' or 'exterior'" });
     }
+
+    if (
+      !customer ||
+      typeof customer !== "object" ||
+      !String(customer.firstName || "").trim() ||
+      !String(customer.lastName || "").trim() ||
+      !String(customer.address || "").trim()
+    ) {
+      return json(400, { error: "customer must include firstName, lastName, and address" });
+    }
+
+    const normalizedCustomer = {
+      firstName: String(customer.firstName).trim(),
+      lastName: String(customer.lastName).trim(),
+      address: String(customer.address).trim(),
+      fullName: `${String(customer.firstName).trim()} ${String(customer.lastName).trim()}`,
+    };
 
     // NOTE: if grandTotal is coming as a string from the UI,
     // parse it before validation:
@@ -72,6 +89,7 @@ exports.handler = async (event, context) => {
       createdAt: new Date().toISOString(),
       createdBy: { id: user.sub, email: user.email },
       ...payload,
+      customer: normalizedCustomer,
       grandTotal: totalNumber,
     };
 

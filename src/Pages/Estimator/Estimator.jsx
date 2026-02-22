@@ -4,23 +4,80 @@ import "../../Styling/PaintCalculator.css";
 import ExteriorEstimator from "./Components/ExteriorEstimator";
 import { InteriorEstimator } from "./Components/InteriorEstimator";
 import { IdentityControls } from "../../Components/IdentityControls";
+import {StartEstimate} from "./Components/StartEstimate"
 
 export const Estimator = () => {
     const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
+    const [step, setStep] = useState(() => localStorage.getItem("estimateStep") || "customer");
 
+    const [customer, setCustomer] = useState(() => {
+      try {
+        return JSON.parse(localStorage.getItem("estimateCustomer") || "null");
+      } catch {
+        return null;
+      }
+    });
+
+    const getInitials = (cust) => {
+    const f = (cust?.firstName || "").trim();
+    const l = (cust?.lastName || "").trim();
+    const first = f ? f[0].toUpperCase() : "";
+    const last = l ? l[0].toUpperCase() : "";
+    return (first + last) || "?";
+    };
+
+    const editCustomer = () => {
+      setStep("customer");
+      localStorage.setItem("estimateStep", "customer");
+    };
+
+    if (step === "calculator" && (!customer || !jobType)) {
+    setStep(customer ? "jobType" : "customer");
+    localStorage.setItem("estimateStep", customer ? "jobType" : "customer");
+  }
+    
     const chooseJobType = (type) => {
       setJobType(type);
       localStorage.setItem("jobType", type);
+
+      setStep("calculator");
+      localStorage.setItem("estimateStep", "calculator");
     };
 
-if (!jobType) {
+    const handleCustomerNext = (cust) => {
+      setCustomer(cust);
+      localStorage.setItem("estimateCustomer", JSON.stringify(cust));
+
+      setStep("jobType");
+      localStorage.setItem("estimateStep", "jobType");
+    };
+
+// STEP 1: customer info
+if (step === "customer") {
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper-jobs">
         <IdentityControls />
 
         <div className="jobtype-card">
-          <h1>Start an Estimate</h1>
+          <StartEstimate
+            initialCustomer={customer}
+            onNext={handleCustomerNext}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// STEP 2: choose job type
+if (step === "jobType") {
+  return (
+    <section className="paint-calculator-wrapper">
+      <div className="content-wrapper-jobs">
+        <IdentityControls />
+
+          <h1>Estimate Type</h1>
           <p>Is this an interior or exterior job?</p>
 
           <div className="jobtype-actions">
@@ -29,7 +86,7 @@ if (!jobType) {
               className="job-type-opt"
               onClick={() => chooseJobType("interior")}
             >
-              Interior
+              Interior Paint
             </button>
 
             <button
@@ -37,168 +94,85 @@ if (!jobType) {
               className="job-type-opt"
               onClick={() => chooseJobType("exterior")}
             >
-              Exterior
+              Exterior Paint
             </button>
           </div>
+
+          <button
+            type="button"
+            className="collapse-area-btn"
+            onClick={() => {
+              setStep("customer");
+              localStorage.setItem("estimateStep", "customer");
+            }}
+            style={{ marginTop: 12 }}
+          >
+            Back
+          </button>
         </div>
-      </div>
     </section>
   );
 }
+return (
+  <section className="paint-calculator-wrapper">
+    <div className="content-wrapper">
+      <button
+        type="button"
+        className="collapse-area-btn"
+        onClick={() => {
+          setJobType("");
+          localStorage.removeItem("jobType");
 
-  return (
-    <section className="paint-calculator-wrapper">
-      <div className="content-wrapper">
+          setStep("jobType");
+          localStorage.setItem("estimateStep", "jobType");
+        }}
+      >
+        Change Job Type
+      </button>
+
+      <button
+        type="button"
+        className="collapse-area-btn"
+        onClick={() => {
+          setStep("customer");
+          localStorage.setItem("estimateStep", "customer");
+        }}
+        style={{ marginLeft: 8 }}
+      >
+        Change Customer
+      </button>
+
+      <IdentityControls />
+      {customer && (
         <button
           type="button"
-          className="collapse-area-btn"
-          onClick={() => {
-            setJobType("");
-            localStorage.removeItem("jobType");
-          }}
+          className="customer-pill"
+          onClick={editCustomer}
+          title="Click to edit customer"
         >
-          Change Job Type
+          <div className="customer-avatar" aria-hidden="true">
+            {getInitials(customer)}
+          </div>
+
+          <div className="customer-info">
+            <strong>
+              {customer.firstName} {customer.lastName}
+            </strong>
+            <span>{customer.address}</span>
+            <small className="customer-edit-hint">Click to edit</small>
+          </div>
         </button>
-        <IdentityControls />
+      )}
 
-        <div className="sub-heading">
+      <div className="sub-heading">
         {jobType === "interior" ? (
-        <>
-        <InteriorEstimator/>
-          {/* <h1>Interior Estimator</h1>
-          <p>This tool is to be used exclusively by Authorized Employees.</p>
-
-          <div className="price-inputs">
-            <h2>Price</h2>
-            <p>Price set is standard rate. Price will change based on some of the conditions.</p>
-
-            <div className="price-input-items">
-              <label>
-                <span>Wall ($)</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className="dim-input"
-                  value={wallPricePerSqft}
-                  onChange={(e) => setWallPricePerSqft(e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>Ceiling ($)</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className="dim-input"
-                  value={ceilingPricePerSqft}
-                  onChange={(e) => setCeilingPricePerSqft(e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>Baseboard ($/LF)</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className="dim-input"
-                  value={baseboardPricePerLf}
-                  onChange={(e) => setBaseboardPricePerLf(e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>Door Price ($)</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  className="dim-input"
-                  value={doorPrice}
-                  onChange={(e) => setDoorPrice(e.target.value)}
-                />
-              </label>
-
-              <label>
-                <span>Paint Grade (SW)</span>
-                <select
-                  className="dim-input"
-                  value={paintGrade}
-                  onChange={(e) => setPaintGrade(e.target.value)}
-                >
-                  {PAINT_GRADE_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          </div>
-        <form className="paint-calculator-form" onSubmit={(e) => e.preventDefault()}>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={areas.map((a) => a.id)}
-            strategy={verticalListSortingStrategy}
-          >
-          {areas.length === 0 ? (
-            <EmptyState />
-          ) : (
-            areas.map((area) => {
-              const calc = perAreaById.get(area.id) ?? EMPTY_CALC;
-
-              return (
-              <SortableAreaCard
-                key={area.id}
-                id={area.id}               // 👈 REQUIRED
-                area={area}
-                calc={calc}
-                onToggle={() => toggleArea(area.id)}
-                onRemove={() => removeArea(area.id)}
-                onUpdate={(key, value) => updateArea(area.id, key, value)}
-                fmt={fmt}
-                fmtMoney={fmtMoney}
-                fmtDollar={fmtDollar}
-                fmtHours={fmtHours}
-              />
-              );
-            })
-          )}
-          </SortableContext>
-          </DndContext>
-
-          <button type="button" onClick={addArea} className="add-area-btn add">
-            + Add Area
-          </button>
-
-          <SummarySticky
-            showSummary={showSummary}
-            setShowSummary={setShowSummary}
-            grandTotal={grandTotal}
-            totalJobHours={totalJobHours}
-            totalJobGallons={totalJobGallons}
-            paintGrade={paintGrade}
-            totalPaintMaterialCost={totalPaintMaterialCost}
-            fmtMoney={fmtMoney}
-            fmtHours={fmtHours}
-          />
-        </form> */}
-
-        </> ) : (
-          <div className="jobtype-card">
-            <ExteriorEstimator/>
-
-            <button type="button" className="add-area-btn add" onClick={() => chooseJobType("interior")}>
-              Switch to Interior
-            </button>
-          </div>
+          <InteriorEstimator customer={customer} />
+        ) : (
+          <ExteriorEstimator customer={customer} />
         )}
-
       </div>
     </div>
-    </section>
+  </section>
   );
 };
 
