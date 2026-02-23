@@ -147,8 +147,6 @@ export const InteriorEstimator = ({customer}) => {
     };
 
     const handleGenerateQuote = async () => {
-      console.log(customer);
-      
       const user = netlifyIdentity.currentUser();
       const token = user ? await user.jwt() : null;
 

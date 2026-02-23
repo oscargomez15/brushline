@@ -53,6 +53,20 @@ exports.handler = async (event, context) => {
     // ✅ Validate
     const { jobType, grandTotal, customer } = payload;
 
+    if (
+      !customer ||
+      typeof customer !== "object" ||
+      !String(customer.firstName || "").trim() ||
+      !String(customer.lastName || "").trim() ||
+      !String(customer.address || "").trim()
+    ) {
+      return json(400, {
+        error: "Missing customer info in request payload",
+        receivedCustomer: customer ?? null,
+        receivedKeys: Object.keys(payload || {}),
+      });
+    }
+
     if (!jobType || !["interior", "exterior"].includes(jobType)) {
       return json(400, { error: "jobType must be 'interior' or 'exterior'" });
     }

@@ -10,6 +10,16 @@ export default function QuotePage() {
   const [quote, setQuote] = useState(null);
   const [err, setErr] = useState("");
 
+  const customerName =
+  quote?.clientName ||
+  quote?.customer?.fullName ||
+  `${quote?.customer?.firstName || ""} ${quote?.customer?.lastName || ""}`.trim();
+
+  const projectAddress =
+  quote?.projectAddress ||
+  quote?.customer?.address ||
+  "";
+
   useEffect(() => {
     (async () => {
       try {
@@ -71,12 +81,12 @@ export default function QuotePage() {
           <div className="quote-details">
             <div className="quote-detail-card">
               <div className="quote-detail-label">PREPARED FOR</div>
-              <div className="quote-detail-value">{quote.clientName}</div>
+              <div className="quote-detail-value">{customerName}</div>
             </div>
 
             <div className="quote-detail-card">
               <div className="quote-detail-label">PROJECT LOCATION</div>
-              <div className="quote-detail-value">{quote.projectAddress}</div>
+              <div className="quote-detail-value">{projectAddress}</div>
             </div>
 
             <div className="quote-detail-card">
