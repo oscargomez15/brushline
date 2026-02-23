@@ -160,6 +160,55 @@
   line-height: 1.6;
 }
 
+.quote-items {
+  margin-top: 18px;
+}
+
+.quote-items-title {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.quote-area {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.quote-area-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.quote-area-name {
+  font-weight: 700;
+}
+
+.quote-area-subtotal {
+  font-weight: 700;
+}
+
+.quote-area-table {
+  display: grid;
+  gap: 8px;
+}
+
+.quote-area-row {
+  display: grid;
+  grid-template-columns: 1.6fr 0.7fr 0.7fr;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.quote-area-row-head {
+  font-weight: 700;
+  opacity: 0.75;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .quote-meta {

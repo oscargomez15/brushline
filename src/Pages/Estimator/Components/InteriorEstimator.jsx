@@ -146,6 +146,84 @@ export const InteriorEstimator = ({customer}) => {
       setAreas((prev) => reorderById(prev, active.id, over.id));
     };
 
+const buildInteriorItems = (areas, perAreaById) => {
+  return areas.map((a, idx) => {
+    const calc = perAreaById.get(a.id) || {};
+
+    const areaName = (a.name || "").trim() || `Area ${idx + 1}`;
+    const components = [];
+
+    // Helpers to safely read values from calc (since we don't know your exact calc keys)
+    const pick = (...keys) => {
+      for (const k of keys) {
+        const v = calc?.[k];
+        if (v !== undefined && v !== null && v !== "") return v;
+      }
+      return null;
+    };
+
+    // Walls
+    if (a.paintWalls) {
+      components.push({
+        label: "Walls",
+        qty: pick("wallSqft", "wallsSqft", "wallAreaSqft"),
+        unit: "sq ft",
+        amount: pick("wallTotal", "wallsTotal", "wallCost"),
+      });
+    }
+
+    // Ceiling
+    if (a.paintCeiling) {
+      components.push({
+        label: "Ceilings",
+        qty: pick("ceilingSqft", "ceilingsSqft", "ceilingAreaSqft"),
+        unit: "sq ft",
+        amount: pick("ceilingTotal", "ceilingsTotal", "ceilingCost"),
+      });
+    }
+
+    // Doors
+    if (a.paintDoors) {
+      const doorCount = Number.parseInt(a.doorCount || "0", 10) || 0;
+      components.push({
+        label: "Doors",
+        qty: doorCount,
+        unit: "ea",
+        amount: pick("doorsTotal", "doorTotal", "doorCost"),
+      });
+    }
+
+    // Baseboards
+    if (a.paintBaseboard) {
+      components.push({
+        label: "Baseboards",
+        qty: pick("baseboardLf", "baseboardsLf", "baseboardLengthLf"),
+        unit: "lf",
+        amount: pick("baseboardTotal", "baseboardsTotal", "baseboardCost"),
+      });
+    }
+
+    const subtotal =
+      pick("areaTotal", "total", "grandTotal") ??
+      components.reduce((sum, c) => sum + (Number(c.amount) || 0), 0);
+
+    return {
+      areaId: a.id,
+      areaName,
+      subtotal: Number(subtotal) || 0,
+      components,
+      // Keep raw scope toggles too (useful later)
+      scope: {
+        paintWalls: !!a.paintWalls,
+        paintCeiling: !!a.paintCeiling,
+        paintDoors: !!a.paintDoors,
+        paintBaseboard: !!a.paintBaseboard,
+        furnitureMove: !!a.furnitureMove,
+      },
+    };
+  });
+};
+
     const handleGenerateQuote = async () => {
       const user = netlifyIdentity.currentUser();
       const token = user ? await user.jwt() : null;
@@ -154,6 +232,7 @@ export const InteriorEstimator = ({customer}) => {
     alert("You must be logged in to generate a quote.");
     return;
   }
+  const items = buildInteriorItems(areas, perAreaById);
 
   // Build your payload from your existing totals
   const payload = {
@@ -167,6 +246,7 @@ export const InteriorEstimator = ({customer}) => {
     // Optional fields from inputs you can add later:
     customer,
     note: "Thanks for having us out — excited about this project!",
+    items
   };
 
   const res = await fetch("/.netlify/functions/create-quote", {

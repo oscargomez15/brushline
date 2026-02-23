@@ -98,6 +98,41 @@ export default function QuotePage() {
             </div>
           </div>
 
+          {Array.isArray(quote.items) && quote.items.length > 0 ? (
+          <div className="quote-items">
+            <h2 className="quote-items-title">Scope of Work</h2>
+
+            {quote.items.map((area) => (
+              <div key={area.areaId} className="quote-area">
+                <div className="quote-area-head">
+                  <div className="quote-area-name">{area.areaName}</div>
+                  <div className="quote-area-subtotal">{fmtMoney(area.subtotal)}</div>
+                </div>
+
+                <div className="quote-area-table">
+                  <div className="quote-area-row quote-area-row-head">
+                    <div>Item</div>
+                    <div>Qty</div>
+                    <div>Amount</div>
+                  </div>
+
+                  {(area.components || []).map((c, i) => (
+                    <div key={i} className="quote-area-row">
+                      <div>{c.label}</div>
+                      <div>
+                        {c.qty !== null && c.qty !== undefined && c.qty !== ""
+                          ? `${c.qty}${c.unit ? ` ${c.unit}` : ""}`
+                          : "—"}
+                      </div>
+                      <div>{c.amount ? fmtMoney(c.amount) : "—"}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
           {quote.note ? (
             <div className="quote-note">
               <div className="quote-note-title">Note</div>
