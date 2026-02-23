@@ -102,19 +102,19 @@ export default function QuotePage() {
             <div className="quote-scope">
               <div className="quote-scope-title">Scope of Work</div>
 
-              {quote.scopeItems.map((a) => (
-                <div key={a.areaId} className="quote-scope-area">
-                  <div className="quote-scope-area-name">{a.areaName}</div>
-
-                  <div className="quote-scope-tags">
-                    {(a.scope || []).map((tag) => (
-                      <span key={tag} className="quote-scope-tag">
-                        {tag}
-                      </span>
-                    ))}
+              {quote.scopeItems.map((area) => (
+                <div key={area.areaId} className="quote-scope-area">
+                  <div className="quote-scope-area-name">
+                    {area.areaName}
                   </div>
 
-                  {a.notes ? <div className="quote-scope-notes">{a.notes}</div> : null}
+                  <div className="quote-scope-list">
+                    {area.scope.map((item) => (
+                      <div key={item} className="quote-scope-line">
+                        • Paint {item}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

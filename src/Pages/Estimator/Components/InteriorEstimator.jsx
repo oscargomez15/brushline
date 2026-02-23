@@ -151,18 +151,17 @@ export const InteriorEstimator = ({customer}) => {
         const areaName = (a.name || "").trim() || `Area ${idx + 1}`;
 
         const scope = [];
+
         if (a.paintWalls) scope.push("Walls");
         if (a.paintCeiling) scope.push("Ceilings");
         if (a.paintDoors) scope.push("Doors");
         if (a.paintBaseboard) scope.push("Baseboards");
 
-        // ✅ furnitureMove omitted on purpose
 
         return {
           areaId: a.id,
           areaName,
           scope, // array of strings
-          notes: (a.notes || "").trim() || "", // optional if you have it
         };
       });
     };
