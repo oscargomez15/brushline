@@ -23,10 +23,13 @@ export default function QuotePage() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Failed to load quote");
-        setQuote(data);
+      const res = await fetch(`/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`);
+      const data = await res.json();
+      console.log("get-quote response:", data);
+      if (!res.ok) throw new Error(data?.error || "Failed to load quote");
+
+      // ✅ Accept either { ...quoteFields } or { quote: { ...quoteFields } }
+      setQuote(data?.quote ?? data);
       } catch (e) {
         setErr(e.message);
       }

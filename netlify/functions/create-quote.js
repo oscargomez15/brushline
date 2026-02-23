@@ -104,6 +104,8 @@ exports.handler = async (event, context) => {
       createdBy: { id: user.sub, email: user.email },
       ...payload,
       customer: normalizedCustomer,
+      clientName: normalizedCustomer.fullName,      // ✅ add
+      projectAddress: normalizedCustomer.address,   // ✅ add
       grandTotal: totalNumber,
     };
 
