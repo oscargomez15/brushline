@@ -30,6 +30,8 @@ export default function QuotePage() {
 
       // ✅ Accept either { ...quoteFields } or { quote: { ...quoteFields } }
       setQuote(data?.quote ?? data);
+      console.log("QUOTE FROM get-quote:", data);
+      console.log("scopeItems:", data?.scopeItems);
       } catch (e) {
         setErr(e.message);
       }
