@@ -98,40 +98,27 @@ export default function QuotePage() {
             </div>
           </div>
 
-          {Array.isArray(quote.items) && quote.items.length > 0 ? (
-          <div className="quote-items">
-            <h2 className="quote-items-title">Scope of Work</h2>
+          {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
+            <div className="quote-scope">
+              <div className="quote-scope-title">Scope of Work</div>
 
-            {quote.items.map((area) => (
-              <div key={area.areaId} className="quote-area">
-                <div className="quote-area-head">
-                  <div className="quote-area-name">{area.areaName}</div>
-                  <div className="quote-area-subtotal">{fmtMoney(area.subtotal)}</div>
-                </div>
+              {quote.scopeItems.map((a) => (
+                <div key={a.areaId} className="quote-scope-area">
+                  <div className="quote-scope-area-name">{a.areaName}</div>
 
-                <div className="quote-area-table">
-                  <div className="quote-area-row quote-area-row-head">
-                    <div>Item</div>
-                    <div>Qty</div>
-                    <div>Amount</div>
+                  <div className="quote-scope-tags">
+                    {(a.scope || []).map((tag) => (
+                      <span key={tag} className="quote-scope-tag">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
 
-                  {(area.components || []).map((c, i) => (
-                    <div key={i} className="quote-area-row">
-                      <div>{c.label}</div>
-                      <div>
-                        {c.qty !== null && c.qty !== undefined && c.qty !== ""
-                          ? `${c.qty}${c.unit ? ` ${c.unit}` : ""}`
-                          : "—"}
-                      </div>
-                      <div>{c.amount ? fmtMoney(c.amount) : "—"}</div>
-                    </div>
-                  ))}
+                  {a.notes ? <div className="quote-scope-notes">{a.notes}</div> : null}
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : null}
+              ))}
+            </div>
+          ) : null}
 
           {quote.note ? (
             <div className="quote-note">

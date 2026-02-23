@@ -160,53 +160,46 @@
   line-height: 1.6;
 }
 
-.quote-items {
-  margin-top: 18px;
+.quote-scope {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0,0,0,0.08);
 }
 
-.quote-items-title {
-  font-size: 16px;
-  margin: 0 0 10px;
-}
-
-.quote-area {
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-
-.quote-area-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
+.quote-scope-title {
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
-.quote-area-name {
-  font-weight: 700;
+.quote-scope-area {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
 }
 
-.quote-area-subtotal {
+.quote-scope-area-name {
   font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.quote-area-table {
-  display: grid;
+.quote-scope-tags {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-.quote-area-row {
-  display: grid;
-  grid-template-columns: 1.6fr 0.7fr 0.7fr;
-  gap: 10px;
-  font-size: 13px;
+.quote-scope-tag {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.06);
 }
 
-.quote-area-row-head {
-  font-weight: 700;
-  opacity: 0.75;
+.quote-scope-notes {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.8;
 }
 
 /* ===== Responsive ===== */
