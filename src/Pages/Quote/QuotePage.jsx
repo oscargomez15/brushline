@@ -129,6 +129,17 @@ export default function QuotePage() {
             </div>
           ) : null}
         </section>
+
+        {quote.terms ? (
+          <section className="quote-terms">
+            <div className="quote-terms-title">Terms of Service</div>
+            <div className="quote-terms-body">
+              {quote.terms.split("\n").map((line, idx) => (
+                <p key={idx}>{line}</p>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </div>
   );

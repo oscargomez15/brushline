@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { DEFAULT_TERMS_TEXT, DEFAULT_TERMS_VERSION } = require("./_terms");
 
 function json(statusCode, body) {
   return {
@@ -108,6 +109,8 @@ exports.handler = async (event, context) => {
       clientName: normalizedCustomer.fullName,      // ✅ add
       projectAddress: normalizedCustomer.address,   // ✅ add
       grandTotal: totalNumber,
+      terms: payload.terms || DEFAULT_TERMS_TEXT,
+      termsVersion: payload.termsVersion || DEFAULT_TERMS_VERSION,
     };
 
     await store.setJSON(id, quote);

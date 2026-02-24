@@ -202,6 +202,24 @@
   opacity: 0.8;
 }
 
+.quote-terms {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.quote-terms-title {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.quote-terms-body p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .quote-meta {

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import "../../Styling/FindEstimate.css";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(n) || 0);
@@ -39,67 +40,109 @@ export default function FindEstimates() {
   if (err) return <div style={{ color: "crimson" }}>Error: {err}</div>;
 
   return (
-    <div>
-      <h1 style={{ marginTop: 0 }}>Find Estimates</h1>
+  <div className="find-estimates">
+    {/* Title row */}
+    <div className="fe-header">
+      <div>
+        <h1 className="fe-title">Find Estimates</h1>
+        <p className="fe-subtitle">
+          Search, review, and open proposals you’ve generated.
+        </p>
+      </div>
 
-      <div style={{ display: "flex", gap: 10, marginBottom: 12 }}>
+      <a className="fe-primary-btn" href="/estimates/create">
+        + New Estimate
+      </a>
+    </div>
+
+    {/* Toolbar */}
+    <div className="fe-toolbar">
+      <div className="fe-search">
+        <span className="fe-search-icon" aria-hidden="true">⌕</span>
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search by name, address, id…"
-          style={{ padding: 10, borderRadius: 10, border: "1px solid #ddd", width: 360 }}
+          placeholder="Search by client, address, quote #..."
         />
       </div>
 
-      <div style={{ overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", background: "white" }}>
+      <div className="fe-stats">
+        <div className="fe-stat">
+          <div className="fe-stat-label">Total</div>
+          <div className="fe-stat-value">{items.length}</div>
+        </div>
+        <div className="fe-stat">
+          <div className="fe-stat-label">Showing</div>
+          <div className="fe-stat-value">{filtered.length}</div>
+        </div>
+      </div>
+    </div>
+
+    {/* Table */}
+    <div className="fe-card">
+      <div className="fe-table-wrap">
+        <table className="fe-table">
           <thead>
             <tr>
-              <Th>Date</Th>
-              <Th>Client</Th>
-              <Th>Address</Th>
-              <Th>Type</Th>
-              <Th>Total</Th>
-              <Th>Open</Th>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Address</th>
+              <th>Type</th>
+              <th className="right">Total</th>
+              <th className="right">Open</th>
             </tr>
           </thead>
+
           <tbody>
-            {filtered.map((x) => (
-              <tr key={x.id}>
-                <Td>{x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "—"}</Td>
-                <Td>{x.clientName || "—"}</Td>
-                <Td>{x.projectAddress || "—"}</Td>
-                <Td style={{ textTransform: "capitalize" }}>{x.jobType || "—"}</Td>
-                <Td>{fmtMoney(x.grandTotal)}</Td>
-                <Td>
-                  <a href={`/quote/${x.id}`} target="_blank" rel="noreferrer">
-                    View
-                  </a>
-                </Td>
-              </tr>
-            ))}
+            {filtered.map((x) => {
+              const clientInitial = (x.clientName || "?").trim()[0]?.toUpperCase() || "?";
+              const typeLabel = x.jobType === "exterior" ? "Exterior" : "Interior";
+              const typeClass = x.jobType === "exterior" ? "exterior" : "interior";
+
+              return (
+                <tr key={x.id}>
+                  <td className="muted">
+                    {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "—"}
+                  </td>
+
+                  <td>
+                    <div className="fe-client">
+                      <div className="fe-avatar" aria-hidden="true">{clientInitial}</div>
+                      <div className="fe-client-meta">
+                        <div className="fe-client-name">{x.clientName || "—"}</div>
+                        <div className="fe-client-id">#{x.quoteNumber || x.id}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className="muted">{x.projectAddress || "—"}</td>
+
+                  <td>
+                    <span className={`fe-pill ${typeClass}`}>{typeLabel}</span>
+                  </td>
+
+                  <td className="right strong">{fmtMoney(x.grandTotal)}</td>
+
+                  <td className="right">
+                    <a className="fe-link" href={`/quote/${x.id}`} target="_blank" rel="noreferrer">
+                      View →
+                    </a>
+                  </td>
+                </tr>
+              );
+            })}
+
             {filtered.length === 0 ? (
               <tr>
-                <Td colSpan={6} style={{ opacity: 0.7 }}>
+                <td colSpan={6} className="fe-empty">
                   No estimates found.
-                </Td>
+                </td>
               </tr>
             ) : null}
           </tbody>
         </table>
       </div>
     </div>
-  );
-}
-
-function Th({ children }) {
-  return (
-    <th style={{ textAlign: "left", padding: 10, borderBottom: "1px solid #eee", fontSize: 12, opacity: 0.7 }}>
-      {children}
-    </th>
-  );
-}
-
-function Td({ children, ...rest }) {
-  return <td style={{ padding: 10, borderBottom: "1px solid #f3f3f3" }} {...rest}>{children}</td>;
+  </div>
+);
 }
