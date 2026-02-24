@@ -78,26 +78,30 @@ export default function QuotePage() {
           </div>
 
         <div className="quote-header-right">
-          <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
-            {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
+          <div className="quote-header-actions">
+            <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
+              {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
+            </div>
+
+            {quote.status !== "approved" ? (
+              <button
+                type="button"
+                className="quote-approve-btn"
+                onClick={handleApprove}
+                disabled={approving}
+              >
+                {approving ? "Approving..." : "Approve Estimate"}
+              </button>
+            ) : null}
           </div>
 
-          {quote.status !== "approved" ? (
-            <button
-              type="button"
-              className="quote-approve-btn"
-              onClick={handleApprove}
-              disabled={approving}
-            >
-              {approving ? "Approving..." : "Approve Estimate"}
-            </button>
-          ) : (
-            <div className="quote-approved-date">
-              Approved {quote.approvedAt ? new Date(quote.approvedAt).toLocaleString() : ""}
-            </div>
-          )}
-
           <div className="quote-title">Proposal</div>
+
+          {quote.status === "approved" && quote.approvedAt ? (
+            <div className="quote-approved-date">
+              Approved {new Date(quote.approvedAt).toLocaleString()}
+            </div>
+          ) : null}
         </div>
         </header>
 

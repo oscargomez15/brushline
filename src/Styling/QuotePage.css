@@ -52,6 +52,81 @@
   gap: 16px;
 }
 
+/* Header container already exists in your code */
+.quote-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* RIGHT COLUMN */
+.quote-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 240px;
+}
+
+/* Row for status + approve button */
+.quote-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap; /* prevents overflow on small screens */
+  justify-content: flex-end;
+}
+
+/* Keep Proposal aligned and not huge */
+.quote-title {
+  font-size: 28px;     /* adjust to taste */
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+  text-align: right;
+}
+
+/* Status pill (keep your existing base styles if you have them) */
+.quote-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.quote-status-pill.approved {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+/* Approve button */
+.quote-approve-btn {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: #16a34a; /* green */
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.quote-approve-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quote-approved-date {
+  font-size: 12px;
+  opacity: 0.75;
+  text-align: right;
+}
+
 .quote-logo {
   width: 48px;
   height: 48px;
