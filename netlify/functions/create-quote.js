@@ -41,6 +41,7 @@ exports.handler = async (event, context) => {
 
     // ✅ Store configured with siteID/token
     const store = getStore("quotes", { siteID, token });
+    const indexStore = getStore("quotes_index", { siteID, token });
 
     // ✅ Parse body
     let payload;
@@ -110,6 +111,14 @@ exports.handler = async (event, context) => {
     };
 
     await store.setJSON(id, quote);
+    await indexStore.setJSON(id, {
+      id,
+      createdAt: quote.createdAt,
+      jobType: quote.jobType,
+      grandTotal: quote.grandTotal,
+      clientName: quote.clientName || quote.customer?.fullName || "",
+      projectAddress: quote.projectAddress || quote.customer?.address || "",
+    });
 
     return json(200, { id, url: `/quote/${id}` });
   } catch (err) {
