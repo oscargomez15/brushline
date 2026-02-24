@@ -12,7 +12,6 @@ import {
   FiPlusCircle,
   FiEdit,
   FiDollarSign,
-  FiLogOut,
   FiChevronRight,
   FiChevronDown
 } from "react-icons/fi";

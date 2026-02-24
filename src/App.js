@@ -26,7 +26,6 @@ import FindEstimates from "./Pages/Estimates/FindEstimates";
 
 // (Optional placeholders for now)
 const Dashboard = () => <div>Dashboard (coming next)</div>;
-const EstimatesFind = () => <div>Find Estimates</div>;
 const EstimatesEdit = () => <div>Edit Estimate</div>;
 const InvoicesFind = () => <div>Find Invoices</div>;
 const InvoicesCreate = () => <div>Create Invoice</div>;
