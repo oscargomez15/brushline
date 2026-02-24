@@ -1,3 +1,4 @@
+
 /* ===== Page Wrapper ===== */
 .quote-wrap {
   min-height: 100vh;
@@ -5,6 +6,7 @@
   padding: 32px 16px;
   display: flex;
   justify-content: center;
+  padding-top: 174px; /* adjust to match your navbar height */
 }
 
 .quote-shell {
@@ -203,9 +205,8 @@
 }
 
 .quote-terms {
-  margin-top: 18px;
-  padding-top: 14px;
   border-top: 1px solid rgba(0,0,0,0.08);
+  padding: 32px;
 }
 
 .quote-terms-title {

@@ -7,7 +7,9 @@ export default function PublicLayout() {
   return (
     <div className="background-wrapper">
       <Navigation />
-      <Outlet />
+      <div className="public-with-nav">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );
