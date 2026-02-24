@@ -68,6 +68,15 @@ export default function QuotePage() {
       <div className="quote-shell">
 
         {/* HEADER in the style you showed (use your quote.css) */}
+        <header className="quote-header">
+          <div className="quote-header-left">
+            <div className="quote-logo">P</div>
+            <div>
+              <div className="quote-company">{quote.companyName}</div>
+              <div className="quote-tagline">Painting and Home Improvement</div>
+            </div>
+          </div>
+
         <div className="quote-header-right">
           <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
             {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
@@ -90,6 +99,7 @@ export default function QuotePage() {
 
           <div className="quote-title">Proposal</div>
         </div>
+        </header>
 
         <section className="quote-meta">
           <div className="quote-meta-item">
