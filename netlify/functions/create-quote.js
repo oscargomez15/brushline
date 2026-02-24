@@ -111,6 +111,8 @@ exports.handler = async (event, context) => {
       grandTotal: totalNumber,
       terms: payload.terms || DEFAULT_TERMS_TEXT,
       termsVersion: payload.termsVersion || DEFAULT_TERMS_VERSION,
+      status: payload.status || "awaiting_approval",
+      approvedAt: null,
     };
 
     await store.setJSON(id, quote);
@@ -121,6 +123,8 @@ exports.handler = async (event, context) => {
       grandTotal: quote.grandTotal,
       clientName: quote.clientName || quote.customer?.fullName || "",
       projectAddress: quote.projectAddress || quote.customer?.address || "",
+      status: payload.status || "awaiting_approval",
+      approvedAt: null,
     });
 
     return json(200, { id, url: `/quote/${id}` });

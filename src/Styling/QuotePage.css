@@ -19,12 +19,31 @@
 }
 
 /* ===== Header ===== */
-.quote-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 28px 32px;
-  border-bottom: 1px solid #e5e7eb;
+.quote-status-pill.approved {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.25);
+}
+
+.quote-approve-btn {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #111827;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.quote-approve-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quote-approved-date {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.75;
 }
 
 .quote-header-left {

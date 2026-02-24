@@ -20,6 +20,26 @@ export default function QuotePage() {
   quote?.customer?.address ||
   "";
 
+  const [approving, setApproving] = useState(false);
+
+  const handleApprove = async () => {
+    try {
+      setApproving(true);
+      const res = await fetch("/.netlify/functions/approve-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: quote.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to approve");
+      setQuote(data.quote);
+    } catch (e) {
+      setErr(e.message);
+    } finally {
+      setApproving(false);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -48,20 +68,28 @@ export default function QuotePage() {
       <div className="quote-shell">
 
         {/* HEADER in the style you showed (use your quote.css) */}
-        <header className="quote-header">
-          <div className="quote-header-left">
-            <div className="quote-logo">P</div>
-            <div>
-              <div className="quote-company">{quote.companyName}</div>
-              <div className="quote-tagline">Painting and Home Improvement</div>
-            </div>
+        <div className="quote-header-right">
+          <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
+            {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
           </div>
 
-          <div className="quote-header-right">
-            <div className="quote-status-pill">AWAITING APPROVAL</div>
-            <div className="quote-title">Proposal</div>
-          </div>
-        </header>
+          {quote.status !== "approved" ? (
+            <button
+              type="button"
+              className="quote-approve-btn"
+              onClick={handleApprove}
+              disabled={approving}
+            >
+              {approving ? "Approving..." : "Approve Estimate"}
+            </button>
+          ) : (
+            <div className="quote-approved-date">
+              Approved {quote.approvedAt ? new Date(quote.approvedAt).toLocaleString() : ""}
+            </div>
+          )}
+
+          <div className="quote-title">Proposal</div>
+        </div>
 
         <section className="quote-meta">
           <div className="quote-meta-item">

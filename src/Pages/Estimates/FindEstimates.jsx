@@ -88,6 +88,7 @@ export default function FindEstimates() {
               <th>Client</th>
               <th>Address</th>
               <th>Type</th>
+              <th>Status</th>
               <th className="right">Total</th>
               <th className="right">Open</th>
             </tr>
@@ -119,6 +120,12 @@ export default function FindEstimates() {
 
                   <td>
                     <span className={`fe-pill ${typeClass}`}>{typeLabel}</span>
+                  </td>
+
+                  <td>
+                    <span className={`fe-pill ${x.status === "approved" ? "approved" : "awaiting"}`}>
+                        {x.status === "approved" ? "Approved" : "Awaiting"}
+                    </span>
                   </td>
 
                   <td className="right strong">{fmtMoney(x.grandTotal)}</td>

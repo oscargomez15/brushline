@@ -3,6 +3,9 @@
   margin: 0 auto;
 }
 
+.fe-pill.awaiting { background: rgba(245,158,11,0.12); }
+.fe-pill.approved { background: rgba(34,197,94,0.12); }
+
 .fe-header {
   display: flex;
   align-items: flex-end;
