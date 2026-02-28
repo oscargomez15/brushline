@@ -182,42 +182,52 @@ export default function QuotePage() {
             </div>
           ) : null}
 
-          {showPkgs.length > 0 ? (
-            <section className="quote-upgrades">
-              <div className="quote-upgrades-title">Change Scope</div>
+        <div className="quote-upgrades">
+          <div className="quote-upgrades-title">Change Scope</div>
+          <div className="quote-upgrades-subtitle">
+            Select the scope you’d like included in this estimate.
+          </div>
 
-              <div className="quote-upgrades-grid">
-                {showPkgs.map((p) => {
-                  const newTotal = Number(p.total) || 0;
-                  const diff = newTotal - currentTotal;
-                  const isUp = diff > 0;
+          <div className="quote-upgrades-grid">
+            {showPkgs.map((p) => {
+              const newTotal = Number(p.total) || 0;
+              const diff = newTotal - currentTotal;
+              const isUp = diff > 0;
+              const badge =
+                diff === 0 ? "" : isUp ? `+ ${fmtMoney(diff)}` : `- ${fmtMoney(Math.abs(diff))}`;
 
-                  return (
-                    <div key={p.key} className="quote-upgrade-card">
-                      <div className="quote-upgrade-head">
-                        <div className="quote-upgrade-name">{p.label}</div>
-                        <div className={`quote-upgrade-diff ${isUp ? "up" : "down"}`}>
-                          {diff === 0 ? "" : isUp ? `+ ${fmtMoney(diff)}` : `- ${fmtMoney(Math.abs(diff))}`}
-                        </div>
-                      </div>
+              return (
+                <div key={p.key} className="scope-card">
+                  <div className="scope-card-top">
+                    <div className="scope-card-title">{p.label}</div>
 
-                      <div className="quote-upgrade-meta">
-                        New total: <strong>{fmtMoney(newTotal)}</strong>
-                      </div>
+                    {badge ? (
+                      <span className={`scope-badge ${isUp ? "up" : "down"}`}>
+                        {badge}
+                      </span>
+                    ) : null}
+                  </div>
 
-                      <button
-                        type="button"
-                        className="quote-upgrade-btn"
-                        onClick={() => handleSelectPackage(p.key)}
-                      >
-                        Select This Scope
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          ) : null}
+                  <div className="scope-card-total">
+                    New total <span className="scope-card-total-amt">{fmtMoney(newTotal)}</span>
+                  </div>
+
+                  <div className="scope-card-divider" />
+
+                  <div className="scope-card-actions">
+                    <button
+                      type="button"
+                      className="scope-card-btn"
+                      onClick={() => handleSelectPackage(p.key)}
+                    >
+                      Select This Scope
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
           {quote.note ? (
             <div className="quote-note">
