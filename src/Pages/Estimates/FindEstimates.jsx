@@ -67,7 +67,15 @@ export default function FindEstimates() {
 
   return (
     <div className="find-estimates">
-      {/* ... your header + toolbar ... */}
+      <div className="fe-toolbar">
+        <input
+            type="text"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search by client, address, or ID..."
+            className="fe-search"
+        />
+        </div>
 
       <div className="fe-card">
         <div className="fe-table-wrap">

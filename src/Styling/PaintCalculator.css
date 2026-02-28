@@ -778,7 +778,8 @@
    Buttons
 ========================= */
 .add-area-btn,
-.remove-area-btn{
+.remove-area-btn,
+.generate-btn{
   height: 46px;
   border-radius: 14px;
   border: 1px solid rgba(15, 23, 42, 0.12);
@@ -792,6 +793,14 @@
   margin-top: 14px;
   background: #0f172a;
   color: #fff;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.18);
+}
+
+.generate-btn.add{
+  width: 100%;
+  margin-top: 14px;
+  background: #0104a8;
+  color: #ffffff;
   box-shadow: 0 10px 24px rgba(15,23,42,0.18);
 }
 

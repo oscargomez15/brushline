@@ -381,7 +381,7 @@ export const InteriorEstimator = ({customer}) => {
                 fmtHours={fmtHours}
                 />
             </form>
-            <button type="button" className="add-area-btn add" onClick={handleGenerateQuote}>
+            <button type="button" className="generate-btn add" onClick={handleGenerateQuote}>
             Generate Client Quote
             </button>
     </div>
