@@ -39,6 +39,17 @@ export default function QuotePage() {
       setApproving(false);
     }
   };
+  
+  const handleSelectPackage = async (packageKey) => {
+  const res = await fetch("/.netlify/functions/apply-package", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: quote.id, packageKey }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Failed to change scope");
+  setQuote(data.quote);
+};
 
   useEffect(() => {
     (async () => {
@@ -62,7 +73,14 @@ export default function QuotePage() {
   if (!quote) return <div className="quote-wrap"><div className="quote-card">Loading…</div></div>;
 
   const jobLabel = quote.jobType === "exterior" ? "Exterior Painting" : "Interior Painting";
+          const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
+          const currentKey = quote.selectedPackageKey;
+          const currentTotal = Number(quote.grandTotal) || 0;
 
+          // show all packages except the current one.
+          // if current is "custom", show all 3 as options.
+          const showPkgs =
+            currentKey === "custom" ? pkgs : pkgs.filter((p) => p.key !== currentKey);
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -162,6 +180,43 @@ export default function QuotePage() {
                 </div>
               ))}
             </div>
+          ) : null}
+
+          {showPkgs.length > 0 ? (
+            <section className="quote-upgrades">
+              <div className="quote-upgrades-title">Change Scope</div>
+
+              <div className="quote-upgrades-grid">
+                {showPkgs.map((p) => {
+                  const newTotal = Number(p.total) || 0;
+                  const diff = newTotal - currentTotal;
+                  const isUp = diff > 0;
+
+                  return (
+                    <div key={p.key} className="quote-upgrade-card">
+                      <div className="quote-upgrade-head">
+                        <div className="quote-upgrade-name">{p.label}</div>
+                        <div className={`quote-upgrade-diff ${isUp ? "up" : "down"}`}>
+                          {diff === 0 ? "" : isUp ? `+ ${fmtMoney(diff)}` : `- ${fmtMoney(Math.abs(diff))}`}
+                        </div>
+                      </div>
+
+                      <div className="quote-upgrade-meta">
+                        New total: <strong>{fmtMoney(newTotal)}</strong>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="quote-upgrade-btn"
+                        onClick={() => handleSelectPackage(p.key)}
+                      >
+                        Select This Scope
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           ) : null}
 
           {quote.note ? (

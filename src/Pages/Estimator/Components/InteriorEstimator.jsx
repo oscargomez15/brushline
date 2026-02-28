@@ -146,6 +146,38 @@ export const InteriorEstimator = ({customer}) => {
       setAreas((prev) => reorderById(prev, active.id, over.id));
     };
 
+    const detectPackageKey = (areas) => {
+    const allWalls = areas.every((a) => !!a.paintWalls);
+    const allCeil = areas.every((a) => !!a.paintCeiling);
+    const allBase = areas.every((a) => !!a.paintBaseboard);
+    const allDoors = areas.every((a) => !!a.paintDoors);
+
+    if (allWalls && !allCeil && !allBase && !allDoors) return "walls_only";
+    if (allWalls && allCeil && !allBase && !allDoors) return "walls_ceilings";
+    if (allWalls && allCeil && allBase && allDoors) return "full";
+    return "custom";
+  };
+
+  const applyPackageToAreas = (areas, key) => {
+    return areas.map((a) => {
+      if (key === "walls_only") {
+        return { ...a, paintWalls: true, paintCeiling: false, paintBaseboard: false, paintDoors: false };
+      }
+      if (key === "walls_ceilings") {
+        return { ...a, paintWalls: true, paintCeiling: true, paintBaseboard: false, paintDoors: false };
+      }
+      // full
+      return { ...a, paintWalls: true, paintCeiling: true, paintBaseboard: true, paintDoors: true };
+    });
+  };
+
+  // Uses YOUR existing calc functions (computeAreaCalc + computeJobTotals)
+  const computeGrandTotalForAreas = (areasVariant) => {
+    const perAreaVariant = areasVariant.map((a) => computeAreaCalc(a, pricing));
+    const totals = computeJobTotals(perAreaVariant, paintPricePerGallon);
+    return totals.grandTotal;
+  };
+
     const buildScopeItems = (areas) => {
       return areas.map((a, idx) => {
         const areaName = (a.name || "").trim() || `Area ${idx + 1}`;
@@ -176,6 +208,20 @@ export const InteriorEstimator = ({customer}) => {
   }
   const scopeItems = buildScopeItems(areas);
 
+  const selectedPackageKey = detectPackageKey(areas);
+
+  const packageDefs = [
+    { key: "walls_only", label: "Walls Only" },
+    { key: "walls_ceilings", label: "Walls + Ceilings" },
+    { key: "full", label: "Walls + Ceilings + Baseboards + Doors" },
+  ];
+
+  const scopePackages = packageDefs.map((p) => {
+    const areasForPkg = applyPackageToAreas(areas, p.key);
+    const pkgTotal = computeGrandTotalForAreas(areasForPkg);
+    return { key: p.key, label: p.label, total: pkgTotal };
+  });
+
   // Build your payload from your existing totals
   const payload = {
     jobType: "interior",
@@ -185,10 +231,13 @@ export const InteriorEstimator = ({customer}) => {
     companyName: "Brushline Services",
     validForDays: 30,
 
-    // Optional fields from inputs you can add later:
     customer,
     note: "Thanks for having us out — excited about this project!",
-    scopeItems
+    scopeItems,
+
+    // ✅ new
+    selectedPackageKey,
+    scopePackages,
   };
 
   const res = await fetch("/.netlify/functions/create-quote", {

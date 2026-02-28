@@ -261,6 +261,9 @@
   opacity: 0.8;
 }
 
+.quote-upgrade-diff.up { color: #16a34a; font-weight: 900; }
+.quote-upgrade-diff.down { color: #dc2626; font-weight: 900; }
+
 .quote-terms {
   border-top: 1px solid rgba(0,0,0,0.08);
   padding: 32px;

@@ -17,7 +17,7 @@ import {
 } from "react-icons/fi";
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [openMenu, setOpenMenu] = useState(null); // "estimates" | "invoices" | null
   const [email, setEmail] = useState("");
 
