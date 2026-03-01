@@ -10,6 +10,8 @@ export default function AreaCard({
   onToggle,
   onRemove,
   onUpdate,
+  forceDoorInputs,
+  forceBaseboardInputs,
   fmtMoney,
   fmt,
   fmtDollar,
@@ -85,7 +87,11 @@ export default function AreaCard({
           <AreaConditions area={area} calc={calc} onUpdate={onUpdate} />
 
           <div className="area-calc-body">
-            <AreaMeasurements area={area} onUpdate={onUpdate} />
+            <AreaMeasurements 
+            area={area} 
+            onUpdate={onUpdate}
+            forceDoorInputs={forceDoorInputs}
+            forceBaseboardInputs={forceBaseboardInputs} />
             <AreaCalculations
               area={area}
               calc={calc}

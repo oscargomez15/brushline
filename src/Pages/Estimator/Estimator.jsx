@@ -57,7 +57,7 @@ if (step === "customer") {
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper-jobs">
-        <IdentityControls />
+        {/* <IdentityControls /> */}
 
         <div className="jobtype-card">
           <StartEstimate

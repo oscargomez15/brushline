@@ -2,7 +2,13 @@ import React from "react";
 import { BASEBOARD_HEIGHT_OPTIONS } from "../constants";
 import DimInput from "./DimInput";
 
-export default function AreaMeasurements({ area, onUpdate }) {
+export default function AreaMeasurements({ 
+  area, 
+  onUpdate,
+  forceDoorInputs = false,
+  forceBaseboardInputs = false }) {
+  const showDoorInputs = area.paintDoors || forceDoorInputs;
+  const showBaseboardInputs = area.paintBaseboard || forceBaseboardInputs;
   const showRoomDims = area.paintWalls || area.paintCeiling || area.paintBaseboard;
 
   return (
@@ -20,7 +26,7 @@ export default function AreaMeasurements({ area, onUpdate }) {
         <DimInput label="Height" value={area.height} onChange={(v) => onUpdate("height", v)} />
       )}
 
-      {area.paintBaseboard && (
+      {showBaseboardInputs&& (
         <div className="baseboard-container">
           <h3>Baseboard</h3>
 
@@ -49,7 +55,7 @@ export default function AreaMeasurements({ area, onUpdate }) {
         </div>
       )}
 
-      {area.paintDoors && (
+      {showDoorInputs && (
         <div className="doors-container">
           <h3>Doors Info</h3>
 

@@ -143,7 +143,7 @@ export default function FindEstimates() {
                         disabled={isDeleting}
                         title="Delete estimate"
                       >
-                        {isDeleting ? "Deleting…" : "Delete"}
+                        {isDeleting ? "Deleting…" : "🗑 Delete"}
                       </button>
                     </td>
                   </tr>

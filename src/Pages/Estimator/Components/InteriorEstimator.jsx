@@ -42,7 +42,7 @@ export const InteriorEstimator = ({customer}) => {
     const navigate = useNavigate();
 
     // --- Pricing inputs (strings kept raw; parsed inside calc)
-      const [wallPricePerSqft, setWallPricePerSqft] = useState("1.50");
+      const [wallPricePerSqft, setWallPricePerSqft] = useState("1.25");
       const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState("1.25");
       const [doorPrice, setDoorPrice] = useState("100");
       const [baseboardPricePerLf, setBaseboardPricePerLf] = useState("1.25");
@@ -178,37 +178,39 @@ export const InteriorEstimator = ({customer}) => {
     return totals.grandTotal;
   };
 
-    const buildScopeItems = (areas) => {
-      return areas.map((a, idx) => {
-        const areaName = (a.name || "").trim() || `Area ${idx + 1}`;
+  const buildScopeItems = (areas) => {
+    return areas.map((a, idx) => {
+      const areaName = (a.name || "").trim() || `Area ${idx + 1}`;
 
-        const scope = [];
+      const scope = [];
 
-        if (a.paintWalls) scope.push("Walls");
-        if (a.paintCeiling) scope.push("Ceilings");
-        if (a.paintDoors) scope.push("Doors");
-        if (a.paintBaseboard) scope.push("Baseboards");
+      if (a.paintWalls) scope.push("Walls");
+      if (a.paintCeiling) scope.push("Ceilings");
+      if (a.paintDoors) scope.push("Doors");
+      if (a.paintBaseboard) scope.push("Baseboards");
 
 
-        return {
-          areaId: a.id,
-          areaName,
-          scope, // array of strings
-        };
-      });
-    };
+      return {
+        areaId: a.id,
+        areaName,
+        scope, // array of strings
+      };
+    });
+  };
 
-    const handleGenerateQuote = async () => {
-      const user = netlifyIdentity.currentUser();
-      const token = user ? await user.jwt() : null;
+  const selectedPackageKey = detectPackageKey(areas);
+  const upgradesNeedDoors = selectedPackageKey !== "full";
+  const upgradesNeedBaseboards = selectedPackageKey !== "full";
+
+  const handleGenerateQuote = async () => {
+    const user = netlifyIdentity.currentUser();
+    const token = user ? await user.jwt() : null;
 
   if (!token) {
     alert("You must be logged in to generate a quote.");
     return;
   }
   const scopeItems = buildScopeItems(areas);
-
-  const selectedPackageKey = detectPackageKey(areas);
 
   const packageDefs = [
     { key: "walls_only", label: "Walls Only" },
@@ -257,6 +259,7 @@ export const InteriorEstimator = ({customer}) => {
 
   navigate(data.url);
 };
+
   return (
     <div>
     <h1>Interior Estimator</h1>
@@ -354,6 +357,8 @@ export const InteriorEstimator = ({customer}) => {
                     onToggle={() => toggleArea(area.id)}
                     onRemove={() => removeArea(area.id)}
                     onUpdate={(key, value) => updateArea(area.id, key, value)}
+                    forceDoorInputs={upgradesNeedDoors}
+                    forceBaseboardInputs={upgradesNeedBaseboards}
                     fmt={fmt}
                     fmtMoney={fmtMoney}
                     fmtDollar={fmtDollar}

@@ -220,13 +220,28 @@
 }
 
 .fe-danger-btn{
-  border: 1px solid rgba(220,38,38,.5);
+  border: 1px solid rgba(220,38,38,.4);
   background: transparent;
-  padding: 8px 10px;
+  color: rgb(220,38,38);
+  padding: 8px 12px;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
+
+.fe-danger-btn:hover{
+  background: rgba(220,38,38,.08);
+  border-color: rgb(220,38,38);
+  transform: translateY(-1px);
+}
+
+.fe-danger-btn:active{
+  transform: translateY(0px);
+}
+
 .fe-danger-btn:disabled{
-  opacity: .6;
+  opacity: .5;
   cursor: not-allowed;
+  transform: none;
 }
