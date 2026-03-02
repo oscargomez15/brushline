@@ -179,40 +179,93 @@
 }
 
 /* ---------- Mobile drawer behavior ---------- */
+/* ---------- Mobile: always-visible top nav (no hiding) ---------- */
 @media (max-width: 900px) {
   .crm-shell {
-    position: relative;
+    flex-direction: column;     /* sidebar on top, content below */
+    height: 100vh;
   }
 
   .crm-sidebar {
-    position: fixed;
-    left: 0;
+    position: sticky;           /* stays visible while you scroll */
     top: 0;
-    height: 100vh;
     z-index: 50;
 
-    /* Drawer animation */
-    transform: translateX(0);
-    transition: transform 0.25s ease;
-    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+    width: 100%;
+    min-width: 0;
+    height: auto;
+
+    transform: none !important; /* cancel drawer behavior */
+    box-shadow: none;
   }
 
-  /* On mobile, treat "collapsed" as "closed drawer" */
+  /* On mobile, ignore "collapsed" sizing/hiding */
   .crm-sidebar.collapsed {
-    width: 280px;      /* keep normal width; just slide it away */
-    min-width: 280px;
-    transform: translateX(-100%);
+    width: 100%;
+    min-width: 0;
+    transform: none !important;
   }
 
   .crm-main {
     width: 100%;
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Tighten header area */
+  .crm-top {
+    padding: 10px 12px;
+  }
+
+  /* Make nav horizontal and scrollable */
+  .crm-nav {
+    padding: 10px 12px 12px;
+    flex-direction: row;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .crm-nav::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .crm-link,
+  .crm-group-btn {
+    flex: 0 0 auto;            /* prevent squeezing */
+    white-space: nowrap;
+    padding: 10px 12px;
+    border-radius: 999px;
+  }
+
+  /* Optional: reduce indentation on mobile */
+  .crm-link.indent {
+    padding-left: 12px;
+  }
+
+  /* Optional: hide less critical sidebar footer hint on small screens */
+  .crm-bottom {
+    display: none;
   }
 }
 
 @media (max-width: 520px) {
-  .crm-sidebar,
-  .crm-sidebar.collapsed {
-    width: 86vw;
-    min-width: 86vw;
+  .crm-user {
+    margin-top: 8px;
+  }
+
+  .crm-user-email {
+    font-size: 12px;
+  }
+
+  .crm-link,
+  .crm-group-btn {
+    font-size: 13px;
+    padding: 9px 11px;
+  }
+
+  .crm-icon {
+    font-size: 16px;
   }
 }

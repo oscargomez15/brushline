@@ -1,25 +1,29 @@
 /* =========================
-   Layout / Page
+   Paint Calculator (Cleaned)
+   Mobile-first responsive
 ========================= */
-.paint-calculator-wrapper{
+
+/* ---------- Base / Page ---------- */
+.paint-calculator-wrapper {
   min-height: 100vh;
-  padding: 12rem 16px 60px;
-  background: radial-gradient(1200px 600px at 20% 10%, rgba(59,130,246,0.12), transparent 60%),
-              radial-gradient(900px 500px at 90% 30%, rgba(16,185,129,0.10), transparent 55%),
-              radial-gradient(900px 500px at 50% 110%, rgba(245,158,11,0.10), transparent 55%),
-              #f6f7fb;
+  padding: 11rem 16px 60px; /* slightly reduced from 12rem */
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(59, 130, 246, 0.12), transparent 60%),
+    radial-gradient(900px 500px at 90% 30%, rgba(16, 185, 129, 0.10), transparent 55%),
+    radial-gradient(900px 500px at 50% 110%, rgba(245, 158, 11, 0.10), transparent 55%),
+    #f6f7fb;
 }
 
-.exterior-calculator-wrapper{
+.exterior-calculator-wrapper {
   padding-block: 1rem;
 }
 
-.content-wrapper{
+.content-wrapper {
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.content-wrapper-jobs{
+.content-wrapper-jobs {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,7 +33,8 @@
   height: 70vh;
 }
 
-.jobtype-card{
+/* ---------- Job Type ---------- */
+.jobtype-card {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +60,7 @@
   font-weight: 600;
   color: #111827;
   cursor: pointer;
-  transition: 
+  transition:
     background-color 0.2s ease,
     box-shadow 0.2s ease,
     transform 0.15s ease,
@@ -82,26 +87,37 @@
     0 12px 28px rgba(37, 99, 235, 0.18);
 }
 
+/* ---------- Header / Customer ---------- */
+.sub-heading {
+  margin-bottom: 18px;
+}
 
+.sub-heading h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
 
-/* =========================
-   Header / Intro
-========================= */
+.sub-heading p {
+  margin: 8px 0 0;
+  color: rgba(15, 23, 42, 0.72);
+}
 
-
-.start-estimate-form{
+.start-estimate-form {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  justify-content: start;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
   gap: 14px;
   margin-top: 12px;
 }
 
-.start-estimate-form label{
+.start-estimate-form label {
   display: flex;
-  flex-direction: column
+  flex-direction: column; /* ✅ fixed missing semicolon */
 }
 
 .customer-pill {
@@ -135,9 +151,8 @@
   place-items: center;
   font-weight: 700;
   font-size: 14px;
-  /* keep it neutral so it matches any theme */
   background: #111827;
-  color: white;
+  color: #fff;
   flex: 0 0 38px;
 }
 
@@ -162,23 +177,7 @@
   opacity: 0.6;
 }
 
-.sub-heading{
-  margin-bottom: 18px;
-}
-
-.sub-heading h1{
-  margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #0f172a;
-}
-
-.sub-heading p{
-  margin: 8px 0 0;
-  color: rgba(15, 23, 42, 0.72);
-}
-
+/* identity controls (desktop) */
 .identity-controls {
   position: fixed;
   top: 16px;
@@ -195,43 +194,37 @@
   color: rgba(15, 23, 42, 0.75);
 }
 
-/* =========================
-   Global Pricing Card
-========================= */
-.price-inputs{
+/* ---------- Global Pricing Card ---------- */
+.price-inputs {
   margin-top: 14px;
   padding: 16px;
   border-radius: 18px;
   border: 1px solid rgba(15, 23, 42, 0.10);
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(15,23,42,0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
-.price-inputs h2{
+.price-inputs h2 {
   margin: 0 0 6px;
   font-size: 16px;
   font-weight: 800;
   color: #0f172a;
 }
 
-.price-inputs p{
+.price-inputs p {
   margin: 0 0 12px;
   font-size: 13px;
   color: rgba(15, 23, 42, 0.70);
 }
 
-.price-input-items{
+.price-input-items {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.price-input-items span{
-    color: black;
-}
-
-.price-input-items label{
+.price-input-items label {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -252,79 +245,78 @@
   cursor: grabbing;
 }
 
-
-@media (max-width: 720px){
-  .price-input-items{
-    grid-template-columns: 1fr;
-  }
-}
-
-/* =========================
-   Form
-========================= */
-.paint-calculator-form{
+/* ---------- Form ---------- */
+.paint-calculator-form {
   margin-top: 16px;
   display: grid;
   gap: 14px;
 }
 
-/* =========================
-   Area Card
-========================= */
-.area-card-header{
+/* ---------- Area Card ---------- */
+.area-card {
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.10);
+  padding: 16px;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.area-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.14);
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+.area-card.is-collapsed {
+  padding: 14px 16px;
+}
+
+.area-card.is-collapsed .area-card-header {
+  margin-bottom: 0;
+}
+
+.area-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
+  flex-wrap: wrap; /* helps mobile */
 }
 
-.area-card-title{
+.area-card-title {
   display: grid;
   gap: 4px;
+  min-width: 0;
 }
 
-.area-name{
+.area-name {
   font-size: 16px;
   font-weight: 900;
   color: #0f172a;
 }
 
-.area-sub{
-    display: flex;
-    gap: 0 1rem;
+.area-sub {
+  display: flex;
+  gap: 0 1rem;
   font-size: 13px;
   color: rgba(15, 23, 42, 0.70);
   font-weight: 700;
+  flex-wrap: wrap;
 }
 
-.mini-row{
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.mini-value{
-  color: #0f172a;
-}
-
-.mini-label{
-    font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(15, 23, 42, 0.58);
-}
-
-.area-card-actions{
+.area-card-actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: flex-start;
 }
 
 /* Minimize button */
-.collapse-area-btn{
+.collapse-area-btn {
   height: 46px;
   padding: 0 14px;
   border-radius: 14px;
@@ -336,137 +328,20 @@
   align-self: flex-start;
 }
 
-.collapse-area-btn:hover{
+.collapse-area-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(15,23,42,0.10);
-}
-/* =========================
-   Scope Toggle Buttons
-========================= */
-.surfaces-container{
-  margin-bottom: 12px;
-  padding: 12px;
-  border-radius: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(248, 250, 252, 0.85);
-}
-
-.surfaces-container h3{
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(15, 23, 42, 0.70);
-}
-
-/* grid for pills */
-.surfaces-container{
-  display: flex;
-  flex-direction: column;
-}
-
-.options{
-  display: flex;
-  flex-wrap: wrap;        
-  gap: 10px;
-}
-
-/* hide native checkbox */
-.scope-option input{
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* pill button */
-.scope-option{
-  display: flex;
-  align-items: center;
-    flex: 1 1 110px;         /* ✅ wraps nicely; adjust 110px if you want */
-  min-width: 110px;
-}
-
-.scope-option span{
-  width: 100%;
-  text-align: center;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.14);
-  background: #ffffff;
-  font-weight: 800;
-  font-size: 13px;
-  color: rgba(15, 23, 42, 0.85);
-  cursor: pointer;
-  transition: background 140ms ease,
-    color 140ms ease,
-    box-shadow 140ms ease,
-    transform 120ms ease,
-    border-color 140ms ease;
-}
-
-/* hover */
-.scope-option span:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-}
-
-/* checked (active) */
-.scope-option input:checked + span{
-  background: #0f172a;
-  color: #ffffff;
-  border-color: #0f172a;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
-}
-
-/* focus (keyboard accessibility) */
-.scope-option input:focus + span{
-  outline: none;
-  box-shadow:
-    0 0 0 3px rgba(59, 130, 246, 0.35),
-    0 10px 24px rgba(15, 23, 42, 0.28);
-}
-
-/* disabled (if you ever add it) */
-.scope-option input:disabled + span{
-  opacity: 0.45;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-
-/* When collapsed, tighten spacing */
-.area-card.is-collapsed{
-  padding: 14px 16px;
-}
-
-.area-card.is-collapsed .area-card-header{
-  margin-bottom: 0;
-}
-.area-card{
-    overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  background: rgba(255,255,255,0.86);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 34px rgba(15,23,42,0.10);
-  padding: 16px;
-  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
-}
-
-.area-card:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 18px 48px rgba(15,23,42,0.14);
-  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.10);
 }
 
 /* Top row select */
-.area-selection-container{
+.area-selection-container {
   display: flex;
   gap: 10px;
   align-items: center;
   margin-bottom: 12px;
 }
 
-.area-selection-container select{
+.area-selection-container select {
   width: 100%;
   height: 44px;
   border-radius: 14px;
@@ -478,23 +353,23 @@
   outline: none;
 }
 
-.area-selection-container select:focus{
-  border-color: rgba(59,130,246,0.65);
-  box-shadow: 0 0 0 4px rgba(59,130,246,0.18);
+.area-selection-container select:focus {
+  border-color: rgba(59, 130, 246, 0.65);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
 }
 
-/* =========================
-   Conditions
-========================= */
-.conditions-container{
+/* ---------- Scope toggle (pills) ---------- */
+.surfaces-container {
+  margin-bottom: 12px;
+  padding: 12px;
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(248, 250, 252, 0.85);
-  padding: 12px;
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
-.conditions-container h3{
+.surfaces-container h3 {
   margin: 0 0 10px;
   font-size: 13px;
   text-transform: uppercase;
@@ -502,7 +377,88 @@
   color: rgba(15, 23, 42, 0.70);
 }
 
-.conditions-container > div{
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* hide native checkbox */
+.scope-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scope-option {
+  display: flex;
+  align-items: center;
+  flex: 1 1 110px;
+  min-width: 110px;
+}
+
+.scope-option span {
+  width: 100%;
+  text-align: center;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.85);
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease,
+    transform 120ms ease,
+    border-color 140ms ease;
+}
+
+.scope-option span:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.scope-option input:checked + span {
+  background: #0f172a;
+  color: #fff;
+  border-color: #0f172a;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+.scope-option input:focus + span {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.35),
+    0 10px 24px rgba(15, 23, 42, 0.28);
+}
+
+.scope-option input:disabled + span {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- Conditions ---------- */
+.conditions-container {
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.conditions-container h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+.conditions-container > div {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -511,29 +467,21 @@
   font-weight: 600;
 }
 
-.conditions-container input[type="checkbox"]{
+.conditions-container input[type="checkbox"] {
   width: 16px;
   height: 16px;
 }
 
-/* =========================
-   Body split layout
-========================= */
-.area-calc-body{
+/* ---------- Body split ---------- */
+.area-calc-body {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 14px;
 }
 
-@media (max-width: 900px){
-  .area-calc-body{
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Panels */
 .dimensions-container,
-.calculations-container{
+.calculations-container {
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(248, 250, 252, 0.80);
@@ -541,7 +489,7 @@
 }
 
 .dimensions-container h3,
-.calculations-container h3{
+.calculations-container h3 {
   margin: 0 0 10px;
   font-size: 13px;
   text-transform: uppercase;
@@ -549,10 +497,8 @@
   color: rgba(15, 23, 42, 0.70);
 }
 
-/* =========================
-   Inputs
-========================= */
-.dimensions-container label{
+/* Inputs */
+.dimensions-container label {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -562,7 +508,7 @@
   font-size: 13px;
 }
 
-.dim-input{
+.dim-input {
   height: 44px;
   border-radius: 14px;
   border: 1px solid rgba(15, 23, 42, 0.14);
@@ -573,33 +519,31 @@
   color: #0f172a;
 }
 
-.dim-input::placeholder{
+.dim-input::placeholder {
   color: rgba(15, 23, 42, 0.35);
   font-weight: 600;
 }
 
-.dim-input:focus{
-  border-color: rgba(59,130,246,0.65);
-  box-shadow: 0 0 0 4px rgba(59,130,246,0.18);
+.dim-input:focus {
+  border-color: rgba(59, 130, 246, 0.65);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
 }
 
-/* =========================
-   Calculations (nested cards)
-========================= */
-.calculations-container{
+/* Calculations */
+.calculations-container {
   display: grid;
   gap: 12px;
 }
 
-.calculations-card{
+.calculations-card {
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(255,255,255,0.92);
+  background: rgba(255, 255, 255, 0.92);
   padding: 12px;
-  box-shadow: 0 6px 18px rgba(15,23,42,0.06);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
-.calculations-card h3{
+.calculations-card h3 {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: 800;
@@ -608,146 +552,14 @@
   letter-spacing: 0;
 }
 
-/* Stats grid inside each calc card */
-.calculations-items{
+.calculations-items {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px 14px;
 }
 
-/* Sticky wrapper */
-.summary-sticky{
-  position: sticky;
-  bottom: 16px;            /* sticks near bottom as you scroll */
-  z-index: 20;
-  margin-top: 18px;
-}
-
-/* header row inside summary card */
-.summary-header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-/* when hidden, keep it compact */
-.summary-sticky.is-hidden .grand-total{
-  padding: 12px 16px;
-}
-
-.summary-sticky.is-hidden .summary-header{
-  margin-bottom: 0;
-}
-
-/* Allow header content to wrap instead of overflowing */
-.area-card-header{
-  flex-wrap: wrap;
-}
-
-/* Let the title block take full width on small screens */
-.area-card-title{
-  min-width: 0; /* important so long text can wrap */
-}
-
-/* Keep buttons from shrinking off-screen */
-.area-card-actions{
-  justify-content: flex-start;
-}
-
-/* Make sure buttons can shrink nicely instead of forcing overflow */
-
-.mini-row{
-  min-width: 0;
-}
-
-.mini-label{
-  white-space: nowrap;
-}
-
-.mini-row span,
-.mini-row-summary span,
-.dimensions-container span,
-.total-items span,
-.summary-big span{
-  color: black;
-}
-
-.mini-value{
-  text-align: right;
-  min-width: 0;
-}
-
-/* Exterior layout: reuse your existing containers; just tune grid */
-.exterior-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 1rem;
-}
-
-@media (max-width: 900px) {
-  .exterior-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* small meta row in the price card */
-.exterior-meta {
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 0.25rem;
-}
-
-
-@media (max-width: 520px){
-  .calculations-items{
-    grid-template-columns: 1fr;
-  }
-    .area-card-header{
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .area-card-actions{
-    width: 100%;
-    gap: 10px;
-  }
-
-  .area-card-actions .collapse-area-btn,
-  .area-card-actions .remove-area-btn{
-    width: 100%;
-  }
-
-  /* If your mini breakdown rows are wide, let them wrap */
-  .area-sub{
-    flex-wrap: wrap;
-  }
-  
-  .options{
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* ✅ 2 columns */
-    gap: 10px;
-  }
-
-  .scope-option{
-    min-width: 0; /* ✅ prevents overflow in grid */
-  }
-}
-
-.paint-grade-select{
-    display: flex;
-    flex-direction: column;
-}
-
-.paint-grade-select span{
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(15, 23, 42, 0.75);
-    margin-bottom: 6px;
-}
-
-/* Stat component styling */
-.calculation-label{
+/* Stat */
+.calculation-label {
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -756,30 +568,78 @@
   margin-bottom: 4px;
 }
 
-.calculations-items > div{
+.calculations-items > div {
   padding: 10px;
   border-radius: 14px;
   border: 1px solid rgba(15, 23, 42, 0.06);
   background: rgba(248, 250, 252, 0.85);
 }
 
-.calculations-items > div > div:last-child{
+.calculations-items > div > div:last-child {
   font-size: 16px;
   font-weight: 900;
   color: #0f172a;
 }
 
-/* Area totals at bottom of calc panel */
-.calculations-container > .calculation-label{
-  margin-top: 6px;
+/* ---------- Sticky Summary ---------- */
+.summary-sticky {
+  position: sticky;
+  bottom: 16px;
+  z-index: 20;
+  margin-top: 18px;
 }
 
-/* =========================
-   Buttons
-========================= */
+.summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.summary-sticky.is-hidden .grand-total {
+  padding: 12px 16px;
+}
+
+.summary-sticky.is-hidden .summary-header {
+  margin-bottom: 0;
+}
+
+.grand-total {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.10);
+}
+
+.grand-total h2 {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.total-items {
+  display: grid;
+}
+
+.total-items h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: rgba(15, 23, 42, 0.88);
+}
+
+.summary-heading {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* Buttons */
 .add-area-btn,
 .remove-area-btn,
-.generate-btn{
+.generate-btn {
   height: 46px;
   border-radius: 14px;
   border: 1px solid rgba(15, 23, 42, 0.12);
@@ -788,28 +648,29 @@
   transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
 }
 
-.add-area-btn.add{
+.add-area-btn.add {
   width: 100%;
   margin-top: 14px;
   background: #0f172a;
   color: #fff;
-  box-shadow: 0 10px 24px rgba(15,23,42,0.18);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
 }
 
-.generate-btn.add{
+.generate-btn.add {
   width: 100%;
   margin-top: 14px;
   background: #0104a8;
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(15,23,42,0.18);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
 }
 
-.add-area-btn.add:hover{
+.add-area-btn.add:hover,
+.generate-btn.add:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 34px rgba(15,23,42,0.24);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.24);
 }
 
-.remove-area-btn.delete{
+.remove-area-btn.delete {
   width: 100%;
   background: #fff;
   padding: 0 1rem;
@@ -817,42 +678,85 @@
   border-color: rgba(185, 28, 28, 0.25);
 }
 
-.remove-area-btn.delete:hover{
+.remove-area-btn.delete:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(185, 28, 28, 0.12);
 }
 
-/* =========================
-   Summary Card
-========================= */
-.grand-total{
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 20px;
-  border: 1px solid rgba(15, 23, 42, 0.10);
-  background: rgba(255,255,255,0.88);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 34px rgba(15,23,42,0.10);
-}
-
-.grand-total h2{
-  font-size: 18px;
-  font-weight: 900;
-  color: #0f172a;
-}
-
-.total-items{
+/* ---------- Exterior helpers ---------- */
+.exterior-grid {
   display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1rem;
 }
 
-.total-items h2{
-  margin: 0;
-  font-size: 16px;
-  font-weight: 900;
-  color: rgba(15, 23, 42, 0.88);
+.exterior-meta {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 0.25rem;
 }
 
-.summary-heading{
-    font-weight: bold;
-    margin-top: 1rem;
+/* ---------- Mobile responsiveness ---------- */
+@media (max-width: 900px) {
+  .area-calc-body {
+    grid-template-columns: 1fr;
+  }
+
+  .exterior-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce big top padding so content starts sooner on phones/tablets */
+  .paint-calculator-wrapper {
+    padding-top: 9rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .price-input-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .paint-calculator-wrapper {
+    padding: 8rem 12px 48px;
+  }
+
+  /* Make the fixed identity controls not cover the page */
+  .identity-controls {
+    position: static;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+
+  .calculations-items {
+    grid-template-columns: 1fr;
+  }
+
+  .area-card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .area-card-actions {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .area-card-actions .collapse-area-btn,
+  .area-card-actions .remove-area-btn {
+    width: 100%;
+  }
+
+  /* Scope pills become a 2-col grid for better tap targets */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .scope-option {
+    min-width: 0;
+  }
 }
