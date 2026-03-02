@@ -21,13 +21,13 @@ export default function Sidebar() {
   const [openMenu, setOpenMenu] = useState(null); // "estimates" | "invoices" | null
   const [email, setEmail] = useState("");
   const [mobileMenu, setMobileMenu] = useState(null); // "estimates" | "invoices" | null
+  const location = useLocation();
 
   useEffect(() => {
     // Close any open mobile menu when route changes
     setMobileMenu(null);
   }, [location.pathname]);
   
-  const location = useLocation();
 
   useEffect(() => {
     // read current user email (Netlify Identity)
@@ -71,29 +71,124 @@ export default function Sidebar() {
   }, [email]);
 
   return (
-  <>
-    <aside className={`crm-sidebar ${collapsed ? "collapsed" : ""}`}>
-      {/* Top */}
-      <div className="crm-top">
-        ...
-      </div>
+    <>
+      <aside className={`crm-sidebar ${collapsed ? "collapsed" : ""}`}>
+        {/* Top */}
+        <div className="crm-top">
+          <button
+            type="button"
+            className="crm-collapse-btn"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand" : "Collapse"}
+          >
+            {collapsed ? "»" : "«"}
+          </button>
 
-      {/* Nav */}
-      <nav className="crm-nav">
-        ...
-      </nav>
+          <div className="crm-user">
+            <div className="crm-user-avatar" aria-hidden="true">
+              {email ? email[0].toUpperCase() : "?"}
+            </div>
+            {!collapsed && (
+              <div className="crm-user-meta">
+                <div className="crm-user-label">Current User</div>
+                <div className="crm-user-email">{userLabel}</div>
 
-      {/* Bottom */}
-      <div className="crm-bottom">
-        {!collapsed && (
-          <div className="crm-bottom-hint">
-            Tip: Use the dropdowns to manage estimates and invoices.
+                <button
+                  type="button"
+                  className="crm-signout"
+                  onClick={signOut}
+                  disabled={!email}
+                  style={{ opacity: email ? 1 : 0.6 }}
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </aside>
+        </div>
 
-    {/* ✅ Mobile Bottom Nav */}
+        {/* Nav */}
+        <nav className="crm-nav">
+          <NavItem
+              to="/dashboard"
+              label="Dashboard"
+              icon={<FiHome />}
+              collapsed={collapsed}
+          />
+
+          <Dropdown
+          label="Estimates"
+          icon={<FiFileText />}
+          collapsed={collapsed}
+          open={openMenu === "estimates"}
+          onToggle={() => toggleMenu("estimates")}
+          >
+              <NavItem
+              to="/estimates/find"
+              label="Find"
+              icon={<FiSearch />}
+              collapsed={collapsed}
+              indent
+              />
+              <NavItem
+              to="/estimates/create"
+              label="Create"
+              icon={<FiPlusCircle />}
+              collapsed={collapsed}
+              indent
+              />
+              <NavItem
+              to="/estimates/edit"
+              label="Edit"
+              icon={<FiEdit />}
+              collapsed={collapsed}
+              indent
+              />
+          </Dropdown>
+
+          <Dropdown
+          label="Invoices"
+          icon={<FiDollarSign />}
+          collapsed={collapsed}
+          open={openMenu === "invoices"}
+          onToggle={() => toggleMenu("invoices")}
+          >
+              <NavItem
+                  to="/invoices/find"
+                  label="Find"
+                  icon={<FiSearch />}
+                  collapsed={collapsed}
+                  indent
+              />
+              <NavItem
+                  to="/invoices/create"
+                  label="Create"
+                  icon={<FiPlusCircle />}
+                  collapsed={collapsed}
+                  indent
+              />
+              <NavItem
+                  to="/invoices/edit"
+                  label="Edit"
+                  icon={<FiEdit />}
+                  collapsed={collapsed}
+                  indent
+              />
+          </Dropdown>
+        </nav>
+
+        {/* Bottom (optional) */}
+        <div className="crm-bottom">
+          {!collapsed && (
+            <div className="crm-bottom-hint">
+              Tip: Use the dropdowns to manage estimates and invoices.
+            </div>
+          )}
+        </div>
+      </aside>
+
+          {/* ✅ Mobile Bottom Nav */}
     <div className="crm-mobile-nav" aria-label="Mobile navigation">
       <NavLink
         to="/dashboard"
@@ -159,8 +254,8 @@ export default function Sidebar() {
 
     {/* Optional: tap-away backdrop to close dropdown */}
     {mobileMenu && <div className="crm-mobile-backdrop" onClick={() => setMobileMenu(null)} />}
-  </>
-);
+    </>
+  );
 }
 
 function NavItem({ to, label, icon, collapsed, indent = false }) {
