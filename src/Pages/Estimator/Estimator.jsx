@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import "../../Styling/PaintCalculator.css";
 import ExteriorEstimator from "./Components/ExteriorEstimator";
 import { InteriorEstimator } from "./Components/InteriorEstimator";
-import { IdentityControls } from "../../Components/IdentityControls";
 import {StartEstimate} from "./Components/StartEstimate"
 
 export const Estimator = () => {
