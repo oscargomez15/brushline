@@ -146,17 +146,26 @@ export const InteriorEstimator = ({customer}) => {
       setAreas((prev) => reorderById(prev, active.id, over.id));
     };
 
-    const detectPackageKey = (areas) => {
-    const allWalls = areas.every((a) => !!a.paintWalls);
-    const allCeil = areas.every((a) => !!a.paintCeiling);
-    const allBase = areas.every((a) => !!a.paintBaseboard);
-    const allDoors = areas.every((a) => !!a.paintDoors);
+function detectPackageKey(areas) {
+  const hasWalls = areas.some((a) => a.paintWalls);
+  const hasCeilings = areas.some((a) => a.paintCeiling);
+  const hasBaseboards = areas.some((a) => a.paintBaseboard);
+  const hasDoors = areas.some((a) => a.paintDoors);
 
-    if (allWalls && !allCeil && !allBase && !allDoors) return "walls_only";
-    if (allWalls && allCeil && !allBase && !allDoors) return "walls_ceilings";
-    if (allWalls && allCeil && allBase && allDoors) return "full";
-    return "custom";
-  };
+  if (hasWalls && hasCeilings && hasBaseboards && hasDoors) {
+    return "full";
+  }
+
+  if (hasWalls && hasCeilings && !hasBaseboards && !hasDoors) {
+    return "wallsCeilings";
+  }
+
+  if (hasWalls && !hasCeilings && !hasBaseboards && !hasDoors) {
+    return "wallsOnly";
+  }
+
+  return "custom";
+}
 
   const applyPackageToAreas = (areas, key) => {
     return areas.map((a) => {

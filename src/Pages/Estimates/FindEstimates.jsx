@@ -132,8 +132,16 @@ export default function FindEstimates() {
 
                     <td className="right">
                       <a className="fe-link" href={`/quote/${x.id}`} target="_blank" rel="noreferrer">
-                        View →
+                        Open →
                       </a>
+                    </td>
+
+                    <td>
+                      {x.viewCount > 0 ? (
+                        <span className="fe-pill approved">Viewed</span>
+                      ) : (
+                        <span className="fe-pill awaiting">Not viewed</span>
+                      )}
                     </td>
 
                     <td className="right">

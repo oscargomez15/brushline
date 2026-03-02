@@ -22,6 +22,16 @@ export default function QuotePage() {
 
   const [approving, setApproving] = useState(false);
 
+  const getSessionId = () => {
+  const key = "quote_view_session";
+  let v = sessionStorage.getItem(key);
+  if (!v) {
+    v = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    sessionStorage.setItem(key, v);
+  }
+  return v;
+};
+
   const handleApprove = async () => {
     try {
       setApproving(true);
@@ -69,18 +79,50 @@ export default function QuotePage() {
     })();
   }, [id]);
 
+  useEffect(() => {
+    if (!id) return;
+
+    fetch("/.netlify/functions/track-quote-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, sessionId: getSessionId() }),
+    }).catch(() => {});
+  }, [id]);
+
   if (err) return <div className="quote-wrap"><div className="quote-card">Error: {err}</div></div>;
   if (!quote) return <div className="quote-wrap"><div className="quote-card">Loading…</div></div>;
 
   const jobLabel = quote.jobType === "exterior" ? "Exterior Painting" : "Interior Painting";
-          const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
-          const currentKey = quote.selectedPackageKey;
-          const currentTotal = Number(quote.grandTotal) || 0;
+  const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
+  const currentTotal = Number(quote.grandTotal) || 0;
+  const EPS = 0.01;
 
-          // show all packages except the current one.
-          // if current is "custom", show all 3 as options.
-          const showPkgs =
-            currentKey === "custom" ? pkgs : pkgs.filter((p) => p.key !== currentKey);
+  // If selectedPackageKey is "custom" (or wrong), infer the current package by matching totals.
+  const inferred = pkgs.reduce(
+    (best, p) => {
+      const t = Number(p.total) || 0;
+      const d = Math.abs(t - currentTotal);
+      return d < best.diff ? { diff: d, key: p.key } : best;
+    },
+    { diff: Infinity, key: null }
+  );
+
+  const effectiveCurrentKey =
+    quote.selectedPackageKey && quote.selectedPackageKey !== "custom"
+      ? quote.selectedPackageKey
+      : inferred.diff <= EPS
+        ? inferred.key
+        : quote.selectedPackageKey;
+
+  // ✅ Never show a package card if it results in the same total (prevents identical upgrades)
+  let showPkgs = pkgs
+    .filter((p) => Math.abs((Number(p.total) || 0) - currentTotal) > EPS)
+    .filter((p) => (effectiveCurrentKey ? p.key !== effectiveCurrentKey : true));
+
+  // ✅ If current is FULL, only show downgrades (no upgrades)
+  if (effectiveCurrentKey === "full") {
+    showPkgs = showPkgs.filter((p) => (Number(p.total) || 0) < currentTotal - EPS);
+  }
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
