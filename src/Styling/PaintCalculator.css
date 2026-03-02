@@ -2,11 +2,40 @@
    Paint Calculator (Cleaned)
    Mobile-first responsive
 ========================= */
+.pac-container {
+  z-index: 9999 !important;
+}
 
+.addr-dd {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  z-index: 9999;
+}
+
+.addr-dd-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.9);
+}
+
+.addr-dd-item:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
 /* ---------- Base / Page ---------- */
 .paint-calculator-wrapper {
   min-height: 100vh;
-  padding: 11rem 16px 60px; /* slightly reduced from 12rem */
   background:
     radial-gradient(1200px 600px at 20% 10%, rgba(59, 130, 246, 0.12), transparent 60%),
     radial-gradient(900px 500px at 90% 30%, rgba(16, 185, 129, 0.10), transparent 55%),
@@ -216,6 +245,13 @@
   margin: 0 0 12px;
   font-size: 13px;
   color: rgba(15, 23, 42, 0.70);
+}
+
+.price-inputs span,
+ .summary-big .summary-amount,
+ .mini-row span,
+ .dimensions-container span{
+  color: black;
 }
 
 .price-input-items {
