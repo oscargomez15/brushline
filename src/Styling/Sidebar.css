@@ -269,3 +269,126 @@
     font-size: 16px;
   }
 }
+
+/* ==========================
+   Mobile Bottom Nav
+========================== */
+.crm-mobile-nav,
+.crm-mobile-backdrop {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* Hide desktop sidebar on mobile */
+  .crm-sidebar {
+    display: none;
+  }
+
+  /* Make room for bottom nav */
+  .crm-main {
+    padding-bottom: 84px;
+  }
+
+  .crm-mobile-nav {
+    display: flex;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 1001;
+
+    height: 58px;
+    padding: 0 10px;
+
+    align-items: center;
+    justify-content: space-around;
+
+    background: rgba(11, 18, 32, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 18px;
+
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+  }
+
+  .crm-mobile-link {
+    height: 44px;
+    width: 44px;
+    border-radius: 14px;
+
+    display: grid;
+    place-items: center;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid transparent;
+
+    color: #e5e7eb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .crm-mobile-link.active {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(59, 130, 246, 0.22);
+  }
+
+  .crm-mobile-icon {
+    font-size: 20px;
+    display: grid;
+    place-items: center;
+  }
+
+  .crm-mobile-menu {
+    position: relative;
+  }
+
+  .crm-mobile-dropdown {
+    position: absolute;
+    bottom: 66px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 210px;
+
+    background: rgba(11, 18, 32, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+    padding: 8px;
+
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+  }
+
+  .crm-mobile-dd-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 12px;
+    border-radius: 12px;
+
+    color: #e5e7eb;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .crm-mobile-dd-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Tap-away backdrop */
+  .crm-mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: transparent; /* keep invisible */
+  }
+}
+
+@media (max-width: 520px) {
+  .crm-mobile-nav {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
+}
