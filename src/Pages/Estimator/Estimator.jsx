@@ -57,8 +57,6 @@ if (step === "customer") {
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper-jobs">
-        {/* <IdentityControls /> */}
-
         <div className="jobtype-card">
           <StartEstimate
             initialCustomer={customer}
@@ -75,7 +73,6 @@ if (step === "jobType") {
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper-jobs">
-        <IdentityControls />
 
           <h1>Estimate Type</h1>
           <p>Is this an interior or exterior job?</p>
@@ -142,7 +139,6 @@ return (
         Change Customer
       </button>
 
-      <IdentityControls />
       {customer && (
         <button
           type="button"

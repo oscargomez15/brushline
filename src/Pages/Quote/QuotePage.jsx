@@ -88,7 +88,9 @@ export default function QuotePage() {
         {/* HEADER in the style you showed (use your quote.css) */}
         <header className="quote-header">
           <div className="quote-header-left">
-            <div className="quote-logo">P</div>
+            <div className="quote-logo">
+              <img src="/logo.png" alt="Your Company Logo" />
+            </div>
             <div>
               <div className="quote-company">{quote.companyName}</div>
               <div className="quote-tagline">Painting and Home Improvement</div>

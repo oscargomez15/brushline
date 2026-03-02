@@ -1,26 +1,21 @@
+/* Sidebar.css */
+
 .crm-shell {
   display: flex;
-  height: 100vh;       /* lock to viewport */
-  overflow: hidden;    /* prevent body scroll fighting */
+  height: 100vh;
+  overflow: hidden;
 }
 
+/* Sidebar */
 .crm-sidebar {
   width: 280px;
   min-width: 280px;
   height: 100%;
-  top: 0;
   background: #0b1220;
   color: #e5e7eb;
-  border-right: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-}
-
-.crm-main {
-  flex: 1;
-  height: 100%;
-  overflow-y: auto;    /* main content scrolls */
-  background: #f5f7fb;
 }
 
 .crm-sidebar.collapsed {
@@ -28,17 +23,26 @@
   min-width: 72px;
 }
 
+/* Main */
+.crm-main {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  background: #f5f7fb;
+}
+
+/* Top section */
 .crm-top {
   padding: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .crm-collapse-btn {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: #e5e7eb;
   cursor: pointer;
 }
@@ -57,7 +61,7 @@
   display: grid;
   place-items: center;
   font-weight: 800;
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.12);
   flex: 0 0 42px;
 }
 
@@ -81,17 +85,19 @@
   word-break: break-word;
 }
 
+/* Sign out */
 .crm-signout {
   margin-top: 4px;
   width: fit-content;
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: #e5e7eb;
   cursor: pointer;
 }
 
+/* Nav */
 .crm-nav {
   padding: 10px;
   display: flex;
@@ -104,7 +110,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 10px 10px;
   border-radius: 12px;
   color: #e5e7eb;
@@ -112,25 +118,25 @@
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 14px;
 }
 
 .crm-link:hover,
 .crm-group-btn:hover {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .crm-link.active {
-  border-color: rgba(255,255,255,0.14);
-  background: rgba(59,130,246,0.18);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(59, 130, 246, 0.18);
 }
 
 .crm-link-dot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.28);
+  background: rgba(255, 255, 255, 0.28);
   flex: 0 0 10px;
 }
 
@@ -141,6 +147,8 @@
 .crm-caret {
   margin-left: auto;
   opacity: 0.8;
+  display: flex;
+  align-items: center;
 }
 
 .crm-group-children {
@@ -151,10 +159,11 @@
   margin-left: 6px;
 }
 
+/* Bottom */
 .crm-bottom {
   margin-top: auto;
   padding: 12px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .crm-bottom-hint {
@@ -169,13 +178,41 @@
   justify-content: center;
 }
 
-.crm-link,
-.crm-group-btn {
-  gap: 12px;
+/* ---------- Mobile drawer behavior ---------- */
+@media (max-width: 900px) {
+  .crm-shell {
+    position: relative;
+  }
+
+  .crm-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 50;
+
+    /* Drawer animation */
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  }
+
+  /* On mobile, treat "collapsed" as "closed drawer" */
+  .crm-sidebar.collapsed {
+    width: 280px;      /* keep normal width; just slide it away */
+    min-width: 280px;
+    transform: translateX(-100%);
+  }
+
+  .crm-main {
+    width: 100%;
+  }
 }
 
-.crm-caret {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
+@media (max-width: 520px) {
+  .crm-sidebar,
+  .crm-sidebar.collapsed {
+    width: 86vw;
+    min-width: 86vw;
+  }
 }

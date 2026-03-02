@@ -1,11 +1,13 @@
+/* FindEstimate.css */
+
+/* Layout */
 .find-estimates {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 16px;
 }
 
-.fe-pill.awaiting { background: rgba(245,158,11,0.12); }
-.fe-pill.approved { background: rgba(34,197,94,0.12); }
-
+/* Header */
 .fe-header {
   display: flex;
   align-items: flex-end;
@@ -25,6 +27,7 @@
   opacity: 0.75;
 }
 
+/* Primary button */
 .fe-primary-btn {
   display: inline-flex;
   align-items: center;
@@ -33,31 +36,36 @@
   border-radius: 12px;
   text-decoration: none;
   background: #111827;
-  color: white;
+  color: #fff;
   font-weight: 800;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .fe-primary-btn:hover {
   opacity: 0.92;
 }
 
+/* Toolbar */
 .fe-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   margin: 14px 0;
+  flex-wrap: wrap; /* important for mobile */
 }
 
+/* Search */
 .fe-search {
   flex: 1;
+  min-width: 240px;
   max-width: 520px;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
-  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 14px;
   padding: 10px 12px;
 }
@@ -67,6 +75,7 @@
   outline: none;
   width: 100%;
   font-size: 14px;
+  background: transparent;
 }
 
 .fe-search-icon {
@@ -74,14 +83,16 @@
   font-size: 16px;
 }
 
+/* Stats */
 .fe-stats {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .fe-stat {
-  background: white;
-  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 14px;
   padding: 10px 12px;
   min-width: 100px;
@@ -100,20 +111,23 @@
   margin-top: 2px;
 }
 
+/* Card + Table */
 .fe-card {
-  background: white;
-  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   overflow: hidden;
 }
 
 .fe-table-wrap {
-  overflow-x: auto;
+  overflow-x: auto; /* keeps table usable on small screens */
+  -webkit-overflow-scrolling: touch;
 }
 
 .fe-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 820px; /* ensures horizontal scroll instead of squished columns */
 }
 
 .fe-table thead th {
@@ -123,8 +137,8 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 12px 14px;
-  background: rgba(0,0,0,0.02);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -132,14 +146,15 @@
 
 .fe-table tbody td {
   padding: 14px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   vertical-align: middle;
 }
 
 .fe-table tbody tr:hover {
-  background: rgba(59,130,246,0.06);
+  background: rgba(59, 130, 246, 0.06);
 }
 
+/* Helpers */
 .muted {
   opacity: 0.75;
 }
@@ -152,6 +167,7 @@
   font-weight: 900;
 }
 
+/* Client cell */
 .fe-client {
   display: flex;
   align-items: center;
@@ -165,7 +181,7 @@
   display: grid;
   place-items: center;
   background: #111827;
-  color: white;
+  color: #fff;
   font-weight: 900;
   flex: 0 0 36px;
 }
@@ -174,10 +190,15 @@
   display: flex;
   flex-direction: column;
   line-height: 1.1;
+  min-width: 0;
 }
 
 .fe-client-name {
   font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
 }
 
 .fe-client-id {
@@ -186,6 +207,7 @@
   margin-top: 3px;
 }
 
+/* Pills */
 .fe-pill {
   display: inline-flex;
   align-items: center;
@@ -193,17 +215,26 @@
   border-radius: 999px;
   font-size: 12px;
   font-weight: 900;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .fe-pill.interior {
-  background: rgba(34,197,94,0.12);
+  background: rgba(34, 197, 94, 0.12);
 }
 
 .fe-pill.exterior {
-  background: rgba(59,130,246,0.12);
+  background: rgba(59, 130, 246, 0.12);
 }
 
+.fe-pill.awaiting {
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.fe-pill.approved {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+/* Links */
 .fe-link {
   text-decoration: none;
   font-weight: 900;
@@ -213,35 +244,114 @@
   text-decoration: underline;
 }
 
+/* Empty */
 .fe-empty {
   padding: 18px;
   text-align: center;
   opacity: 0.7;
 }
 
-.fe-danger-btn{
-  border: 1px solid rgba(220,38,38,.4);
+/* Delete button */
+.fe-danger-btn {
+  border: 1px solid rgba(220, 38, 38, 0.4);
   background: transparent;
-  color: rgb(220,38,38);
+  color: rgb(220, 38, 38);
   padding: 8px 12px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.fe-danger-btn:hover{
-  background: rgba(220,38,38,.08);
-  border-color: rgb(220,38,38);
+.fe-danger-btn:hover {
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgb(220, 38, 38);
   transform: translateY(-1px);
 }
 
-.fe-danger-btn:active{
+.fe-danger-btn:active {
   transform: translateY(0px);
 }
 
-.fe-danger-btn:disabled{
-  opacity: .5;
+.fe-danger-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 900px) {
+  .find-estimates {
+    padding: 12px;
+  }
+
+  .fe-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .fe-title {
+    font-size: 24px;
+  }
+
+  .fe-primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fe-search {
+    max-width: none;
+    width: 100%;
+  }
+
+  .fe-stats {
+    width: 100%;
+  }
+
+  .fe-stat {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .fe-client-name {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 520px) {
+  .find-estimates {
+    padding: 10px;
+  }
+
+  .fe-title {
+    font-size: 22px;
+  }
+
+  /* Tighten table spacing */
+  .fe-table thead th,
+  .fe-table tbody td {
+    padding: 12px 12px;
+  }
+
+  /* Hide avatar to save room */
+  .fe-avatar {
+    display: none;
+  }
+
+  .fe-client-name {
+    max-width: 180px;
+  }
+
+  /*
+    Optional: hide less important columns on tiny screens.
+    Your columns are:
+    1 Date, 2 Client, 3 Address, 4 Type, 5 Status, 6 Total, 7 Open, 8 Delete
+  */
+  .fe-table thead th:nth-child(1),
+  .fe-table tbody td:nth-child(1),
+  .fe-table thead th:nth-child(4),
+  .fe-table tbody td:nth-child(4) {
+    display: none;
+  }
 }

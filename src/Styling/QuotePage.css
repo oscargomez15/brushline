@@ -106,16 +106,20 @@
 }
 
 .quote-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #111827, #1f2937);
-  color: #fff;
-  font-weight: 700;
-  font-size: 22px;
   display: flex;
   align-items: center;
-  justify-content: center;
+}
+
+.quote-logo img {
+  height: 60px;     /* adjust if needed */
+  width: auto;
+  object-fit: contain;
+}
+
+@media print {
+  .quote-logo img {
+    height: 50px;
+  }
 }
 
 .quote-company {
