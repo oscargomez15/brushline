@@ -176,22 +176,11 @@ export default function QuotePage() {
           </div>
 
         <div className="quote-header-right">
-          {/* <div className="quote-header-actions">
+          <div className="quote-header-actions">
             <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
               {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
             </div>
-
-            {quote.status !== "approved" ? (
-              <button
-                type="button"
-                className="quote-approve-btn"
-                onClick={() => setSigOpen(true)}
-                disabled={approving || quote?.status === "approved"}
-              >
-                {quote?.status === "approved" ? "Approved" : "Approve Estimate"}
-              </button>
-            ) : null}
-          </div> */}
+          </div>
 
           <div className="quote-title">Proposal</div>
 
@@ -276,8 +265,13 @@ export default function QuotePage() {
                 const isSelected = (effectiveCurrentKey === p.key);
 
                 // Make the biggest package "recommended" (or use your own rule)
+                const hasSelection = !!effectiveCurrentKey;
+
                 const isRecommended =
-                  p.key === "full" || /baseboard|doors|trim|full/i.test(p.label) || idx === showPkgs.length - 1;
+                  !hasSelection && (
+                    p.key === "full" ||
+                    /baseboard|doors|trim|full/i.test(p.label)
+                  );
 
                 // Normalize into 3 package names you want
                 const name =
