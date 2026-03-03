@@ -234,29 +234,35 @@ export default function QuotePage() {
               <div className="quote-scope-title">Scope of Work</div>
 
               {quote.scopeItems.map((area) => (
-                <div key={area.areaId} className="quote-scope-area">
-                  <div className="quote-scope-area-name">
-                    {area.areaName}
+                <div key={area.areaId} className="scope-area">
+                  <div className="scope-area-head">
+                    <div className="scope-area-title">{area.areaName}</div>
                   </div>
 
-                  <div className="quote-scope-list">
+                  {/* Paint scope */}
+                  <div className="scope-chips">
                     {area.scope.map((item) => (
-                      <div key={item} className="quote-scope-line">
-                        • Paint {item}
-                      </div>
+                      <span key={item} className="scope-chip">
+                        {item}
+                      </span>
                     ))}
+                  </div>
 
-                    {Array.isArray(area.extras) && area.extras.length > 0 && (
-                      <>
-                        <div className="quote-scope-line quote-scope-extra-title">Extra work:</div>
+                  {/* Extra work */}
+                  {Array.isArray(area.extras) && area.extras.length > 0 && (
+                    <div className="scope-extras">
+                      <div className="scope-extras-title">Extra work</div>
+
+                      <div className="scope-extras-list">
                         {area.extras.map((x, i) => (
-                          <div key={`${x.label}-${i}`} className="quote-scope-line">
-                            • {x.label} {x.price ? `(${fmtMoney(x.price)})` : ""}
+                          <div key={`${x.label}-${i}`} className="scope-extra-row">
+                            <span className="scope-extra-label">{x.label}</span>
+                            <span className="scope-extra-price">{fmtMoney(x.price || 0)}</span>
                           </div>
                         ))}
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
