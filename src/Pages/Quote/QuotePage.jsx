@@ -135,6 +135,8 @@ export default function QuotePage() {
   const currentTotal = Number(quote.grandTotal) || 0;
   const EPS = 0.01;
 
+  const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
+
   // If selectedPackageKey is "custom" (or wrong), infer the current package by matching totals.
   const inferred = pkgs.reduce(
     (best, p) => {
@@ -153,14 +155,10 @@ export default function QuotePage() {
         : quote.selectedPackageKey;
 
   // ✅ Never show a package card if it results in the same total (prevents identical upgrades)
-  let showPkgs = pkgs
-    .filter((p) => Math.abs((Number(p.total) || 0) - currentTotal) > EPS)
-    .filter((p) => (effectiveCurrentKey ? p.key !== effectiveCurrentKey : true));
+    let showPkgs = pkgs;
 
-  // ✅ If current is FULL, only show downgrades (no upgrades)
-  if (effectiveCurrentKey === "full") {
-    showPkgs = showPkgs.filter((p) => (Number(p.total) || 0) < currentTotal - EPS);
-  }
+    // Optional: if you want to hide "custom" if it ever appears
+    showPkgs = showPkgs.filter((p) => p.key !== "custom");
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -275,7 +273,7 @@ export default function QuotePage() {
                 const newTotal = Number(p.total) || 0;
 
                 // Decide selection
-                const isSelected = quote.selectedPackageKey === p.key;
+                const isSelected = (effectiveCurrentKey === p.key);
 
                 // Make the biggest package "recommended" (or use your own rule)
                 const isRecommended =
@@ -283,19 +281,11 @@ export default function QuotePage() {
 
                 // Normalize into 3 package names you want
                 const name =
-                  p.key === "walls"
+                  p.key === "walls_only"
                     ? "Walls Only"
-                    : p.key === "walls_ceiling"
+                    : p.key === "walls_ceilings"
                       ? "Walls and Ceiling"
                       : "Walls, Ceiling, Baseboard and Doors";
-
-                // Feature list based on package
-                // const includes = {
-                //   walls: true,
-                //   ceiling: p.key !== "walls",
-                //   baseboard: p.key === "full" || /baseboard|trim/i.test(p.label),
-                //   doors: p.key === "full" || /doors/i.test(p.label),
-                // };
 
                 const features = FEATURES_BY_KEY[p.key] ?? [];
 
@@ -348,14 +338,19 @@ export default function QuotePage() {
               </div>
 
               <div className="pkg-footer-right">
-                <button
-                  type="button"
-                  className="pkg-approve"
-                  onClick={() => setSigOpen(true)}
-                  disabled={approving || quote.status === "approved"}
-                >
-                  {quote.status === "approved" ? "Approved" : "Approve"}
-                </button>
+                  <div className="pkg-deposit">
+                    <div className="pkg-deposit-top">Start for only</div>
+                    <div className="pkg-deposit-amt">{fmtMoney(deposit)} deposit</div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="pkg-approve"
+                    onClick={() => setSigOpen(true)}
+                    disabled={approving || quote.status === "approved"}
+                  >
+                    {quote.status === "approved" ? "Approved" : "Approve"}
+                  </button>
               </div>
             </div>
           </div>

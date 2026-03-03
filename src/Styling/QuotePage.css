@@ -798,6 +798,29 @@
   }
 }
 
+.pkg-footer-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.pkg-deposit{
+  text-align:right;
+  line-height:1.05;
+}
+
+.pkg-deposit-top{
+  font-size:12px;
+  font-weight:700;
+  opacity:.8;
+}
+
+.pkg-deposit-amt{
+  font-size:14px;
+  font-weight:950;
+  color: rgba(34,197,94,.95);
+}
+
 .quote-terms {
   border-top: 1px solid rgba(0,0,0,0.08);
   padding: 32px;
