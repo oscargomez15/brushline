@@ -14,7 +14,8 @@ export default function QuotePage() {
   const [sigOpen, setSigOpen] = useState(false);
   const [typedName, setTypedName] = useState("");
   const sigRef = useRef(null);
-  
+  const [approving, setApproving] = useState(false);
+
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -25,7 +26,6 @@ export default function QuotePage() {
   quote?.customer?.address ||
   "";
 
-  const [approving, setApproving] = useState(false);
 
   const getSessionId = () => {
   const key = "quote_view_session";
@@ -37,7 +37,18 @@ export default function QuotePage() {
   return v;
 };
 
-  const handleApprove = async (signatureDataUrl, typedName) => {
+  const handleSelectPackage = async (packageKey) => {
+  const res = await fetch("/.netlify/functions/apply-package", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: quote.id, packageKey }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Failed to change scope");
+  setQuote(data.quote);
+};
+
+  const submitApprovalWithSignature = async (signatureDataUrl, signerName) => {
     setApproving(true);
     try {
       const res = await fetch("/.netlify/functions/approve-quote", {
@@ -46,7 +57,7 @@ export default function QuotePage() {
         body: JSON.stringify({
           id,
           signatureDataUrl,
-          typedName,
+          typedName: signerName,
         }),
       });
 
@@ -67,17 +78,6 @@ export default function QuotePage() {
       setApproving(false);
     }
   };
-  
-  const handleSelectPackage = async (packageKey) => {
-  const res = await fetch("/.netlify/functions/apply-package", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: quote.id, packageKey }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.error || "Failed to change scope");
-  setQuote(data.quote);
-};
 
   useEffect(() => {
     (async () => {
@@ -168,9 +168,9 @@ export default function QuotePage() {
                 type="button"
                 className="quote-approve-btn"
                 onClick={() => setSigOpen(true)}
-                disabled={approving}
+                disabled={approving || quote?.status === "approved"}
               >
-                {approving ? "Approving..." : "Approve Estimate"}
+                {quote?.status === "approved" ? "Approved" : "Approve Estimate"}
               </button>
             ) : null}
           </div>
@@ -247,7 +247,7 @@ export default function QuotePage() {
         <div className="quote-upgrades">
           <div className="quote-upgrades-title">Change Scope</div>
           <div className="quote-upgrades-subtitle">
-            Feel free to change the scope of 
+            Changed your mind? Select a different scope package below to see updated totals and choose the one that’s right for you.
           </div>
 
           <div className="quote-upgrades-grid">
@@ -342,19 +342,27 @@ export default function QuotePage() {
                 type="button"
                 className="btn-primary"
                 onClick={() => {
-                  if (sigRef.current.isEmpty()) {
+                  const pad = sigRef.current;
+
+                  if (!pad || typeof pad.isEmpty !== "function") {
+                    console.error("Signature pad not ready:", pad);
+                    alert("Signature pad not ready. Please refresh and try again.");
+                    return;
+                  }
+
+                  if (pad.isEmpty()) {
                     alert("Please sign before submitting.");
                     return;
                   }
-                  if (!typedName.trim()) {
+
+                  const name = typedName.trim();
+                  if (!name) {
                     alert("Please type your name.");
                     return;
                   }
 
-                  const signatureDataUrl =
-                    sigRef.current.getTrimmedCanvas().toDataURL("image/png");
-
-                  handleApprove(signatureDataUrl, typedName.trim());
+                  const signatureDataUrl = pad.getTrimmedCanvas().toDataURL("image/png");
+                  submitApprovalWithSignature(signatureDataUrl, name);
                 }}
               >
                 Submit Approval
