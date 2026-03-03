@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
@@ -344,9 +344,21 @@ export default function QuotePage() {
                 onClick={() => {
                   const pad = sigRef.current;
 
-                  if (!pad || typeof pad.isEmpty !== "function") {
-                    console.error("Signature pad not ready:", pad);
+                  if (!pad) {
+                    console.error("Signature pad ref is null");
                     alert("Signature pad not ready. Please refresh and try again.");
+                    return;
+                  }
+
+                  if (typeof pad.isEmpty !== "function") {
+                    console.error("pad.isEmpty is not a function:", pad);
+                    alert("Signature pad error. Please refresh and try again.");
+                    return;
+                  }
+
+                  if (typeof pad.getTrimmedCanvas !== "function") {
+                    console.error("pad.getTrimmedCanvas is not a function:", pad);
+                    alert("Signature pad error. Please refresh and try again.");
                     return;
                   }
 
@@ -362,6 +374,13 @@ export default function QuotePage() {
                   }
 
                   const signatureDataUrl = pad.getTrimmedCanvas().toDataURL("image/png");
+
+                  if (typeof handleApprove !== "function") {
+                    console.error("handleApprove is not a function:", handleApprove);
+                    alert("Approve handler missing. Please refresh.");
+                    return;
+                  }
+
                   handleApprove(signatureDataUrl, name);
                 }}
               >
