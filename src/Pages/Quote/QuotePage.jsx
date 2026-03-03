@@ -251,7 +251,7 @@ export default function QuotePage() {
                   {/* Extra work */}
                   {Array.isArray(area.extras) && area.extras.length > 0 && (
                     <div className="scope-extras">
-                      <div className="scope-extras-title">Extra work</div>
+                      <div className="scope-extras-title">Additional work</div>
 
                       <div className="scope-extras-list">
                         {area.extras.map((x, i) => (

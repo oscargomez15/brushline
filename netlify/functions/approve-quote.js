@@ -1,5 +1,68 @@
 const { getStore } = require("@netlify/blobs");
 
+const sgMail = require("@sendgrid/mail");
+
+function safeStr(v) {
+  return (v || "").toString().trim();
+}
+
+function buildQuoteLink(baseUrl, id) {
+  if (!baseUrl) return "";
+  return `${baseUrl.replace(/\/$/, "")}/${encodeURIComponent(id)}`;
+}
+
+async function sendApprovalEmail(updatedQuote, quoteId) {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  const to = process.env.APPROVAL_NOTIFY_TO;
+  const from = process.env.APPROVAL_NOTIFY_FROM;
+
+  if (!apiKey || !to || !from) {
+    console.warn("SendGrid env vars missing; skipping approval email.");
+    return;
+  }
+
+  sgMail.setApiKey(apiKey);
+
+  const customerName =
+    safeStr(updatedQuote?.clientName) ||
+    safeStr(updatedQuote?.customer?.fullName) ||
+    `${safeStr(updatedQuote?.customer?.firstName)} ${safeStr(updatedQuote?.customer?.lastName)}`.trim() ||
+    "Client";
+
+  const address =
+    safeStr(updatedQuote?.projectAddress) ||
+    safeStr(updatedQuote?.customer?.address) ||
+    "N/A";
+
+  const total = Number(updatedQuote?.grandTotal || 0);
+  const deposit = Math.round(total * 0.4 * 100) / 100;
+
+  const quoteNumber = updatedQuote?.quoteNumber || quoteId;
+  const link = buildQuoteLink(process.env.PUBLIC_QUOTE_BASE_URL, quoteId);
+
+  const subject = `✅ Quote Approved: ${customerName} (${quoteNumber})`;
+
+  const textLines = [
+    `A client has approved a quote.`,
+    ``,
+    `Client: ${customerName}`,
+    `Address: ${address}`,
+    `Quote #: ${quoteNumber}`,
+    `Total: $${total.toFixed(2)}`,
+    `Deposit (40%): $${deposit.toFixed(2)}`,
+    `Approved at: ${updatedQuote?.approvedAt || "N/A"}`,
+    updatedQuote?.signature?.typedName ? `Signed as: ${updatedQuote.signature.typedName}` : null,
+    link ? `View quote: ${link}` : null,
+  ].filter(Boolean);
+
+  await sgMail.send({
+    to,
+    from,
+    subject,
+    text: textLines.join("\n"),
+  });
+}
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -77,6 +140,11 @@ exports.handler = async (event) => {
     };
 
     await quotes.setJSON(id, updatedQuote);
+
+    // 🔔 Email notify (don't block approval if email fails)
+    sendApprovalEmail(updatedQuote, id).catch((e) =>
+      console.error("sendApprovalEmail error:", e)
+    );
 
     // Update index
     const idx = await index.get(id, { type: "json" });
