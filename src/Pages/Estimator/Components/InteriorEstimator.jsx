@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import SortableAreaCard from "./SortableAreaCard";
 
 import netlifyIdentity from "netlify-identity-widget";
@@ -56,9 +56,6 @@ export const InteriorEstimator = ({customer}) => {
       // Areas (start empty — no default area)
       const [areas, setAreas] = useState([]);
 
-      useEffect(() => {
-        console.log("areas length:", areas.length, areas);
-      }, [areas]);
       // Simple id helper (CRA-safe)
       const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
@@ -90,7 +87,6 @@ export const InteriorEstimator = ({customer}) => {
       });
     
       const addArea = () => {
-      console.log("Add Area clicked");
       setAreas((prev) => [...prev, createArea()]);
     };
       const removeArea = (id) => setAreas((prev) => prev.filter((a) => a.id !== id));

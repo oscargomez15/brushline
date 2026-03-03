@@ -20,9 +20,13 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     const fn = initialCustomer?.firstName || "";
     const ln = initialCustomer?.lastName || "";
     const addr = initialCustomer?.address || "";
+    const unit = initialCustomer?.unit || "";
+    const email = initialCustomer?.email || "";
     setFirstName(fn);
     setLastName(ln);
     setAddress(addr);
+    setUnit(unit);
+    setEmail(email);
   }, [initialCustomer]);
 
   useEffect(() => {

@@ -104,13 +104,10 @@ export default function QuotePage() {
       try {
       const res = await fetch(`/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`);
       const data = await res.json();
-      console.log("get-quote response:", data);
       if (!res.ok) throw new Error(data?.error || "Failed to load quote");
 
       // ✅ Accept either { ...quoteFields } or { quote: { ...quoteFields } }
       setQuote(data?.quote ?? data);
-      console.log("QUOTE FROM get-quote:", data);
-      console.log("scopeItems:", data?.scopeItems);
       } catch (e) {
         setErr(e.message);
       }

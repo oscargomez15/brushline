@@ -121,6 +121,11 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
 async function sendQuoteEmail({ to, quote, publicUrl }) {
   const apiKey = process.env.SENDGRID_API_KEY;
   const from = process.env.QUOTE_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM;
+  const address =
+    safeStr(quote?.projectAddress) ||
+    safeStr(quote?.customer?.address) ||
+    safeStr(quote?.address) ||
+    "N/A";
 
   if (!apiKey || !from || !to) {
     console.warn("SendGrid env vars missing; skipping quote email.", {
