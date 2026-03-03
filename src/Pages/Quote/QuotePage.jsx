@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
+import SignatureCanvas from "react-signature-canvas";
+
 import { useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
-import SignatureCanvas from "react-signature-canvas";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
@@ -338,15 +339,27 @@ export default function QuotePage() {
                 Clear
               </button>
 
+              console.log("pad:", sigRef.current);
+              console.log("pad.isEmpty type:", typeof sigRef.current?.isEmpty);
+              console.log("pad.getTrimmedCanvas type:", typeof sigRef.current?.getTrimmedCanvas);
+              console.log("submitApprovalWithSignature type:", typeof submitApprovalWithSignature);
+
               <button
                 type="button"
                 className="btn-primary"
                 onClick={() => {
                   const pad = sigRef.current;
 
-                  if (!pad || typeof pad.isEmpty !== "function") {
-                    console.error("Signature pad not ready:", pad);
-                    alert("Signature pad not ready. Please refresh and try again.");
+                  // Hard-guard: if ref isn't the pad instance, stop here
+                  if (!pad) {
+                    console.error("Signature pad ref is null");
+                    alert("Signature pad not ready. Please try again.");
+                    return;
+                  }
+
+                  if (typeof pad.isEmpty !== "function" || typeof pad.getTrimmedCanvas !== "function") {
+                    console.error("Signature pad ref is not a SignatureCanvas instance:", pad);
+                    alert("Signature pad error. Please refresh and try again.");
                     return;
                   }
 
@@ -362,6 +375,13 @@ export default function QuotePage() {
                   }
 
                   const signatureDataUrl = pad.getTrimmedCanvas().toDataURL("image/png");
+
+                  if (typeof submitApprovalWithSignature !== "function") {
+                    console.error("submitApprovalWithSignature is not a function:", submitApprovalWithSignature);
+                    alert("Approve handler missing. Please refresh.");
+                    return;
+                  }
+
                   submitApprovalWithSignature(signatureDataUrl, name);
                 }}
               >
