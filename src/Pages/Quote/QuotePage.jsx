@@ -373,7 +373,7 @@ export default function QuotePage() {
                     return;
                   }
 
-                  const signatureDataUrl = pad.getTrimmedCanvas().toDataURL("image/png");
+                  const signatureDataUrl = pad.toDataURL("image/png");
 
                   if (typeof handleApprove !== "function") {
                     console.error("handleApprove is not a function:", handleApprove);
