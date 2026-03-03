@@ -232,11 +232,11 @@ export default function QuotePage() {
           {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
             <div className="quote-scope">
               <div className="quote-scope-title">Scope of Work</div>
-              <div className="scope-section-label">Areas to be painted</div>
               {quote.scopeItems.map((area) => (
                 <div key={area.areaId} className="scope-area">
                   <div className="scope-area-head">
                     <div className="scope-area-title">{area.areaName}</div>
+                    <div className="scope-section-label">Areas to be painted</div>
                   </div>
 
                   {/* Paint scope */}
