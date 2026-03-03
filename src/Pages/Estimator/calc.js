@@ -85,7 +85,10 @@ export function computeAreaCalc(area, pricing) {
   const wallHours = wallsOn ? Math.ceil(wallSqft / SQFT_PER_HOUR) : 0;
   const ceilingHours = ceilingOn ? Math.ceil(ceilingSqft / SQFT_PER_HOUR) : 0;
 
-  const totalCost = wallCost + ceilingCost + doorCost + baseboardCost;
+  // Manual add-ons (extra work like drywall, baseboard install, etc.)
+  const addonsTotal = (area.addons || []).reduce((sum, a) => sum + parseMoney(a.price), 0);
+
+  const totalCost = wallCost + ceilingCost + doorCost + baseboardCost + addonsTotal;
   const totalGallons = wallGallons + ceilingGallons + doorGallons + baseboardGallons;
   const totalHours = wallHours + ceilingHours;
 
@@ -115,6 +118,7 @@ export function computeAreaCalc(area, pricing) {
     totalGallons,
     totalCost,
     isHighCeiling,
+    addonsTotal
   };
 }
 
@@ -158,4 +162,5 @@ export const EMPTY_CALC = {
   totalGallons: 0,
   totalCost: 0,
   isHighCeiling: false,
+  addonsTotal: 0,
 };

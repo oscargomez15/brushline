@@ -85,6 +85,8 @@ export const InteriorEstimator = ({customer}) => {
         paintCeiling: true,
         paintDoors: false,
         paintBaseboard: false,
+
+        addons: [],
       });
     
       const addArea = () => {
@@ -190,11 +192,19 @@ function detectPackageKey(areas) {
       if (a.paintDoors) scope.push("Doors");
       if (a.paintBaseboard) scope.push("Baseboards");
 
+      const extras = (a.addons || [])
+      .filter(x => (x.label || "").trim())
+      .map(x => ({
+        label: x.label.trim(),
+        price: Number(x.price) || 0,
+      }));
+
 
       return {
         areaId: a.id,
         areaName,
         scope, // array of strings
+        extras,
       };
     });
   };

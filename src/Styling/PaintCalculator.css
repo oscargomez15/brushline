@@ -931,3 +931,96 @@
     min-width: 0;
   }
 }
+
+/* -------------------------
+   Extra work (Add-ons)
+------------------------- */
+.addons-box {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+  display: grid;
+  gap: 10px;
+}
+
+.addons-box h3 {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+/* Each row: Description | Price | Remove */
+.addon-row {
+  display: grid;
+  grid-template-columns: 1fr 140px auto;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Make the add-on inputs a bit less tall than main dims (optional) */
+.addon-row .dim-input {
+  height: 42px;
+}
+
+/* Remove button */
+.addon-remove {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(185, 28, 28, 0.25);
+  background: #fff;
+  color: #b91c1c;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  white-space: nowrap;
+}
+
+.addon-remove:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(185, 28, 28, 0.12);
+}
+
+/* Add button */
+.addon-add {
+  height: 44px;
+  border-radius: 12px;
+  border: 1px dashed rgba(15, 23, 42, 0.18);
+  background: rgba(255, 255, 255, 0.75);
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.addon-add:hover {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.10);
+}
+
+/* Responsive: stack nicely on smaller screens */
+@media (max-width: 720px) {
+  .addon-row {
+    grid-template-columns: 1fr 120px;
+    grid-template-areas:
+      "desc price"
+      "remove remove";
+  }
+
+  .addon-row .dim-input:nth-child(1) {
+    grid-area: desc;
+  }
+
+  .addon-row .dim-input:nth-child(2) {
+    grid-area: price;
+  }
+
+  .addon-remove {
+    grid-area: remove;
+    width: 100%;
+  }
+}

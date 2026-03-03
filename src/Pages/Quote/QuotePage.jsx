@@ -245,6 +245,17 @@ export default function QuotePage() {
                         • Paint {item}
                       </div>
                     ))}
+
+                    {Array.isArray(area.extras) && area.extras.length > 0 && (
+                      <>
+                        <div className="quote-scope-line quote-scope-extra-title">Extra work:</div>
+                        {area.extras.map((x, i) => (
+                          <div key={`${x.label}-${i}`} className="quote-scope-line">
+                            • {x.label} {x.price ? `(${fmtMoney(x.price)})` : ""}
+                          </div>
+                        ))}
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
