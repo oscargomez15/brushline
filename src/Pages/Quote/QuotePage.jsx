@@ -176,7 +176,7 @@ export default function QuotePage() {
           </div>
 
         <div className="quote-header-right">
-          <div className="quote-header-actions">
+          {/* <div className="quote-header-actions">
             <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
               {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
             </div>
@@ -191,7 +191,7 @@ export default function QuotePage() {
                 {quote?.status === "approved" ? "Approved" : "Approve Estimate"}
               </button>
             ) : null}
-          </div>
+          </div> */}
 
           <div className="quote-title">Proposal</div>
 
