@@ -8,61 +8,94 @@ function json(statusCode, body) {
   };
 }
 
+function dataUrlToBuffer(dataUrl) {
+  const match = /^data:image\/png;base64,(.+)$/.exec(dataUrl || "");
+  if (!match) return null;
+  return Buffer.from(match[1], "base64");
+}
+
 exports.handler = async (event) => {
   try {
-    if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed" });
-
-    let payload;
-    try {
-      payload = JSON.parse(event.body || "{}");
-    } catch {
-      return json(400, { error: "Invalid JSON" });
+    if (event.httpMethod !== "POST") {
+      return json(405, { error: "Method not allowed" });
     }
-
-    const id = payload?.id;
-    if (!id) return json(400, { error: "Missing id" });
 
     const siteID = process.env.NETLIFY_SITE_ID;
     const token = process.env.NETLIFY_AUTH_TOKEN;
-    if (!siteID || !token) return json(500, { error: "Missing env vars for Blobs" });
+    if (!siteID || !token) {
+      return json(500, { error: "Missing Netlify env vars" });
+    }
 
-    const store = getStore("quotes", { siteID, token });
+    const { id, signatureDataUrl, typedName } = JSON.parse(event.body || "{}");
 
-    const quote = await store.get(id, { type: "json" });
+    if (!id) return json(400, { error: "Missing quote id" });
+    if (!signatureDataUrl) return json(400, { error: "Missing signature" });
+    if (!typedName) return json(400, { error: "Missing typed name" });
+
+    const pngBuffer = dataUrlToBuffer(signatureDataUrl);
+    if (!pngBuffer || pngBuffer.length < 100) {
+      return json(400, { error: "Invalid signature image" });
+    }
+
+    const quotes = getStore("quotes", { siteID, token });
+    const index = getStore("quotes_index", { siteID, token });
+    const signatures = getStore("quote_signatures", { siteID, token });
+
+    const quote = await quotes.get(id, { type: "json" });
     if (!quote) return json(404, { error: "Quote not found" });
 
-    // If already approved, just return it
+    // Prevent double approval
     if (quote.status === "approved") {
-      return json(200, { ok: true, quote });
+      return json(400, { error: "Quote already approved" });
     }
 
-    const updated = {
-      ...quote,
-      status: "approved",
-      approvedAt: new Date().toISOString(),
+    const now = new Date().toISOString();
+    const signatureKey = `${id}-${Date.now()}.png`;
+
+    // Save signature image
+    await signatures.set(signatureKey, pngBuffer, {
+      contentType: "image/png",
+      metadata: {
+        typedName,
+        signedAt: now,
+      },
+    });
+
+    const signature = {
+      key: signatureKey,
+      typedName,
+      signedAt: now,
+      userAgent: event.headers["user-agent"] || null,
+      ip: event.headers["x-nf-client-connection-ip"] || null,
     };
 
-    await store.setJSON(id, updated);
+    const updatedQuote = {
+      ...quote,
+      status: "approved",
+      approvedAt: now,
+      signature,
+    };
 
-    // ✅ if you have an index store, update it too
-    const indexStore = getStore("quotes_index", { siteID, token });
-    if (indexStore) {
-      try {
-        const existingIndex = await indexStore.get(id, { type: "json" });
-        await indexStore.setJSON(id, {
-          ...(existingIndex || {}),
-          id,
-          status: "approved",
-          approvedAt: updated.approvedAt,
-        });
-      } catch {
-        // ignore index errors so approval still works
-      }
+    await quotes.setJSON(id, updatedQuote);
+
+    // Update index
+    const idx = await index.get(id, { type: "json" });
+    if (idx) {
+      await index.setJSON(id, {
+        ...idx,
+        status: "approved",
+        approvedAt: now,
+        signature,
+      });
     }
 
-    return json(200, { ok: true, quote: updated });
+    return json(200, {
+      ok: true,
+      approvedAt: now,
+      signature,
+    });
   } catch (err) {
-    console.error("approve-quote crashed:", err);
-    return json(500, { error: "approve-quote failed", message: err?.message || String(err) });
+    console.error("approve-quote error:", err);
+    return json(500, { error: "Server error" });
   }
 };

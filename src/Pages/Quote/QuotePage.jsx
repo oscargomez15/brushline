@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
+import SignatureCanvas from "react-signature-canvas";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
@@ -10,6 +11,10 @@ export default function QuotePage() {
   const [quote, setQuote] = useState(null);
   const [err, setErr] = useState("");
 
+  const [sigOpen, setSigOpen] = useState(false);
+  const [typedName, setTypedName] = useState("");
+  const sigRef = useRef(null);
+  
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -32,19 +37,32 @@ export default function QuotePage() {
   return v;
 };
 
-  const handleApprove = async () => {
+  const handleApprove = async (signatureDataUrl, typedName) => {
+    setApproving(true);
     try {
-      setApproving(true);
       const res = await fetch("/.netlify/functions/approve-quote", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: quote.id }),
+        body: JSON.stringify({
+          id,
+          signatureDataUrl,
+          typedName,
+        }),
       });
+
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to approve");
-      setQuote(data.quote);
+      if (!res.ok) throw new Error(data?.error || "Failed to approve.");
+
+      setQuote((q) => ({
+        ...q,
+        status: "approved",
+        approvedAt: data.approvedAt,
+        signature: data.signature,
+      }));
+
+      setSigOpen(false);
     } catch (e) {
-      setErr(e.message);
+      alert(e.message);
     } finally {
       setApproving(false);
     }
@@ -149,7 +167,7 @@ export default function QuotePage() {
               <button
                 type="button"
                 className="quote-approve-btn"
-                onClick={handleApprove}
+                onClick={() => setSigOpen(true)}
                 disabled={approving}
               >
                 {approving ? "Approving..." : "Approve Estimate"}
@@ -229,7 +247,7 @@ export default function QuotePage() {
         <div className="quote-upgrades">
           <div className="quote-upgrades-title">Change Scope</div>
           <div className="quote-upgrades-subtitle">
-            Select the scope you’d like included in this estimate.
+            Feel free to change the scope of 
           </div>
 
           <div className="quote-upgrades-grid">
@@ -292,6 +310,59 @@ export default function QuotePage() {
           </section>
         ) : null}
       </div>
+      {sigOpen && (
+        <div className="sig-backdrop" onClick={() => setSigOpen(false)}>
+          <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Sign to Approve Estimate</h3>
+
+            <SignatureCanvas
+              ref={sigRef}
+              penColor="black"
+              canvasProps={{ className: "sig-canvas" }}
+            />
+
+            <input
+              type="text"
+              placeholder="Type your full name"
+              value={typedName}
+              onChange={(e) => setTypedName(e.target.value)}
+              className="sig-input"
+            />
+
+            <div className="sig-actions">
+              <button
+                type="button"
+                onClick={() => sigRef.current.clear()}
+                className="btn-secondary"
+              >
+                Clear
+              </button>
+
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => {
+                  if (sigRef.current.isEmpty()) {
+                    alert("Please sign before submitting.");
+                    return;
+                  }
+                  if (!typedName.trim()) {
+                    alert("Please type your name.");
+                    return;
+                  }
+
+                  const signatureDataUrl =
+                    sigRef.current.getTrimmedCanvas().toDataURL("image/png");
+
+                  handleApprove(signatureDataUrl, typedName.trim());
+                }}
+              >
+                Submit Approval
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

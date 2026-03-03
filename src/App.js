@@ -23,6 +23,7 @@ import { NotFound } from "./Pages/NotFound";
 import { Estimator } from "./Pages/Estimator/Estimator";
 import QuotePage from "./Pages/Quote/QuotePage";
 import FindEstimates from "./Pages/Estimates/FindEstimates";
+import { StartEstimate } from "./Pages/Estimator/Components/StartEstimate";
 
 // (Optional placeholders for now)
 const Dashboard = () => <div>Dashboard (coming next)</div>;
@@ -30,6 +31,34 @@ const EstimatesEdit = () => <div>Edit Estimate</div>;
 const InvoicesFind = () => <div>Find Invoices</div>;
 const InvoicesCreate = () => <div>Create Invoice</div>;
 const InvoicesEdit = () => <div>Edit Invoice</div>;
+
+function StartEstimateRoute() {
+  const navigate = useNavigate();
+
+  const initialCustomer = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("estimateCustomer") || "null");
+    } catch {
+      return null;
+    }
+  })();
+
+  return (
+    <StartEstimate
+      initialCustomer={initialCustomer}
+      onNext={(customerData) => {
+        // ✅ match Estimator.jsx keys
+        localStorage.setItem("estimateCustomer", JSON.stringify(customerData));
+        localStorage.setItem("estimateStep", "jobType"); // ✅ move to next step
+
+        // optional: clear job type if you want to force choosing again
+        // localStorage.removeItem("jobType");
+
+        navigate("/estimator");
+      }}
+    />
+  );
+}
 
 function App() {
   const navigate = useNavigate();
@@ -73,7 +102,7 @@ function App() {
 
             {/* Estimates */}
             <Route path="/estimates/find" element={<FindEstimates />} />
-            <Route path="/estimates/create" element={<Estimator />} />
+            <Route path="/estimates/create" element={<StartEstimateRoute />} />
             <Route path="/estimates/edit" element={<EstimatesEdit />} />
 
             {/* Keep your old estimator route if you want */}

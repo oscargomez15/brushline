@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import "../../../Styling/StartEstimate.css";
 
 export const StartEstimate = ({ initialCustomer, onNext }) => {
   const [firstName, setFirstName] = useState(initialCustomer?.firstName || "");
@@ -114,16 +115,20 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
 
   const canContinue = firstName.trim() && lastName.trim() && address.trim();
 
-  const handleNext = () => {
-    if (!canContinue) return;
-    onNext({
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      address: address.trim(),
-    });
-  };
+const handleNext = () => {
+  if (!canContinue) return;
+  if (typeof onNext !== "function") return;
+
+  onNext({
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    address: address.trim(),
+    unit: unit.trim(),
+  });
+};
 
   return (
+    <div className="start-estimate-page">
     <div className="jobtype-card">
       <h1>Start an Estimate</h1>
 
@@ -206,6 +211,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
           Next
         </button>
       </div>
+    </div>
     </div>
   );
 };
