@@ -152,17 +152,9 @@ function detectPackageKey(areas) {
   const hasBaseboards = areas.some((a) => a.paintBaseboard);
   const hasDoors = areas.some((a) => a.paintDoors);
 
-  if (hasWalls && hasCeilings && hasBaseboards && hasDoors) {
-    return "full";
-  }
-
-  if (hasWalls && hasCeilings && !hasBaseboards && !hasDoors) {
-    return "wallsCeilings";
-  }
-
-  if (hasWalls && !hasCeilings && !hasBaseboards && !hasDoors) {
-    return "wallsOnly";
-  }
+  if (hasWalls && hasCeilings && hasBaseboards && hasDoors) return "full";
+  if (hasWalls && hasCeilings && !hasBaseboards && !hasDoors) return "walls_ceilings";
+  if (hasWalls && !hasCeilings && !hasBaseboards && !hasDoors) return "walls_only";
 
   return "custom";
 }

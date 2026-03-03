@@ -6,6 +6,27 @@ import SignatureCanvas from "react-signature-canvas";
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
 
+const FEATURES_BY_KEY = {
+  walls_only: [
+    { label: "Interior Walls", included: true },
+    { label: "Ceilings", included: false },
+    { label: "Baseboards", included: false },
+    { label: "Doors", included: false },
+  ],
+  walls_ceilings: [
+    { label: "Interior Walls", included: true },
+    { label: "Ceilings", included: true },
+    { label: "Baseboards", included: false },
+    { label: "Doors", included: false },
+  ],
+  full: [
+    { label: "Interior Walls", included: true },
+    { label: "Ceilings", included: true },
+    { label: "Baseboards", included: true },
+    { label: "Doors", included: true },
+  ],
+};
+
 export default function QuotePage() {
   const { id } = useParams();
   const [quote, setQuote] = useState(null);
@@ -72,8 +93,7 @@ export default function QuotePage() {
   const res = await fetch("/.netlify/functions/apply-package", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: quote.id, packageKey }),
-  });
+    body: JSON.stringify({ id, packageKey }),  });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || "Failed to change scope");
   setQuote(data.quote);
@@ -244,52 +264,101 @@ export default function QuotePage() {
             </div>
           ) : null}
 
-        <div className="quote-upgrades">
-          <div className="quote-upgrades-title">Change Scope</div>
-          <div className="quote-upgrades-subtitle">
-            Changed your mind? Select a different scope package below to see updated totals and choose the one that’s right for you.
+          <div className="pkg-section">
+            <div className="pkg-head">
+              <div className="pkg-title">Select Your Package</div>
+              <div className="pkg-subtitle">Choose the option that best fits your needs</div>
+            </div>
+
+            <div className="pkg-grid">
+              {showPkgs.map((p, idx) => {
+                const newTotal = Number(p.total) || 0;
+
+                // Decide selection
+                const isSelected = quote.selectedPackageKey === p.key;
+
+                // Make the biggest package "recommended" (or use your own rule)
+                const isRecommended =
+                  p.key === "full" || /baseboard|doors|trim|full/i.test(p.label) || idx === showPkgs.length - 1;
+
+                // Normalize into 3 package names you want
+                const name =
+                  p.key === "walls"
+                    ? "Walls Only"
+                    : p.key === "walls_ceiling"
+                      ? "Walls and Ceiling"
+                      : "Walls, Ceiling, Baseboard and Doors";
+
+                // Feature list based on package
+                // const includes = {
+                //   walls: true,
+                //   ceiling: p.key !== "walls",
+                //   baseboard: p.key === "full" || /baseboard|trim/i.test(p.label),
+                //   doors: p.key === "full" || /doors/i.test(p.label),
+                // };
+
+                const features = FEATURES_BY_KEY[p.key] ?? [];
+
+                return (
+                  <button
+                    key={p.key}
+                    type="button"
+                    className={`pkg-card ${isSelected ? "is-selected" : ""} ${isRecommended ? "is-recommended" : ""}`}
+                    onClick={() => handleSelectPackage(p.key)}
+                  >
+                    <div className="pkg-radio" aria-hidden="true">
+                      <span className="pkg-radio-dot" />
+                    </div>
+
+                    {isRecommended ? <div className="pkg-badge">RECOMMENDED</div> : null}
+
+                    <div className="pkg-name">{name}</div>
+
+                    <div className="pkg-price">{fmtMoney(newTotal)}</div>
+
+                    <div className="pkg-features">
+                      {features.map((f) => (
+                        <div key={f.label} className="pkg-feature">
+                          <span className={`pkg-icon ${f.included ? "yes" : "no"}`}>
+                            {f.included ? "✓" : "✕"}
+                          </span>
+                          <span className={`pkg-feature-text ${f.included ? "" : "muted"}`}>
+                            {f.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="pkg-cta">
+                      {isSelected ? (
+                        <span className="pkg-selected">✓ Selected</span>
+                      ) : (
+                        <span className="pkg-select">Select Package</span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="pkg-footer">
+              <div className="pkg-footer-left">
+                <div className="pkg-footer-label">PACKAGE TOTAL</div>
+                <div className="pkg-footer-amt">{fmtMoney(quote.grandTotal)}</div>
+              </div>
+
+              <div className="pkg-footer-right">
+                <button
+                  type="button"
+                  className="pkg-approve"
+                  onClick={() => setSigOpen(true)}
+                  disabled={approving || quote.status === "approved"}
+                >
+                  {quote.status === "approved" ? "Approved" : "Approve"}
+                </button>
+              </div>
+            </div>
           </div>
-
-          <div className="quote-upgrades-grid">
-            {showPkgs.map((p) => {
-              const newTotal = Number(p.total) || 0;
-              const diff = newTotal - currentTotal;
-              const isUp = diff > 0;
-              const badge =
-                diff === 0 ? "" : isUp ? `+ ${fmtMoney(diff)}` : `- ${fmtMoney(Math.abs(diff))}`;
-
-              return (
-                <div key={p.key} className="scope-card">
-                  <div className="scope-card-top">
-                    <div className="scope-card-title">{p.label}</div>
-
-                    {badge ? (
-                      <span className={`scope-badge ${isUp ? "up" : "down"}`}>
-                        {badge}
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="scope-card-total">
-                    New total <span className="scope-card-total-amt">{fmtMoney(newTotal)}</span>
-                  </div>
-
-                  <div className="scope-card-divider" />
-
-                  <div className="scope-card-actions">
-                    <button
-                      type="button"
-                      className="scope-card-btn"
-                      onClick={() => handleSelectPackage(p.key)}
-                    >
-                      Select This Scope
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
           {quote.note ? (
             <div className="quote-note">

@@ -15,15 +15,81 @@ export default function AreaMeasurements({
     <div className="dimensions-container">
       <h3>Measurements (ft)</h3>
 
-      {showRoomDims && (
-        <>
-          <DimInput label="Length" value={area.length} onChange={(v) => onUpdate("length", v)} />
-          <DimInput label="Width" value={area.width} onChange={(v) => onUpdate("width", v)} />
-        </>
+      {(showRoomDims || area.paintWalls) && (
+        <div className="measurements-row">
+          {showRoomDims && (
+            <>
+              <DimInput
+                label="Length"
+                value={area.length}
+                onChange={(v) => onUpdate("length", v)}
+              />
+              <DimInput
+                label="Width"
+                value={area.width}
+                onChange={(v) => onUpdate("width", v)}
+              />
+            </>
+          )}
+
+          {area.paintWalls && (
+            <DimInput
+              label="Height"
+              value={area.height}
+              onChange={(v) => onUpdate("height", v)}
+            />
+          )}
+        </div>
       )}
 
-      {area.paintWalls && (
-        <DimInput label="Height" value={area.height} onChange={(v) => onUpdate("height", v)} />
+        {showDoorInputs && (
+        <div className="doors-container">
+          <h3>Doors Info</h3>
+
+          <div className="doors-row">
+            <div className="door-counter">
+              <span className="counter-label">Door Count</span>
+
+              <div className="counter-controls">
+                <button
+                  type="button"
+                  className="counter-btn"
+                  onClick={() =>
+                    onUpdate("doorCount", Math.max(0, Number(area.doorCount || 0) - 1))
+                  }
+                >
+                  −
+                </button>
+
+                <div className="counter-value">
+                  {Number(area.doorCount || 0)}
+                </div>
+
+                <button
+                  type="button"
+                  className="counter-btn"
+                  onClick={() =>
+                    onUpdate("doorCount", Number(area.doorCount || 0) + 1)
+                  }
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <DimInput
+              label="Width (in)"
+              value={area.doorWidthIn}
+              onChange={(v) => onUpdate("doorWidthIn", v)}
+            />
+
+            <DimInput
+              label="Height (in)"
+              value={area.doorHeightIn}
+              onChange={(v) => onUpdate("doorHeightIn", v)}
+            />
+          </div>
+        </div>
       )}
 
       {showBaseboardInputs&& (
@@ -55,35 +121,7 @@ export default function AreaMeasurements({
         </div>
       )}
 
-      {showDoorInputs && (
-        <div className="doors-container">
-          <h3>Doors Info</h3>
 
-          <label className="flex flex-col gap-1">
-            <span>Door Count</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              className="dim-input"
-              value={area.doorCount}
-              onChange={(e) => onUpdate("doorCount", e.target.value)}
-            />
-          </label>
-
-          <div className="doors-dims">
-            <DimInput
-              label="Door Width (in)"
-              value={area.doorWidthIn}
-              onChange={(v) => onUpdate("doorWidthIn", v)}
-            />
-            <DimInput
-              label="Door Height (in)"
-              value={area.doorHeightIn}
-              onChange={(v) => onUpdate("doorHeightIn", v)}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

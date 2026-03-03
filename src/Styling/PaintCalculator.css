@@ -237,17 +237,153 @@
 
 .price-input-items {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+/* Prevent “unnecessarily long” fields */
+.price-input-items label {
+  min-width: 0;
+}
+
+.price-input-items input,
+.price-input-items select {
+  width: 100%;
+  max-width: 220px; /* keeps them from stretching too long */
+}
+
+/* Measurements row: Length / Width / Height */
+.measurements-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(140px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+/* Tablet: 2 per row */
+@media (max-width: 980px) {
+  .measurements-row {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+}
+
+/* Phone: stacked */
+@media (max-width: 520px) {
+  .measurements-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* If DimInput renders a label with margin-bottom, remove it in this row */
+.measurements-row label {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+/* Doors: 3 inputs in one row */
+.doors-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 12px;
 }
 
-.price-input-items label {
+/* Prevent label stacking spacing issues */
+.doors-row label {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+/* Tablet: 2 per row */
+@media (max-width: 980px) {
+  .doors-row {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+
+/* Phone: stacked */
+@media (max-width: 520px) {
+  .doors-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Door counter layout */
+.door-counter {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.counter-label {
   font-size: 13px;
-  color: rgba(15, 23, 42, 0.75);
   font-weight: 700;
+  color: rgba(15, 23, 42, 0.75);
+}
+
+/* Counter box */
+/* Make the entire counter match .dim-input height */
+/* Make the entire counter match .dim-input height */
+.counter-controls {
+  display: flex;
+  align-items: stretch;
+  height: 44px; /* same as .dim-input */
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Match input visual weight */
+.counter-btn {
+  width: 44px;
+  height: 100%;
+  border: none;
+  background: #f8fafc;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Add subtle divider lines like real input sections */
+.counter-btn:first-child {
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.counter-btn:last-child {
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+/* Center value perfectly */
+.counter-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  color: #0f172a;
+}
+/* Tablet */
+@media (max-width: 980px) {
+  .price-input-items {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+  }
+
+  .price-input-items input,
+  .price-input-items select {
+    max-width: none;
+  }
+}
+
+/* Phone */
+@media (max-width: 720px) {
+  .price-input-items {
+    grid-template-columns: 1fr;
+  }
 }
 
 .drag-handle {
@@ -514,6 +650,8 @@
   color: rgba(15, 23, 42, 0.70);
 }
 
+
+
 /* Inputs */
 .dimensions-container label {
   display: flex;
@@ -569,12 +707,26 @@
   letter-spacing: 0;
 }
 
+/* 4 stats in one row inside each calculations card */
 .calculations-items {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 14px;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 10px 12px;
 }
 
+/* Tablet: 2 per row */
+@media (max-width: 980px) {
+  .calculations-items {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+
+/* Phone: 1 per row */
+@media (max-width: 520px) {
+  .calculations-items {
+    grid-template-columns: 1fr;
+  }
+}
 /* Stat */
 .calculation-label {
   font-size: 12px;
@@ -729,11 +881,13 @@
   }
 }
 
+/* Mobile: 2 inputs per row (last one will wrap to row 3 automatically) */
 @media (max-width: 720px) {
   .price-input-items {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 }
+
 
 @media (max-width: 520px) {
   .paint-calculator-wrapper {
