@@ -16,6 +16,12 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
   const to = process.env.APPROVAL_NOTIFY_TO;
   const from = process.env.APPROVAL_NOTIFY_FROM;
 
+  console.log("SendGrid env check:", {
+  hasApiKey: !!process.env.SENDGRID_API_KEY,
+  to: process.env.APPROVAL_NOTIFY_TO ? "set" : "missing",
+  from: process.env.APPROVAL_NOTIFY_FROM ? "set" : "missing",
+});
+
   if (!apiKey || !to || !from) {
     console.warn("SendGrid env vars missing; skipping approval email.");
     return;
@@ -142,9 +148,12 @@ exports.handler = async (event) => {
     await quotes.setJSON(id, updatedQuote);
 
     // 🔔 Email notify (don't block approval if email fails)
-    sendApprovalEmail(updatedQuote, id).catch((e) =>
-      console.error("sendApprovalEmail error:", e)
-    );
+    sendApprovalEmail(updatedQuote, id).catch((e) => {
+      console.error(
+        "sendApprovalEmail error:",
+        e?.response?.body || e?.message || e
+      );
+    });
 
     // Update index
     const idx = await index.get(id, { type: "json" });

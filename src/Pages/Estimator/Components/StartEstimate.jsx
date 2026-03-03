@@ -5,6 +5,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
   const [firstName, setFirstName] = useState(initialCustomer?.firstName || "");
   const [lastName, setLastName] = useState(initialCustomer?.lastName || "");
   const [address, setAddress] = useState(initialCustomer?.address || "");
+  const [email, setEmail] = useState(initialCustomer?.email || "");
 
   // ✅ our own autocomplete UI
   const [predictions, setPredictions] = useState([]);
@@ -124,6 +125,7 @@ const handleNext = () => {
     lastName: lastName.trim(),
     address: address.trim(),
     unit: unit.trim(),
+    email: email.trim(), 
   });
 };
 
@@ -198,6 +200,17 @@ const handleNext = () => {
             value={unit}
             onChange={(e) => setUnit(e.target.value)}
             placeholder="Apt 3B"
+          />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input
+            type="email"
+            className="dim-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="customer@email.com"
           />
         </label>
 
