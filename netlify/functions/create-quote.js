@@ -35,16 +35,14 @@ async function buildQuotePdfBase64(quote) {
       const topY = 30;
 
       // Logo
-      try {
-        const logoPath = path.join(__dirname, "assets", "logo.png");
-        if (fs.existsSync(logoPath)) {
-          doc.image(logoPath, leftX, topY, { width: 140 });
-        } else {
-          console.warn("Logo not found at:", logoPath);
-        }
-      } catch (err) {
-        console.warn("Logo load failed:", err);
-      }
+      const logoCandidates = [
+        path.join(__dirname, "assets", "logo.png"),
+        path.join(__dirname, "..", "assets", "logo.png"),
+      ];
+
+      const logoPath = logoCandidates.find((p) => fs.existsSync(p));
+      if (logoPath) doc.image(logoPath, leftX, topY, { width: 140 });
+      else console.warn("Logo not found. Tried:", logoCandidates);
 
       const statusText = quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL";
       const serviceLabel =
