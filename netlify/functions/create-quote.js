@@ -26,6 +26,112 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
     return x.toLocaleString("en-US", { style: "currency", currency: "USD" });
   };
 
+  const PDFDocument = require("pdfkit");
+
+function fmtMoney(n) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
+}
+
+async function buildQuotePdfBase64(quote) {
+  return await new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({ size: "LETTER", margin: 40 });
+      const chunks = [];
+
+      doc.on("data", (c) => chunks.push(c));
+      doc.on("end", () => {
+        const buf = Buffer.concat(chunks);
+        resolve(buf.toString("base64"));
+      });
+
+      // Header
+      doc.fontSize(18).text(quote.companyName || "Brushline Services", { align: "left" });
+      doc.moveDown(0.25);
+      doc.fontSize(10).fillColor("#555").text("Quote / Proposal", { align: "left" });
+      doc.fillColor("#000").moveDown(1);
+
+      // Meta
+      doc.fontSize(11).text(`Proposal #: ${quote.quoteNumber || quote.id}`);
+      doc.text(`Date: ${new Date(quote.createdAt).toLocaleDateString()}`);
+      doc.text(`Prepared For: ${quote.clientName || quote.customer?.fullName || ""}`);
+      doc.text(`Project Location: ${quote.projectAddress || quote.customer?.address || ""}`);
+      doc.moveDown(1);
+
+      // Service
+      const serviceLabel =
+        quote.jobType === "exterior"
+          ? "Exterior Painting"
+          : quote.jobType === "handyman"
+            ? "Handyman / Misc"
+            : "Interior Painting";
+      doc.fontSize(12).text(`Service: ${serviceLabel}`);
+      doc.moveDown(0.75);
+
+      // Handyman line items
+      if (quote.jobType === "handyman" && Array.isArray(quote.lineItems) && quote.lineItems.length) {
+        doc.fontSize(12).text("Service Details");
+        doc.moveDown(0.3);
+
+        // Table header
+        doc.fontSize(10).fillColor("#444").text("Service", 40, doc.y, { continued: true });
+        doc.text("Price", 500, doc.y, { align: "right" });
+        doc.fillColor("#000");
+        doc.moveDown(0.4);
+
+        quote.lineItems.forEach((it) => {
+          doc.fontSize(10).text(it.description || "", 40, doc.y, { width: 440, continued: true });
+          doc.text(fmtMoney(it.price), 500, doc.y, { align: "right" });
+        });
+
+        doc.moveDown(0.6);
+        doc.fontSize(12).text(`Total: ${fmtMoney(quote.grandTotal)}`, { align: "right" });
+        doc.moveDown(1);
+      }
+
+      // Painting scope (if present)
+      if (Array.isArray(quote.scopeItems) && quote.scopeItems.length) {
+        doc.fontSize(12).text("Scope of Work");
+        doc.moveDown(0.4);
+
+        quote.scopeItems.forEach((area) => {
+          doc.fontSize(11).text(area.areaName || "Area", { underline: true });
+          doc.fontSize(10).text(`Areas: ${(area.scope || []).join(", ") || "N/A"}`);
+
+          if (Array.isArray(area.extras) && area.extras.length) {
+            doc.moveDown(0.2);
+            doc.fontSize(10).text("Additional work:");
+            area.extras.forEach((x) => {
+              doc.fontSize(10).text(`• ${x.label} — ${fmtMoney(x.price)}`);
+            });
+          }
+
+          doc.moveDown(0.6);
+        });
+
+        doc.fontSize(12).text(`Total: ${fmtMoney(quote.grandTotal)}`, { align: "right" });
+        doc.moveDown(1);
+      }
+
+      // Deposit
+      const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
+      doc.fontSize(11).text(`Deposit (40%): ${fmtMoney(deposit)}`);
+      doc.moveDown(1);
+
+      // Terms (optional — keep it short so PDF doesn’t get huge)
+      if (quote.terms) {
+        doc.fontSize(12).text("Terms of Service");
+        doc.moveDown(0.4);
+        doc.fontSize(9).fillColor("#333").text(String(quote.terms), { width: 540 });
+        doc.fillColor("#000");
+      }
+
+      doc.end();
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
   return `
 <div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
   <div style="max-width:680px;margin:0 auto;">
@@ -114,7 +220,7 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
 </div>`;
 }
 
-async function sendQuoteEmail({ to, quote, publicUrl }) {
+async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
   const apiKey = process.env.SENDGRID_API_KEY;
   const from = process.env.QUOTE_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM;
   const address =
@@ -171,7 +277,19 @@ async function sendQuoteEmail({ to, quote, publicUrl }) {
     from,
     subject,
     text,
-    html
+    html,
+    ...(pdfBase64
+      ? {
+          attachments: [
+            {
+              content: pdfBase64,
+              filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
+              type: "application/pdf",
+              disposition: "attachment",
+            },
+          ],
+        }
+      : {}),
   });
 }
 
@@ -325,12 +443,15 @@ exports.handler = async (event, context) => {
 
       // ✅ tokenized customer link
       const linkToSend = publicUrl ? `${publicUrl}?t=${encodeURIComponent(viewToken)}` : "";
+    
+      const pdfBase64 = await buildQuotePdfBase64(quote);
 
     if (normalizedCustomer.email && isValidEmail(normalizedCustomer.email) && linkToSend) {
       await sendQuoteEmail({
         to: normalizedCustomer.email,
         quote,
         publicUrl: linkToSend,
+        pdfBase64
       });
     } else {
       console.warn("No valid customer email or no public URL; skipping quote email.", {
