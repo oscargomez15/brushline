@@ -64,6 +64,11 @@ export default function FindEstimates() {
 
   if (loading) return <div>Loading estimates…</div>;
   if (err) return <div style={{ color: "crimson" }}>Error: {err}</div>;
+  const typeMap = {
+    interior: "Interior",
+    exterior: "Exterior",
+    handyman: "Handyman",
+  };
 
   return (
     <div className="find-estimates">
@@ -87,8 +92,8 @@ export default function FindEstimates() {
                 <th>Address</th>
                 <th>Type</th>
                 <th>Status</th>
-                <th className="right">Total</th>
                 <th className="right">View Status</th>
+                <th className="right">Total</th>
                 <th className="right">Open</th>
                 <th className="right">Delete</th>
               </tr>
@@ -97,7 +102,7 @@ export default function FindEstimates() {
             <tbody>
               {filtered.map((x) => {
                 const clientInitial = (x.clientName || "?").trim()[0]?.toUpperCase() || "?";
-                const typeLabel = x.jobType === "exterior" ? "Exterior" : "Interior";
+                const typeLabel = typeMap[x.jobType] || x.jobType;
                 const typeClass = x.jobType === "exterior" ? "exterior" : "interior";
                 const isDeleting = deletingId === x.id;
 
