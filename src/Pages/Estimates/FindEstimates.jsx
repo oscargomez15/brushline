@@ -1,5 +1,35 @@
-import React, { useEffect, useMemo, useState } from "react";
 import "../../Styling/FindEstimate.css";
+import netlifyIdentity from "netlify-identity-widget";
+import React, { useEffect, useMemo, useState } from "react";
+
+function prettyUA(ua = "") {
+  const s = ua.toLowerCase();
+  const browser =
+    s.includes("edg") ? "Edge" :
+    s.includes("chrome") && !s.includes("edg") ? "Chrome" :
+    s.includes("safari") && !s.includes("chrome") ? "Safari" :
+    s.includes("firefox") ? "Firefox" :
+    s.includes("opr") || s.includes("opera") ? "Opera" :
+    "Browser";
+
+  const device =
+    s.includes("iphone") ? "iPhone" :
+    s.includes("ipad") ? "iPad" :
+    s.includes("android") ? "Android" :
+    s.includes("mobile") ? "Mobile" :
+    "Desktop";
+
+  return `${device} • ${browser}`;
+}
+
+function refDomain(ref = "") {
+  try {
+    const u = new URL(ref);
+    return u.hostname;
+  } catch {
+    return ref ? "Direct/Unknown" : "Direct/Unknown";
+  }
+}
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(n) || 0);
@@ -10,22 +40,61 @@ export default function FindEstimates() {
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyErr, setHistoryErr] = useState("");
+  const [historyData, setHistoryData] = useState(null); // { viewCount, lastViewedAt, viewEvents, id }
+  
+  async function openViewHistory(quoteId) {
+  setHistoryErr("");
+  setHistoryLoading(true);
+  setHistoryData(null);
+  setHistoryOpen(true);
+
+  try {
+    const user = netlifyIdentity.currentUser();
+    const token = user ? await user.jwt() : null;
+    if (!token) throw new Error("You must be logged in.");
+
+    const res = await fetch(
+      `/.netlify/functions/get-quote-views?id=${encodeURIComponent(quoteId)}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.error || "Failed to load view history");
+
+    setHistoryData(data);
+  } catch (e) {
+    setHistoryErr(e.message);
+  } finally {
+    setHistoryLoading(false);
+  }
+}
+  
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetch("/.netlify/functions/list-quotes?limit=100");
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Failed to load estimates");
-        setItems(data.items || []);
-      } catch (e) {
-        setErr(e.message);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+      (async () => {
+        try {
+          setLoading(true);
+          const res = await fetch("/.netlify/functions/list-quotes?limit=100");
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error || "Failed to load estimates");
+          setItems(data.items || []);
+        } catch (e) {
+          setErr(e.message);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }, []);
+
+    useEffect(() => {
+      const onDocClick = () => setOpenMenuId(null);
+      document.addEventListener("click", onDocClick);
+      return () => document.removeEventListener("click", onDocClick);
+    }, []);
 
   const handleDelete = async (id) => {
     const ok = window.confirm("Delete this estimate? This can’t be undone.");
@@ -69,6 +138,7 @@ export default function FindEstimates() {
     exterior: "Exterior",
     handyman: "Handyman",
   };
+
 
   return (
     <div className="find-estimates">
@@ -146,7 +216,7 @@ export default function FindEstimates() {
 
                     <td className="right">
                       <a href={`/quote/${q.id}`} className="view-quote-btn">
-                        View Quote →
+                        View
                       </a>
                     </td>
 
@@ -162,6 +232,33 @@ export default function FindEstimates() {
                         {isDeleting ? "Deleting…" : "🗑 Delete"}
                       </button>
                     </td>
+
+                    <div className="row-actions" onClick={(e) => e.stopPropagation()}>
+                    
+                    <button
+                      type="button"
+                      className="kebab-btn"
+                      onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}
+                      aria-label="More actions"
+                    >
+                      ⋯
+                    </button>
+
+                    {openMenuId === x.id && (
+                      <div className="kebab-menu">
+                        <button
+                          type="button"
+                          className="kebab-item"
+                          onClick={() => {
+                            setOpenMenuId(null);
+                            openViewHistory(x.id);
+                          }}
+                        >
+                          View history
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   </tr>
                 );
               })}
@@ -177,6 +274,63 @@ export default function FindEstimates() {
           </table>
         </div>
       </div>
+
+      {historyOpen && (
+      <div className="modal-backdrop" onClick={() => setHistoryOpen(false)}>
+        <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-head">
+            <div>
+              <div className="modal-title">Quote View History</div>
+              <div className="modal-sub">
+                Quote ID: <span className="mono">{historyData?.id || "—"}</span>
+              </div>
+            </div>
+
+            <button className="modal-close" onClick={() => setHistoryOpen(false)}>✕</button>
+          </div>
+
+          {historyLoading ? (
+            <div className="modal-body">Loading…</div>
+          ) : historyErr ? (
+            <div className="modal-body error">{historyErr}</div>
+          ) : (
+            <div className="modal-body">
+              <div className="history-summary">
+                <div><strong>Total views:</strong> {historyData?.viewCount ?? 0}</div>
+                <div>
+                  <strong>Last viewed:</strong>{" "}
+                  {historyData?.lastViewedAt ? new Date(historyData.lastViewedAt).toLocaleString() : "—"}
+                </div>
+              </div>
+
+              <div className="history-table">
+                <div className="hrow head">
+                  <div>Time</div>
+                  <div>Device</div>
+                  <div>Referrer</div>
+                  <div>Visitor</div>
+                </div>
+
+                {(historyData?.viewEvents || []).length === 0 ? (
+                  <div className="hrow empty">
+                    <div>No views logged yet.</div>
+                  </div>
+                ) : (
+                  historyData.viewEvents.map((v, i) => (
+                    <div className="hrow" key={`${v.at}-${i}`}>
+                      <div>{v.at ? new Date(v.at).toLocaleString() : "—"}</div>
+                      <div>{prettyUA(v.ua)}</div>
+                      <div>{refDomain(v.ref)}</div>
+                      <div className="mono">{v.ipHash || "—"}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+)}
     </div>
   );
 }
