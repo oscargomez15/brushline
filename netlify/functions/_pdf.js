@@ -12,9 +12,7 @@ function resolveLogoPath() {
     path.join(__dirname, "assets", "logo.png"),
     path.join(__dirname, "..", "assets", "logo.png"),
   ];
-  const found = candidates.find((p) => fs.existsSync(p));
-  if (!found) console.warn("Logo not found. Tried:", candidates);
-  return found || null;
+  return candidates.find((p) => fs.existsSync(p)) || null;
 }
 
 function truncateTerms(terms, max = 3000) {
@@ -34,18 +32,35 @@ function buildQuotePdfBuffer(quote) {
       doc.on("error", reject);
 
       // ---------- CRM-STYLE HEADER ----------
-      const leftX = 40;
-      const rightX = 320;
-      const topY = 30;
+        const leftX = 40;
+        const rightX = 320;
+        const topY = 26;
 
-      const logoPath = resolveLogoPath();
-      if (logoPath) {
+        const logoPath = resolveLogoPath();
+        if (logoPath) {
         try {
-          doc.image(logoPath, leftX, topY, { width: 140 });
+            const logoBuf = fs.readFileSync(logoPath); // ✅ more reliable on Netlify
+            doc.image(logoBuf, leftX, topY, {
+            fit: [160, 70],   // ✅ controls max width/height
+            align: "left",
+            valign: "top",
+            });
         } catch (e) {
-          console.warn("doc.image failed:", e?.message || e);
+            console.warn("Logo render failed:", e?.message || e);
         }
-      }
+        } else {
+        console.warn("Logo not found");
+        }
+
+        const headerBottomY = topY + 78;
+
+        doc
+        .moveTo(leftX, headerBottomY)
+        .lineTo(570, headerBottomY)
+        .strokeColor("#E5E7EB")
+        .stroke();
+
+        doc.y = headerBottomY + 15;
 
       const statusText = quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL";
       const serviceLabel =
