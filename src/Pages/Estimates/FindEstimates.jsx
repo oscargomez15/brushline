@@ -166,6 +166,8 @@ export default function FindEstimates() {
                 <th className="right">Total</th>
                 <th className="right">Open</th>
                 <th className="right">Delete</th>
+                <th className="right">Actions</th>
+
               </tr>
             </thead>
 
@@ -233,7 +235,7 @@ export default function FindEstimates() {
                       </button>
                     </td>
 
-                    <td className="row-actions" onClick={(e) => e.stopPropagation()}>
+                    <td className="right" onClick={(e) => e.stopPropagation()}>
                     
                     <button
                       type="button"
