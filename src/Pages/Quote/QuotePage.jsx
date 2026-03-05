@@ -95,6 +95,36 @@ export default function QuotePage() {
   setQuote(data.quote);
 };
 
+const handleDownloadPdf = async () => {
+  try {
+    const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
+    url.searchParams.set("id", id);
+
+    // If customer token exists, pass it so they can download too
+    if (t) url.searchParams.set("t", t);
+
+    const res = await fetch(url.toString());
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data?.error || "Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = `Quote-${quote.quoteNumber || quote.id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (e) {
+    alert(e.message);
+  }
+};
+
   useEffect(() => {
     (async () => {
       try {
@@ -186,13 +216,8 @@ const jobLabel =
               Print
             </button>
 
-            <button
-              type="button"
-              className="quote-action-btn"
-              onClick={() => window.print()}  // download = print dialog → Save as PDF
-              title="Download PDF"
-            >
-              Download
+            <button type="button" className="quote-action-btn" onClick={handleDownloadPdf}>
+              Download PDF
             </button>
 
             <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
