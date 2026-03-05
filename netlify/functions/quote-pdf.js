@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { buildQuotePdfBase64 } = require("./_pdf");
 
 function json(statusCode, body) {
   return {
@@ -46,9 +47,14 @@ exports.handler = async (event, context) => {
       if (!user) return json(401, { error: "Unauthorized" });
     }
 
-    // ✅ get the stored pdf (this is what you emailed)
-    const pdfBase64 = await pdfsStore.get(id, { type: "text" });
-    if (!pdfBase64) return json(404, { error: "PDF not found for this quote yet" });
+    // 1) Try stored PDF first (matches emailed)
+    let pdfBase64 = await pdfsStore.get(id, { type: "text" });
+
+    // 2) If missing, generate (new style), store, then return
+    if (!pdfBase64) {
+      pdfBase64 = await buildQuotePdfBase64(quote);
+      await pdfsStore.set(id, pdfBase64);
+    }
 
     const filename = `Quote-${quote.quoteNumber || quote.id}.pdf`;
 
@@ -59,7 +65,7 @@ exports.handler = async (event, context) => {
         "Content-Disposition": `attachment; filename="${filename}"`,
         "Cache-Control": "no-store",
       },
-      body: pdfBase64,          // ✅ NOT pdf
+      body: pdfBase64,
       isBase64Encoded: true,
     };
   } catch (e) {
