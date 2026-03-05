@@ -485,6 +485,7 @@ exports.handler = async (event, context) => {
     
       const pdfBase64 = await buildQuotePdfBase64(quote);
       const pdfStore = getStore("quotes_pdfs", { siteID, token });
+      
       await pdfStore.set(id, pdfBase64); // store the base64 string
 
     if (normalizedCustomer.email && isValidEmail(normalizedCustomer.email) && linkToSend) {

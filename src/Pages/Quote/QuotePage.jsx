@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
+import netlifyIdentity from "netlify-identity-widget";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
@@ -100,13 +101,24 @@ const handleDownloadPdf = async () => {
     const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
     url.searchParams.set("id", id);
 
-    // If customer token exists, pass it so they can download too
+    // Customer download uses token from URL
     if (t) url.searchParams.set("t", t);
 
-    const res = await fetch(url.toString());
+    // Admin download (no t) must include Identity JWT
+    const headers = {};
+    if (!t) {
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+      if (!jwt) throw new Error("Please log in to download the PDF.");
+      headers.Authorization = `Bearer ${jwt}`;
+    }
+
+    const res = await fetch(url.toString(), { headers });
+
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data?.error || "Failed to download PDF");
+      // show real error text (JSON or plain text)
+      const text = await res.text().catch(() => "");
+      throw new Error(`Failed to download PDF (${res.status}): ${text}`);
     }
 
     const blob = await res.blob();
@@ -114,7 +126,7 @@ const handleDownloadPdf = async () => {
 
     const a = document.createElement("a");
     a.href = blobUrl;
-    a.download = `Quote-${quote.quoteNumber || quote.id}.pdf`;
+    a.download = `Quote-${quote?.quoteNumber || quote?.id || id}.pdf`;
     document.body.appendChild(a);
     a.click();
     a.remove();
