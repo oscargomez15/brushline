@@ -355,3 +355,29 @@
     display: none;
   }
 }
+
+.open-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 12px;
+
+  font-weight:600;
+  font-size:14px;
+
+  color:#2563eb;
+  background:#eef4ff;
+
+  border-radius:8px;
+  text-decoration:none;
+
+  transition:all .15s ease;
+}
+
+.open-btn:hover .arrow{
+  transform:translateX(3px);
+}
+
+.arrow{
+  transition:transform .15s ease;
+}

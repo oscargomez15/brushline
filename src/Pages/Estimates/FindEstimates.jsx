@@ -88,6 +88,7 @@ export default function FindEstimates() {
                 <th>Type</th>
                 <th>Status</th>
                 <th className="right">Total</th>
+                <th className="right">View Status</th>
                 <th className="right">Open</th>
                 <th className="right">Delete</th>
               </tr>
@@ -128,14 +129,6 @@ export default function FindEstimates() {
                       </span>
                     </td>
 
-                    <td className="right strong">{fmtMoney(x.grandTotal)}</td>
-
-                    <td className="right">
-                      <a className="fe-link" href={`/quote/${x.id}`} target="_blank" rel="noreferrer">
-                        Open →
-                      </a>
-                    </td>
-
                     <td>
                       {x.viewCount > 0 ? (
                         <span className="fe-pill approved">Viewed</span>
@@ -143,6 +136,16 @@ export default function FindEstimates() {
                         <span className="fe-pill awaiting">Not viewed</span>
                       )}
                     </td>
+
+                    <td className="right strong">{fmtMoney(x.grandTotal)}</td>
+
+                    <td className="right">
+                      <a href={`/quote/${q.id}`} className="view-quote-btn">
+                        View Quote →
+                      </a>
+                    </td>
+
+
 
                     <td className="right">
                       <button

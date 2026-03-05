@@ -153,7 +153,7 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
     `Total: $${total.toFixed(2)}`,
     `Deposit (40%): $${deposit.toFixed(2)}`,
     ``,
-    publicUrl ? `View & approve your quote here:\n${publicUrl}` : null,
+    publicUrl ? `View your quote here:\n${publicUrl}` : null,
     ``,
     `If you have any questions, just reply to this email.`,
   ].filter(Boolean).join("\n");
