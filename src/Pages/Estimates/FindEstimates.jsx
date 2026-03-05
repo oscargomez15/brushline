@@ -233,7 +233,7 @@ export default function FindEstimates() {
                       </button>
                     </td>
 
-                    <div className="row-actions" onClick={(e) => e.stopPropagation()}>
+                    <td className="row-actions" onClick={(e) => e.stopPropagation()}>
                     
                     <button
                       type="button"
@@ -258,7 +258,7 @@ export default function FindEstimates() {
                         </button>
                       </div>
                     )}
-                  </div>
+                  </td>
                   </tr>
                 );
               })}
