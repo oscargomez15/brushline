@@ -1,6 +1,5 @@
 const { getStore } = require("@netlify/blobs");
 const PDFDocument = require("pdfkit");
-const pdfStore = getStore("quotes_pdfs", { siteID, token });
 
 function json(statusCode, body) {
   return {
@@ -148,6 +147,7 @@ exports.handler = async (event, context) => {
     const store = getStore("quotes", { siteID, token });
     const quote = await store.get(id, { type: "json" });
     if (!quote) return json(404, { error: "Quote not found" });
+    const pdfStore = getStore("quotes_pdfs", { siteID, token });
 
     // ✅ Access rule:
     // - If token `t` is provided and matches, allow (customer)
