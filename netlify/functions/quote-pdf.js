@@ -36,12 +36,14 @@ exports.handler = async (event, context) => {
     if (!siteID || !token) return json(500, { error: "Missing env vars for Blobs" });
 
     
-    const quote = await store.get(id, { type: "json" });
-    if (!quote) return json(404, { error: "Quote not found" });
+
     
     const store = getStore("quotes", { siteID, token });
     const pdfStore = getStore("quotes_pdfs", { siteID, token });
 
+    const quote = await store.get(id, { type: "json" });
+    if (!quote) return json(404, { error: "Quote not found" });
+    
     // ✅ Access rule:
     // - If token `t` is provided and matches, allow (customer)
     // - Else require authenticated admin
@@ -54,7 +56,7 @@ exports.handler = async (event, context) => {
 
     const pdfBase64 = await pdfStore.get(id, { type: "text" });
     if (!pdfBase64) return json(404, { error: "PDF not found for this quote yet" });
-    
+
     const filename = `Quote-${quote.quoteNumber || quote.id}.pdf`;
 
     return {
