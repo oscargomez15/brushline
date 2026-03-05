@@ -37,17 +37,13 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
         <img
           src="https://brushlineservices.com/logo.png"
           alt="Brushline Services"
-          style="height:60px;width:auto;display:block;margin:0 auto;"
+          style="height:120px;width:auto;display:block;margin:0 auto;"
         />
       </div>
 
       <!-- HEADER ROW -->
       <div style="padding:14px 20px;border-bottom:1px solid rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;">
-        <div style="font-weight:800;font-size:16px;letter-spacing:-.01em;">
-          ${safe(companyName)}
-        </div>
-
-        <div style="font-size:12px;font-weight:700;color:rgba(15,23,42,.65);">
+        <div style="font-size:16px;font-weight:700;color:rgba(15,23,42,.65);">
           Quote Ready
         </div>
       </div>
@@ -247,8 +243,8 @@ exports.handler = async (event, context) => {
       });
     }
 
-    if (!jobType || !["interior", "exterior"].includes(jobType)) {
-      return json(400, { error: "jobType must be 'interior' or 'exterior'" });
+    if (!jobType || !["interior", "exterior", "handyman"].includes(jobType)) {
+      return json(400, { error: "jobType must be 'interior', 'exterior', or 'handyman'" });
     }
 
     if (
@@ -282,6 +278,7 @@ exports.handler = async (event, context) => {
     }
 
     const id = makeId();
+    const viewToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
 
     const quote = {
       id,
@@ -296,6 +293,9 @@ exports.handler = async (event, context) => {
       termsVersion: payload.termsVersion || DEFAULT_TERMS_VERSION,
       status: payload.status || "awaiting_approval",
       approvedAt: null,
+      viewToken,
+      viewedAt: null,
+      viewedBy: null,
     };
 
     await store.setJSON(id, quote);
@@ -312,20 +312,32 @@ exports.handler = async (event, context) => {
 
     // ✅ Email the customer the quote link (do not fail quote creation if email fails)
     try {
-      const publicUrl = buildPublicQuoteLink(process.env.PUBLIC_QUOTE_BASE_URL, id);
 
       // fallback: if PUBLIC_QUOTE_BASE_URL not set, email the relative URL
-      const linkToSend = publicUrl || `/quote/${id}`;
+     const publicBase = process.env.PUBLIC_QUOTE_BASE_URL;  // e.g. https://brushlineservices.com/quote
+      const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL; // Netlify fallbacks
 
-      if (normalizedCustomer.email && isValidEmail(normalizedCustomer.email)) {
-        await sendQuoteEmail({
-          to: normalizedCustomer.email,
-          quote,
-          publicUrl: linkToSend,
-        });
-      } else {
-        console.warn("No valid customer email; skipping quote email.");
-      }
+      const base =
+        publicBase ||
+        (siteUrl ? `${siteUrl.replace(/\/$/, "")}/quote` : "");
+
+      const publicUrl = base ? `${base.replace(/\/$/, "")}/${encodeURIComponent(id)}` : "";
+
+      // ✅ tokenized customer link
+      const linkToSend = publicUrl ? `${publicUrl}?t=${encodeURIComponent(viewToken)}` : "";
+
+    if (normalizedCustomer.email && isValidEmail(normalizedCustomer.email) && linkToSend) {
+      await sendQuoteEmail({
+        to: normalizedCustomer.email,
+        quote,
+        publicUrl: linkToSend,
+      });
+    } else {
+      console.warn("No valid customer email or no public URL; skipping quote email.", {
+        hasEmail: !!normalizedCustomer.email,
+        hasLink: !!linkToSend,
+      });
+    }
     } catch (e) {
       console.error("sendQuoteEmail failed:", e?.response?.body || e?.message || e);
     }

@@ -4,6 +4,7 @@ import "../../Styling/PaintCalculator.css";
 import ExteriorEstimator from "./Components/ExteriorEstimator";
 import { InteriorEstimator } from "./Components/InteriorEstimator";
 import {StartEstimate} from "./Components/StartEstimate"
+import HandymanEstimator from "./Components/HandymanEstimator";
 
 export const Estimator = () => {
     const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
@@ -74,7 +75,7 @@ if (step === "jobType") {
       <div className="content-wrapper-jobs">
 
           <h1>Estimate Type</h1>
-          <p>Is this an interior or exterior job?</p>
+          <p>What type of job are we estimating today?</p>
 
           <div className="jobtype-actions">
             <button
@@ -91,6 +92,14 @@ if (step === "jobType") {
               onClick={() => chooseJobType("exterior")}
             >
               Exterior Paint
+            </button>
+
+            <button
+              type="button"
+              className="job-type-opt"
+              onClick={() => chooseJobType("handyman")}
+            >
+              Handyman / Misc
             </button>
           </div>
 
@@ -162,8 +171,10 @@ return (
       <div className="sub-heading">
         {jobType === "interior" ? (
           <InteriorEstimator customer={customer} />
-        ) : (
+        ) : jobType === "exterior" ? (
           <ExteriorEstimator customer={customer} />
+        ) : (
+          <HandymanEstimator customer={customer} />
         )}
       </div>
     </div>

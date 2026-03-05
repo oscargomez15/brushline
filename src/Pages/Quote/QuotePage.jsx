@@ -1,5 +1,5 @@
 import React, {useRef, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
 
@@ -27,8 +27,15 @@ const FEATURES_BY_KEY = {
   ],
 };
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function QuotePage() {
   const { id } = useParams();
+  const query = useQuery();
+  const t = query.get("t"); 
+
   const [quote, setQuote] = useState(null);
   const [err, setErr] = useState("");
 
@@ -46,17 +53,6 @@ export default function QuotePage() {
   quote?.projectAddress ||
   quote?.customer?.address ||
   "";
-
-
-  const getSessionId = () => {
-  const key = "quote_view_session";
-  let v = sessionStorage.getItem(key);
-  if (!v) {
-    v = Math.random().toString(36).slice(2) + Date.now().toString(36);
-    sessionStorage.setItem(key, v);
-  }
-  return v;
-};
 
   const handleApprove = async (signatureDataUrl, typedName) => {
     setApproving(true);
@@ -115,14 +111,16 @@ export default function QuotePage() {
   }, [id]);
 
   useEffect(() => {
-    if (!id) return;
+      // ✅ no token = admin/internal view = DO NOTHING
+      if (!id || !t) return;
 
-    fetch("/.netlify/functions/track-quote-view", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, sessionId: getSessionId() }),
-    }).catch(() => {});
-  }, [id]);
+      fetch("/.netlify/functions/track-quote-view", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, t }),
+      }).catch((e) => console.error("track-quote-view failed", e));
+    }, [id, t]);
+
 
   if (err) return <div className="quote-wrap"><div className="quote-card">Error: {err}</div></div>;
   if (!quote) return <div className="quote-wrap"><div className="quote-card">Loading…</div></div>;
@@ -226,6 +224,32 @@ export default function QuotePage() {
             </div>
           </div>
 
+          {/* ✅ Handyman / Misc items (line items table) */}
+          {quote.jobType === "handyman" && Array.isArray(quote.lineItems) && quote.lineItems.length > 0 ? (
+            <div className="quote-items">
+              <div className="quote-items-title">Items</div>
+
+              <div className="quote-items-table">
+                <div className="quote-items-row head">
+                  <div>Description</div>
+                  <div className="right">Price</div>
+                </div>
+
+                {quote.lineItems.map((it, idx) => (
+                  <div key={idx} className="quote-items-row">
+                    <div className="desc">{it.description}</div>
+                    <div className="right">{fmtMoney(it.price || 0)}</div>
+                  </div>
+                ))}
+
+                <div className="quote-items-row total">
+                  <div>Total</div>
+                  <div className="right">{fmtMoney(quote.grandTotal)}</div>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
             <div className="quote-scope">
               <div className="quote-scope-title">Scope of Work</div>
@@ -264,7 +288,7 @@ export default function QuotePage() {
               ))}
             </div>
           ) : null}
-
+          {quote.jobType !== "handyman" ? (
           <div className="pkg-section">
             <div className="pkg-head">
               <div className="pkg-title">Select Your Package</div>
@@ -362,6 +386,7 @@ export default function QuotePage() {
               </div>
             </div>
           </div>
+          ) : null}
 
           {quote.note ? (
             <div className="quote-note">
