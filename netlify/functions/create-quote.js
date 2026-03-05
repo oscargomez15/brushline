@@ -1,5 +1,8 @@
 const { getStore } = require("@netlify/blobs");
 const { DEFAULT_TERMS_TEXT, DEFAULT_TERMS_VERSION } = require("./_terms");
+const path = require("path");
+const fs = require("fs");
+const PDFDocument = require("pdfkit");
 
 const sgMail = require("@sendgrid/mail");
 
@@ -23,40 +26,72 @@ async function buildQuotePdfBase64(quote) {
       const chunks = [];
 
       doc.on("data", (c) => chunks.push(c));
-      doc.on("end", () => {
-        const buf = Buffer.concat(chunks);
-        resolve(buf.toString("base64"));
-      });
+      doc.on("end", () => resolve(Buffer.concat(chunks).toString("base64")));
+      doc.on("error", reject);
 
-      // Header
-      doc.fontSize(18).text(quote.companyName || "Brushline Services", { align: "left" });
-      doc.moveDown(0.25);
-      doc.fontSize(10).fillColor("#555").text("Quote / Proposal", { align: "left" });
-      doc.fillColor("#000").moveDown(1);
+      // ---------- CRM-STYLE HEADER ----------
+      const leftX = 40;
+      const rightX = 320;
+      const topY = 30;
 
-      // Meta
-      doc.fontSize(11).text(`Proposal #: ${quote.quoteNumber || quote.id}`);
-      doc.text(`Date: ${new Date(quote.createdAt).toLocaleDateString()}`);
-      doc.text(`Prepared For: ${quote.clientName || quote.customer?.fullName || ""}`);
-      doc.text(`Project Location: ${quote.projectAddress || quote.customer?.address || ""}`);
-      doc.moveDown(1);
+      // Logo
+      try {
+        const logoPath = path.join(__dirname, "assets", "logo.png");
+        if (fs.existsSync(logoPath)) {
+          doc.image(logoPath, leftX, topY, { width: 140 });
+        } else {
+          console.warn("Logo not found at:", logoPath);
+        }
+      } catch (err) {
+        console.warn("Logo load failed:", err);
+      }
 
-      // Service
+      const statusText = quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL";
       const serviceLabel =
         quote.jobType === "exterior"
           ? "Exterior Painting"
           : quote.jobType === "handyman"
             ? "Handyman / Misc"
             : "Interior Painting";
-      doc.fontSize(12).text(`Service: ${serviceLabel}`);
-      doc.moveDown(0.75);
+
+      doc.fontSize(18).fillColor("#111").text("Proposal", rightX, topY, { align: "right", width: 250 });
+      doc.fontSize(10).fillColor("#555").text(statusText, rightX, topY + 24, { align: "right", width: 250 });
+      doc.fontSize(10).fillColor("#555").text(serviceLabel, rightX, topY + 40, { align: "right", width: 250 });
+      doc.fillColor("#000");
+
+      doc
+        .moveTo(leftX, topY + 70)
+        .lineTo(570, topY + 70)
+        .strokeColor("#E5E7EB")
+        .stroke();
+
+      doc.y = topY + 85;
+      // ---------- END HEADER ----------
+
+      // Meta (bring this back)
+      const proposalNum = quote.quoteNumber || quote.id;
+      const created = quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : "";
+      const customer =
+        quote.clientName ||
+        quote.customer?.fullName ||
+        `${quote.customer?.firstName || ""} ${quote.customer?.lastName || ""}`.trim();
+      const projectAddress = quote.projectAddress || quote.customer?.address || "";
+
+      doc.fontSize(11).fillColor("#111").text(quote.companyName || "Brushline Services");
+      doc.moveDown(0.25);
+      doc.fontSize(10).fillColor("#333");
+      doc.text(`Proposal #: ${proposalNum}`);
+      doc.text(`Date: ${created}`);
+      doc.text(`Prepared For: ${customer}`);
+      doc.text(`Project Location: ${projectAddress}`);
+      doc.moveDown(1);
+      doc.fillColor("#000");
 
       // Handyman line items
       if (quote.jobType === "handyman" && Array.isArray(quote.lineItems) && quote.lineItems.length) {
         doc.fontSize(12).text("Service Details");
         doc.moveDown(0.3);
 
-        // Table header
         doc.fontSize(10).fillColor("#444").text("Service", 40, doc.y, { continued: true });
         doc.text("Price", 500, doc.y, { align: "right" });
         doc.fillColor("#000");
@@ -72,7 +107,7 @@ async function buildQuotePdfBase64(quote) {
         doc.moveDown(1);
       }
 
-      // Painting scope (if present)
+      // Painting scope
       if (Array.isArray(quote.scopeItems) && quote.scopeItems.length) {
         doc.fontSize(12).text("Scope of Work");
         doc.moveDown(0.4);
@@ -84,11 +119,8 @@ async function buildQuotePdfBase64(quote) {
           if (Array.isArray(area.extras) && area.extras.length) {
             doc.moveDown(0.2);
             doc.fontSize(10).text("Additional work:");
-            area.extras.forEach((x) => {
-              doc.fontSize(10).text(`• ${x.label} — ${fmtMoney(x.price)}`);
-            });
+            area.extras.forEach((x) => doc.fontSize(10).text(`• ${x.label} — ${fmtMoney(x.price)}`));
           }
-
           doc.moveDown(0.6);
         });
 
@@ -101,13 +133,21 @@ async function buildQuotePdfBase64(quote) {
       doc.fontSize(11).text(`Deposit (40%): ${fmtMoney(deposit)}`);
       doc.moveDown(1);
 
-      // Terms (optional — keep it short so PDF doesn’t get huge)
+      // Terms truncated
       if (quote.terms) {
+        const terms = String(quote.terms || "");
+        const shortTerms =
+          terms.length > 3000 ? terms.slice(0, 3000) + "\n\n(Full terms available in the online quote.)" : terms;
+
         doc.fontSize(12).text("Terms of Service");
         doc.moveDown(0.4);
-        doc.fontSize(9).fillColor("#333").text(String(quote.terms), { width: 540 });
+        doc.fontSize(9).fillColor("#333").text(shortTerms, { width: 540 });
         doc.fillColor("#000");
       }
+
+      doc.moveDown(0.5);
+      doc.fontSize(8).fillColor("#666").text("For full terms, please refer to the online quote.");
+      doc.fillColor("#000");
 
       doc.end();
     } catch (e) {
@@ -116,7 +156,6 @@ async function buildQuotePdfBase64(quote) {
   });
 }
 
-const PDFDocument = require("pdfkit");
 
 function fmtMoney(n) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
