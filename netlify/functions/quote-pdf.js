@@ -12,12 +12,10 @@ function safeStr(v) {
   return (v || "").toString().trim();
 }
 
-// Customer: allow with token t
 function tokenMatches(quote, t) {
   return safeStr(quote.viewToken) && safeStr(quote.viewToken) === safeStr(t);
 }
 
-// Admin: require Netlify Identity user
 function requireAuth(context) {
   return context?.clientContext?.user || null;
 }
@@ -28,25 +26,19 @@ exports.handler = async (event, context) => {
 
     const id = safeStr(event.queryStringParameters?.id);
     const t = safeStr(event.queryStringParameters?.t);
-
     if (!id) return json(400, { error: "Missing id" });
 
     const siteID = process.env.NETLIFY_SITE_ID;
     const token = process.env.NETLIFY_AUTH_TOKEN;
     if (!siteID || !token) return json(500, { error: "Missing env vars for Blobs" });
 
-    
+    const quotesStore = getStore("quotes", { siteID, token });
+    const pdfsStore = getStore("quotes_pdfs", { siteID, token });
 
-    
-    const store = getStore("quotes", { siteID, token });
-    const pdfStore = getStore("quotes_pdfs", { siteID, token });
-
-    const quote = await store.get(id, { type: "json" });
+    const quote = await quotesStore.get(id, { type: "json" });
     if (!quote) return json(404, { error: "Quote not found" });
-    
-    // ✅ Access rule:
-    // - If token `t` is provided and matches, allow (customer)
-    // - Else require authenticated admin
+
+    // auth
     if (t) {
       if (!tokenMatches(quote, t)) return json(403, { error: "Invalid token" });
     } else {
@@ -54,7 +46,8 @@ exports.handler = async (event, context) => {
       if (!user) return json(401, { error: "Unauthorized" });
     }
 
-    const pdfBase64 = await pdfStore.get(id, { type: "text" });
+    // ✅ get the stored pdf (this is what you emailed)
+    const pdfBase64 = await pdfsStore.get(id, { type: "text" });
     if (!pdfBase64) return json(404, { error: "PDF not found for this quote yet" });
 
     const filename = `Quote-${quote.quoteNumber || quote.id}.pdf`;
@@ -66,7 +59,7 @@ exports.handler = async (event, context) => {
         "Content-Disposition": `attachment; filename="${filename}"`,
         "Cache-Control": "no-store",
       },
-      body: pdf.toString("base64"),
+      body: pdfBase64,          // ✅ NOT pdf
       isBase64Encoded: true,
     };
   } catch (e) {
