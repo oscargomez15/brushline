@@ -16,22 +16,6 @@ function buildPublicQuoteLink(baseUrl, id) {
   return `${baseUrl.replace(/\/$/, "")}/${encodeURIComponent(id)}`;
 }
 
-function buildQuoteEmailHtml({ companyName, customerName, address, total, deposit, quoteUrl }) {
-  const safe = (v) => String(v ?? "").replace(/[&<>"']/g, (m) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  }[m]));
-
-  const money = (n) => {
-    const x = Number(n || 0);
-    return x.toLocaleString("en-US", { style: "currency", currency: "USD" });
-  };
-
-  const PDFDocument = require("pdfkit");
-
-function fmtMoney(n) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
-}
-
 async function buildQuotePdfBase64(quote) {
   return await new Promise((resolve, reject) => {
     try {
@@ -131,6 +115,22 @@ async function buildQuotePdfBase64(quote) {
     }
   });
 }
+
+const PDFDocument = require("pdfkit");
+
+function fmtMoney(n) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n || 0));
+}
+
+function buildQuoteEmailHtml({ companyName, customerName, address, total, deposit, quoteUrl }) {
+  const safe = (v) => String(v ?? "").replace(/[&<>"']/g, (m) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[m]));
+
+  const money = (n) => {
+    const x = Number(n || 0);
+    return x.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  };
 
   return `
 <div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
