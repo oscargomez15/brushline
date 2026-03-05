@@ -44,49 +44,51 @@ export default function HandymanEstimator({ customer }) {
     setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   };
 
-  const createQuote = async () => {
+    const createQuote = async () => {
     if (!canCreate) return;
 
     const lineItems = items
-      .map((it) => ({
+        .map((it) => ({
         description: it.desc.trim(),
         price: safeNumber(it.price),
-      }))
-      .filter((it) => it.description && it.price > 0);
+        }))
+        .filter((it) => it.description && it.price > 0);
 
     const payload = {
-      jobType: "handyman",
-      customer,                // keep email/unit/etc
-      lineItems,               // ✅ send to backend
-      grandTotal,              // ✅ computed total
+        jobType: "handyman",
+        customer,
+        lineItems,
+        grandTotal,
+        companyName: "Brushline Services",
+        validForDays: 30,
+        note: "Thanks for the opportunity — looking forward to helping with this project!",
     };
-    
+
     const user = netlifyIdentity.currentUser();
-    const token = user?.token?.access_token; // most common
+    const token = user ? await user.jwt() : null; // ✅ same as InteriorEstimator
 
     if (!token) {
-    alert("You must be logged in to create a quote.");
-    return;
+        alert("You must be logged in to create a quote.");
+        return;
     }
 
     const res = await fetch("/.netlify/functions/create-quote", {
-    method: "POST",
-    headers: {
+        method: "POST",
+        headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ REQUIRED
-    },
-    body: JSON.stringify(payload),
+        Authorization: `Bearer ${token}`, // ✅ Identity JWT
+        },
+        body: JSON.stringify(payload),
     });
 
     const data = await res.json();
     if (!res.ok) {
-      alert(data?.error || "Failed to create quote");
-      return;
+        alert(data?.error || "Failed to create quote");
+        return;
     }
 
-    // Redirect to quote page (admin preview). DO NOT include t token.
-    window.location.href = data.url; // or use navigate(data.url)
-  };
+    window.location.href = data.url;
+    };
 
   return (
     <div style={{ width: "100%" }}>
