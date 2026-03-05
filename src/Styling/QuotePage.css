@@ -902,15 +902,17 @@
   justify-content: space-between;
 }
 
+/* Handyman items section */
+
 .quote-items {
-  margin-top: 18px;
+  margin-top: 22px;
 }
 
 .quote-items-title {
   font-weight: 800;
   font-size: 14px;
+  letter-spacing: .04em;
   margin-bottom: 10px;
-  letter-spacing: .02em;
 }
 
 .quote-items-table {
@@ -923,24 +925,25 @@
 .quote-items-row {
   display: grid;
   grid-template-columns: 1fr 140px;
-  gap: 12px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-top: 1px solid rgba(15,23,42,.08);
+  align-items: center;
 }
 
 .quote-items-row.head {
   border-top: none;
-  background: rgba(15,23,42,.03);
+  background: rgba(15,23,42,.04);
   font-size: 12px;
   font-weight: 800;
-  color: rgba(15,23,42,.65);
-  text-transform: uppercase;
   letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(15,23,42,.60);
 }
 
 .quote-items-row.total {
-  background: rgba(15,23,42,.02);
   font-weight: 900;
+  background: rgba(15,23,42,.02);
+  font-size: 15px;
 }
 
 .quote-items-row .right {
@@ -948,3 +951,6 @@
   white-space: nowrap;
 }
 
+.quote-items-row .desc {
+  font-weight: 500;
+}

@@ -225,30 +225,37 @@ export default function QuotePage() {
           </div>
 
           {/* ✅ Handyman / Misc items (line items table) */}
-          {quote.jobType === "handyman" && Array.isArray(quote.lineItems) && quote.lineItems.length > 0 ? (
+          {quote.jobType === "handyman" &&
+          Array.isArray(quote.lineItems) &&
+          quote.lineItems.length > 0 && (
             <div className="quote-items">
-              <div className="quote-items-title">Items</div>
+              <div className="quote-items-title">Service Details</div>
 
               <div className="quote-items-table">
+
+                {/* HEADER */}
                 <div className="quote-items-row head">
-                  <div>Description</div>
+                  <div>Service</div>
                   <div className="right">Price</div>
                 </div>
 
-                {quote.lineItems.map((it, idx) => (
-                  <div key={idx} className="quote-items-row">
-                    <div className="desc">{it.description}</div>
-                    <div className="right">{fmtMoney(it.price || 0)}</div>
+                {/* ITEMS */}
+                {quote.lineItems.map((item, i) => (
+                  <div key={i} className="quote-items-row">
+                    <div className="desc">{item.description}</div>
+                    <div className="right">{fmtMoney(item.price)}</div>
                   </div>
                 ))}
 
+                {/* TOTAL */}
                 <div className="quote-items-row total">
                   <div>Total</div>
                   <div className="right">{fmtMoney(quote.grandTotal)}</div>
                 </div>
+
               </div>
             </div>
-          ) : null}
+          )}
 
           {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
             <div className="quote-scope">
@@ -362,6 +369,8 @@ export default function QuotePage() {
                 );
               })}
             </div>
+          </div>
+          ) : null}
 
             <div className="pkg-footer">
               <div className="pkg-footer-left">
@@ -385,8 +394,6 @@ export default function QuotePage() {
                   </button>
               </div>
             </div>
-          </div>
-          ) : null}
 
           {quote.note ? (
             <div className="quote-note">

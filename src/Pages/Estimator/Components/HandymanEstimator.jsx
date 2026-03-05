@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import netlifyIdentity from "netlify-identity-widget";
 
 const money = (n) =>
   (Number(n || 0) || 0).toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -59,11 +60,22 @@ export default function HandymanEstimator({ customer }) {
       lineItems,               // ✅ send to backend
       grandTotal,              // ✅ computed total
     };
+    
+    const user = netlifyIdentity.currentUser();
+    const token = user?.token?.access_token; // most common
+
+    if (!token) {
+    alert("You must be logged in to create a quote.");
+    return;
+    }
 
     const res = await fetch("/.netlify/functions/create-quote", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ REQUIRED
+    },
+    body: JSON.stringify(payload),
     });
 
     const data = await res.json();
