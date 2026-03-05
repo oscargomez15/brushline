@@ -954,3 +954,49 @@
 .quote-items-row .desc {
   font-weight: 500;
 }
+
+.quote-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quote-action-btn {
+  border: 1px solid rgba(15,23,42,.14);
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.quote-action-btn:hover {
+  background: rgba(15,23,42,.03);
+}
+
+@media print {
+  /* Hide buttons + anything not needed */
+  .quote-header-actions,
+  .pkg-approve,
+  .sig-backdrop,
+  .sig-modal {
+    display: none !important;
+  }
+
+  /* Remove page padding/backgrounds */
+  body {
+    background: #fff !important;
+  }
+
+  .quote-wrap {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Keep the quote centered and full width */
+  .quote-shell {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

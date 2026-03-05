@@ -125,7 +125,12 @@ export default function QuotePage() {
   if (err) return <div className="quote-wrap"><div className="quote-card">Error: {err}</div></div>;
   if (!quote) return <div className="quote-wrap"><div className="quote-card">Loading…</div></div>;
 
-  const jobLabel = quote.jobType === "exterior" ? "Exterior Painting" : "Interior Painting";
+const jobLabel =
+  quote.jobType === "exterior"
+    ? "Exterior Painting"
+    : quote.jobType === "handyman"
+      ? "Handyman / Misc"
+      : "Interior Painting";
   const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
   const currentTotal = Number(quote.grandTotal) || 0;
   const EPS = 0.01;
@@ -172,6 +177,24 @@ export default function QuotePage() {
 
         <div className="quote-header-right">
           <div className="quote-header-actions">
+            <button
+              type="button"
+              className="quote-action-btn"
+              onClick={() => window.print()}
+              title="Print"
+            >
+              Print
+            </button>
+
+            <button
+              type="button"
+              className="quote-action-btn"
+              onClick={() => window.print()}  // download = print dialog → Save as PDF
+              title="Download PDF"
+            >
+              Download
+            </button>
+
             <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
               {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
             </div>
