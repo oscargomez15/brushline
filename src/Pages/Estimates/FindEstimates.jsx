@@ -41,6 +41,7 @@ export default function FindEstimates() {
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [regeneratingId, setRegeneratingId] = useState(null);
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -126,6 +127,40 @@ export default function FindEstimates() {
       setDeletingId(null);
     }
   };
+
+const handleRegeneratePdf = async (quoteId) => {
+  try {
+    setRegeneratingId(quoteId);
+
+    const user = netlifyIdentity.currentUser();
+    const jwt = user ? await user.jwt() : null;
+
+    if (!jwt) {
+      throw new Error("Please log in first.");
+    }
+
+    const res = await fetch("/.netlify/functions/regenerate-quote-pdf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({ id: quoteId }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      throw new Error(data?.error || "Failed to regenerate PDF");
+    }
+
+    alert("PDF regenerated successfully.");
+  } catch (e) {
+    alert(e.message);
+  } finally {
+    setRegeneratingId(null);
+  }
+};
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -266,28 +301,17 @@ export default function FindEstimates() {
                             >
                               View history
                             </button>
-
                             <button
-                            type="button"
-                            className="kebab-item"
-                            onClick={async () => {
-                              const user = netlifyIdentity.currentUser();
-                              const token = await user.jwt();
-
-                              await fetch("/.netlify/functions/regenerate-quote-pdf", {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  Authorization: `Bearer ${token}`,
-                                },
-                                body: JSON.stringify({ id: x.id }),
-                              });
-
-                              alert("PDF regenerated with latest style");
-                            }}
-                          >
-                            Update PDF Style
-                          </button>
+                              type="button"
+                              className="kebab-item"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleRegeneratePdf(x.id);
+                              }}
+                              disabled={regeneratingId === x.id}
+                            >
+                              {regeneratingId === x.id ? "Updating PDF..." : "Update PDF Style"}
+                            </button>
                           </div>
                         )}
                       </div>
