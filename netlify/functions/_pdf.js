@@ -60,6 +60,7 @@ function buildQuotePdfBuffer(quote) {
         .strokeColor("#E5E7EB")
         .stroke();
 
+        doc.x = leftX;
         doc.y = headerBottomY + 15;
 
       const statusText = quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL";
@@ -81,8 +82,10 @@ function buildQuotePdfBuffer(quote) {
         .strokeColor("#E5E7EB")
         .stroke();
 
+      doc.x = leftX;
       doc.y = topY + 85;
       // ---------- END HEADER ----------
+
 
       // Meta
       const proposalNum = quote.quoteNumber || quote.id;
