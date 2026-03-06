@@ -235,39 +235,42 @@ export default function FindEstimates() {
                       </button>
                     </td>
 
-                    <div className="right" onClick={(e) => e.stopPropagation()}>
-                    
-                    <button
-                      type="button"
-                      className="kebab-btn"
-                      onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}
-                      aria-label="More actions"
-                    >
-                      ⋯
-                    </button>
-
-                    {openMenuId === x.id && (
-                      <div className="kebab-menu">
+                    <td className="right">
+                      <div className="kebab-wrap" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
-                          className="kebab-item"
-                          onClick={() => {
-                            setOpenMenuId(null);
-                            openViewHistory(x.id);
-                          }}
+                          className="kebab-btn"
+                          onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}
+                          aria-label="More actions"
+                          aria-expanded={openMenuId === x.id}
                         >
-                          View history
+                          ⋯
                         </button>
+
+                        {openMenuId === x.id && (
+                          <div className="kebab-menu" role="menu">
+                            <button
+                              type="button"
+                              className="kebab-item"
+                              role="menuitem"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                openViewHistory(x.id);
+                              }}
+                            >
+                              View history
+                            </button>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                    </td>
                   </tr>
                 );
               })}
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="fe-empty">
+                  <td colSpan={10} className="fe-empty">
                     No estimates found.
                   </td>
                 </tr>
