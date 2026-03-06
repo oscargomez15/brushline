@@ -96,6 +96,12 @@ export default function FindEstimates() {
       return () => document.removeEventListener("click", onDocClick);
     }, []);
 
+    useEffect(() => {
+  const close = () => setOpenMenuId(null);
+  window.addEventListener("scroll", close, true);
+  return () => window.removeEventListener("scroll", close, true);
+}, []);
+
   const handleDelete = async (id) => {
     const ok = window.confirm("Delete this estimate? This can’t be undone.");
     if (!ok) return;
@@ -260,6 +266,28 @@ export default function FindEstimates() {
                             >
                               View history
                             </button>
+
+                            <button
+                            type="button"
+                            className="kebab-item"
+                            onClick={async () => {
+                              const user = netlifyIdentity.currentUser();
+                              const token = await user.jwt();
+
+                              await fetch("/.netlify/functions/regenerate-quote-pdf", {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                  Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify({ id: x.id }),
+                              });
+
+                              alert("PDF regenerated with latest style");
+                            }}
+                          >
+                            Update PDF Style
+                          </button>
                           </div>
                         )}
                       </div>
