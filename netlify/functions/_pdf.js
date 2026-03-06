@@ -76,12 +76,6 @@ function buildQuotePdfBuffer(quote) {
       doc.fontSize(10).fillColor("#555").text(serviceLabel, rightX, topY + 40, { align: "right", width: 250 });
       doc.fillColor("#000");
 
-      doc
-        .moveTo(leftX, topY + 70)
-        .lineTo(570, topY + 70)
-        .strokeColor("#E5E7EB")
-        .stroke();
-
       doc.x = leftX;
       doc.y = topY + 85;
       // ---------- END HEADER ----------
