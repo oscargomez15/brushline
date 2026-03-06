@@ -217,7 +217,7 @@ export default function FindEstimates() {
                     <td className="right strong">{fmtMoney(x.grandTotal)}</td>
 
                     <td className="right">
-                      <a href={`/quote/${q.id}`} className="view-quote-btn">
+                      <a href={`/quote/${x.id}`} className="view-quote-btn">
                         View
                       </a>
                     </td>
@@ -235,7 +235,7 @@ export default function FindEstimates() {
                       </button>
                     </td>
 
-                    <td className="right" onClick={(e) => e.stopPropagation()}>
+                    <div className="right" onClick={(e) => e.stopPropagation()}>
                     
                     <button
                       type="button"
@@ -260,7 +260,7 @@ export default function FindEstimates() {
                         </button>
                       </div>
                     )}
-                  </td>
+                  </div>
                   </tr>
                 );
               })}
