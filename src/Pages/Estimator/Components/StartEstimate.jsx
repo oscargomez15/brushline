@@ -3,6 +3,8 @@ import netlifyIdentity from "netlify-identity-widget";
 import "../../../Styling/StartEstimate.css";
 
 export const StartEstimate = ({ initialCustomer, onNext }) => {
+  const [mode, setMode] = useState(null); // "new" | "existing" | null
+
   const [firstName, setFirstName] = useState(initialCustomer?.firstName || "");
   const [lastName, setLastName] = useState(initialCustomer?.lastName || "");
   const [address, setAddress] = useState(initialCustomer?.address || "");
@@ -11,13 +13,11 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
   const [phone, setPhone] = useState(initialCustomer?.phone || "");
   const [customerId, setCustomerId] = useState(initialCustomer?.customerId || "");
 
-  // existing customer search
   const [customerSearch, setCustomerSearch] = useState("");
   const [customerResults, setCustomerResults] = useState([]);
   const [searchingCustomers, setSearchingCustomers] = useState(false);
   const [searchErr, setSearchErr] = useState("");
 
-  // address autocomplete
   const [predictions, setPredictions] = useState([]);
   const [showPredictions, setShowPredictions] = useState(false);
 
@@ -42,6 +42,10 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     setEmail(emailVal);
     setPhone(phoneVal);
     setCustomerId(customerIdVal);
+
+    if (fn || ln || addr) {
+      setMode(customerIdVal ? "existing" : "new");
+    }
   }, [initialCustomer]);
 
   useEffect(() => {
@@ -130,6 +134,8 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
   };
 
   useEffect(() => {
+    if (mode !== "existing") return;
+
     const q = customerSearch.trim();
 
     if (!q) {
@@ -176,7 +182,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
         clearTimeout(customerSearchDebounceRef.current);
       }
     };
-  }, [customerSearch]);
+  }, [customerSearch, mode]);
 
   const handlePickCustomer = (customer) => {
     setCustomerId(customer.id || "");
@@ -191,7 +197,33 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     setSearchErr("");
   };
 
-  const canContinue = firstName.trim() && lastName.trim() && address.trim();
+  const resetForm = () => {
+    setCustomerId("");
+    setFirstName("");
+    setLastName("");
+    setAddress("");
+    setUnit("");
+    setEmail("");
+    setPhone("");
+    setCustomerSearch("");
+    setCustomerResults([]);
+    setSearchErr("");
+    setPredictions([]);
+    setShowPredictions(false);
+  };
+
+  const handleChooseNew = () => {
+    resetForm();
+    setMode("new");
+  };
+
+  const handleChooseExisting = () => {
+    resetForm();
+    setMode("existing");
+  };
+
+  const canContinue =
+    firstName.trim() && lastName.trim() && address.trim();
 
   const handleNext = async () => {
     if (!canContinue) return;
@@ -241,154 +273,283 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
       <div className="jobtype-card">
         <h1>Start an Estimate</h1>
 
-        <div className="start-estimate-form">
-          <label style={{ position: "relative" }}>
-            <span>Search Existing Customer</span>
-            <input
-              className="dim-input"
-              type="text"
-              value={customerSearch}
-              onChange={(e) => setCustomerSearch(e.target.value)}
-              placeholder="Search by name, email, phone, or address"
-            />
+        {!mode && (
+          <div className="customer-mode-grid">
+            <button
+              type="button"
+              className="customer-mode-card"
+              onClick={handleChooseNew}
+            >
+              <div className="customer-mode-title">New Customer</div>
+              <div className="customer-mode-text">
+                Enter customer information manually.
+              </div>
+            </button>
 
-            {searchingCustomers && (
-              <div className="addr-dd">
-                <div className="addr-dd-item" style={{ cursor: "default" }}>
-                  Searching...
+            <button
+              type="button"
+              className="customer-mode-card"
+              onClick={handleChooseExisting}
+            >
+              <div className="customer-mode-title">Existing Customer</div>
+              <div className="customer-mode-text">
+                Search and reuse a saved customer.
+              </div>
+            </button>
+          </div>
+        )}
+
+        {mode === "existing" && (
+          <div className="start-estimate-form">
+            <div className="start-estimate-topbar">
+              <button
+                type="button"
+                className="back-link-btn"
+                onClick={() => setMode(null)}
+              >
+                ← Back
+              </button>
+            </div>
+
+            <label style={{ position: "relative" }}>
+              <span>Search Existing Customer</span>
+              <input
+                className="dim-input"
+                type="text"
+                value={customerSearch}
+                onChange={(e) => setCustomerSearch(e.target.value)}
+                placeholder="Search by name, email, phone, or address"
+              />
+
+              {searchingCustomers && (
+                <div className="addr-dd">
+                  <div className="addr-dd-item" style={{ cursor: "default" }}>
+                    Searching...
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {!searchingCustomers && customerResults.length > 0 && (
+                <div className="addr-dd">
+                  {customerResults.map((customer) => (
+                    <button
+                      key={customer.id}
+                      type="button"
+                      className="addr-dd-item"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => handlePickCustomer(customer)}
+                    >
+                      <strong>{customer.fullName || "Unnamed Customer"}</strong>
+                      <br />
+                      <small>
+                        {customer.address || "No address"}
+                        {customer.unit ? `, ${customer.unit}` : ""}
+                      </small>
+                      <br />
+                      <small>
+                        {customer.email || "No email"}
+                        {customer.phone ? ` • ${customer.phone}` : ""}
+                      </small>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {!searchingCustomers && searchErr && (
+                <div style={{ color: "crimson", marginTop: 6 }}>{searchErr}</div>
+              )}
+            </label>
+
+            {customerId && (
+              <>
+                <label>
+                  <span>First Name</span>
+                  <input
+                    className="dim-input"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Last Name</span>
+                  <input
+                    className="dim-input"
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Address</span>
+                  <input
+                    className="dim-input"
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>Unit / Apt / Suite</span>
+                  <input
+                    className="dim-input"
+                    type="text"
+                    value={unit}
+                    onChange={(e) => setUnit(e.target.value)}
+                    placeholder="Apt 3B"
+                  />
+                </label>
+
+                <label>
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    className="dim-input"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="customer@email.com"
+                  />
+                </label>
+
+                <label>
+                  <span>Phone</span>
+                  <input
+                    type="text"
+                    className="dim-input"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="(239) 555-1234"
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  className="add-area-btn add"
+                  onClick={handleNext}
+                  disabled={!canContinue}
+                  style={{ opacity: canContinue ? 1 : 0.6 }}
+                >
+                  Next
+                </button>
+              </>
             )}
+          </div>
+        )}
 
-            {!searchingCustomers && customerResults.length > 0 && (
-              <div className="addr-dd">
-                {customerResults.map((customer) => (
-                  <button
-                    key={customer.id}
-                    type="button"
-                    className="addr-dd-item"
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => handlePickCustomer(customer)}
-                  >
-                    <strong>{customer.fullName || "Unnamed Customer"}</strong>
-                    <br />
-                    <small>
-                      {customer.address || "No address"}
-                      {customer.unit ? `, ${customer.unit}` : ""}
-                    </small>
-                    <br />
-                    <small>
-                      {customer.email || "No email"}
-                      {customer.phone ? ` • ${customer.phone}` : ""}
-                    </small>
-                  </button>
-                ))}
-              </div>
-            )}
+        {mode === "new" && (
+          <div className="start-estimate-form">
+            <div className="start-estimate-topbar">
+              <button
+                type="button"
+                className="back-link-btn"
+                onClick={() => setMode(null)}
+              >
+                ← Back
+              </button>
+            </div>
 
-            {!searchingCustomers && searchErr && (
-              <div style={{ color: "crimson", marginTop: 6 }}>{searchErr}</div>
-            )}
-          </label>
+            <label>
+              <span>First Name</span>
+              <input
+                className="dim-input"
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </label>
 
-          <label>
-            <span>First Name</span>
-            <input
-              className="dim-input"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </label>
+            <label>
+              <span>Last Name</span>
+              <input
+                className="dim-input"
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </label>
 
-          <label>
-            <span>Last Name</span>
-            <input
-              className="dim-input"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </label>
+            <label style={{ position: "relative" }}>
+              <span>Address</span>
+              <input
+                className="dim-input"
+                type="text"
+                inputMode="text"
+                spellCheck={false}
+                name="new-address"
+                value={address}
+                onChange={(e) => onAddressChange(e.target.value)}
+                onFocus={() => setShowPredictions(true)}
+                onBlur={() => {
+                  setTimeout(() => setShowPredictions(false), 150);
+                }}
+                placeholder="123 Main St, Cape Coral, FL"
+                autoComplete="new-password"
+              />
 
-          <label style={{ position: "relative" }}>
-            <span>Address</span>
-            <input
-              className="dim-input"
-              type="text"
-              inputMode="text"
-              spellCheck={false}
-              name="new-address"
-              value={address}
-              onChange={(e) => onAddressChange(e.target.value)}
-              onFocus={() => setShowPredictions(true)}
-              onBlur={() => {
-                setTimeout(() => setShowPredictions(false), 150);
-              }}
-              placeholder="123 Main St, Cape Coral, FL"
-              autoComplete="new-password"
-            />
+              {showPredictions && predictions.length > 0 && (
+                <div className="addr-dd">
+                  {predictions.map((p) => (
+                    <button
+                      key={p.place_id}
+                      type="button"
+                      className="addr-dd-item"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => selectPrediction(p)}
+                    >
+                      {p.description}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </label>
 
-            {showPredictions && predictions.length > 0 && (
-              <div className="addr-dd">
-                {predictions.map((p) => (
-                  <button
-                    key={p.place_id}
-                    type="button"
-                    className="addr-dd-item"
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => selectPrediction(p)}
-                  >
-                    {p.description}
-                  </button>
-                ))}
-              </div>
-            )}
-          </label>
+            <label>
+              <span>Unit / Apt / Suite</span>
+              <input
+                className="dim-input"
+                type="text"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                placeholder="Apt 3B"
+              />
+            </label>
 
-          <label>
-            <span>Unit / Apt / Suite</span>
-            <input
-              className="dim-input"
-              type="text"
-              value={unit}
-              onChange={(e) => setUnit(e.target.value)}
-              placeholder="Apt 3B"
-            />
-          </label>
+            <label>
+              <span>Email</span>
+              <input
+                type="email"
+                className="dim-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="customer@email.com"
+              />
+            </label>
 
-          <label>
-            <span>Email</span>
-            <input
-              type="email"
-              className="dim-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="customer@email.com"
-            />
-          </label>
+            <label>
+              <span>Phone</span>
+              <input
+                type="text"
+                className="dim-input"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="(239) 555-1234"
+              />
+            </label>
 
-          <label>
-            <span>Phone</span>
-            <input
-              type="text"
-              className="dim-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="(239) 555-1234"
-            />
-          </label>
-
-          <button
-            type="button"
-            className="add-area-btn add"
-            onClick={handleNext}
-            disabled={!canContinue}
-            style={{ opacity: canContinue ? 1 : 0.6 }}
-          >
-            Next
-          </button>
-        </div>
+            <button
+              type="button"
+              className="add-area-btn add"
+              onClick={handleNext}
+              disabled={!canContinue}
+              style={{ opacity: canContinue ? 1 : 0.6 }}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
