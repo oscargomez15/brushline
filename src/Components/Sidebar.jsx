@@ -13,7 +13,8 @@ import {
   FiEdit,
   FiDollarSign,
   FiChevronRight,
-  FiChevronDown
+  FiChevronDown,
+  FiUsers
 } from "react-icons/fi";
 
 export default function Sidebar() {
