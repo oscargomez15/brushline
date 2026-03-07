@@ -100,11 +100,20 @@ const handleDownloadPdf = async () => {
   try {
     const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
     url.searchParams.set("id", id);
+    url.searchParams.set("ts", Date.now().toString());
 
-    // Customer download uses token from URL
     if (t) url.searchParams.set("t", t);
 
-    // Admin download (no t) must include Identity JWT
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    // iPhone / iPad Safari: open PDF directly instead of blob download
+    if (isIOS) {
+      window.open(url.toString(), "_blank");
+      return;
+    }
+
     const headers = {};
     if (!t) {
       const user = netlifyIdentity.currentUser();
@@ -116,7 +125,6 @@ const handleDownloadPdf = async () => {
     const res = await fetch(url.toString(), { headers });
 
     if (!res.ok) {
-      // show real error text (JSON or plain text)
       const text = await res.text().catch(() => "");
       throw new Error(`Failed to download PDF (${res.status}): ${text}`);
     }

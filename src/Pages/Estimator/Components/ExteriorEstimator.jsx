@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from "react";
+import netlifyIdentity from "netlify-identity-widget";
+import { useNavigate } from "react-router-dom";
 import ExteriorSummarySticky from "./ExteriorSummarySticky";
 
 // Coverage (sq ft per gallon) – adjust if you want exterior to differ
@@ -18,9 +20,9 @@ const toNum = (v) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-export default function ExteriorEstimator() {
-
-const [showSummary, setShowSummary] = useState(false);
+export default function ExteriorEstimator({ customer }) {
+  const navigate = useNavigate();
+  const [showSummary, setShowSummary] = useState(false);
 
   // price control (top card)
   const [pricePerSqft, setPricePerSqft] = useState("2.50");
@@ -67,6 +69,94 @@ const [showSummary, setShowSummary] = useState(false);
   const fmtMoney = (n) =>
     new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
 
+  const canCreate = useMemo(() => {
+    const hasCustomer =
+      customer?.firstName?.trim() &&
+      customer?.lastName?.trim() &&
+      customer?.address?.trim();
+
+    const hasMeasurements = sides.some((s) => toNum(s.length) > 0);
+
+    return !!hasCustomer && hasMeasurements && totals.totalCost > 0;
+  }, [customer, sides, totals.totalCost]);
+
+  const buildScopeItems = () => {
+    return [
+      {
+        areaId: "exterior",
+        areaName: "Exterior",
+        scope: ["Exterior Walls"],
+        extras: [],
+      },
+    ];
+  };
+
+  const handleGenerateQuote = async () => {
+    if (!canCreate) return;
+
+    const user = netlifyIdentity.currentUser();
+    const token = user ? await user.jwt() : null;
+
+    if (!token) {
+      alert("You must be logged in to generate a quote.");
+      return;
+    }
+
+    const payload = {
+      jobType: "exterior",
+      grandTotal: totals.totalCost,
+      totalGallons: totals.totalGallons,
+
+      companyName: "Brushline Services",
+      validForDays: 30,
+
+      customerId: customer?.customerId || null,
+      customer: {
+        firstName: customer?.firstName || "",
+        lastName: customer?.lastName || "",
+        address: customer?.address || "",
+        unit: customer?.unit || "",
+        email: customer?.email || "",
+        phone: customer?.phone || "",
+      },
+
+      note: "Thanks for having us out — excited about this project!",
+      scopeItems: buildScopeItems(),
+
+      exterior: {
+        soffitHeight: heightFt,
+        pricePerSqft: rate,
+        totalSqft: totals.totalSqft,
+        totalGallons: totals.totalGallons,
+        sides: perSide.map((s) => ({
+          id: s.id,
+          label: s.label,
+          length: s.lengthFt,
+          sqft: s.sqft,
+          gallons: s.gallons,
+          cost: s.cost,
+        })),
+      },
+    };
+
+    const res = await fetch("/.netlify/functions/create-quote", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alert(data?.error || "Failed to create quote");
+      return;
+    }
+
+    navigate(data.url);
+  };
+
   return (
     <section className="exterior-calculator-wrapper">
       <div className="content-wrapper">
@@ -74,7 +164,6 @@ const [showSummary, setShowSummary] = useState(false);
           <h1>Exterior Estimator</h1>
           <p>Enter each side length and soffit height. We’ll estimate sqft + paint gallons.</p>
 
-          {/* Top price card (matches your interior style) */}
           <div className="price-inputs">
             <h2>Price</h2>
             <p>Adjust the price per sq ft for exterior.</p>
@@ -112,7 +201,6 @@ const [showSummary, setShowSummary] = useState(false);
           </div>
         </div>
 
-        {/* Sides card (matches your "area-card" look) */}
         <div className="area-card">
           <div className="area-card-header">
             <div className="area-card-title">
@@ -135,7 +223,6 @@ const [showSummary, setShowSummary] = useState(false);
           </div>
 
           <div className="area-calc-body exterior-grid">
-            {/* Left: inputs */}
             <div className="dimensions-container">
               <h3>Measurements (ft)</h3>
 
@@ -154,7 +241,6 @@ const [showSummary, setShowSummary] = useState(false);
               ))}
             </div>
 
-            {/* Right: calculations */}
             <div className="calculations-container">
               <h3>Calculations (sq ft)</h3>
 
@@ -187,7 +273,18 @@ const [showSummary, setShowSummary] = useState(false);
             </div>
           </div>
         </div>
+
+        <button
+          type="button"
+          className="generate-btn add"
+          onClick={handleGenerateQuote}
+          disabled={!canCreate}
+          style={{ opacity: canCreate ? 1 : 0.6 }}
+        >
+          Generate Client Quote
+        </button>
       </div>
+
       <ExteriorSummarySticky
         showSummary={showSummary}
         setShowSummary={setShowSummary}
@@ -197,8 +294,7 @@ const [showSummary, setShowSummary] = useState(false);
         grandTotal={totals.totalCost}
         fmtMoney={fmtMoney}
         fmt={fmt}
-        />
-
+      />
     </section>
   );
 }

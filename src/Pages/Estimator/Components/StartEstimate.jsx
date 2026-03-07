@@ -1,32 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
+import netlifyIdentity from "netlify-identity-widget";
 import "../../../Styling/StartEstimate.css";
 
 export const StartEstimate = ({ initialCustomer, onNext }) => {
   const [firstName, setFirstName] = useState(initialCustomer?.firstName || "");
   const [lastName, setLastName] = useState(initialCustomer?.lastName || "");
   const [address, setAddress] = useState(initialCustomer?.address || "");
+  const [unit, setUnit] = useState(initialCustomer?.unit || "");
   const [email, setEmail] = useState(initialCustomer?.email || "");
+  const [phone, setPhone] = useState(initialCustomer?.phone || "");
+  const [customerId, setCustomerId] = useState(initialCustomer?.customerId || "");
 
-  // ✅ our own autocomplete UI
+  // existing customer search
+  const [customerSearch, setCustomerSearch] = useState("");
+  const [customerResults, setCustomerResults] = useState([]);
+  const [searchingCustomers, setSearchingCustomers] = useState(false);
+  const [searchErr, setSearchErr] = useState("");
+
+  // address autocomplete
   const [predictions, setPredictions] = useState([]);
   const [showPredictions, setShowPredictions] = useState(false);
-  const [unit, setUnit] = useState(initialCustomer?.unit || "");
 
   const autoServiceRef = useRef(null);
   const placesServiceRef = useRef(null);
   const debounceRef = useRef(null);
+  const customerSearchDebounceRef = useRef(null);
 
   useEffect(() => {
     const fn = initialCustomer?.firstName || "";
     const ln = initialCustomer?.lastName || "";
     const addr = initialCustomer?.address || "";
-    const unit = initialCustomer?.unit || "";
-    const email = initialCustomer?.email || "";
+    const unitVal = initialCustomer?.unit || "";
+    const emailVal = initialCustomer?.email || "";
+    const phoneVal = initialCustomer?.phone || "";
+    const customerIdVal = initialCustomer?.customerId || "";
+
     setFirstName(fn);
     setLastName(ln);
     setAddress(addr);
-    setUnit(unit);
-    setEmail(email);
+    setUnit(unitVal);
+    setEmail(emailVal);
+    setPhone(phoneVal);
+    setCustomerId(customerIdVal);
   }, [initialCustomer]);
 
   useEffect(() => {
@@ -41,7 +56,6 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
 
       autoServiceRef.current = new window.google.maps.places.AutocompleteService();
 
-      // PlacesService needs a DOM node; this can be a hidden div
       const dummy = document.createElement("div");
       placesServiceRef.current = new window.google.maps.places.PlacesService(dummy);
     };
@@ -88,18 +102,15 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     setAddress(val);
     setShowPredictions(true);
 
-    // ✅ debounce
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => fetchPredictions(val), 200);
   };
 
   const selectPrediction = (p) => {
-    // Option A (fast): use description
     setAddress(p.description);
     setPredictions([]);
     setShowPredictions(false);
 
-    // Option B (best): fetch formatted_address from details
     if (placesServiceRef.current) {
       placesServiceRef.current.getDetails(
         {
@@ -118,117 +129,267 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     }
   };
 
+  useEffect(() => {
+    const q = customerSearch.trim();
+
+    if (!q) {
+      setCustomerResults([]);
+      setSearchErr("");
+      return;
+    }
+
+    if (customerSearchDebounceRef.current) {
+      clearTimeout(customerSearchDebounceRef.current);
+    }
+
+    customerSearchDebounceRef.current = setTimeout(async () => {
+      try {
+        setSearchingCustomers(true);
+        setSearchErr("");
+
+        const user = netlifyIdentity.currentUser();
+        const jwt = user ? await user.jwt() : null;
+        if (!jwt) throw new Error("You must be logged in.");
+
+        const res = await fetch(
+          `/.netlify/functions/list-customers?q=${encodeURIComponent(q)}&limit=8`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || "Failed to search customers");
+
+        setCustomerResults(data.items || []);
+      } catch (e) {
+        setSearchErr(e.message);
+      } finally {
+        setSearchingCustomers(false);
+      }
+    }, 250);
+
+    return () => {
+      if (customerSearchDebounceRef.current) {
+        clearTimeout(customerSearchDebounceRef.current);
+      }
+    };
+  }, [customerSearch]);
+
+  const handlePickCustomer = (customer) => {
+    setCustomerId(customer.id || "");
+    setFirstName(customer.firstName || "");
+    setLastName(customer.lastName || "");
+    setAddress(customer.address || "");
+    setUnit(customer.unit || "");
+    setEmail(customer.email || "");
+    setPhone(customer.phone || "");
+    setCustomerSearch(customer.fullName || "");
+    setCustomerResults([]);
+    setSearchErr("");
+  };
+
   const canContinue = firstName.trim() && lastName.trim() && address.trim();
 
-const handleNext = () => {
-  if (!canContinue) return;
-  if (typeof onNext !== "function") return;
+  const handleNext = async () => {
+    if (!canContinue) return;
+    if (typeof onNext !== "function") return;
 
-  onNext({
-    firstName: firstName.trim(),
-    lastName: lastName.trim(),
-    address: address.trim(),
-    unit: unit.trim(),
-    email: email.trim(), 
-  });
-};
+    try {
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+      if (!jwt) throw new Error("You must be logged in.");
+
+      const res = await fetch("/.netlify/functions/save-customer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          id: customerId || undefined,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          address: address.trim(),
+          unit: unit.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to save customer");
+
+      onNext({
+        customerId: data.customer?.id || customerId || "",
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        address: address.trim(),
+        unit: unit.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+      });
+    } catch (e) {
+      alert(e.message);
+    }
+  };
 
   return (
     <div className="start-estimate-page">
-    <div className="jobtype-card">
-      <h1>Start an Estimate</h1>
+      <div className="jobtype-card">
+        <h1>Start an Estimate</h1>
 
-      <div className="start-estimate-form">
-        <label>
-          <span>First Name</span>
-          <input
-            className="dim-input"
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </label>
+        <div className="start-estimate-form">
+          <label style={{ position: "relative" }}>
+            <span>Search Existing Customer</span>
+            <input
+              className="dim-input"
+              type="text"
+              value={customerSearch}
+              onChange={(e) => setCustomerSearch(e.target.value)}
+              placeholder="Search by name, email, phone, or address"
+            />
 
-        <label>
-          <span>Last Name</span>
-          <input
-            className="dim-input"
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </label>
+            {searchingCustomers && (
+              <div className="addr-dd">
+                <div className="addr-dd-item" style={{ cursor: "default" }}>
+                  Searching...
+                </div>
+              </div>
+            )}
 
-        {/* ✅ Address with our dropdown */}
-        <label style={{ position: "relative" }}>
-          <span>Address</span>
-          <input
-            className="dim-input"
-            type="text"
-            inputMode="text"
-            spellCheck={false}
-            name="new-address"
-            value={address}
-            onChange={(e) => onAddressChange(e.target.value)}
-            onFocus={() => setShowPredictions(true)}
-            onBlur={() => {
-              // let click register before closing
-              setTimeout(() => setShowPredictions(false), 150);
-            }}
-            placeholder="123 Main St, Cape Coral, FL"
-            autoComplete="new-password"
-          />
+            {!searchingCustomers && customerResults.length > 0 && (
+              <div className="addr-dd">
+                {customerResults.map((customer) => (
+                  <button
+                    key={customer.id}
+                    type="button"
+                    className="addr-dd-item"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => handlePickCustomer(customer)}
+                  >
+                    <strong>{customer.fullName || "Unnamed Customer"}</strong>
+                    <br />
+                    <small>
+                      {customer.address || "No address"}
+                      {customer.unit ? `, ${customer.unit}` : ""}
+                    </small>
+                    <br />
+                    <small>
+                      {customer.email || "No email"}
+                      {customer.phone ? ` • ${customer.phone}` : ""}
+                    </small>
+                  </button>
+                ))}
+              </div>
+            )}
 
-          {showPredictions && predictions.length > 0 && (
-            <div className="addr-dd">
-              {predictions.map((p) => (
-                <button
-                  key={p.place_id}
-                  type="button"
-                  className="addr-dd-item"
-                  onMouseDown={(e) => e.preventDefault()} // prevents blur before click
-                  onClick={() => selectPrediction(p)}
-                >
-                  {p.description}
-                </button>
-              ))}
-            </div>
-          )}
-        </label>
+            {!searchingCustomers && searchErr && (
+              <div style={{ color: "crimson", marginTop: 6 }}>{searchErr}</div>
+            )}
+          </label>
 
-        <label>
-          <span>Unit / Apt / Suite </span>
-          <input
-            className="dim-input"
-            type="text"
-            value={unit}
-            onChange={(e) => setUnit(e.target.value)}
-            placeholder="Apt 3B"
-          />
-        </label>
+          <label>
+            <span>First Name</span>
+            <input
+              className="dim-input"
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </label>
 
-        <label>
-          <span>Email</span>
-          <input
-            type="email"
-            className="dim-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="customer@email.com"
-          />
-        </label>
+          <label>
+            <span>Last Name</span>
+            <input
+              className="dim-input"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </label>
 
-        <button
-          type="button"
-          className="add-area-btn add"
-          onClick={handleNext}
-          disabled={!canContinue}
-          style={{ opacity: canContinue ? 1 : 0.6 }}
-        >
-          Next
-        </button>
+          <label style={{ position: "relative" }}>
+            <span>Address</span>
+            <input
+              className="dim-input"
+              type="text"
+              inputMode="text"
+              spellCheck={false}
+              name="new-address"
+              value={address}
+              onChange={(e) => onAddressChange(e.target.value)}
+              onFocus={() => setShowPredictions(true)}
+              onBlur={() => {
+                setTimeout(() => setShowPredictions(false), 150);
+              }}
+              placeholder="123 Main St, Cape Coral, FL"
+              autoComplete="new-password"
+            />
+
+            {showPredictions && predictions.length > 0 && (
+              <div className="addr-dd">
+                {predictions.map((p) => (
+                  <button
+                    key={p.place_id}
+                    type="button"
+                    className="addr-dd-item"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => selectPrediction(p)}
+                  >
+                    {p.description}
+                  </button>
+                ))}
+              </div>
+            )}
+          </label>
+
+          <label>
+            <span>Unit / Apt / Suite</span>
+            <input
+              className="dim-input"
+              type="text"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              placeholder="Apt 3B"
+            />
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              className="dim-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="customer@email.com"
+            />
+          </label>
+
+          <label>
+            <span>Phone</span>
+            <input
+              type="text"
+              className="dim-input"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="(239) 555-1234"
+            />
+          </label>
+
+          <button
+            type="button"
+            className="add-area-btn add"
+            onClick={handleNext}
+            disabled={!canContinue}
+            style={{ opacity: canContinue ? 1 : 0.6 }}
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

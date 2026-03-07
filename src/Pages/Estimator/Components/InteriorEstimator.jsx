@@ -234,17 +234,25 @@ function detectPackageKey(areas) {
   // Build your payload from your existing totals
   const payload = {
     jobType: "interior",
-    grandTotal: grandTotal,
+    grandTotal,
     totalGallons: totalJobGallons,
 
     companyName: "Brushline Services",
     validForDays: 30,
 
-    customer,
+    customerId: customer?.customerId || null,
+    customer: {
+      firstName: customer?.firstName || "",
+      lastName: customer?.lastName || "",
+      address: customer?.address || "",
+      unit: customer?.unit || "",
+      email: customer?.email || "",
+      phone: customer?.phone || "",
+    },
+
     note: "Thanks for having us out — excited about this project!",
     scopeItems,
 
-    // ✅ new
     selectedPackageKey,
     scopePackages,
   };

@@ -55,13 +55,23 @@ export default function HandymanEstimator({ customer }) {
         .filter((it) => it.description && it.price > 0);
 
     const payload = {
-        jobType: "handyman",
-        customer,
-        lineItems,
-        grandTotal,
-        companyName: "Brushline Services",
-        validForDays: 30,
-        note: "Thanks for the opportunity — looking forward to helping with this project!",
+    jobType: "handyman",
+
+    customerId: customer?.customerId || null,
+    customer: {
+        firstName: customer?.firstName || "",
+        lastName: customer?.lastName || "",
+        address: customer?.address || "",
+        unit: customer?.unit || "",
+        email: customer?.email || "",
+        phone: customer?.phone || "",
+    },
+
+    lineItems,
+    grandTotal,
+    companyName: "Brushline Services",
+    validForDays: 30,
+    note: "Thanks for the opportunity — looking forward to helping with this project!",
     };
 
     const user = netlifyIdentity.currentUser();

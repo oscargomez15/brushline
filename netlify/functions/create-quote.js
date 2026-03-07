@@ -273,9 +273,11 @@ exports.handler = async (event, context) => {
     const normalizedCustomer = {
       firstName: safeStr(customer.firstName),
       lastName: safeStr(customer.lastName),
-      address: safeStr(customer.address),
-      email: safeStr(customer.email), // ✅ keep email
       fullName: `${safeStr(customer.firstName)} ${safeStr(customer.lastName)}`.trim(),
+      address: safeStr(customer.address),
+      unit: safeStr(customer.unit),
+      email: safeStr(customer.email),
+      phone: safeStr(customer.phone),
     };
 
     if (normalizedCustomer.email && !isValidEmail(normalizedCustomer.email)) {
@@ -298,9 +300,17 @@ exports.handler = async (event, context) => {
       createdAt: new Date().toISOString(),
       createdBy: { id: user.sub, email: user.email },
       ...payload,
+
+      customerId: safeStr(payload.customerId) || null,
       customer: normalizedCustomer,
-      clientName: normalizedCustomer.fullName,      // ✅ add
-      projectAddress: normalizedCustomer.address,   // ✅ add
+
+      clientName: normalizedCustomer.fullName,
+      projectAddress: normalizedCustomer.unit
+        ? `${normalizedCustomer.address}, ${normalizedCustomer.unit}`
+        : normalizedCustomer.address,
+      email: normalizedCustomer.email,
+      phone: normalizedCustomer.phone,
+
       grandTotal: totalNumber,
       terms: payload.terms || DEFAULT_TERMS_TEXT,
       termsVersion: payload.termsVersion || DEFAULT_TERMS_VERSION,
@@ -312,8 +322,10 @@ exports.handler = async (event, context) => {
     };
 
     await store.setJSON(id, quote);
+    
     await indexStore.setJSON(id, {
       id,
+      customerId: quote.customerId,
       createdAt: quote.createdAt,
       jobType: quote.jobType,
       grandTotal: quote.grandTotal,
