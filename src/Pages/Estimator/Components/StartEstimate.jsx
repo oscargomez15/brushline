@@ -185,16 +185,17 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
   }, [customerSearch, mode]);
 
   const handlePickCustomer = (customer) => {
-    setCustomerId(customer.id || "");
-    setFirstName(customer.firstName || "");
-    setLastName(customer.lastName || "");
-    setAddress(customer.address || "");
-    setUnit(customer.unit || "");
-    setEmail(customer.email || "");
-    setPhone(customer.phone || "");
-    setCustomerSearch(customer.fullName || "");
-    setCustomerResults([]);
-    setSearchErr("");
+    if (typeof onNext !== "function") return;
+
+    onNext({
+      customerId: customer.id || "",
+      firstName: customer.firstName || "",
+      lastName: customer.lastName || "",
+      address: customer.address || "",
+      unit: customer.unit || "",
+      email: customer.email || "",
+      phone: customer.phone || "",
+    });
   };
 
   const resetForm = () => {
@@ -345,11 +346,6 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
                         {customer.address || "No address"}
                         {customer.unit ? `, ${customer.unit}` : ""}
                       </small>
-                      <br />
-                      <small>
-                        {customer.email || "No email"}
-                        {customer.phone ? ` • ${customer.phone}` : ""}
-                      </small>
                     </button>
                   ))}
                 </div>
@@ -359,83 +355,6 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
                 <div style={{ color: "crimson", marginTop: 6 }}>{searchErr}</div>
               )}
             </label>
-
-            {customerId && (
-              <>
-                <label>
-                  <span>First Name</span>
-                  <input
-                    className="dim-input"
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </label>
-
-                <label>
-                  <span>Last Name</span>
-                  <input
-                    className="dim-input"
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </label>
-
-                <label>
-                  <span>Address</span>
-                  <input
-                    className="dim-input"
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                  />
-                </label>
-
-                <label>
-                  <span>Unit / Apt / Suite</span>
-                  <input
-                    className="dim-input"
-                    type="text"
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                    placeholder="Apt 3B"
-                  />
-                </label>
-
-                <label>
-                  <span>Email</span>
-                  <input
-                    type="email"
-                    className="dim-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="customer@email.com"
-                  />
-                </label>
-
-                <label>
-                  <span>Phone</span>
-                  <input
-                    type="text"
-                    className="dim-input"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="(239) 555-1234"
-                  />
-                </label>
-
-                <button
-                  type="button"
-                  className="add-area-btn add"
-                  onClick={handleNext}
-                  disabled={!canContinue}
-                  style={{ opacity: canContinue ? 1 : 0.6 }}
-                >
-                  Next
-                </button>
-              </>
-            )}
           </div>
         )}
 
