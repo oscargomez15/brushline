@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
+import "../../Styling/CustomersList.css";
 
 function fmtDate(value) {
   if (!value) return "—";
