@@ -25,22 +25,13 @@ export default function EditEstimateRoute() {
 
         const quote = data?.quote ?? data;
 
-        localStorage.setItem("editingQuoteId", quote.id);
-        localStorage.setItem("estimateCustomer", JSON.stringify({
-          customerId: quote.customerId || "",
-          firstName: quote.customer?.firstName || "",
-          lastName: quote.customer?.lastName || "",
-          address: quote.customer?.address || "",
-          unit: quote.customer?.unit || "",
-          email: quote.customer?.email || "",
-          phone: quote.customer?.phone || "",
-        }));
+        console.log("quote loaded in EditEstimateRoute:", quote);
 
         localStorage.setItem("editingQuoteId", quote.id);
-
+        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
         localStorage.setItem(
-        "estimateCustomer",
-        JSON.stringify({
+          "estimateCustomer",
+          JSON.stringify({
             customerId: quote.customerId || "",
             firstName: quote.customer?.firstName || "",
             lastName: quote.customer?.lastName || "",
@@ -48,27 +39,14 @@ export default function EditEstimateRoute() {
             unit: quote.customer?.unit || "",
             email: quote.customer?.email || "",
             phone: quote.customer?.phone || "",
-        })
+          })
         );
-
         localStorage.setItem("jobType", quote.jobType || "");
-        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
         localStorage.setItem("estimateStep", "calculator");
 
-        console.log("quote loaded in EditEstimateRoute:", quote);
-        console.log("quote estimatorData:", quote?.estimatorData);
-        console.log("quote areas:", quote?.estimatorData?.areas);
-
-        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
-
-        console.log(
-        "editingQuoteData saved to localStorage:",
-        localStorage.getItem("editingQuoteData")
-        );
-
         navigate("/estimator", {
-        replace: true,
-        state: { editingQuoteData: quote },
+          replace: true,
+          state: { editingQuoteData: quote },
         });
       } catch (e) {
         setErr(e.message);
