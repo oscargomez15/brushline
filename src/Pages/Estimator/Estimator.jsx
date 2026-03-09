@@ -23,6 +23,9 @@ export const Estimator = () => {
       ? editingQuoteData?.estimatorData?.areas || []
       : [];
 
+  console.log("editingQuoteData", editingQuoteData);
+  console.log("interiorInitialAreas", interiorInitialAreas);
+
   const interiorInitialPricing =
     editingQuoteData?.jobType === "interior"
       ? editingQuoteData?.estimatorData?.pricing || null
@@ -193,6 +196,11 @@ return (
       <div className="sub-heading">
         {jobType === "interior" ? (
           <InteriorEstimator
+            key={
+              editingQuoteData?.id
+                ? `edit-${editingQuoteData.id}`
+                : "new-interior"
+            }
             customer={customer}
             initialAreas={interiorInitialAreas}
             initialPricing={interiorInitialPricing}

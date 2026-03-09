@@ -83,6 +83,7 @@ exports.handler = async (event, context) => {
       viewToken: existing.viewToken,
       viewedAt: existing.viewedAt,
       viewedBy: existing.viewedBy,
+      estimatorData: payload.estimatorData || existing.estimatorData || null,
     };
 
     await quotesStore.setJSON(id, updatedQuote);

@@ -62,21 +62,22 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
       Array.isArray(initialAreas) && initialAreas.length > 0 ? initialAreas : []
     );
 
-    useEffect(() => {
-    if (Array.isArray(initialAreas) && initialAreas.length > 0) {
-      setAreas(initialAreas);
-    }
+  useEffect(() => {
+    setAreas(Array.isArray(initialAreas) ? initialAreas : []);
 
     if (initialPricing) {
       setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.25");
       setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
       setDoorPrice(initialPricing.doorPrice || "100");
       setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
+    } else {
+      setWallPricePerSqft("1.25");
+      setCeilingPricePerSqft("1.25");
+      setDoorPrice("100");
+      setBaseboardPricePerLf("1.25");
     }
 
-    if (initialPaintGrade) {
-      setPaintGrade(initialPaintGrade);
-    }
+    setPaintGrade(initialPaintGrade || "promar200");
   }, [initialAreas, initialPricing, initialPaintGrade]);
 
       // Summary collapse

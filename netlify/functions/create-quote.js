@@ -319,10 +319,11 @@ exports.handler = async (event, context) => {
       viewToken,
       viewedAt: null,
       viewedBy: null,
+      estimatorData: payload.estimatorData || null,
     };
 
     await store.setJSON(id, quote);
-    
+
     await indexStore.setJSON(id, {
       id,
       customerId: quote.customerId,
