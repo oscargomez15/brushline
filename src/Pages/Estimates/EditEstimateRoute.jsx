@@ -36,11 +36,26 @@ export default function EditEstimateRoute() {
           phone: quote.customer?.phone || "",
         }));
 
-        localStorage.setItem("jobType", quote.jobType || "");
-        localStorage.setItem("estimateStep", "jobType");
-        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
+        localStorage.setItem("editingQuoteId", quote.id);
 
-        navigate("/estimator");
+        localStorage.setItem(
+        "estimateCustomer",
+        JSON.stringify({
+            customerId: quote.customerId || "",
+            firstName: quote.customer?.firstName || "",
+            lastName: quote.customer?.lastName || "",
+            address: quote.customer?.address || "",
+            unit: quote.customer?.unit || "",
+            email: quote.customer?.email || "",
+            phone: quote.customer?.phone || "",
+        })
+        );
+
+        localStorage.setItem("jobType", quote.jobType || "");
+        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
+        localStorage.setItem("estimateStep", "calculator");
+
+        navigate("/estimator", { replace: true });
       } catch (e) {
         setErr(e.message);
       }
