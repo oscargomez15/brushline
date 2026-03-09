@@ -210,6 +210,7 @@ function detectPackageKey(areas) {
   const upgradesNeedBaseboards = selectedPackageKey !== "full";
 
   const handleGenerateQuote = async () => {
+    const editingQuoteId = localStorage.getItem("editingQuoteId");
     const user = netlifyIdentity.currentUser();
     const token = user ? await user.jwt() : null;
 
@@ -233,6 +234,7 @@ function detectPackageKey(areas) {
 
   // Build your payload from your existing totals
   const payload = {
+    id: editingQuoteId || undefined,
     jobType: "interior",
     grandTotal,
     totalGallons: totalJobGallons,
@@ -257,20 +259,38 @@ function detectPackageKey(areas) {
     scopePackages,
   };
 
-  const res = await fetch("/.netlify/functions/create-quote", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // ✅ Identity JWT
-    },
-    body: JSON.stringify(payload),
-  });
+  const endpoint = editingQuoteId
+    ? "/.netlify/functions/update-quote"
+    : "/.netlify/functions/create-quote";
+
+  if (editingQuoteId) {
+    payload.id = editingQuoteId;
+  }
+  const res = await fetch(endpoint, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify(payload),
+});
+  // const res = await fetch("/.netlify/functions/create-quote", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${token}`, // ✅ Identity JWT
+  //   },
+  //   body: JSON.stringify(payload),
+  // });
 
   const data = await res.json();
   if (!res.ok) {
     alert(data?.error || "Failed to create quote");
     return;
   }
+
+  localStorage.removeItem("editingQuoteId");
+  localStorage.removeItem("editingQuoteData");
 
   navigate(data.url);
 };

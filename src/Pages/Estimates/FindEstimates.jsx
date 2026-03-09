@@ -293,6 +293,16 @@ const handleRegeneratePdf = async (quoteId) => {
                             <button
                               type="button"
                               className="kebab-item"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                window.location.href = `/estimates/edit/${x.id}`;
+                              }}
+                            >
+                              Edit Quote
+                            </button>
+                            <button
+                              type="button"
+                              className="kebab-item"
                               role="menuitem"
                               onClick={() => {
                                 setOpenMenuId(null);
