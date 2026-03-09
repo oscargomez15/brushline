@@ -55,7 +55,21 @@ export default function EditEstimateRoute() {
         localStorage.setItem("editingQuoteData", JSON.stringify(quote));
         localStorage.setItem("estimateStep", "calculator");
 
-        navigate("/estimator", { replace: true });
+        console.log("quote loaded in EditEstimateRoute:", quote);
+        console.log("quote estimatorData:", quote?.estimatorData);
+        console.log("quote areas:", quote?.estimatorData?.areas);
+
+        localStorage.setItem("editingQuoteData", JSON.stringify(quote));
+
+        console.log(
+        "editingQuoteData saved to localStorage:",
+        localStorage.getItem("editingQuoteData")
+        );
+
+        navigate("/estimator", {
+        replace: true,
+        state: { editingQuoteData: quote },
+        });
       } catch (e) {
         setErr(e.message);
       }

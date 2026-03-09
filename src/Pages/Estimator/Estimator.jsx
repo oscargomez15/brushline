@@ -1,5 +1,6 @@
 // src/Pages/PaintCalculator/index.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "../../Styling/PaintCalculator.css";
 import ExteriorEstimator from "./Components/ExteriorEstimator";
 import { InteriorEstimator } from "./Components/InteriorEstimator";
@@ -7,16 +8,28 @@ import {StartEstimate} from "./Components/StartEstimate"
 import HandymanEstimator from "./Components/HandymanEstimator";
 
 export const Estimator = () => {
+    const location = useLocation();
     const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
     const [step, setStep] = useState(() => localStorage.getItem("estimateStep") || "customer");
     
-    const [editingQuoteData] = useState(() => {
-      try {
-        return JSON.parse(localStorage.getItem("editingQuoteData") || "null");
-      } catch {
-        return null;
+    const [editingQuoteData, setEditingQuoteData] = useState(
+      location.state?.editingQuoteData || null
+    );
+
+    useEffect(() => {
+      if (location.state?.editingQuoteData) {
+        setEditingQuoteData(location.state.editingQuoteData);
+        return;
       }
-    });
+
+      try {
+        const saved = JSON.parse(localStorage.getItem("editingQuoteData") || "null");
+        setEditingQuoteData(saved);
+        console.log("editingQuoteData loaded in Estimator:", saved);
+      } catch {
+        setEditingQuoteData(null);
+      }
+    }, [location.state]);
 
     const interiorInitialAreas =
     editingQuoteData?.jobType === "interior"
