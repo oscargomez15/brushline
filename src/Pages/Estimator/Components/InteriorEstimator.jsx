@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SortableAreaCard from "./SortableAreaCard";
 
 import netlifyIdentity from "netlify-identity-widget";
@@ -38,23 +38,49 @@ import {
   return next;
 };
 
-export const InteriorEstimator = ({customer}) => {
+export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = null, initialPaintGrade=null  }) => {
     const navigate = useNavigate();
 
-    // --- Pricing inputs (strings kept raw; parsed inside calc)
-      const [wallPricePerSqft, setWallPricePerSqft] = useState("1.25");
-      const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState("1.25");
-      const [doorPrice, setDoorPrice] = useState("100");
-      const [baseboardPricePerLf, setBaseboardPricePerLf] = useState("1.25");
+    const [wallPricePerSqft, setWallPricePerSqft] = useState(
+      initialPricing?.wallPricePerSqft || "1.25"
+    );
+    const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState(
+      initialPricing?.ceilingPricePerSqft || "1.25"
+    );
+    const [doorPrice, setDoorPrice] = useState(
+      initialPricing?.doorPrice || "100"
+    );
+    const [baseboardPricePerLf, setBaseboardPricePerLf] = useState(
+      initialPricing?.baseboardPricePerLf || "1.25"
+    );
 
-      // Paint grade
-      const [paintGrade, setPaintGrade] = useState("promar200");
+    const [paintGrade, setPaintGrade] = useState(
+      initialPaintGrade || "promar200"
+    );
+
+    const [areas, setAreas] = useState(
+      Array.isArray(initialAreas) && initialAreas.length > 0 ? initialAreas : []
+    );
+
+    useEffect(() => {
+    if (Array.isArray(initialAreas) && initialAreas.length > 0) {
+      setAreas(initialAreas);
+    }
+
+    if (initialPricing) {
+      setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.25");
+      setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
+      setDoorPrice(initialPricing.doorPrice || "100");
+      setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
+    }
+
+    if (initialPaintGrade) {
+      setPaintGrade(initialPaintGrade);
+    }
+  }, [initialAreas, initialPricing, initialPaintGrade]);
 
       // Summary collapse
       const [showSummary, setShowSummary] = useState(false);
-
-      // Areas (start empty — no default area)
-      const [areas, setAreas] = useState([]);
 
       // Simple id helper (CRA-safe)
       const uid = () => `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -257,6 +283,17 @@ function detectPackageKey(areas) {
 
     selectedPackageKey,
     scopePackages,
+
+    estimatorData: {
+    areas,
+    pricing: {
+      wallPricePerSqft,
+      ceilingPricePerSqft,
+      doorPrice,
+      baseboardPricePerLf,
+    },
+    paintGrade,
+  },
   };
 
   const endpoint = editingQuoteId

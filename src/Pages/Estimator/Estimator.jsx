@@ -9,7 +9,29 @@ import HandymanEstimator from "./Components/HandymanEstimator";
 export const Estimator = () => {
     const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
     const [step, setStep] = useState(() => localStorage.getItem("estimateStep") || "customer");
+    
+    const [editingQuoteData] = useState(() => {
+      try {
+        return JSON.parse(localStorage.getItem("editingQuoteData") || "null");
+      } catch {
+        return null;
+      }
+    });
 
+    const interiorInitialAreas =
+    editingQuoteData?.jobType === "interior"
+      ? editingQuoteData?.estimatorData?.areas || []
+      : [];
+
+  const interiorInitialPricing =
+    editingQuoteData?.jobType === "interior"
+      ? editingQuoteData?.estimatorData?.pricing || null
+      : null;
+
+  const interiorInitialPaintGrade =
+    editingQuoteData?.jobType === "interior"
+      ? editingQuoteData?.estimatorData?.paintGrade || null
+      : null;
     const [customer, setCustomer] = useState(() => {
       try {
         return JSON.parse(localStorage.getItem("estimateCustomer") || "null");
@@ -170,7 +192,12 @@ return (
 
       <div className="sub-heading">
         {jobType === "interior" ? (
-          <InteriorEstimator customer={customer} />
+          <InteriorEstimator
+            customer={customer}
+            initialAreas={interiorInitialAreas}
+            initialPricing={interiorInitialPricing}
+            initialPaintGrade={interiorInitialPaintGrade}
+          />
         ) : jobType === "exterior" ? (
           <ExteriorEstimator customer={customer} />
         ) : (
