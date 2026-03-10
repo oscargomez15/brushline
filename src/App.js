@@ -26,9 +26,9 @@ import FindEstimates from "./Pages/Estimates/FindEstimates";
 import { StartEstimate } from "./Pages/Estimator/Components/StartEstimate";
 import CustomersList from "./Pages/Customers/CustomersList";
 import EditEstimateRoute from "./Pages/Estimates/EditEstimateRoute";
+import Dashboard from "./Pages/Dashboard/Dashboard";
 
 // (Optional placeholders for now)
-const Dashboard = () => <div>Dashboard (coming next)</div>;
 const InvoicesFind = () => <div>Find Invoices</div>;
 const InvoicesCreate = () => <div>Create Invoice</div>;
 const InvoicesEdit = () => <div>Edit Invoice</div>;
@@ -98,7 +98,7 @@ function App() {
             <Route path="/estimates/find" element={<FindEstimates />} />
             <Route path="/estimates/create" element={<StartEstimateRoute />} />
             <Route path="/estimates/edit/:id" element={<EditEstimateRoute />} />
-            
+
             {/* Keep your old estimator route if you want */}
             <Route path="/estimator" element={<Estimator />} />
 
