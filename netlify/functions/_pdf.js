@@ -1,4 +1,5 @@
 // netlify/functions/_pdf.js
+const { getStore } = require("@netlify/blobs");
 const PDFDocument = require("pdfkit");
 const path = require("path");
 const fs = require("fs");
@@ -20,6 +21,26 @@ function dataUrlToBuffer(dataUrl) {
   }
 }
 
+async function getSignatureBufferFromQuote(quote) {
+  try {
+    const key = quote?.signature?.key;
+    if (!key) return null;
+
+    const siteID = process.env.NETLIFY_SITE_ID;
+    const token = process.env.NETLIFY_AUTH_TOKEN;
+    if (!siteID || !token) return null;
+
+    const signaturesStore = getStore("quote_signatures", { siteID, token });
+    const arr = await signaturesStore.get(key, { type: "arrayBuffer" });
+    if (!arr) return null;
+
+    return Buffer.from(arr);
+  } catch (e) {
+    console.warn("Failed to load signature buffer:", e?.message || e);
+    return null;
+  }
+}
+
 function resolveLogoPath() {
   const candidates = [
     path.join(__dirname, "assets", "logo.png"),
@@ -35,7 +56,7 @@ function truncateTerms(terms, max = 3000) {
 }
 
 function buildQuotePdfBuffer(quote) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: "LETTER", margin: 40 });
       const chunks = [];
@@ -173,35 +194,35 @@ function buildQuotePdfBuffer(quote) {
       doc.fillColor("#000");
 
       // Signature / approval
-      if (quote.status === "approved" && quote.signature?.image) {
-        doc.moveDown(1);
-        doc.fontSize(12).fillColor("#111").text("Client Approval");
-        doc.moveDown(0.4);
+    if (quote.status === "approved" && quote.signature?.key) {
+      doc.moveDown(1);
+      doc.fontSize(12).fillColor("#111").text("Client Approval");
+      doc.moveDown(0.4);
 
-        doc.fontSize(10).fillColor("#333");
-        doc.text(`Signed By: ${quote.signature?.typedName || quote.clientName || "Client"}`);
-        doc.text(
-          `Date: ${quote.approvedAt ? new Date(quote.approvedAt).toLocaleString() : "—"}`
-        );
-        doc.moveDown(0.4);
+      doc.fontSize(10).fillColor("#333");
+      doc.text(`Signed By: ${quote.signature?.typedName || quote.clientName || "Client"}`);
+      doc.text(
+        `Date: ${quote.approvedAt ? new Date(quote.approvedAt).toLocaleString() : "—"}`
+      );
+      doc.moveDown(0.4);
 
-        const sigBuffer = dataUrlToBuffer(quote.signature.image);
-        if (sigBuffer) {
-          try {
-            doc.image(sigBuffer, {
-              fit: [180, 70],
-              align: "left",
-            });
-            doc.moveDown(0.2);
-            doc.moveTo(40, doc.y).lineTo(220, doc.y).strokeColor("#999").stroke();
-            doc.moveDown(0.3);
-          } catch (e) {
-            console.warn("Signature render failed:", e?.message || e);
-          }
+      const sigBuffer = await getSignatureBufferFromQuote(quote);
+      if (sigBuffer) {
+        try {
+          doc.image(sigBuffer, {
+            fit: [180, 70],
+            align: "left",
+          });
+          doc.moveDown(0.2);
+          doc.moveTo(40, doc.y).lineTo(220, doc.y).strokeColor("#999").stroke();
+          doc.moveDown(0.3);
+        } catch (e) {
+          console.warn("Signature render failed:", e?.message || e);
         }
-
-        doc.fillColor("#000");
       }
+
+      doc.fillColor("#000");
+    }
 
       doc.end();
     } catch (e) {
