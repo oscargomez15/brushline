@@ -48,11 +48,12 @@ export default function HandymanEstimator({ customer }) {
     if (!canCreate) return;
 
     const lineItems = items
-        .map((it) => ({
+    .map((it) => ({
         description: it.desc.trim(),
         price: safeNumber(it.price),
-        }))
-        .filter((it) => it.description && it.price > 0);
+        excluded: false,
+    }))
+    .filter((it) => it.description && it.price > 0);
 
     const payload = {
     jobType: "handyman",

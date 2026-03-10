@@ -1000,3 +1000,61 @@
     border: none !important;
   }
 }
+
+.quote-remove-line-btn {
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.quote-remove-line-btn:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.25);
+}
+
+.quote-remove-line-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.quote-items-row.is-excluded {
+  opacity: 0.7;
+}
+
+.quote-line-text.excluded,
+.quote-line-price.excluded {
+  text-decoration: line-through;
+  color: rgba(15, 23, 42, 0.5);
+}
+
+.quote-toggle-line-btn {
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #fff;
+  color: #0f172a;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.quote-toggle-line-btn:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.25);
+}
+
+.quote-toggle-line-btn.restore {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.quote-toggle-line-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

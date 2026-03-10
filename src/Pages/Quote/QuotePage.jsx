@@ -44,7 +44,8 @@ export default function QuotePage() {
   const [typedName, setTypedName] = useState("");
   const sigRef = useRef(null);
   const [approving, setApproving] = useState(false);
-
+  const [togglingLineIndex, setTogglingLineIndex] = useState(null);
+  
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -54,6 +55,31 @@ export default function QuotePage() {
   quote?.projectAddress ||
   quote?.customer?.address ||
   "";
+  
+  const handleToggleLineItem = async (lineIndex) => {
+    try {
+      setTogglingLineIndex(lineIndex);
+
+      const res = await fetch("/.netlify/functions/toggle-quote-line-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          t: t || "",
+          lineIndex,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to update item");
+
+      setQuote(data.quote);
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setTogglingLineIndex(null);
+    }
+  };
 
   const handleApprove = async (signatureDataUrl, typedName) => {
     setApproving(true);
@@ -96,54 +122,55 @@ export default function QuotePage() {
   setQuote(data.quote);
 };
 
-const handleDownloadPdf = async () => {
-  try {
-    const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
-    url.searchParams.set("id", id);
-    url.searchParams.set("ts", Date.now().toString());
 
-    if (t) url.searchParams.set("t", t);
+  const handleDownloadPdf = async () => {
+    try {
+      const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
+      url.searchParams.set("id", id);
+      url.searchParams.set("ts", Date.now().toString());
 
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      if (t) url.searchParams.set("t", t);
 
-    // iPhone / iPad Safari: open PDF directly instead of blob download
-    if (isIOS) {
-      window.open(url.toString(), "_blank");
-      return;
+      const isIOS =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      // iPhone / iPad Safari: open PDF directly instead of blob download
+      if (isIOS) {
+        window.open(url.toString(), "_blank");
+        return;
+      }
+
+      const headers = {};
+      if (!t) {
+        const user = netlifyIdentity.currentUser();
+        const jwt = user ? await user.jwt() : null;
+        if (!jwt) throw new Error("Please log in to download the PDF.");
+        headers.Authorization = `Bearer ${jwt}`;
+      }
+
+      const res = await fetch(url.toString(), { headers });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Failed to download PDF (${res.status}): ${text}`);
+      }
+
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `Quote-${quote?.quoteNumber || quote?.id || id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+      alert(e.message);
     }
-
-    const headers = {};
-    if (!t) {
-      const user = netlifyIdentity.currentUser();
-      const jwt = user ? await user.jwt() : null;
-      if (!jwt) throw new Error("Please log in to download the PDF.");
-      headers.Authorization = `Bearer ${jwt}`;
-    }
-
-    const res = await fetch(url.toString(), { headers });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Failed to download PDF (${res.status}): ${text}`);
-    }
-
-    const blob = await res.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = `Quote-${quote?.quoteNumber || quote?.id || id}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    window.URL.revokeObjectURL(blobUrl);
-  } catch (e) {
-    alert(e.message);
-  }
-};
+  };
 
   useEffect(() => {
     (async () => {
@@ -308,12 +335,49 @@ const jobLabel =
                 </div>
 
                 {/* ITEMS */}
-                {quote.lineItems.map((item, i) => (
-                  <div key={i} className="quote-items-row">
-                    <div className="desc">{item.description}</div>
-                    <div className="right">{fmtMoney(item.price)}</div>
-                  </div>
-                ))}
+                {quote.lineItems.map((item, i) => {
+                  const isExcluded = !!item.excluded;
+
+                  return (
+                    <div
+                      key={i}
+                      className={`quote-items-row ${isExcluded ? "is-excluded" : ""}`}
+                    >
+                      <div className="desc">
+                        <span className={isExcluded ? "quote-line-text excluded" : "quote-line-text"}>
+                          {item.description}
+                        </span>
+                      </div>
+
+                      <div
+                        className="right"
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                          justifyContent: "flex-end",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span className={isExcluded ? "quote-line-price excluded" : ""}>
+                          {fmtMoney(item.price)}
+                        </span>
+
+                        <button
+                          type="button"
+                          className={`quote-toggle-line-btn ${isExcluded ? "restore" : ""}`}
+                          onClick={() => handleToggleLineItem(i)}
+                          disabled={togglingLineIndex === i}
+                        >
+                          {togglingLineIndex === i
+                            ? "Updating..."
+                            : isExcluded
+                              ? "Restore"
+                              : "Exclude"}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
 
                 {/* TOTAL */}
                 <div className="quote-items-row total">
