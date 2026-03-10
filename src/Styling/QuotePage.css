@@ -1058,3 +1058,61 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.quote-signature {
+  margin-top: 24px;
+}
+
+.quote-signature-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.quote-signature-card {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff;
+}
+
+.quote-signature-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.quote-signature-block {
+  min-width: 180px;
+}
+
+.quote-signature-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(15, 23, 42, 0.6);
+  margin-bottom: 4px;
+}
+
+.quote-signature-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.quote-signature-image-wrap {
+  margin-top: 8px;
+}
+
+.quote-signature-image {
+  display: block;
+  margin-top: 8px;
+  max-width: 260px;
+  max-height: 110px;
+  object-fit: contain;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.18);
+  padding-bottom: 6px;
+}

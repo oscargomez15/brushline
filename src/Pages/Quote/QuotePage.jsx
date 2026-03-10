@@ -533,6 +533,39 @@ const jobLabel =
               <div className="quote-note-text">{quote.note}</div>
             </div>
           ) : null}
+
+          {quote.status === "approved" && quote.signature?.image ? (
+          <section className="quote-signature">
+            <div className="quote-signature-title">Client Approval</div>
+
+            <div className="quote-signature-card">
+              <div className="quote-signature-row">
+                <div className="quote-signature-block">
+                  <div className="quote-signature-label">Signed By</div>
+                  <div className="quote-signature-value">
+                    {quote.signature?.typedName || customerName || "Client"}
+                  </div>
+                </div>
+
+                <div className="quote-signature-block">
+                  <div className="quote-signature-label">Date</div>
+                  <div className="quote-signature-value">
+                    {quote.approvedAt ? new Date(quote.approvedAt).toLocaleString() : "—"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="quote-signature-image-wrap">
+                <div className="quote-signature-label">Signature</div>
+                <img
+                  src={quote.signature.image}
+                  alt="Client signature"
+                  className="quote-signature-image"
+                />
+              </div>
+            </div>
+          </section>
+        ) : null}
         </section>
 
         {quote.terms ? (
