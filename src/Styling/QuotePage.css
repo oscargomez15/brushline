@@ -1117,8 +1117,9 @@
   padding-bottom: 6px;
 }
 
-.quote-signature {
+section .quote-signature {
   margin-top: 24px;
+  padding: 0;
 }
 
 .quote-signature-title {
