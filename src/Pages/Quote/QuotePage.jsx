@@ -46,7 +46,8 @@ export default function QuotePage() {
   const [approving, setApproving] = useState(false);
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
   const [startingDeposit, setStartingDeposit] = useState(false);
-  
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -92,7 +93,7 @@ const signatureUrl =
     }
   };
 
-    const handlePayDeposit = async () => {
+    const handleStartStripeDeposit = async () => {
     try {
       setStartingDeposit(true);
 
@@ -680,7 +681,7 @@ const jobLabel =
                   <button
                     type="button"
                     className={`pkg-approve ${depositPaid ? "paid" : ""}`}
-                    onClick={handlePayDeposit}
+                    onClick={()=> {setPaymentModalOpen(true)}}
                     disabled={startingDeposit || depositPaid}
                   >
                     {depositPaid
@@ -693,10 +694,6 @@ const jobLabel =
                           )} Deposit`}
                   </button>
                 )}
-
-                {depositPaid ? (
-                  <div className="quote-status-pill approved">DEPOSIT PAID</div>
-                ) : null}
               </div>
             </div>
 
@@ -822,6 +819,73 @@ const jobLabel =
           <div className="sig-note">
             By submitting, you confirm approval of the selected quote and its terms.
           </div>
+
+          {paymentModalOpen && !depositPaid && (
+          <div className="sig-backdrop" onClick={() => setPaymentModalOpen(false)}>
+            <div className="sig-modal payment-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="sig-modal-head">
+                <h3 className="sig-modal-title">Choose Payment Method</h3>
+                <p className="sig-modal-subtitle">
+                  Select how you would like to pay your deposit.
+                </p>
+              </div>
+
+              <div className="payment-methods">
+                <div className="payment-card">
+                  <div className="payment-card-title">Check</div>
+                  <div className="payment-card-text">
+                    Mail check payable to <strong>Brushline Services</strong>
+                  </div>
+                  <div className="payment-card-subtext">
+                    3261 Magnolia Pond Dr #104<br />
+                    Naples, FL 34116
+                  </div>
+                </div>
+
+                <div className="payment-card">
+                  <div className="payment-card-title">Zelle</div>
+                  <div className="payment-card-text">
+                    Send payment to:
+                  </div>
+                  <div className="payment-card-subtext">
+                    <strong>239-777-3713</strong>
+                  </div>
+                </div>
+
+                <div className="payment-card stripe-option">
+                  <div className="payment-card-title">Card / Stripe</div>
+                  <div className="payment-card-text">
+                    Pay securely online by card.
+                  </div>
+                  <div className="payment-fee-note">
+                    A 3.5% processing fee applies to card payments.
+                  </div>
+
+                  <button
+                    type="button"
+                    className="sig-btn primary"
+                    onClick={handleStartStripeDeposit}
+                    disabled={startingDeposit}
+                  >
+                    {startingDeposit ? "Opening Checkout..." : "Continue to Stripe"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="sig-actions">
+                <div className="sig-right-actions">
+                  <button
+                    type="button"
+                    className="sig-btn"
+                    onClick={() => setPaymentModalOpen(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         </div>
       </div>
       )}

@@ -2565,3 +2565,50 @@ section .quote-signature {
   cursor: default;
   opacity: 0.9;
 }
+
+.payment-methods {
+  display: grid;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.payment-card {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff;
+}
+
+.payment-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #0f172a;
+}
+
+.payment-card-text {
+  font-size: 15px;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.payment-card-subtext {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.payment-fee-note {
+  margin: 10px 0 14px;
+  font-size: 13px;
+  color: #b45309;
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.stripe-option {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
