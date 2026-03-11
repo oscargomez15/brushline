@@ -295,7 +295,7 @@ const handleRegeneratePdf = async (quoteId) => {
                               className="kebab-item"
                               onClick={() => {
                                 setOpenMenuId(null);
-                                window.location.href = `/estimates/edit/${x.id}`;
+                                window.location.href = `/crm/estimates/edit/${x.id}`;
                               }}
                             >
                               Edit Quote
