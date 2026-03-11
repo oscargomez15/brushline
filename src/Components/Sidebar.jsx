@@ -260,7 +260,7 @@ export default function Sidebar() {
       </div>
 
       <NavLink
-        to="crm/customers"
+        to="/crm/customers"
         className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`}
         aria-label="Customers"
         onClick={() => setMobileMenu(null)}

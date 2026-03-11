@@ -86,7 +86,7 @@ export default function CustomersList() {
     );
 
     localStorage.setItem("estimateStep", "jobType");
-    navigate("/estimator");
+    navigate("/crm/estimator");
   };
 
   if (loading) {

@@ -44,7 +44,7 @@ export default function EditEstimateRoute() {
         localStorage.setItem("jobType", quote.jobType || "");
         localStorage.setItem("estimateStep", "calculator");
 
-        navigate("/estimator", {
+        navigate("/crm/estimator", {
           replace: true,
           state: { editingQuoteData: quote },
         });

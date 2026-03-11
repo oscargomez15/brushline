@@ -18,9 +18,9 @@ export const Login = () => {
   useEffect(() => {
     // If already logged in, go straight to estimator
     const user = netlifyIdentity.currentUser();
-    if (user) navigate("/estimator", { replace: true });
+    if (user) navigate("/crm/dashboard", { replace: true });
 
-    const onLogin = () => navigate("/estimator", { replace: true });
+    const onLogin = () => navigate("/crm/dashboard", { replace: true });
 
     // If you want to handle signup/login events globally
     netlifyIdentity.on("login", onLogin);
@@ -41,7 +41,7 @@ const handleLogin = async (e) => {
     await netlifyIdentity.gotrue.login(email, password, true);
 
     // optional: you can navigate here OR rely on the "login" event listener
-    navigate("/estimator", { replace: true });
+    navigate("/crm/dashboard", { replace: true });
   } catch (err) {
     setError(err?.message || "Login failed. Check your email/password.");
   } finally {
