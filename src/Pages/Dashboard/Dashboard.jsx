@@ -75,9 +75,67 @@ export default function Dashboard() {
     load();
   }, []);
 
-  if (loading) {
-    return <div className="dashboard-page">Loading dashboard…</div>;
-  }
+    if (loading) {
+    return (
+        <div className="dashboard-page">
+        <div className="dashboard-head">
+            <div className="db-skeleton db-skeleton-title" />
+            <div className="db-skeleton db-skeleton-subtitle" />
+        </div>
+
+        <div className="dashboard-grid">
+            <div className="db-card db-stat-card">
+            <div className="db-skeleton db-skeleton-label" />
+            <div className="db-skeleton db-skeleton-value" />
+            <div className="db-skeleton db-skeleton-text" />
+            </div>
+
+            <div className="db-card db-stat-card">
+            <div className="db-skeleton db-skeleton-label" />
+            <div className="db-skeleton db-skeleton-value" />
+            <div className="db-skeleton db-skeleton-text" />
+            </div>
+
+            <div className="db-card db-stat-card">
+            <div className="db-skeleton db-skeleton-label" />
+            <div className="db-skeleton db-skeleton-value" />
+            <div className="db-skeleton db-skeleton-text" />
+            </div>
+
+            <div className="db-card db-stat-card db-close-card">
+            <div className="db-skeleton db-skeleton-label" />
+            <div className="db-skeleton db-skeleton-close-main" />
+            <div className="db-skeleton db-skeleton-text" />
+            <div className="db-skeleton db-skeleton-pill" />
+            <div className="db-skeleton db-skeleton-pill" />
+            <div className="db-skeleton db-skeleton-pill" />
+            </div>
+
+            <div className="db-card db-chart-card">
+            <div className="db-skeleton db-skeleton-chart-title" />
+            <div className="db-skeleton db-skeleton-chart-subtitle" />
+            <div className="db-chart-skeleton">
+                {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="db-chart-skeleton-col">
+                    <div
+                    className="db-skeleton db-chart-skeleton-bar"
+                    style={{ height: `${35 + ((i % 5) * 12)}%` }}
+                    />
+                    <div className="db-skeleton db-chart-skeleton-label" />
+                </div>
+                ))}
+            </div>
+            </div>
+
+            <div className="db-card db-placeholder-card tall">
+            <div className="db-skeleton db-skeleton-label" />
+            <div className="db-skeleton db-skeleton-block" />
+            <div className="db-skeleton db-skeleton-block short" />
+            </div>
+        </div>
+        </div>
+    );
+    }
 
   if (err) {
     return <div className="dashboard-page" style={{ color: "crimson" }}>Error: {err}</div>;

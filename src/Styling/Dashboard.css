@@ -340,3 +340,149 @@
   font-size: 15px;
   color: #0f172a;
 }
+
+/* Skeleton loading */
+.db-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 0.05) 0%,
+    rgba(15, 23, 42, 0.1) 20%,
+    rgba(15, 23, 42, 0.05) 40%
+  );
+  background-size: 200% 100%;
+  animation: dbShimmer 1.25s linear infinite;
+  border-radius: 12px;
+}
+
+.db-skeleton-title {
+  width: 220px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.db-skeleton-subtitle {
+  width: 320px;
+  height: 16px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.db-skeleton-label {
+  width: 120px;
+  height: 14px;
+  border-radius: 8px;
+}
+
+.db-skeleton-value {
+  width: 140px;
+  height: 40px;
+  margin-top: 14px;
+  border-radius: 10px;
+}
+
+.db-skeleton-text {
+  width: 180px;
+  height: 14px;
+  margin-top: 12px;
+  border-radius: 8px;
+}
+
+.db-skeleton-close-main {
+  width: 110px;
+  height: 44px;
+  margin-top: 12px;
+  border-radius: 10px;
+}
+
+.db-skeleton-pill {
+  width: 100%;
+  height: 46px;
+  border-radius: 14px;
+}
+
+.db-skeleton-chart-title {
+  width: 180px;
+  height: 22px;
+  border-radius: 8px;
+}
+
+.db-skeleton-chart-subtitle {
+  width: 240px;
+  height: 14px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.db-skeleton-block {
+  width: 100%;
+  height: 16px;
+  margin-top: 16px;
+  border-radius: 8px;
+}
+
+.db-skeleton-block.short {
+  width: 76%;
+}
+
+.db-chart-skeleton {
+  height: 290px;
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+}
+
+.db-chart-skeleton-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.db-chart-skeleton-bar {
+  width: 100%;
+  max-width: 44px;
+  min-height: 40px;
+  border-radius: 14px;
+}
+
+.db-chart-skeleton-label {
+  width: 28px;
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+@keyframes dbShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.db-card {
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  padding: 18px;
+  min-width: 0;
+  animation: dbFadeUp 0.35s ease;
+}
+
+@keyframes dbFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
