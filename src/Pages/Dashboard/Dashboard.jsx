@@ -113,7 +113,7 @@ export default function Dashboard() {
           <div className="db-card-subtle">Average of approved quotes this year</div>
         </div>
 
-        <div className="db-card db-close-card">
+        <div className="db-card db-stat-card db-close-card">
         <div className="db-card-label">Closing Rate</div>
 
         <div className="db-close-rate-row">
