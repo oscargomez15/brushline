@@ -20,8 +20,8 @@ function requireAuth(context) {
 
 exports.handler = async (event, context) => {
   try {
-    if (event.httpMethod !== "POST") {
-      return json(405, { error: "Method not allowed" });
+    if (!["POST", "PUT"].includes(event.httpMethod)) {
+    return json(405, { error: "Method not allowed" });
     }
 
     const user = requireAuth(context);
@@ -45,14 +45,16 @@ exports.handler = async (event, context) => {
     const existing = await quotesStore.get(id, { type: "json" });
     if (!existing) return json(404, { error: "Quote not found" });
 
+    const baseCustomer = payload.customer || existing.customer || {};
+
     const normalizedCustomer = {
-      firstName: safeStr(payload.customer?.firstName),
-      lastName: safeStr(payload.customer?.lastName),
-      fullName: `${safeStr(payload.customer?.firstName)} ${safeStr(payload.customer?.lastName)}`.trim(),
-      address: safeStr(payload.customer?.address),
-      unit: safeStr(payload.customer?.unit),
-      email: safeStr(payload.customer?.email),
-      phone: safeStr(payload.customer?.phone),
+    firstName: safeStr(baseCustomer.firstName),
+    lastName: safeStr(baseCustomer.lastName),
+    fullName: `${safeStr(baseCustomer.firstName)} ${safeStr(baseCustomer.lastName)}`.trim(),
+    address: safeStr(baseCustomer.address),
+    unit: safeStr(baseCustomer.unit),
+    email: safeStr(baseCustomer.email),
+    phone: safeStr(baseCustomer.phone),
     };
 
     const updatedQuote = {

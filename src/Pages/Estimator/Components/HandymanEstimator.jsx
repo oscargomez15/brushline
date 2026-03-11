@@ -2,7 +2,10 @@ import React, { useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 
 const money = (n) =>
-  (Number(n || 0) || 0).toLocaleString("en-US", { style: "currency", currency: "USD" });
+  (Number(n || 0) || 0).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
 function safeNumber(v) {
   const x = typeof v === "string" ? v.replace(/[^0-9.]/g, "") : v;
@@ -10,10 +13,31 @@ function safeNumber(v) {
   return Number.isFinite(n) ? n : 0;
 }
 
-export default function HandymanEstimator({ customer }) {
-  const [items, setItems] = useState([
-    { id: crypto.randomUUID?.() || String(Date.now()), desc: "", price: "" },
-  ]);
+function makeId() {
+  return crypto.randomUUID?.() || String(Date.now() + Math.random());
+}
+
+export default function HandymanEstimator({
+  customer,
+  initialQuote = null,
+  mode = "create",
+  onSaved,
+}) {
+  const activeCustomer = customer || initialQuote?.customer || null;
+
+  const [items, setItems] = useState(() => {
+    if (initialQuote?.lineItems?.length) {
+      return initialQuote.lineItems.map((it) => ({
+        id: makeId(),
+        desc: it.description || "",
+        price: String(it.price ?? ""),
+      }));
+    }
+
+    return [{ id: makeId(), desc: "", price: "" }];
+  });
+
+  const [saving, setSaving] = useState(false);
 
   const grandTotal = useMemo(
     () => items.reduce((sum, it) => sum + safeNumber(it.price), 0),
@@ -22,17 +46,21 @@ export default function HandymanEstimator({ customer }) {
 
   const canCreate = useMemo(() => {
     const hasCustomer =
-      customer?.firstName?.trim() && customer?.lastName?.trim() && customer?.address?.trim();
+      activeCustomer?.firstName?.trim() &&
+      activeCustomer?.lastName?.trim() &&
+      activeCustomer?.address?.trim();
 
-    const hasValidLine = items.some((it) => it.desc.trim() && safeNumber(it.price) > 0);
+    const hasValidLine = items.some(
+      (it) => it.desc.trim() && safeNumber(it.price) > 0
+    );
 
     return !!hasCustomer && hasValidLine && grandTotal > 0;
-  }, [customer, items, grandTotal]);
+  }, [activeCustomer, items, grandTotal]);
 
   const addRow = () => {
     setItems((prev) => [
       ...prev,
-      { id: crypto.randomUUID?.() || String(Date.now() + Math.random()), desc: "", price: "" },
+      { id: makeId(), desc: "", price: "" },
     ]);
   };
 
@@ -44,71 +72,121 @@ export default function HandymanEstimator({ customer }) {
     setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   };
 
-    const createQuote = async () => {
-    if (!canCreate) return;
+  const saveQuote = async () => {
+    if (!canCreate || saving) return;
 
     const lineItems = items
-    .map((it) => ({
+      .map((it) => ({
         description: it.desc.trim(),
         price: safeNumber(it.price),
         excluded: false,
-    }))
-    .filter((it) => it.description && it.price > 0);
+      }))
+      .filter((it) => it.description && it.price > 0);
 
     const payload = {
-    jobType: "handyman",
+      jobType: "handyman",
 
-    customerId: customer?.customerId || null,
-    customer: {
-        firstName: customer?.firstName || "",
-        lastName: customer?.lastName || "",
-        address: customer?.address || "",
-        unit: customer?.unit || "",
-        email: customer?.email || "",
-        phone: customer?.phone || "",
-    },
+      customerId: activeCustomer?.customerId || initialQuote?.customerId || null,
+      customer: {
+        firstName: activeCustomer?.firstName || "",
+        lastName: activeCustomer?.lastName || "",
+        address: activeCustomer?.address || "",
+        unit: activeCustomer?.unit || "",
+        email: activeCustomer?.email || "",
+        phone: activeCustomer?.phone || "",
+      },
 
-    lineItems,
-    grandTotal,
-    companyName: "Brushline Services",
-    validForDays: 30,
-    note: "Thanks for the opportunity — looking forward to helping with this project!",
+      lineItems,
+      grandTotal,
+      companyName: initialQuote?.companyName || "Brushline Services",
+      validForDays: initialQuote?.validForDays || 30,
+      note:
+        initialQuote?.note ||
+        "Thanks for the opportunity — looking forward to helping with this project!",
     };
 
     const user = netlifyIdentity.currentUser();
-    const token = user ? await user.jwt() : null; // ✅ same as InteriorEstimator
+    const token = user ? await user.jwt() : null;
 
     if (!token) {
-        alert("You must be logged in to create a quote.");
-        return;
+      alert("You must be logged in.");
+      return;
     }
 
-    const res = await fetch("/.netlify/functions/create-quote", {
+    try {
+      setSaving(true);
+
+    if (mode === "edit" && initialQuote?.id) {
+    const res = await fetch("/.netlify/functions/update-quote", {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ Identity JWT
+        Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+        id: initialQuote.id,
+        ...payload,
+        }),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+
     if (!res.ok) {
-        alert(data?.error || "Failed to create quote");
-        return;
+        throw new Error(data?.error || "Failed to update quote");
     }
 
-    window.location.href = data.url;
-    };
+    localStorage.removeItem("editingQuoteId");
+    localStorage.removeItem("editingQuoteData");
+
+    if (onSaved) {
+        onSaved(data);
+    } else {
+        window.location.href = data?.url || `/quote/${initialQuote.id}`;
+    }
+
+    return;
+    }
+
+      const res = await fetch("/.netlify/functions/create-quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to create quote");
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      alert(err.message || "Something went wrong.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div style={{ width: "100%" }}>
-      <h2 style={{ marginBottom: 6 }}>Handyman / Misc Estimate</h2>
+      <h2 style={{ marginBottom: 6 }}>
+        {mode === "edit" ? "Edit Handyman Estimate" : "Handyman / Misc Estimate"}
+      </h2>
+
       <p style={{ marginTop: 0, opacity: 0.8 }}>
         Add each task and price. Total updates automatically.
       </p>
 
-      <div style={{ border: "1px solid rgba(15,23,42,.12)", borderRadius: 12, padding: 12 }}>
+      <div
+        style={{
+          border: "1px solid rgba(15,23,42,.12)",
+          borderRadius: 12,
+          padding: 12,
+        }}
+      >
         {items.map((it, idx) => (
           <div
             key={it.id}
@@ -170,11 +248,17 @@ export default function HandymanEstimator({ customer }) {
         <button
           type="button"
           className="add-area-btn add"
-          onClick={createQuote}
-          disabled={!canCreate}
-          style={{ opacity: canCreate ? 1 : 0.6 }}
+          onClick={saveQuote}
+          disabled={!canCreate || saving}
+          style={{ opacity: canCreate && !saving ? 1 : 0.6 }}
         >
-          Create Quote
+          {saving
+            ? mode === "edit"
+              ? "Saving..."
+              : "Creating..."
+            : mode === "edit"
+            ? "Save Changes"
+            : "Create Quote"}
         </button>
       </div>
     </div>
