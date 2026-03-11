@@ -31,7 +31,6 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 // (Optional placeholders for now)
 const InvoicesFind = () => <div>Find Invoices</div>;
 const InvoicesCreate = () => <div>Create Invoice</div>;
-const InvoicesEdit = () => <div>Edit Invoice</div>;
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
