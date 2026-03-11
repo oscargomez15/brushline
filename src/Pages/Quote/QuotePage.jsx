@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect } from "react";
+import React, {useRef, useState, useEffect, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
@@ -115,6 +115,18 @@ const signatureUrl =
     }
   };
 
+  const loadQuote = useCallback(async () => {
+    const url = new URL("/.netlify/functions/get-quote", window.location.origin);
+    url.searchParams.set("id", id);
+    if (t) url.searchParams.set("t", t);
+
+    const res = await fetch(url.toString());
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to load quote");
+    setQuote(data?.quote ?? data);
+    setErr("");
+  }, [id, t]);
+
   const handleApprove = async (signatureDataUrl, typedName) => {
     setApproving(true);
     try {
@@ -123,6 +135,7 @@ const signatureUrl =
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id,
+          t: t || "",
           signatureDataUrl,
           typedName,
         }),
@@ -152,7 +165,8 @@ const signatureUrl =
   const res = await fetch("/.netlify/functions/apply-package", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, packageKey }),  });
+    body: JSON.stringify({ id, t: t || "", packageKey })
+  });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error || "Failed to change scope");
   setQuote(data.quote);
@@ -209,34 +223,76 @@ const signatureUrl =
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    if (params.get("deposit") === "success") {
-      (async () => {
-        const res = await fetch(
-          `/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`
-        );
-
-        const data = await res.json();
-        setQuote(data?.quote ?? data);
-      })();
-    }
-  }, [id]);
-
-  useEffect(() => {
     (async () => {
       try {
-      const res = await fetch(`/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Failed to load quote");
-
-      // ✅ Accept either { ...quoteFields } or { quote: { ...quoteFields } }
-      setQuote(data?.quote ?? data);
+        await loadQuote();
       } catch (e) {
         setErr(e.message);
       }
     })();
-  }, [id]);
+  }, [loadQuote]);
+
+  const depositPaid =
+  quote?.depositPaid === true || quote?.depositStatus === "paid";
+
+    useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const deposit = params.get("deposit");
+    const sessionId = params.get("session_id");
+
+    if (deposit !== "success") return;
+    if (!sessionId) return;
+    if (!id) return;
+    if (depositPaid) return;
+
+    const confirmDepositPayment = async () => {
+      const res = await fetch("/.netlify/functions/confirm-deposit-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          t: t || "",
+          sessionId,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to confirm deposit payment");
+      }
+
+      if (!data?.ok) {
+        throw new Error(data?.error || "Deposit payment not confirmed");
+      }
+
+      setQuote((prev) => ({
+        ...prev,
+        ...(data?.quote ?? {}),
+        depositPaid: true,
+        depositStatus: "paid",
+      }));
+    };
+
+    (async () => {
+      try {
+        await confirmDepositPayment();
+        await loadQuote();
+
+        params.delete("deposit");
+        params.delete("session_id");
+
+        const nextSearch = params.toString();
+        const nextUrl =
+          window.location.pathname + (nextSearch ? `?${nextSearch}` : "");
+
+        window.history.replaceState({}, "", nextUrl);
+      } catch (e) {
+        console.error("Deposit confirmation failed:", e);
+        setErr(e.message);
+      }
+    })();
+  }, [id, t, depositPaid, loadQuote]);
 
   useEffect(() => {
       // ✅ no token = admin/internal view = DO NOTHING
@@ -622,11 +678,11 @@ const jobLabel =
                 {quote.status === "approved" && (
                   <button
                     type="button"
-                    className={`pkg-approve ${quote.depositPaid ? "paid" : ""}`}
+                    className={`pkg-approve ${depositPaid ? "paid" : ""}`}
                     onClick={handlePayDeposit}
-                    disabled={startingDeposit || quote.depositPaid}
+                    disabled={startingDeposit || depositPaid}
                   >
-                    {quote.depositPaid
+                    {depositPaid
                       ? "Deposit Paid ✓"
                       : startingDeposit
                         ? "Opening Checkout..."
@@ -637,7 +693,7 @@ const jobLabel =
                   </button>
                 )}
 
-                {quote.depositPaid ? (
+                {depositPaid ? (
                   <div className="quote-status-pill approved">DEPOSIT PAID</div>
                 ) : null}
               </div>

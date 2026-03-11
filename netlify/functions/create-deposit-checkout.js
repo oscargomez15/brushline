@@ -27,9 +27,8 @@ exports.handler = async (event) => {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     const siteID = process.env.NETLIFY_SITE_ID;
     const token = process.env.NETLIFY_AUTH_TOKEN;
-    const publicSiteUrl = safeStr(process.env.PUBLIC_SITE_URL)
-      .replace(/^["']|["']$/g, "");
-      
+    const publicSiteUrl = safeStr(process.env.PUBLIC_SITE_URL).replace(/^["']|["']$/g, "");
+
     console.log("env check", {
       hasStripeKey: !!stripeKey,
       hasSiteID: !!siteID,
@@ -59,8 +58,9 @@ exports.handler = async (event) => {
 
     const { id, t } = parsed;
     const quoteId = safeStr(id);
+    const publicToken = safeStr(t);
 
-    console.log("request body parsed", { quoteId, t });
+    console.log("request body parsed", { quoteId, t: publicToken });
 
     if (!quoteId) {
       return json(400, { error: "Missing quote id" });
@@ -87,6 +87,10 @@ exports.handler = async (event) => {
       });
     }
 
+    if (quote.depositPaid === true || quote.depositStatus === "paid") {
+      return json(400, { error: "Deposit already paid" });
+    }
+
     const total = Number(quote.grandTotal || 0);
     const depositPercent = Number(quote.depositPercent || 0.4);
     const depositRequired = Math.round(total * depositPercent * 100) / 100;
@@ -106,67 +110,55 @@ exports.handler = async (event) => {
       });
     }
 
-    if (quote.depositPaid) {
-      return json(400, { error: "Deposit already paid" });
-    }
-
     const customerName =
       safeStr(quote.clientName) ||
       `${safeStr(quote.customer?.firstName)} ${safeStr(quote.customer?.lastName)}`.trim() ||
       "Customer";
-    
-    console.log("PUBLIC_SITE_URL raw:", JSON.stringify(publicSiteUrl));
 
     const baseUrl = publicSiteUrl.replace(/\/$/, "");
-    const successUrl = `${baseUrl}/quote/${encodeURIComponent(
-      quoteId
-    )}?deposit=success${t ? `&t=${encodeURIComponent(t)}` : ""}`;
 
-    const cancelUrl = `${baseUrl}/quote/${encodeURIComponent(
-      quoteId
-    )}?deposit=cancel${t ? `&t=${encodeURIComponent(t)}` : ""}`;
+    const successUrl = new URL(`${baseUrl}/quote/${encodeURIComponent(quoteId)}`);
+    if (publicToken) successUrl.searchParams.set("t", publicToken);
+    successUrl.searchParams.set("deposit", "success");
+    successUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
+
+    const cancelUrl = new URL(`${baseUrl}/quote/${encodeURIComponent(quoteId)}`);
+    if (publicToken) cancelUrl.searchParams.set("t", publicToken);
+    cancelUrl.searchParams.set("deposit", "cancel");
 
     console.log("Stripe redirect URLs:", {
       baseUrl,
-      successUrl,
-      cancelUrl,
+      successUrl: successUrl.toString(),
+      cancelUrl: cancelUrl.toString(),
     });
 
-    try {
-      new URL(successUrl);
-      new URL(cancelUrl);
-    } catch (e) {
-      console.error("Generated URL failed validation:", e.message);
-      return json(500, {
-        error: "Generated Stripe redirect URL is invalid",
-        baseUrl,
-        successUrl,
-        cancelUrl,
-      });
-    }
-
     console.log("creating stripe session", {
-      successUrl,
-      cancelUrl,
+      successUrl: successUrl.toString(),
+      cancelUrl: cancelUrl.toString(),
       customerName,
     });
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      success_url: successUrl,
-      cancel_url: cancelUrl,
+      success_url: successUrl.toString(),
+      cancel_url: cancelUrl.toString(),
       customer_email: safeStr(quote.email) || undefined,
+
       metadata: {
         quoteId,
+        token: publicToken,
         type: "deposit_checkout",
       },
+
       payment_intent_data: {
         description: `Deposit for quote ${quote.quoteNumber || quoteId} - ${customerName}`,
         metadata: {
           quoteId,
+          token: publicToken,
           type: "quote_deposit",
         },
       },
+
       line_items: [
         {
           quantity: 1,
@@ -193,6 +185,7 @@ exports.handler = async (event) => {
       depositPercent,
       depositRequired,
       depositCheckoutSessionId: session.id,
+      depositCheckoutStatus: "created",
       updatedAt: new Date().toISOString(),
     });
 
