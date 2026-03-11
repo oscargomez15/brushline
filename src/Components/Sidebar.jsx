@@ -51,8 +51,8 @@ export default function Sidebar() {
   // Auto-open dropdown based on route
   useEffect(() => {
     const path = location.pathname;
-    if (path.startsWith("/estimates")) setOpenMenu("estimates");
-    else if (path.startsWith("/invoices")) setOpenMenu("invoices");
+    if (path.startsWith("/crm/estimates")) setOpenMenu("estimates");
+    else if (path.startsWith("/crm/invoices")) setOpenMenu("invoices");
   }, [location.pathname]);
 
   const toggleMenu = (key) => {
@@ -112,7 +112,7 @@ export default function Sidebar() {
         {/* Nav */}
         <nav className="crm-nav">
           <NavItem
-              to="/dashboard"
+              to="/crm/dashboard"
               label="Dashboard"
               icon={<FiHome />}
               collapsed={collapsed}
@@ -126,21 +126,21 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("estimates")}
           >
               <NavItem
-              to="/estimates/find"
+              to="/crm/estimates/find"
               label="Find"
               icon={<FiSearch />}
               collapsed={collapsed}
               indent
               />
               <NavItem
-              to="/estimates/create"
+              to="/crm/estimates/create"
               label="Create"
               icon={<FiPlusCircle />}
               collapsed={collapsed}
               indent
               />
               <NavItem
-              to="/estimates/edit"
+              to="/crm/estimates/edit"
               label="Edit"
               icon={<FiEdit />}
               collapsed={collapsed}
@@ -156,21 +156,21 @@ export default function Sidebar() {
           onToggle={() => toggleMenu("invoices")}
           >
               <NavItem
-                  to="/invoices/find"
+                  to="/crm/invoices/find"
                   label="Find"
                   icon={<FiSearch />}
                   collapsed={collapsed}
                   indent
               />
               <NavItem
-                  to="/invoices/create"
+                  to="/crm/invoices/create"
                   label="Create"
                   icon={<FiPlusCircle />}
                   collapsed={collapsed}
                   indent
               />
               <NavItem
-                  to="/invoices/edit"
+                  to="/crm/invoices/edit/:id"
                   label="Edit"
                   icon={<FiEdit />}
                   collapsed={collapsed}
@@ -179,7 +179,7 @@ export default function Sidebar() {
           </Dropdown>
 
           <NavItem
-            to="/customers"
+            to="/crm/customers"
             label="Customers"
             icon={<FiUsers />}
             collapsed={collapsed}
@@ -220,13 +220,13 @@ export default function Sidebar() {
 
         {mobileMenu === "estimates" && (
           <div className="crm-mobile-dropdown">
-            <NavLink className="crm-mobile-dd-item" to="/estimates/find">
+            <NavLink className="crm-mobile-dd-item" to="/crm/estimates/find">
               <FiSearch /> <span>Find</span>
             </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/estimates/create">
+            <NavLink className="crm-mobile-dd-item" to="/crm/estimates/create">
               <FiPlusCircle /> <span>Create</span>
             </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/estimates/edit">
+            <NavLink className="crm-mobile-dd-item" to="/crm/estimates/edit">
               <FiEdit /> <span>Edit</span>
             </NavLink>
           </div>
@@ -246,13 +246,13 @@ export default function Sidebar() {
 
         {mobileMenu === "invoices" && (
           <div className="crm-mobile-dropdown">
-            <NavLink className="crm-mobile-dd-item" to="/invoices/find">
+            <NavLink className="crm-mobile-dd-item" to="/crm/invoices/find">
               <FiSearch /> <span>Find</span>
             </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/invoices/create">
+            <NavLink className="crm-mobile-dd-item" to="/crm/invoices/create">
               <FiPlusCircle /> <span>Create</span>
             </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/invoices/edit">
+            <NavLink className="crm-mobile-dd-item" to="/crm/invoices/edit/">
               <FiEdit /> <span>Edit</span>
             </NavLink>
           </div>
@@ -260,7 +260,7 @@ export default function Sidebar() {
       </div>
 
       <NavLink
-        to="/customers"
+        to="crm/customers"
         className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`}
         aria-label="Customers"
         onClick={() => setMobileMenu(null)}
