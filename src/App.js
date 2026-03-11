@@ -28,7 +28,6 @@ import CustomersList from "./Pages/Customers/CustomersList";
 import EditEstimateRoute from "./Pages/Estimates/EditEstimateRoute";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 
-// (Optional placeholders for now)
 const InvoicesFind = () => <div>Find Invoices</div>;
 const InvoicesCreate = () => <div>Create Invoice</div>;
 
@@ -47,7 +46,7 @@ function StartEstimateRoute() {
       onNext={(customerData) => {
         localStorage.setItem("estimateCustomer", JSON.stringify(customerData));
         localStorage.setItem("estimateStep", "jobType");
-        navigate("/estimator");
+        navigate("/crm/estimator");
       }}
     />
   );
@@ -65,6 +64,7 @@ function App() {
 
     const onLogout = () => navigate("/", { replace: true });
     netlifyIdentity.on("logout", onLogout);
+
     return () => netlifyIdentity.off("logout", onLogout);
   }, [navigate]);
 
@@ -73,42 +73,30 @@ function App() {
       <ScrollToTop />
 
       <Routes>
-        {/* PUBLIC SITE */}
         <Route element={<PublicLayout />}>
           <Route path="/login" element={<Login />} />
-
           <Route path="/" element={<Home />} />
           <Route path="/painting" element={<Painting />} />
           <Route path="/drywall" element={<Drywall />} />
           <Route path="/cleaning" element={<Cleaning />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/service-area/:citySlug" element={<ServiceArea />} />
-
-          {/* Quote page is public */}
           <Route path="/quote/:id" element={<QuotePage />} />
         </Route>
 
-        {/* CRM / PROTECTED APP */}
-        <Route element={<RequireAuth />}>
+        <Route path="/crm" element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
-
-            <Route path="/crm/dashboard" element={<Dashboard />} />
-
-            <Route path="/crm/estimates/find" element={<FindEstimates />} />
-            <Route path="/crm/estimates/create" element={<StartEstimateRoute />} />
-            <Route path="/crm/estimates/edit/:id" element={<EditEstimateRoute />} />
-
-            <Route path="/crm/estimator" element={<Estimator />} />
-
-            <Route path="/crm/invoices/find" element={<InvoicesFind />} />
-            <Route path="/crm/invoices/create" element={<InvoicesCreate />} />
-
-            <Route path="/crm/customers" element={<CustomersList />} />
-
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="estimates/find" element={<FindEstimates />} />
+            <Route path="estimates/create" element={<StartEstimateRoute />} />
+            <Route path="estimates/edit/:id" element={<EditEstimateRoute />} />
+            <Route path="estimator" element={<Estimator />} />
+            <Route path="invoices/find" element={<InvoicesFind />} />
+            <Route path="invoices/create" element={<InvoicesCreate />} />
+            <Route path="customers" element={<CustomersList />} />
           </Route>
         </Route>
 
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
