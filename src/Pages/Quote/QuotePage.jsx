@@ -388,6 +388,19 @@ const jobLabel =
 
     handleApprove(signatureDataUrl, typedName.trim());
   };
+
+  const baseDeposit =
+  quote.depositRequired ||
+  Math.round((Number(quote.grandTotal || 0) * 0.4) * 100) / 100;
+
+const stripeFee =
+  quote.depositProcessingFee ??
+  Math.round(baseDeposit * 0.035 * 100) / 100;
+
+const stripeTotal =
+  quote.depositStripeChargeTotal ??
+  Math.round((baseDeposit + stripeFee) * 100) / 100;
+
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -856,12 +869,18 @@ const jobLabel =
                 </div>
 
                 <div className="payment-card stripe-option">
-                  <div className="payment-card-title">Card / Stripe</div>
+                  <div className="payment-card-title">Continue to Stripe – {fmtMoney(stripeTotal)}</div>
                   <div className="payment-card-text">
                     Pay securely online by card.
                   </div>
+                  <div className="payment-card-subtext">
+                    Deposit: {fmtMoney(baseDeposit)}<br />
+                    Processing fee: {fmtMoney(stripeFee)}<br />
+                    <strong>Total charged: {fmtMoney(stripeTotal)}</strong>
+                  </div>
+
                   <div className="payment-fee-note">
-                    A 3.5% processing fee applies to card payments.
+                    Card payments include a 3.5% processing fee.
                   </div>
 
                   <button

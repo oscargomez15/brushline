@@ -91,9 +91,17 @@ exports.handler = async (event) => {
       return json(400, { error: "Deposit already paid" });
     }
 
-    const total = Number(quote.grandTotal || 0);
-    const depositPercent = Number(quote.depositPercent || 0.4);
-    const depositRequired = Math.round(total * depositPercent * 100) / 100;
+  const total = Number(quote.grandTotal || 0);
+  const depositPercent = Number(quote.depositPercent || 0.4);
+  const depositRequired = Math.round(total * depositPercent * 100) / 100;
+
+  // Stripe processing fee (3.5%)
+  const feePercent = 0.035;
+  const processingFee = Math.round(depositRequired * feePercent * 100) / 100;
+
+  // Total charged to customer
+  const stripeChargeTotal =
+    Math.round((depositRequired + processingFee) * 100) / 100;
 
     console.log("deposit calc", {
       total,
@@ -168,11 +176,12 @@ exports.handler = async (event) => {
           quantity: 1,
           price_data: {
             currency: "usd",
-            unit_amount: Math.round(depositRequired * 100),
+            unit_amount: Math.round(stripeChargeTotal * 100),
             product_data: {
               name: `Deposit for Quote ${quote.quoteNumber || quoteId}`,
-              description:
-                quote.projectAddress || quote.customer?.address || "Project deposit",
+              description: `Deposit ${depositRequired.toFixed(
+                2
+              )} + card processing fee ${processingFee.toFixed(2)}`,
             },
           },
         },
@@ -188,8 +197,9 @@ exports.handler = async (event) => {
       ...quote,
       depositPercent,
       depositRequired,
+      depositProcessingFee: processingFee,
+      depositStripeChargeTotal: stripeChargeTotal,
       depositCheckoutSessionId: session.id,
-      depositCheckoutStatus: "created",
       updatedAt: new Date().toISOString(),
     });
 
