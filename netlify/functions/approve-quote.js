@@ -241,12 +241,22 @@ exports.handler = async (event) => {
       userAgent: event.headers["user-agent"] || null,
       ip: event.headers["x-nf-client-connection-ip"] || null,
     };
+    
+    const total = Number(quote.grandTotal || 0);
+    const depositPercent = Number(quote.depositPercent || 0.4);
+    const depositRequired = Math.round(total * depositPercent * 100) / 100;
 
     const updatedQuote = {
       ...quote,
       status: "approved",
       approvedAt: now,
       signature,
+      depositPercent,
+      depositRequired,
+      depositPaid: quote.depositPaid || false,
+      depositPaidAt: quote.depositPaidAt || null,
+      depositCheckoutSessionId: quote.depositCheckoutSessionId || null,
+      depositPaymentIntentId: quote.depositPaymentIntentId || null,
     };
 
     await quotes.setJSON(id, updatedQuote);

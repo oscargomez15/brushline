@@ -45,6 +45,7 @@ export default function QuotePage() {
   const sigRef = useRef(null);
   const [approving, setApproving] = useState(false);
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
+  const [startingDeposit, setStartingDeposit] = useState(false);
   
   const customerName =
   quote?.clientName ||
@@ -88,6 +89,29 @@ const signatureUrl =
       alert(e.message);
     } finally {
       setTogglingLineIndex(null);
+    }
+  };
+
+    const handlePayDeposit = async () => {
+    try {
+      setStartingDeposit(true);
+
+      const res = await fetch("/.netlify/functions/create-deposit-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, t: t || "" }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to start deposit payment");
+
+      if (!data?.url) throw new Error("Missing Stripe checkout URL");
+
+      window.location.href = data.url;
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setStartingDeposit(false);
     }
   };
 
@@ -579,6 +603,26 @@ const jobLabel =
                   >
                     {quote.status === "approved" ? "Approved" : "Approve"}
                   </button>
+
+                  {quote.status === "approved" && !quote.depositPaid ? (
+                  <button
+                    type="button"
+                    className="pkg-approve"
+                    onClick={handlePayDeposit}
+                    disabled={startingDeposit}
+                  >
+                    {startingDeposit
+                      ? "Opening Checkout..."
+                      : `Pay ${fmtMoney(
+                          quote.depositRequired ||
+                            Math.round((Number(quote.grandTotal || 0) * 0.4) * 100) / 100
+                        )} Deposit`}
+                  </button>
+                ) : null}
+
+                {quote.depositPaid ? (
+                  <div className="quote-status-pill approved">DEPOSIT PAID</div>
+                ) : null}
               </div>
             </div>
 
