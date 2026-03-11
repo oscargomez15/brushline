@@ -17,10 +17,10 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
   const from = process.env.APPROVAL_NOTIFY_FROM;
 
   console.log("SendGrid env check:", {
-  hasApiKey: !!process.env.SENDGRID_API_KEY,
-  to: process.env.APPROVAL_NOTIFY_TO ? "set" : "missing",
-  from: process.env.APPROVAL_NOTIFY_FROM ? "set" : "missing",
-});
+    hasApiKey: !!process.env.SENDGRID_API_KEY,
+    to: process.env.APPROVAL_NOTIFY_TO ? "set" : "missing",
+    from: process.env.APPROVAL_NOTIFY_FROM ? "set" : "missing",
+  });
 
   if (!apiKey || !to || !from) {
     console.warn("SendGrid env vars missing; skipping approval email.");
@@ -45,27 +45,131 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
 
   const quoteNumber = updatedQuote?.quoteNumber || quoteId;
   const link = buildQuoteLink(process.env.PUBLIC_QUOTE_BASE_URL, quoteId);
+  const approvedAt = updatedQuote?.approvedAt
+    ? new Date(updatedQuote.approvedAt).toLocaleString("en-US", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
+    : "N/A";
 
-  const subject = `✅ Quote Approved: ${customerName} (${quoteNumber})`;
+  const signedName = safeStr(updatedQuote?.signature?.typedName) || "N/A";
+  const customerEmail = safeStr(updatedQuote?.email) || safeStr(updatedQuote?.customer?.email) || "N/A";
+  const customerPhone = safeStr(updatedQuote?.phone) || safeStr(updatedQuote?.customer?.phone) || "N/A";
+  const jobType = safeStr(updatedQuote?.jobType) || "N/A";
+
+  const fmtMoney = (n) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(Number(n || 0));
+
+  const subject = `✅ Quote Approved — ${customerName} (#${quoteNumber})`;
 
   const textLines = [
-    `A client has approved a quote.`,
+    `Congratulations! ${customerName} has approved their quote.`,
     ``,
-    `Client: ${customerName}`,
-    `Address: ${address}`,
     `Quote #: ${quoteNumber}`,
-    `Total: $${total.toFixed(2)}`,
-    `Deposit (40%): $${deposit.toFixed(2)}`,
-    `Approved at: ${updatedQuote?.approvedAt || "N/A"}`,
-    updatedQuote?.signature?.typedName ? `Signed as: ${updatedQuote.signature.typedName}` : null,
-    link ? `View quote: ${link}` : null,
+    `Job Type: ${jobType}`,
+    `Project Address: ${address}`,
+    `Customer Email: ${customerEmail}`,
+    `Customer Phone: ${customerPhone}`,
+    `Quote Total: ${fmtMoney(total)}`,
+    `Deposit Due (40%): ${fmtMoney(deposit)}`,
+    `Approved At: ${approvedAt}`,
+    `Signed As: ${signedName}`,
+    link ? `View Quote: ${link}` : null,
+    ``,
+    `Next step: follow up with the customer to collect the deposit and confirm scheduling.`,
   ].filter(Boolean);
+
+  const html = `
+  <div style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+    <div style="max-width:720px;margin:0 auto;padding:24px 16px;">
+      <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(15,23,42,.08);">
+        
+        <div style="background:#0f172a;padding:24px 28px;">
+          <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:700;">
+            Brushline Services CRM
+          </div>
+          <div style="margin-top:10px;font-size:28px;line-height:1.2;font-weight:800;color:#ffffff;">
+            Quote Approved 🎉
+          </div>
+          <div style="margin-top:8px;font-size:15px;line-height:1.6;color:rgba(255,255,255,.82);">
+            Congratulations! <strong style="color:#ffffff;">${customerName}</strong> has approved their quote.
+          </div>
+        </div>
+
+        <div style="padding:24px 28px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid rgba(15,23,42,.06);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;">Quote #</div>
+              <div style="margin-top:6px;font-size:16px;font-weight:800;color:#0f172a;">${quoteNumber}</div>
+            </div>
+
+            <div style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid rgba(15,23,42,.06);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;">Job Type</div>
+              <div style="margin-top:6px;font-size:16px;font-weight:800;color:#0f172a;">${jobType}</div>
+            </div>
+
+            <div style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid rgba(15,23,42,.06);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;">Quote Total</div>
+              <div style="margin-top:6px;font-size:16px;font-weight:800;color:#0f172a;">${fmtMoney(total)}</div>
+            </div>
+
+            <div style="padding:14px 16px;border-radius:14px;background:#ecfdf5;border:1px solid rgba(16,185,129,.18);">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#047857;">Deposit Due (40%)</div>
+              <div style="margin-top:6px;font-size:16px;font-weight:800;color:#065f46;">${fmtMoney(deposit)}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;padding:18px;border-radius:16px;background:#ffffff;border:1px solid rgba(15,23,42,.08);">
+            <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:12px;">Approval Details</div>
+
+            <div style="font-size:14px;line-height:1.7;color:#334155;">
+              <div><strong>Customer:</strong> ${customerName}</div>
+              <div><strong>Project Address:</strong> ${address}</div>
+              <div><strong>Email:</strong> ${customerEmail}</div>
+              <div><strong>Phone:</strong> ${customerPhone}</div>
+              <div><strong>Approved At:</strong> ${approvedAt}</div>
+              <div><strong>Signed As:</strong> ${signedName}</div>
+            </div>
+          </div>
+
+          ${
+            link
+              ? `
+          <div style="margin-top:22px;">
+            <a
+              href="${link}"
+              style="display:inline-block;padding:14px 18px;background:#0f172a;color:#ffffff;text-decoration:none;border-radius:12px;font-size:14px;font-weight:700;"
+            >
+              Open Approved Quote
+            </a>
+          </div>
+          `
+              : ""
+          }
+
+          <div style="margin-top:22px;padding:16px 18px;border-radius:14px;background:#f8fafc;border:1px solid rgba(15,23,42,.06);">
+            <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin-bottom:6px;">
+              Next Step
+            </div>
+            <div style="font-size:14px;line-height:1.6;color:#334155;">
+              Reach out to the customer to collect the deposit, confirm the project schedule, and lock in the start date.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
 
   await sgMail.send({
     to,
     from,
     subject,
     text: textLines.join("\n"),
+    html,
   });
 }
 

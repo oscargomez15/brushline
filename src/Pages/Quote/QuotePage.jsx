@@ -588,84 +588,91 @@ const jobLabel =
         ) : null}
       </div>
       {sigOpen && (
-        <div className="sig-backdrop" onClick={() => setSigOpen(false)}>
-          <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Sign to Approve Estimate</h3>
+      <div className="sig-backdrop" onClick={() => setSigOpen(false)}>
+        <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="sig-modal-head">
+            <h3 className="sig-modal-title">Approve Estimate</h3>
+            <p className="sig-modal-subtitle">
+              Please sign below and type your full name to confirm approval.
+            </p>
+          </div>
+
+          <div className="sig-canvas-wrap">
+            <div className="sig-canvas-toolbar">
+              <div className="sig-canvas-label">Customer Signature</div>
+              <div className="sig-canvas-hint">Use your finger or mouse to sign</div>
+            </div>
 
             <SignatureCanvas
               ref={sigRef}
-              penColor="black"
+              penColor="#111827"
               canvasProps={{ className: "sig-canvas" }}
             />
+          </div>
 
-            <input
-              type="text"
-              placeholder="Type your full name"
-              value={typedName}
-              onChange={(e) => setTypedName(e.target.value)}
-              className="sig-input"
-            />
+          <div className="sig-form">
+            <div className="sig-field">
+              <label className="sig-label">Full Name</label>
+              <input
+                className="sig-input"
+                type="text"
+                value={typedName}
+                onChange={(e) => setTypedName(e.target.value)}
+                placeholder="Type your full name"
+                autoComplete="name"
+              />
+            </div>
+          </div>
 
-            <div className="sig-actions">
+          <div className="sig-actions">
+            <div className="sig-left-actions">
               <button
                 type="button"
+                className="sig-btn"
                 onClick={() => sigRef.current?.clear()}
-                className="btn-secondary"
               >
                 Clear
+              </button>
+            </div>
+
+            <div className="sig-right-actions">
+              <button
+                type="button"
+                className="sig-btn"
+                onClick={() => setSigOpen(false)}
+              >
+                Cancel
               </button>
 
               <button
                 type="button"
-                className="btn-primary"
+                className="sig-btn primary"
                 onClick={() => {
-                  const pad = sigRef.current;
-
-                  if (!pad) {
-                    console.error("Signature pad ref is null");
-                    alert("Signature pad not ready. Please refresh and try again.");
-                    return;
-                  }
-
-                  if (typeof pad.isEmpty !== "function") {
-                    console.error("pad.isEmpty is not a function:", pad);
-                    alert("Signature pad error. Please refresh and try again.");
-                    return;
-                  }
-
-                  if (typeof pad.getTrimmedCanvas !== "function") {
-                    console.error("pad.getTrimmedCanvas is not a function:", pad);
-                    alert("Signature pad error. Please refresh and try again.");
-                    return;
-                  }
-
-                  if (pad.isEmpty()) {
+                  if (sigRef.current?.isEmpty()) {
                     alert("Please sign before submitting.");
                     return;
                   }
-
-                  const name = typedName.trim();
-                  if (!name) {
+                  if (!typedName.trim()) {
                     alert("Please type your name.");
                     return;
                   }
 
-                  const signatureDataUrl = pad.toDataURL("image/png");
+                  const signatureDataUrl =
+                    sigRef.current.getTrimmedCanvas().toDataURL("image/png");
 
-                  if (typeof handleApprove !== "function") {
-                    console.error("handleApprove is not a function:", handleApprove);
-                    alert("Approve handler missing. Please refresh.");
-                    return;
-                  }
-
-                  handleApprove(signatureDataUrl, name);
+                  handleApprove(signatureDataUrl, typedName.trim());
                 }}
               >
                 Submit Approval
               </button>
             </div>
           </div>
+
+          <div className="sig-note">
+            By submitting, you confirm approval of the selected quote and its terms.
+          </div>
         </div>
+      </div>
       )}
     </div>
   );
