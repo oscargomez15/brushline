@@ -869,7 +869,7 @@ const stripeTotal =
                 </div>
 
                 <div className="payment-card stripe-option">
-                  <div className="payment-card-title">Continue to Stripe – {fmtMoney(stripeTotal)}</div>
+                  <div className="payment-card-title">Card / Stripe</div>
                   <div className="payment-card-text">
                     Pay securely online by card.
                   </div>
@@ -889,7 +889,7 @@ const stripeTotal =
                     onClick={handleStartStripeDeposit}
                     disabled={startingDeposit}
                   >
-                    {startingDeposit ? "Opening Checkout..." : "Continue to Stripe"}
+                    {startingDeposit ? "Opening Checkout..." : `Continue to Stripe – ${fmtMoney(stripeTotal)}`}
                   </button>
                 </div>
               </div>

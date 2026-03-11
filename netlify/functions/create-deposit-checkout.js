@@ -179,9 +179,9 @@ exports.handler = async (event) => {
             unit_amount: Math.round(stripeChargeTotal * 100),
             product_data: {
               name: `Deposit for Quote ${quote.quoteNumber || quoteId}`,
-              description: `Deposit ${depositRequired.toFixed(
+              description: `Deposit $ ${depositRequired.toFixed(
                 2
-              )} + card processing fee ${processingFee.toFixed(2)}`,
+              )} + Card processing fee $ ${processingFee.toFixed(2)}`,
             },
           },
         },
