@@ -123,7 +123,6 @@ exports.handler = async (event) => {
       `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}` +
       `&session_id={CHECKOUT_SESSION_ID}`;
     if (publicToken) successUrl.searchParams.set("t", publicToken);
-    successUrl.searchParams.set("deposit", "success");
 
     const cancelUrl =
       `${baseUrl}/quote/${encodeURIComponent(quoteId)}` +
