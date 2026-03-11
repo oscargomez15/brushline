@@ -22,9 +22,15 @@ export const Estimator = () => {
     }
 
     try {
+      const savedId = localStorage.getItem("editingQuoteId");
       const saved = JSON.parse(localStorage.getItem("editingQuoteData") || "null");
-      setEditingQuoteData(saved);
-      console.log("editingQuoteData loaded in Estimator:", saved);
+
+      if (savedId && saved && saved.id === savedId) {
+        setEditingQuoteData(saved);
+        console.log("editingQuoteData loaded in Estimator:", saved);
+      } else {
+        setEditingQuoteData(null);
+      }
     } catch {
       setEditingQuoteData(null);
     }
@@ -74,6 +80,10 @@ export const Estimator = () => {
   }
 
   const chooseJobType = (type) => {
+    setEditingQuoteData(null);
+    localStorage.removeItem("editingQuoteId");
+    localStorage.removeItem("editingQuoteData");
+
     setJobType(type);
     localStorage.setItem("jobType", type);
 
@@ -160,6 +170,10 @@ export const Estimator = () => {
           type="button"
           className="collapse-area-btn"
           onClick={() => {
+            setEditingQuoteData(null);
+            localStorage.removeItem("editingQuoteId");
+            localStorage.removeItem("editingQuoteData");
+
             setJobType("");
             localStorage.removeItem("jobType");
 

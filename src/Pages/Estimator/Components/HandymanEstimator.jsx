@@ -163,6 +163,9 @@ export default function HandymanEstimator({
       }
 
       window.location.href = data.url;
+      localStorage.removeItem("editingQuoteId");
+      localStorage.removeItem("editingQuoteData");
+      
     } catch (err) {
       alert(err.message || "Something went wrong.");
     } finally {
