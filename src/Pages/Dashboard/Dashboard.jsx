@@ -9,6 +9,18 @@ const fmtMoney = (n) =>
     maximumFractionDigits: 0,
   }).format(Number(n) || 0);
 
+const fmtDate = (value) => {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(d);
+};
+
 function RevenueChart({ data }) {
   const max = useMemo(() => {
     return Math.max(...data.map((d) => Number(d.revenue) || 0), 1);
@@ -214,11 +226,42 @@ export default function Dashboard() {
           <RevenueChart data={stats?.revenueByMonth || []} />
         </div>
 
-        <div className="db-card db-placeholder-card tall">
-          <div className="db-card-label">Future Widget</div>
-          <div className="db-placeholder-text">
-            This area can be used later for recent approvals, pipeline, customer growth, or team performance.
-          </div>
+        <div className="db-card db-recent-card">
+        <div className="db-card-head">
+            <div>
+            <div className="db-card-title">Recent Approvals</div>
+            <div className="db-card-subtle">
+                Last 5 approved quotes
+            </div>
+            </div>
+        </div>
+
+        <div className="db-recent-list">
+            {(stats?.recentApprovedQuotes || []).length === 0 ? (
+            <div className="db-empty-state">No approved quotes yet.</div>
+            ) : (
+            stats.recentApprovedQuotes.map((quote) => (
+                <div key={quote.id} className="db-recent-item">
+                <div className="db-recent-main">
+                    <div className="db-recent-name">{quote.clientName}</div>
+                    <div className="db-recent-date">{fmtDate(quote.approvedAt)}</div>
+                </div>
+
+                <div className="db-recent-right">
+                    <div className="db-recent-amount">{fmtMoney(quote.grandTotal)}</div>
+                    <a
+                    className="db-recent-link"
+                    href={`/quote/${quote.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    >
+                    Open
+                    </a>
+                </div>
+                </div>
+            ))
+            )}
+        </div>
         </div>
       </div>
     </div>

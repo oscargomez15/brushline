@@ -54,13 +54,14 @@ exports.handler = async (event, context) => {
     let declinedQuotesYTD = 0;
     let draftQuotesYTD = 0;
 
+    const recentApprovedQuotes = [];
+
     for (const blob of blobs) {
       const item = await indexStore.get(blob.key, { type: "json" });
       if (!item) continue;
 
       const status = normalizeStatus(item.status);
 
-      // Count quotes created this year
       if (item.createdAt) {
         const createdDate = new Date(item.createdAt);
 
@@ -85,23 +86,35 @@ exports.handler = async (event, context) => {
         }
       }
 
-      // Count approved revenue by approved date
       if (status !== "approved") continue;
       if (!item.approvedAt) continue;
 
       const approvedDate = new Date(item.approvedAt);
       if (Number.isNaN(approvedDate.getTime())) continue;
+
+      const amount = Number(item.grandTotal) || 0;
+
+      recentApprovedQuotes.push({
+        id: item.id || blob.key,
+        clientName: item.clientName || "Unnamed Client",
+        grandTotal: amount,
+        approvedAt: item.approvedAt,
+        status: item.status,
+      });
+
       if (approvedDate.getFullYear() !== currentYear) continue;
 
       const month = approvedDate.getMonth();
-      const amount = Number(item.grandTotal) || 0;
-
       monthlyRevenue[month] += amount;
       monthlyApprovedCount[month] += 1;
 
       approvedRevenueYTD += amount;
       approvedQuotesYTD += 1;
     }
+
+    recentApprovedQuotes.sort((a, b) => {
+      return new Date(b.approvedAt).getTime() - new Date(a.approvedAt).getTime();
+    });
 
     const revenueByMonth = monthLabels.map((label, i) => ({
       label,
@@ -130,6 +143,7 @@ exports.handler = async (event, context) => {
       declinedQuotesYTD,
       draftQuotesYTD,
       closingRateYTD,
+      recentApprovedQuotes: recentApprovedQuotes.slice(0, 5),
     });
   } catch (err) {
     console.error("dashboard-stats failed:", err);
