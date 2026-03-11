@@ -27,8 +27,9 @@ exports.handler = async (event) => {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     const siteID = process.env.NETLIFY_SITE_ID;
     const token = process.env.NETLIFY_AUTH_TOKEN;
-    const publicSiteUrl = process.env.PUBLIC_SITE_URL;
-
+    const publicSiteUrl = safeStr(process.env.PUBLIC_SITE_URL)
+      .replace(/^["']|["']$/g, "");
+      
     console.log("env check", {
       hasStripeKey: !!stripeKey,
       hasSiteID: !!siteID,
@@ -113,6 +114,8 @@ exports.handler = async (event) => {
       safeStr(quote.clientName) ||
       `${safeStr(quote.customer?.firstName)} ${safeStr(quote.customer?.lastName)}`.trim() ||
       "Customer";
+    
+    console.log("PUBLIC_SITE_URL raw:", JSON.stringify(publicSiteUrl));
 
     const baseUrl = publicSiteUrl.replace(/\/$/, "");
     const successUrl = `${baseUrl}/quote/${encodeURIComponent(
@@ -122,6 +125,25 @@ exports.handler = async (event) => {
     const cancelUrl = `${baseUrl}/quote/${encodeURIComponent(
       quoteId
     )}?deposit=cancel${t ? `&t=${encodeURIComponent(t)}` : ""}`;
+
+    console.log("Stripe redirect URLs:", {
+      baseUrl,
+      successUrl,
+      cancelUrl,
+    });
+
+    try {
+      new URL(successUrl);
+      new URL(cancelUrl);
+    } catch (e) {
+      console.error("Generated URL failed validation:", e.message);
+      return json(500, {
+        error: "Generated Stripe redirect URL is invalid",
+        baseUrl,
+        successUrl,
+        cancelUrl,
+      });
+    }
 
     console.log("creating stripe session", {
       successUrl,
