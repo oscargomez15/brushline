@@ -819,6 +819,9 @@ const jobLabel =
           <div className="sig-note">
             By submitting, you confirm approval of the selected quote and its terms.
           </div>
+        </div>
+      </div>
+      )}
 
           {paymentModalOpen && !depositPaid && (
           <div className="sig-backdrop" onClick={() => setPaymentModalOpen(false)}>
@@ -886,9 +889,6 @@ const jobLabel =
             </div>
           </div>
         )}
-        </div>
-      </div>
-      )}
     </div>
   );
 }
