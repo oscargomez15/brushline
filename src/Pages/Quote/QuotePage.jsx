@@ -115,6 +115,8 @@ const signatureUrl =
       }));
 
       setSigOpen(false);
+      setTypedName("");
+      sigRef.current?.clear?.();
     } catch (e) {
       alert(e.message);
     } finally {
@@ -246,6 +248,49 @@ const jobLabel =
 
     // Optional: if you want to hide "custom" if it ever appears
     showPkgs = showPkgs.filter((p) => p.key !== "custom");
+
+    const closeSignatureModal = () => {
+    setSigOpen(false);
+    setTypedName("");
+    sigRef.current?.clear?.();
+  };
+
+  const handleSubmitApproval = () => {
+    const pad = sigRef.current;
+
+    if (!pad) {
+      alert("Signature pad is not ready yet.");
+      return;
+    }
+
+    if (typeof pad.isEmpty === "function" && pad.isEmpty()) {
+      alert("Please sign before submitting.");
+      return;
+    }
+
+    if (!typedName.trim()) {
+      alert("Please type your name.");
+      return;
+    }
+
+    let signatureDataUrl = "";
+
+    try {
+      if (typeof pad.toDataURL === "function") {
+        signatureDataUrl = pad.toDataURL("image/png");
+      } else if (typeof pad.getCanvas === "function") {
+        signatureDataUrl = pad.getCanvas().toDataURL("image/png");
+      } else {
+        throw new Error("Unable to capture signature.");
+      }
+    } catch (e) {
+      console.error("Signature export failed:", e, pad);
+      alert("Could not capture signature. Please try again.");
+      return;
+    }
+
+    handleApprove(signatureDataUrl, typedName.trim());
+  };
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -588,7 +633,7 @@ const jobLabel =
         ) : null}
       </div>
       {sigOpen && (
-      <div className="sig-backdrop" onClick={() => setSigOpen(false)}>
+      <div className="sig-backdrop" onClick={closeSignatureModal}>
         <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
           <div className="sig-modal-head">
             <h3 className="sig-modal-title">Approve Estimate</h3>
@@ -640,7 +685,7 @@ const jobLabel =
               <button
                 type="button"
                 className="sig-btn"
-                onClick={() => setSigOpen(false)}
+                onClick={closeSignatureModal}
               >
                 Cancel
               </button>
@@ -648,23 +693,10 @@ const jobLabel =
               <button
                 type="button"
                 className="sig-btn primary"
-                onClick={() => {
-                  if (sigRef.current?.isEmpty()) {
-                    alert("Please sign before submitting.");
-                    return;
-                  }
-                  if (!typedName.trim()) {
-                    alert("Please type your name.");
-                    return;
-                  }
-
-                  const signatureDataUrl =
-                    sigRef.current.getTrimmedCanvas().toDataURL("image/png");
-
-                  handleApprove(signatureDataUrl, typedName.trim());
-                }}
+                disabled={approving || !typedName.trim()}
+                onClick={handleSubmitApproval}
               >
-                Submit Approval
+                {approving ? "Submitting..." : "Submit Approval"}
               </button>
             </div>
           </div>
