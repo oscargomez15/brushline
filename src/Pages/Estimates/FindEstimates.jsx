@@ -1,6 +1,7 @@
 import "../../Styling/FindEstimate.css";
 import netlifyIdentity from "netlify-identity-widget";
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function prettyUA(ua = "") {
   const s = ua.toLowerCase();
@@ -35,6 +36,8 @@ const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(n) || 0);
 
 export default function FindEstimates() {
+  const navigate = useNavigate();
+
   const [items, setItems] = useState([]);
   const [err, setErr] = useState("");
   const [q, setQ] = useState("");
@@ -295,7 +298,7 @@ const handleRegeneratePdf = async (quoteId) => {
                               className="kebab-item"
                               onClick={() => {
                                 setOpenMenuId(null);
-                                window.location.href = `/crm/estimates/edit/${x.id}`;
+                                navigate(`/crm/estimates/edit/${x.id}`);
                               }}
                             >
                               Edit Quote
