@@ -606,6 +606,7 @@ const jobLabel =
             <SignatureCanvas
               ref={sigRef}
               penColor="#111827"
+              clearOnResize={false}
               canvasProps={{ className: "sig-canvas" }}
             />
           </div>
