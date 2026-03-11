@@ -113,11 +113,34 @@ export default function Dashboard() {
           <div className="db-card-subtle">Average of approved quotes this year</div>
         </div>
 
-        <div className="db-card db-placeholder-card">
-          <div className="db-card-label">Future Widget</div>
-          <div className="db-placeholder-text">
-            Space reserved for jobs scheduled, close rate, deposits, invoices, or leads.
-          </div>
+        <div className="db-card db-close-card">
+        <div className="db-card-label">Closing Rate</div>
+
+        <div className="db-close-rate-row">
+            <div className="db-close-rate-main">
+            {stats?.closingRateYTD != null ? `${stats.closingRateYTD}%` : "0%"}
+            </div>
+            <div className="db-close-rate-sub">
+            Approved vs total quotes this year
+            </div>
+        </div>
+
+        <div className="db-close-metrics">
+            <div className="db-close-metric">
+            <span>Total Quotes</span>
+            <strong>{stats?.totalQuotesYTD || 0}</strong>
+            </div>
+
+            <div className="db-close-metric">
+            <span>Approved</span>
+            <strong>{stats?.approvedQuotesYTD || 0}</strong>
+            </div>
+
+            <div className="db-close-metric">
+            <span>Awaiting Approval</span>
+            <strong>{stats?.pendingQuotesYTD || 0}</strong>
+            </div>
+        </div>
         </div>
 
         <div className="db-card db-chart-card">

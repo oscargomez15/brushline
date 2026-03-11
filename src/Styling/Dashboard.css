@@ -183,3 +183,160 @@
     font-size: 28px;
   }
 }
+
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.card-eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.closing-rate-card {
+  min-height: 260px;
+}
+
+.closing-rate-main {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.closing-rate-circle {
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  border: 10px solid #dbeafe;
+  margin: 0 auto;
+}
+
+.closing-rate-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.closing-rate-label {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.closing-rate-breakdown {
+  display: grid;
+  gap: 12px;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.metric-row span {
+  color: #475569;
+  font-size: 14px;
+}
+
+.metric-row strong {
+  color: #0f172a;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .closing-rate-main {
+    grid-template-columns: 1fr;
+  }
+
+  .closing-rate-circle {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+.db-close-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.db-close-rate-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.db-close-rate-main {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.db-close-rate-sub {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.db-close-metrics {
+  display: grid;
+  gap: 10px;
+}
+
+.db-close-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.db-close-metric span {
+  font-size: 14px;
+  color: #475569;
+}
+
+.db-close-metric strong {
+  font-size: 15px;
+  color: #0f172a;
+}

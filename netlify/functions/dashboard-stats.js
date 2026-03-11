@@ -12,6 +12,10 @@ function requireAuth(context) {
   return context?.clientContext?.user || null;
 }
 
+function normalizeStatus(status) {
+  return String(status || "").trim().toLowerCase();
+}
+
 exports.handler = async (event, context) => {
   try {
     if (event.httpMethod !== "GET") {
@@ -45,11 +49,44 @@ exports.handler = async (event, context) => {
     let approvedRevenueYTD = 0;
     let approvedQuotesYTD = 0;
 
+    let totalQuotesYTD = 0;
+    let pendingQuotesYTD = 0;
+    let declinedQuotesYTD = 0;
+    let draftQuotesYTD = 0;
+
     for (const blob of blobs) {
       const item = await indexStore.get(blob.key, { type: "json" });
       if (!item) continue;
 
-      if (item.status !== "approved") continue;
+      const status = normalizeStatus(item.status);
+
+      // Count quotes created this year
+      if (item.createdAt) {
+        const createdDate = new Date(item.createdAt);
+
+        if (
+          !Number.isNaN(createdDate.getTime()) &&
+          createdDate.getFullYear() === currentYear
+        ) {
+          totalQuotesYTD += 1;
+
+          if (
+            status === "awaiting_approval" ||
+            status === "pending" ||
+            status === "sent" ||
+            status === "viewed"
+          ) {
+            pendingQuotesYTD += 1;
+          } else if (status === "declined" || status === "rejected") {
+            declinedQuotesYTD += 1;
+          } else if (status === "draft") {
+            draftQuotesYTD += 1;
+          }
+        }
+      }
+
+      // Count approved revenue by approved date
+      if (status !== "approved") continue;
       if (!item.approvedAt) continue;
 
       const approvedDate = new Date(item.approvedAt);
@@ -77,12 +114,22 @@ exports.handler = async (event, context) => {
         ? Math.round((approvedRevenueYTD / approvedQuotesYTD) * 100) / 100
         : 0;
 
+    const closingRateYTD =
+      totalQuotesYTD > 0
+        ? Math.round((approvedQuotesYTD / totalQuotesYTD) * 1000) / 10
+        : 0;
+
     return json(200, {
       year: currentYear,
       approvedRevenueYTD: Math.round(approvedRevenueYTD * 100) / 100,
       approvedQuotesYTD,
       avgApprovedQuote,
       revenueByMonth,
+      totalQuotesYTD,
+      pendingQuotesYTD,
+      declinedQuotesYTD,
+      draftQuotesYTD,
+      closingRateYTD,
     });
   } catch (err) {
     console.error("dashboard-stats failed:", err);
