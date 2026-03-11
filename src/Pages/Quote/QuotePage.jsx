@@ -235,14 +235,15 @@ const signatureUrl =
   const depositPaid =
   quote?.depositPaid === true || quote?.depositStatus === "paid";
 
-    useEffect(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const deposit = params.get("deposit");
     const sessionId = params.get("session_id");
 
     if (deposit !== "success") return;
-    if (!sessionId) return;
+    if (!sessionId || sessionId === "{CHECKOUT_SESSION_ID}") return;
     if (!id) return;
+    if (!quote) return;
     if (depositPaid) return;
 
     const confirmDepositPayment = async () => {
@@ -292,7 +293,7 @@ const signatureUrl =
         setErr(e.message);
       }
     })();
-  }, [id, t, depositPaid, loadQuote]);
+  }, [id, t, quote, depositPaid, loadQuote]);
 
   useEffect(() => {
       // ✅ no token = admin/internal view = DO NOTHING

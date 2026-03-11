@@ -117,12 +117,18 @@ exports.handler = async (event) => {
 
     const baseUrl = publicSiteUrl.replace(/\/$/, "");
 
-    const successUrl = new URL(`${baseUrl}/quote/${encodeURIComponent(quoteId)}`);
+    const successUrl =
+      `${baseUrl}/quote/${encodeURIComponent(quoteId)}` +
+      `?deposit=success` +
+      `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}` +
+      `&session_id={CHECKOUT_SESSION_ID}`;
     if (publicToken) successUrl.searchParams.set("t", publicToken);
     successUrl.searchParams.set("deposit", "success");
-    successUrl.searchParams.set("session_id", "{CHECKOUT_SESSION_ID}");
 
-    const cancelUrl = new URL(`${baseUrl}/quote/${encodeURIComponent(quoteId)}`);
+    const cancelUrl =
+      `${baseUrl}/quote/${encodeURIComponent(quoteId)}` +
+      `?deposit=cancel` +
+      `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}`;
     if (publicToken) cancelUrl.searchParams.set("t", publicToken);
     cancelUrl.searchParams.set("deposit", "cancel");
 
