@@ -209,6 +209,21 @@ const signatureUrl =
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("deposit") === "success") {
+      (async () => {
+        const res = await fetch(
+          `/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`
+        );
+
+        const data = await res.json();
+        setQuote(data?.quote ?? data);
+      })();
+    }
+  }, [id]);
+
+  useEffect(() => {
     (async () => {
       try {
       const res = await fetch(`/.netlify/functions/get-quote?id=${encodeURIComponent(id)}`);
@@ -604,21 +619,23 @@ const jobLabel =
                     {quote.status === "approved" ? "Approved" : "Approve"}
                   </button>
 
-                  {quote.status === "approved" && !quote.depositPaid ? (
+                {quote.status === "approved" && (
                   <button
                     type="button"
-                    className="pkg-approve"
+                    className={`pkg-approve ${quote.depositPaid ? "paid" : ""}`}
                     onClick={handlePayDeposit}
-                    disabled={startingDeposit}
+                    disabled={startingDeposit || quote.depositPaid}
                   >
-                    {startingDeposit
-                      ? "Opening Checkout..."
-                      : `Pay ${fmtMoney(
-                          quote.depositRequired ||
+                    {quote.depositPaid
+                      ? "Deposit Paid ✓"
+                      : startingDeposit
+                        ? "Opening Checkout..."
+                        : `Pay ${fmtMoney(
+                            quote.depositRequired ||
                             Math.round((Number(quote.grandTotal || 0) * 0.4) * 100) / 100
-                        )} Deposit`}
+                          )} Deposit`}
                   </button>
-                ) : null}
+                )}
 
                 {quote.depositPaid ? (
                   <div className="quote-status-pill approved">DEPOSIT PAID</div>
