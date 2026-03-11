@@ -92,22 +92,20 @@ function App() {
         {/* CRM / PROTECTED APP */}
         <Route element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
 
-            {/* Estimates */}
-            <Route path="/estimates/find" element={<FindEstimates />} />
-            <Route path="/estimates/create" element={<StartEstimateRoute />} />
-            <Route path="/estimates/edit/:id" element={<EditEstimateRoute />} />
+            <Route path="/crm/dashboard" element={<Dashboard />} />
 
-            {/* Keep your old estimator route if you want */}
-            <Route path="/estimator" element={<Estimator />} />
+            <Route path="/crm/estimates/find" element={<FindEstimates />} />
+            <Route path="/crm/estimates/create" element={<StartEstimateRoute />} />
+            <Route path="/crm/estimates/edit/:id" element={<EditEstimateRoute />} />
 
-            {/* Invoices */}
-            <Route path="/invoices/find" element={<InvoicesFind />} />
-            <Route path="/invoices/create" element={<InvoicesCreate />} />
-            <Route path="/invoices/edit" element={<InvoicesEdit />} />
+            <Route path="/crm/estimator" element={<Estimator />} />
 
-            <Route path="/customers" element={<CustomersList />} />
+            <Route path="/crm/invoices/find" element={<InvoicesFind />} />
+            <Route path="/crm/invoices/create" element={<InvoicesCreate />} />
+
+            <Route path="/crm/customers" element={<CustomersList />} />
+
           </Route>
         </Route>
 
