@@ -129,7 +129,6 @@ exports.handler = async (event) => {
       `?deposit=cancel` +
       `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}`;
     if (publicToken) cancelUrl.searchParams.set("t", publicToken);
-    cancelUrl.searchParams.set("deposit", "cancel");
 
     console.log("Stripe redirect URLs:", {
       baseUrl,
