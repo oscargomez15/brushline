@@ -15,6 +15,11 @@ function safeStr(v) {
 
 exports.handler = async (event) => {
   try {
+    console.log("create-deposit-checkout called", {
+      method: event.httpMethod,
+      hasBody: !!event.body,
+    });
+
     if (event.httpMethod !== "POST") {
       return json(405, { error: "Method not allowed" });
     }
@@ -24,36 +29,80 @@ exports.handler = async (event) => {
     const token = process.env.NETLIFY_AUTH_TOKEN;
     const publicSiteUrl = process.env.PUBLIC_SITE_URL;
 
+    console.log("env check", {
+      hasStripeKey: !!stripeKey,
+      hasSiteID: !!siteID,
+      hasToken: !!token,
+      publicSiteUrl,
+    });
+
     if (!stripeKey || !siteID || !token || !publicSiteUrl) {
-      return json(500, { error: "Missing required environment variables" });
+      return json(500, {
+        error: "Missing required environment variables",
+        hasStripeKey: !!stripeKey,
+        hasSiteID: !!siteID,
+        hasToken: !!token,
+        hasPublicSiteUrl: !!publicSiteUrl,
+      });
     }
 
     const stripe = new Stripe(stripeKey);
     const quotes = getStore("quotes", { siteID, token });
 
-    const { id, t } = JSON.parse(event.body || "{}");
+    let parsed;
+    try {
+      parsed = JSON.parse(event.body || "{}");
+    } catch (e) {
+      return json(400, { error: "Invalid JSON body" });
+    }
+
+    const { id, t } = parsed;
     const quoteId = safeStr(id);
+
+    console.log("request body parsed", { quoteId, t });
 
     if (!quoteId) {
       return json(400, { error: "Missing quote id" });
     }
 
     const quote = await quotes.get(quoteId, { type: "json" });
+
+    console.log("quote loaded", {
+      found: !!quote,
+      status: quote?.status,
+      grandTotal: quote?.grandTotal,
+      depositPaid: quote?.depositPaid,
+      email: quote?.email,
+    });
+
     if (!quote) {
       return json(404, { error: "Quote not found" });
     }
 
     if (quote.status !== "approved") {
-      return json(400, { error: "Quote must be approved before deposit payment." });
+      return json(400, {
+        error: "Quote must be approved before deposit payment.",
+        status: quote.status,
+      });
     }
 
     const total = Number(quote.grandTotal || 0);
     const depositPercent = Number(quote.depositPercent || 0.4);
-    const depositRequired =
-      Math.round(total * depositPercent * 100) / 100;
+    const depositRequired = Math.round(total * depositPercent * 100) / 100;
+
+    console.log("deposit calc", {
+      total,
+      depositPercent,
+      depositRequired,
+    });
 
     if (!(depositRequired > 0)) {
-      return json(400, { error: "Invalid deposit amount" });
+      return json(400, {
+        error: "Invalid deposit amount",
+        total,
+        depositPercent,
+        depositRequired,
+      });
     }
 
     if (quote.depositPaid) {
@@ -65,13 +114,20 @@ exports.handler = async (event) => {
       `${safeStr(quote.customer?.firstName)} ${safeStr(quote.customer?.lastName)}`.trim() ||
       "Customer";
 
-    const successUrl = `${publicSiteUrl.replace(/\/$/, "")}/quote/${encodeURIComponent(
+    const baseUrl = publicSiteUrl.replace(/\/$/, "");
+    const successUrl = `${baseUrl}/quote/${encodeURIComponent(
       quoteId
     )}?deposit=success${t ? `&t=${encodeURIComponent(t)}` : ""}`;
 
-    const cancelUrl = `${publicSiteUrl.replace(/\/$/, "")}/quote/${encodeURIComponent(
+    const cancelUrl = `${baseUrl}/quote/${encodeURIComponent(
       quoteId
     )}?deposit=cancel${t ? `&t=${encodeURIComponent(t)}` : ""}`;
+
+    console.log("creating stripe session", {
+      successUrl,
+      cancelUrl,
+      customerName,
+    });
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -97,11 +153,17 @@ exports.handler = async (event) => {
             unit_amount: Math.round(depositRequired * 100),
             product_data: {
               name: `Deposit for Quote ${quote.quoteNumber || quoteId}`,
-              description: quote.projectAddress || quote.customer?.address || "Project deposit",
+              description:
+                quote.projectAddress || quote.customer?.address || "Project deposit",
             },
           },
         },
       ],
+    });
+
+    console.log("stripe session created", {
+      sessionId: session.id,
+      hasUrl: !!session.url,
     });
 
     await quotes.setJSON(quoteId, {
@@ -119,10 +181,19 @@ exports.handler = async (event) => {
       depositRequired,
     });
   } catch (err) {
-    console.error("create-deposit-checkout failed:", err);
+    console.error("create-deposit-checkout failed:", {
+      message: err?.message,
+      type: err?.type,
+      code: err?.code,
+      raw: err?.raw,
+      stack: err?.stack,
+    });
+
     return json(500, {
       error: "create-deposit-checkout failed",
       message: err?.message || String(err),
+      type: err?.type || null,
+      code: err?.code || null,
     });
   }
 };
