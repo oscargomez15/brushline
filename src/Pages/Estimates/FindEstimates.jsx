@@ -77,6 +77,10 @@ export default function FindEstimates() {
     setHistoryLoading(false);
   }
 }
+
+  useEffect(() => {
+    document.title = "Find Quotes | Brushline CRM";
+  }, []);
   
   useEffect(() => {
       (async () => {

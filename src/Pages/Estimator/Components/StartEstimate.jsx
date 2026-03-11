@@ -132,6 +132,9 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
       );
     }
   };
+    useEffect(() => {
+    document.title = "Create an Estimate | Brushline CRM";
+  }, []);
 
   useEffect(() => {
     if (mode !== "existing") return;

@@ -173,7 +173,6 @@ const signatureUrl =
   setQuote(data.quote);
 };
 
-
   const handleDownloadPdf = async () => {
     try {
       const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
@@ -222,6 +221,10 @@ const signatureUrl =
       alert(e.message);
     }
   };
+
+    useEffect(() => {
+    document.title = "Your Quote from Brushline Services";
+  }, []);
 
   useEffect(() => {
     (async () => {

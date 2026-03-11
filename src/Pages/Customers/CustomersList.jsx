@@ -61,6 +61,10 @@ export default function CustomersList() {
     loadCustomers("");
   }, []);
 
+    useEffect(() => {
+    document.title = "Customers | Brushline CRM";
+  }, []);
+
   useEffect(() => {
     const t = setTimeout(() => {
       loadCustomers(q);

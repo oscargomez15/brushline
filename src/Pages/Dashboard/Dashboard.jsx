@@ -87,6 +87,10 @@ export default function Dashboard() {
     load();
   }, []);
 
+    useEffect(() => {
+    document.title = "Dashboard | CRM Brushline";
+  }, []);
+
     if (loading) {
     return (
         <div className="dashboard-page">
