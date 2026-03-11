@@ -165,16 +165,28 @@ export default function Dashboard() {
       </div>
 
       <div className="dashboard-grid">
-        <div className="db-card db-stat-card">
-          <div className="db-card-label">Approved Revenue (YTD)</div>
-          <div className="db-card-value">{fmtMoney(stats?.approvedRevenueYTD)}</div>
-          <div className="db-card-subtle">Based on approved quotes</div>
-        </div>
+        <div className="db-card db-stat-card db-revenue-card">
+            <div className="db-card-label">Approved Revenue (YTD)</div>
 
-        <div className="db-card db-stat-card">
-          <div className="db-card-label">Approved Quotes</div>
-          <div className="db-card-value">{stats?.approvedQuotesYTD || 0}</div>
-          <div className="db-card-subtle">Quotes marked approved this year</div>
+            <div className="db-revenue-main">
+                {fmtMoney(stats?.approvedRevenueYTD)}
+            </div>
+
+            <div className="db-revenue-sub">
+                Based on approved quotes this year
+            </div>
+
+            <div className="db-revenue-metrics">
+                <div className="db-revenue-metric">
+                <span>Approved Quotes</span>
+                <strong>{stats?.approvedQuotesYTD || 0}</strong>
+                </div>
+
+                <div className="db-revenue-metric">
+                <span>Average Approved Quote</span>
+                <strong>{fmtMoney(stats?.avgApprovedQuote)}</strong>
+                </div>
+            </div>
         </div>
 
         <div className="db-card db-stat-card">

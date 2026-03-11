@@ -151,6 +151,9 @@
 }
 
 @media (max-width: 1100px) {
+    .db-recent-card {
+    grid-column: span 6;
+    }
   .db-stat-card {
     grid-column: span 6;
   }
@@ -165,11 +168,12 @@
 }
 
 @media (max-width: 700px) {
-  .db-stat-card,
-  .db-chart-card,
-  .db-placeholder-card {
+    .db-stat-card,
+    .db-chart-card,
+    .db-placeholder-card,
+    .db-recent-card {
     grid-column: span 12;
-  }
+    }
 
   .db-chart {
     gap: 8px;
@@ -485,4 +489,128 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.db-recent-card {
+  grid-column: span 4;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.db-recent-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 12px;
+}
+
+.db-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: #f8fafc;
+  border-radius: 14px;
+}
+
+.db-recent-main {
+  min-width: 0;
+}
+
+.db-recent-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.db-recent-date {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.db-recent-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.db-recent-amount {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.db-recent-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+.db-recent-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.db-empty-state {
+  padding: 18px 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.db-revenue-card {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.db-revenue-main {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+}
+
+.db-revenue-sub {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.db-revenue-metrics {
+  display: grid;
+  gap: 10px;
+}
+
+.db-revenue-metric {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.db-revenue-metric span {
+  font-size: 14px;
+  color: #475569;
+}
+
+.db-revenue-metric strong {
+  font-size: 15px;
+  color: #0f172a;
 }
