@@ -822,6 +822,11 @@
   margin-top: 24px;
 }
 
+
+section .quote-signature{
+  padding: 0;
+}
+
 .quote-signature-title {
   margin-bottom: 12px;
   font-size: 18px;
