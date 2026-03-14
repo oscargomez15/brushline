@@ -30,8 +30,7 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 
 import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
 import PublicInvoicePage from "./Pages/Invoices/PublicInvoicePage";
-
-const InvoicesFind = () => <div>Find Invoices</div>;
+import FindInvoices from "./Pages/Invoices/FindInvoices";
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
@@ -97,11 +96,11 @@ function App() {
 
             <Route path="estimator" element={<Estimator />} />
 
-            <Route path="invoices/find" element={<InvoicesFind />} />
+            <Route path="invoices/find" element={<FindInvoices />} />
             <Route path="invoices/create" element={<InvoiceEditor />} />
             <Route path="invoices/edit/:id" element={<InvoiceEditor />} />
             <Route path="invoices/:id" element={<PublicInvoicePage />} />
-            
+
             <Route path="customers" element={<CustomersList />} />
           </Route>
         </Route>
