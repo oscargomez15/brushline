@@ -212,7 +212,6 @@ const handleRegeneratePdf = async (quoteId) => {
                 <th>Status</th>
                 <th className="right">View Status</th>
                 <th className="right">Total</th>
-                <th className="right">Open</th>
                 <th className="right">Delete</th>
                 <th className="right">Actions</th>
 
@@ -227,7 +226,19 @@ const handleRegeneratePdf = async (quoteId) => {
                 const isDeleting = deletingId === x.id;
 
                 return (
-                  <tr key={x.id}>
+                  <tr
+                    key={x.id}
+                    className="fe-row-clickable"
+                    onClick={() => navigate(`/quote/${x.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(`/quote/${x.id}`);
+                      }
+                    }}
+                  >
                     <td className="muted">
                       {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "—"}
                     </td>
@@ -264,15 +275,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
                     <td className="right strong">{fmtMoney(x.grandTotal)}</td>
 
-                    <td className="right">
-                      <a href={`/quote/${x.id}`} className="view-quote-btn">
-                        View
-                      </a>
-                    </td>
-
-
-
-                    <td className="right">
+                    <td className="right" onClick={(e) => e.stopPropagation()}>
                       <button
                         className="fe-danger-btn"
                         onClick={() => handleDelete(x.id)}
@@ -283,7 +286,7 @@ const handleRegeneratePdf = async (quoteId) => {
                       </button>
                     </td>
 
-                    <td className="right">
+                    <td className="right" onClick={(e) => e.stopPropagation()}>
                       <div className="kebab-wrap" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
@@ -307,6 +310,7 @@ const handleRegeneratePdf = async (quoteId) => {
                             >
                               Edit Quote
                             </button>
+
                             <button
                               type="button"
                               className="kebab-item"
@@ -318,6 +322,7 @@ const handleRegeneratePdf = async (quoteId) => {
                             >
                               View history
                             </button>
+
                             <button
                               type="button"
                               className="kebab-item"
