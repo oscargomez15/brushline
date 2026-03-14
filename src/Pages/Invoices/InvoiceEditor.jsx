@@ -758,12 +758,20 @@ try {
               </div>
             </div>
 
-            <div style={{ marginTop: 18 }}>
-              <div className="section-title">Terms</div>
-              <div className="bill-box">
-                <div className="bill-text">{invoice.terms || "Payment due upon receipt."}</div>
-              </div>
+            <details className="terms-editor-card" style={{ marginTop: 12 }}>
+            <summary className="terms-editor-summary">
+                <span className="label" style={{ marginBottom: 0 }}>Invoice Terms</span>
+                <span className="terms-editor-toggle">View Terms</span>
+            </summary>
+
+            <div style={{ marginTop: 10 }}>
+                <textarea
+                className="textarea readonly"
+                value={invoice.terms || ""}
+                readOnly
+                />
             </div>
+            </details>
           </div>
 
           <div className="invoice-side">

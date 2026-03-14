@@ -160,11 +160,11 @@ export default function PublicInvoicePage() {
               <div className="meta-label">Project Type</div>
               <div className="meta-value">{invoice.jobType || "—"}</div>
             </div>
-
+{/* 
             <div className="meta-card">
               <div className="meta-label">Linked Quote</div>
               <div className="meta-value">{invoice.linkedQuoteId || "—"}</div>
-            </div>
+            </div> */}
           </div>
 
           <div className="bill-grid">
@@ -182,7 +182,7 @@ export default function PublicInvoicePage() {
               <div className="section-kicker">Invoice Summary</div>
               <div className="summary-list">
                 <div className="summary-row">
-                  <span>Subtotal</span>
+                  <span>Total</span>
                   <strong>{fmtMoney(subtotal)}</strong>
                 </div>
                 {/* <div className="summary-row">
@@ -251,12 +251,16 @@ export default function PublicInvoicePage() {
               </div>
             </div>
 
-            <div className="note-card">
-              <div className="section-kicker">Terms</div>
-              <div className="note-text">
+            <details className="note-card terms-card">
+            <summary className="terms-summary">
+            <span className="section-kicker">Terms & Payment Info</span>
+            <span className="terms-toggle" />
+            </summary>
+
+            <div className="note-text terms-text">
                 {invoice.terms || "Payment due upon receipt."}
-              </div>
             </div>
+            </details>
           </div>
 
           <div className="footer-note">
@@ -705,5 +709,47 @@ const styles = `
     .status-pill.pay-unpaid {
     background: rgba(15,23,42,.05);
     color: #334155;
+    }
+
+    .terms-card {
+    padding: 0;
+    overflow: hidden;
+    }
+
+    .terms-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    }
+
+    .terms-summary::-webkit-details-marker {
+    display: none;
+    }
+
+    .terms-toggle {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0f172a;
+    background: rgba(15,23,42,.06);
+    border: 1px solid rgba(15,23,42,.08);
+    border-radius: 999px;
+    padding: 6px 10px;
+    }
+
+    .terms-card[open] .terms-toggle::after {
+    content: " Less";
+    }
+
+    .terms-card:not([open]) .terms-toggle::after {
+    content: " Terms";
+    }
+
+    .terms-text {
+    padding: 0 16px 16px;
+    border-top: 1px solid rgba(15,23,42,.08);
     }
 `;
