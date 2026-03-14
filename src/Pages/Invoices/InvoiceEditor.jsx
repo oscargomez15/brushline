@@ -577,7 +577,6 @@ export default function InvoiceEditor() {
                 <h2 className="brand-title">{invoice.companyName || "Brushline Services"}</h2>
                 <div className="brand-sub">
                   Professional painting and home improvement services<br />
-                  Naples • Fort Myers • Cape Coral • Estero
                 </div>
               </div>
 
@@ -730,24 +729,10 @@ export default function InvoiceEditor() {
                   </div>
                 </div>
 
-                <div className="field">
-                  <label className="label">Client Name</label>
-                  <input className="input" value={invoice.clientName || ""} onChange={(e) => setField("clientName", e.target.value)} />
-                </div>
-
-                <div className="field">
-                  <label className="label">Project Address</label>
-                  <input className="input" value={invoice.projectAddress || ""} onChange={(e) => setField("projectAddress", e.target.value)} />
-                </div>
-
                 <div className="field-row-2">
                   <div className="field">
                     <label className="label">Email</label>
                     <input className="input" value={invoice.email || ""} onChange={(e) => setField("email", e.target.value)} />
-                  </div>
-                  <div className="field">
-                    <label className="label">Phone</label>
-                    <input className="input" value={invoice.phone || ""} onChange={(e) => setField("phone", e.target.value)} />
                   </div>
                 </div>
 
@@ -769,11 +754,6 @@ export default function InvoiceEditor() {
                 <div className="field">
                   <label className="label">Internal Notes</label>
                   <textarea className="textarea" value={invoice.notes || ""} onChange={(e) => setField("notes", e.target.value)} />
-                </div>
-
-                <div className="field">
-                  <label className="label">Invoice Terms</label>
-                  <textarea className="textarea" value={invoice.terms || ""} onChange={(e) => setField("terms", e.target.value)} />
                 </div>
               </div>
             </div>
@@ -802,9 +782,6 @@ export default function InvoiceEditor() {
               <div className="balance-card">
                 <div className="balance-label">Balance Due</div>
                 <div className="balance-value">{fmtMoney(balanceDue)}</div>
-                <div className="mini-note">
-                  A typical invoice should clearly show who is being billed, invoice number, dates, itemized charges, total due, and payment terms.
-                </div>
               </div>
             </div>
           </div>
