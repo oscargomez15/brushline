@@ -31,6 +31,7 @@ function makeInvoiceNumber() {
 }
 
 exports.handler = async (event, context) => {
+  const viewToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
   try {
     if (event.httpMethod !== "POST") {
       return json(405, { error: "Method not allowed" });
@@ -113,7 +114,9 @@ exports.handler = async (event, context) => {
       invoiceNumber,
       createdAt: now,
       updatedAt: now,
-
+      viewToken,
+      viewedAt: null,
+      viewedBy: null,
       createdBy: {
         id: user.sub,
         email: user.email,

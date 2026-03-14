@@ -17,6 +17,10 @@ function requireAuth(context) {
   return user || null;
 }
 
+function makeViewToken() {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
 function makeId() {
   return `inv_${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
@@ -129,6 +133,9 @@ exports.handler = async (event, context) => {
         id: user.sub,
         email: user.email,
       },
+      viewToken: existing?.viewToken || payload.viewToken || makeViewToken(),
+      viewedAt: existing?.viewedAt || null,
+      viewedBy: existing?.viewedBy || null,
 
       companyName:
         safeStr(payload.companyName) ||

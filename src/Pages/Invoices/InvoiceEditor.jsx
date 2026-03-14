@@ -75,7 +75,40 @@ export default function InvoiceEditor() {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+  const [sending, setSending] = useState(false);
 
+  const handleSendInvoice = async () => {
+try {
+    setSending(true);
+    setErr("");
+
+    const user = netlifyIdentity.currentUser();
+    const jwt = user ? await user.jwt() : null;
+    if (!jwt) throw new Error("Please log in first.");
+
+    if (!id) {
+    throw new Error("Please save the invoice before sending it.");
+    }
+
+    const res = await fetch("/.netlify/functions/send-invoice-email", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+    },
+    body: JSON.stringify({ invoiceId: id }),
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data?.error || "Failed to send invoice");
+
+    alert(`Invoice sent to ${data.sentTo}`);
+} catch (e) {
+    setErr(e.message || "Failed to send invoice");
+} finally {
+    setSending(false);
+}
+};
   useEffect(() => {
     document.title = isEdit ? "Edit Invoice | Brushline CRM" : "Create Invoice | Brushline CRM";
   }, [isEdit]);
@@ -556,12 +589,14 @@ export default function InvoiceEditor() {
         <div className="invoice-toolbar">
           <div className="invoice-toolbar-left">
             <h1>{isEdit ? "Invoice" : "Create Invoice"}</h1>
-            <p>Typical invoice layout with billing details, line items, totals, notes, and payment status.</p>
           </div>
 
           <div className="invoice-toolbar-actions">
             <button className="btn" onClick={() => navigate(-1)}>Back</button>
             <button className="btn" onClick={() => window.print()}>Print</button>
+            <button className="btn primary" onClick={handleSendInvoice} disabled={sending || !id}>
+              {sending ? "Sending..." : "Send Invoice"}
+            </button>
             <button className="btn success" onClick={handleSave} disabled={saving}>
               {saving ? "Saving..." : "Save Invoice"}
             </button>
@@ -576,7 +611,7 @@ export default function InvoiceEditor() {
               <div>
                 <h2 className="brand-title">{invoice.companyName || "Brushline Services"}</h2>
                 <div className="brand-sub">
-                  Professional painting and home improvement services<br />
+                  Painting & Home Improvement Services<br />
                 </div>
               </div>
 
@@ -624,7 +659,7 @@ export default function InvoiceEditor() {
                 <div className="section-title">From</div>
                 <div className="bill-name">{invoice.companyName || "Brushline Services"}</div>
                 <div className="bill-text">
-                  Brushline CRM Invoice\nPrepared for customer billing and records
+                  Brushline Services
                 </div>
               </div>
             </div>

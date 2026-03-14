@@ -27,7 +27,9 @@ import { StartEstimate } from "./Pages/Estimator/Components/StartEstimate";
 import CustomersList from "./Pages/Customers/CustomersList";
 import EditEstimateRoute from "./Pages/Estimates/EditEstimateRoute";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+
 import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
+import PublicInvoicePage from "./Pages/Invoices/PublicInvoicePage";
 
 const InvoicesFind = () => <div>Find Invoices</div>;
 
@@ -82,6 +84,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/service-area/:citySlug" element={<ServiceArea />} />
           <Route path="/quote/:id" element={<QuotePage />} />
+          <Route path="/invoice/:id" element={<PublicInvoicePage />} />
         </Route>
 
         <Route path="/crm" element={<RequireAuth />}>
@@ -97,7 +100,8 @@ function App() {
             <Route path="invoices/find" element={<InvoicesFind />} />
             <Route path="invoices/create" element={<InvoiceEditor />} />
             <Route path="invoices/edit/:id" element={<InvoiceEditor />} />
-
+            <Route path="invoices/:id" element={<PublicInvoicePage />} />
+            
             <Route path="customers" element={<CustomersList />} />
           </Route>
         </Route>
