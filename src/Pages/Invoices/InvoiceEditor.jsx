@@ -583,6 +583,42 @@ try {
           }
           .inline-total { text-align: left; }
         }
+
+        .invoice-badge.status-draft {
+            background: rgba(15,23,42,.05);
+            color: #334155;
+            border-color: rgba(15,23,42,.08);
+            }
+
+            .invoice-badge.status-sent {
+            background: rgba(37,99,235,.12);
+            color: #1d4ed8;
+            border-color: rgba(37,99,235,.2);
+            }
+
+            .invoice-badge.status-void {
+            background: rgba(239,68,68,.12);
+            color: #991b1b;
+            border-color: rgba(239,68,68,.2);
+            }
+
+            .invoice-badge.pay-paid {
+            background: rgba(34,197,94,.12);
+            color: #166534;
+            border-color: rgba(34,197,94,.2);
+            }
+
+            .invoice-badge.pay-partial {
+            background: rgba(245,158,11,.12);
+            color: #92400e;
+            border-color: rgba(245,158,11,.2);
+            }
+
+            .invoice-badge.pay-unpaid {
+            background: rgba(15,23,42,.05);
+            color: #334155;
+            border-color: rgba(15,23,42,.08);
+            }
       `}</style>
 
       <div className="invoice-shell">
@@ -607,6 +643,7 @@ try {
 
         <div className="invoice-grid">
           <div className="invoice-card">
+            
             <div className="invoice-head">
               <div>
                 <h2 className="brand-title">{invoice.companyName || "Brushline Services"}</h2>
@@ -616,8 +653,13 @@ try {
               </div>
 
               <div style={{ textAlign: "right" }}>
-                <div className={`invoice-badge ${invoice.paymentStatus || invoice.status || "draft"}`}>
-                  {(invoice.paymentStatus || invoice.status || "draft").replace(/_/g, " ")}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                <div className={`invoice-badge status-${invoice.status || "draft"}`}>
+                    {(invoice.status || "draft").replace(/_/g, " ")}
+                </div>
+                <div className={`invoice-badge pay-${invoice.paymentStatus || "unpaid"}`}>
+                    {(invoice.paymentStatus || "unpaid").replace(/_/g, " ")}
+                </div>
                 </div>
                 <div style={{ marginTop: 10, fontSize: 13, color: "#64748b" }}>
                   Linked Quote: {invoice.linkedQuoteId || "—"}
@@ -741,26 +783,6 @@ try {
                   <div className="field">
                     <label className="label">Due Date</label>
                     <input className="input" type="date" value={invoice.dueDate ? String(invoice.dueDate).slice(0, 10) : ""} onChange={(e) => setField("dueDate", e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="field-row-2">
-                  <div className="field">
-                    <label className="label">Status</label>
-                    <select className="select" value={invoice.status || "draft"} onChange={(e) => setField("status", e.target.value)}>
-                      <option value="draft">Draft</option>
-                      <option value="sent">Sent</option>
-                      <option value="paid">Paid</option>
-                      <option value="void">Void</option>
-                    </select>
-                  </div>
-                  <div className="field">
-                    <label className="label">Payment Status</label>
-                    <select className="select" value={invoice.paymentStatus || "unpaid"} onChange={(e) => setField("paymentStatus", e.target.value)}>
-                      <option value="unpaid">Unpaid</option>
-                      <option value="partial">Partial</option>
-                      <option value="paid">Paid</option>
-                    </select>
                   </div>
                 </div>
 

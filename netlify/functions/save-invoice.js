@@ -100,12 +100,11 @@ exports.handler = async (event, context) => {
 
     const status = safeStr(payload.status) || existing?.status || "draft";
     const paymentStatus =
-      safeStr(payload.paymentStatus) ||
-      (depositPaid >= grandTotal
+    depositPaid >= grandTotal
         ? "paid"
         : depositPaid > 0
-          ? "partial"
-          : "unpaid");
+        ? "partial"
+        : "unpaid";
 
     const customer = {
       firstName: safeStr(payload?.customer?.firstName),

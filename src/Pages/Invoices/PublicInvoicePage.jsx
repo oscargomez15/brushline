@@ -81,8 +81,6 @@ export default function PublicInvoicePage() {
       ? Number(invoice.balanceDue) || 0
       : Math.max(0, grandTotal - depositPaid);
 
-  const paymentClass = invoice?.paymentStatus || invoice?.status || "draft";
-
   if (loading) {
     return (
       <div className="public-invoice-page">
@@ -131,16 +129,19 @@ export default function PublicInvoicePage() {
                 {invoice.companyName || "Brushline Services"}
               </div>
               <div className="company-sub">
-                Professional painting and home improvement services
-                <br />
-                Naples • Fort Myers • Cape Coral • Estero
+                Painting and Home Improvement Services
               </div>
             </div>
 
             <div className="invoice-head-right">
-              <div className={`status-pill ${paymentClass}`}>
-                {(invoice.paymentStatus || invoice.status || "draft").replace(/_/g, " ")}
-              </div>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <div className={`status-pill status-${invoice.status || "draft"}`}>
+                        {(invoice.status || "draft").replace(/_/g, " ")}
+                    </div>
+                    <div className={`status-pill pay-${invoice.paymentStatus || "unpaid"}`}>
+                        {(invoice.paymentStatus || "unpaid").replace(/_/g, " ")}
+                    </div>
+                </div>
               <div className="invoice-no">
                 Invoice #{invoice.invoiceNumber || invoice.id}
               </div>
@@ -674,4 +675,38 @@ const styles = `
       display: none !important;
     }
   }
+
+  .status-pill.status-draft {
+  background: rgba(15,23,42,.05);
+  color: #334155;
+    }
+
+    .status-pill.status-sent {
+    background: rgba(37,99,235,.12);
+    color: #1d4ed8;
+    border-color: rgba(37,99,235,.18);
+    }
+
+    .status-pill.status-void {
+    background: rgba(239,68,68,.12);
+    color: #991b1b;
+    border-color: rgba(239,68,68,.18);
+    }
+
+    .status-pill.pay-paid {
+    background: rgba(34,197,94,.12);
+    color: #166534;
+    border-color: rgba(34,197,94,.18);
+    }
+
+    .status-pill.pay-partial {
+    background: rgba(245,158,11,.12);
+    color: #92400e;
+    border-color: rgba(245,158,11,.18);
+    }
+
+    .status-pill.pay-unpaid {
+    background: rgba(15,23,42,.05);
+    color: #334155;
+    }
 `;

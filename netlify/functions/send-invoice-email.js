@@ -222,14 +222,35 @@ exports.handler = async (event, context) => {
       html,
     });
 
+    const invoicesIndexStore = getStore("invoices_index", { siteID, token });
+
+    const now = new Date().toISOString();
+
     const updated = {
-      ...invoice,
-      sentAt: new Date().toISOString(),
-      status: invoice.status === "draft" ? "sent" : invoice.status,
-      updatedAt: new Date().toISOString(),
+    ...invoice,
+    sentAt: now,
+    status: invoice.status === "draft" ? "sent" : invoice.status || "sent",
+    paymentStatus:
+        Number(invoice.depositPaid || 0) >= Number(invoice.grandTotal || 0)
+        ? "paid"
+        : Number(invoice.depositPaid || 0) > 0
+            ? "partial"
+            : "unpaid",
+    updatedAt: now,
     };
 
     await invoicesStore.setJSON(invoice.id, updated);
+
+    const existingIndex = await invoicesIndexStore.get(invoice.id, { type: "json" });
+    if (existingIndex) {
+    await invoicesIndexStore.setJSON(invoice.id, {
+        ...existingIndex,
+        updatedAt: now,
+        status: updated.status,
+        paymentStatus: updated.paymentStatus,
+        balanceDue: updated.balanceDue,
+    });
+    }
 
     return json(200, { ok: true, sentTo: to });
   } catch (err) {
