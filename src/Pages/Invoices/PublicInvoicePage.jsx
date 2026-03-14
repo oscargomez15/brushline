@@ -135,9 +135,6 @@ export default function PublicInvoicePage() {
 
             <div className="invoice-head-right">
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                    <div className={`status-pill status-${invoice.status || "draft"}`}>
-                        {(invoice.status || "draft").replace(/_/g, " ")}
-                    </div>
                     <div className={`status-pill pay-${invoice.paymentStatus || "unpaid"}`}>
                         {(invoice.paymentStatus || "unpaid").replace(/_/g, " ")}
                     </div>
@@ -188,10 +185,10 @@ export default function PublicInvoicePage() {
                   <span>Subtotal</span>
                   <strong>{fmtMoney(subtotal)}</strong>
                 </div>
-                <div className="summary-row">
+                {/* <div className="summary-row">
                   <span>Tax</span>
                   <strong>{fmtMoney(tax)}</strong>
-                </div>
+                </div> */}
                 <div className="summary-row">
                   <span>Deposit Paid</span>
                   <strong>{fmtMoney(depositPaid)}</strong>

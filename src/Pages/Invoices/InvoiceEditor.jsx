@@ -692,17 +692,12 @@ try {
                 <div className="bill-name">{invoice.clientName || "Customer name"}</div>
                 <div className="bill-text">
                   {invoice.projectAddress || "Project address"}
-                  {invoice.email ? `\n${invoice.email}` : ""}
-                  {invoice.phone ? `\n${invoice.phone}` : ""}
                 </div>
               </div>
 
               <div className="bill-box">
                 <div className="section-title">From</div>
                 <div className="bill-name">{invoice.companyName || "Brushline Services"}</div>
-                <div className="bill-text">
-                  Brushline Services
-                </div>
               </div>
             </div>
 
@@ -777,10 +772,6 @@ try {
               <div className="field-grid">
                 <div className="field-row-2">
                   <div className="field">
-                    <label className="label">Invoice Number</label>
-                    <input className="input" value={invoice.invoiceNumber || ""} onChange={(e) => setField("invoiceNumber", e.target.value)} />
-                  </div>
-                  <div className="field">
                     <label className="label">Due Date</label>
                     <input className="input" type="date" value={invoice.dueDate ? String(invoice.dueDate).slice(0, 10) : ""} onChange={(e) => setField("dueDate", e.target.value)} />
                   </div>
@@ -798,10 +789,10 @@ try {
                     <label className="label">Subtotal</label>
                     <input className="input" value={fmtMoney(subtotal)} readOnly />
                   </div>
-                  <div className="field">
+                  {/* <div className="field">
                     <label className="label">Tax</label>
                     <input className="input" type="number" min="0" step="0.01" value={tax} onChange={(e) => setField("tax", e.target.value)} />
-                  </div>
+                  </div> */}
                   <div className="field">
                     <label className="label">Deposit Paid</label>
                     <input className="input" type="number" min="0" step="0.01" value={depositPaid} onChange={(e) => setField("depositPaid", e.target.value)} />
@@ -822,10 +813,10 @@ try {
                   <span>Subtotal</span>
                   <strong>{fmtMoney(subtotal)}</strong>
                 </div>
-                <div className="summary-row">
+                {/* <div className="summary-row">
                   <span>Tax</span>
                   <strong>{fmtMoney(tax)}</strong>
-                </div>
+                </div> */}
                 <div className="summary-row">
                   <span>Deposit Paid</span>
                   <strong>{fmtMoney(depositPaid)}</strong>
