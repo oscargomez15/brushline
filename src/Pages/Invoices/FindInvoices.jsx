@@ -20,6 +20,40 @@ export default function FindInvoices() {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
 
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [paymentInvoice, setPaymentInvoice] = useState(null);
+  const [recordingPayment, setRecordingPayment] = useState(false);
+
+  const [paymentForm, setPaymentForm] = useState({
+    amount: "",
+    method: "zelle",
+    note: "",
+    paidAt: new Date().toISOString().slice(0, 10),
+    });
+
+    const openPaymentModal = (invoice) => {
+    setPaymentInvoice(invoice);
+    setPaymentForm({
+        amount: invoice.balanceDue ? String(invoice.balanceDue) : "",
+        method: "zelle",
+        note: "",
+        paidAt: new Date().toISOString().slice(0, 10),
+    });
+    setPaymentOpen(true);
+    };
+
+    const closePaymentModal = () => {
+    setPaymentOpen(false);
+    setPaymentInvoice(null);
+    setPaymentForm({
+        amount: "",
+        method: "zelle",
+        note: "",
+        paidAt: new Date().toISOString().slice(0, 10),
+    });
+    };
+
+
   useEffect(() => {
     document.title = "Find Invoices | Brushline CRM";
   }, []);
@@ -62,6 +96,57 @@ export default function FindInvoices() {
     window.addEventListener("scroll", close, true);
     return () => window.removeEventListener("scroll", close, true);
   }, []);
+
+    const handleRecordPayment = async () => {
+    try {
+        if (!paymentInvoice) return;
+
+        setRecordingPayment(true);
+
+        const user = netlifyIdentity.currentUser();
+        const jwt = user ? await user.jwt() : null;
+        if (!jwt) throw new Error("Please log in first.");
+
+        const res = await fetch("/.netlify/functions/record-invoice-payment", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+            invoiceId: paymentInvoice.id,
+            amount: Number(paymentForm.amount),
+            method: paymentForm.method,
+            note: paymentForm.note,
+            paidAt: paymentForm.paidAt
+            ? new Date(`${paymentForm.paidAt}T12:00:00`).toISOString()
+            : new Date().toISOString(),
+        }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || "Failed to record payment");
+
+        setItems((prev) =>
+        prev.map((item) =>
+            item.id === paymentInvoice.id
+            ? {
+                ...item,
+                balanceDue: data.balanceDue,
+                paymentStatus: data.paymentStatus,
+                }
+            : item
+        )
+        );
+
+        closePaymentModal();
+        alert("Payment recorded successfully.");
+    } catch (e) {
+        alert(e.message);
+    } finally {
+        setRecordingPayment(false);
+    }
+    };
 
   const handleDeleteInvoice = async (id) => {
     const ok = window.confirm("Delete this invoice? This can’t be undone.");
@@ -184,11 +269,11 @@ export default function FindInvoices() {
                     <td>
                       <span
                         className={`fe-pill ${
-                          x.status === "paid"
-                            ? "approved"
-                            : x.status === "sent"
-                            ? "awaiting"
-                            : "awaiting"
+                          x.status === "Paid"
+                            ? "Approved"
+                            : x.status === "Sent"
+                            ? "Awaiting"
+                            : "Awaiting"
                         }`}
                       >
                         {x.status || "draft"}
@@ -198,14 +283,14 @@ export default function FindInvoices() {
                     <td>
                       <span
                         className={`fe-pill ${
-                          x.paymentStatus === "paid"
-                            ? "approved"
-                            : x.paymentStatus === "partial"
-                            ? "awaiting"
-                            : "awaiting"
+                          x.paymentStatus === "Paid"
+                            ? "Approved"
+                            : x.paymentStatus === "Partial"
+                            ? "Awaiting"
+                            : "Awaiting"
                         }`}
                       >
-                        {x.paymentStatus || "unpaid"}
+                        {x.paymentStatus || "Unpaid"}
                       </span>
                     </td>
 
@@ -262,6 +347,17 @@ export default function FindInvoices() {
                                 Open Linked Quote
                               </button>
                             ) : null}
+
+                            <button
+                                type="button"
+                                className="kebab-item"
+                                onClick={() => {
+                                    setOpenMenuId(null);
+                                    openPaymentModal(x);
+                                }}
+                                >
+                                Record Payment
+                            </button>
                           </div>
                         )}
                       </div>
@@ -281,6 +377,94 @@ export default function FindInvoices() {
           </table>
         </div>
       </div>
+      {paymentOpen && paymentInvoice && (
+        <div className="modal-backdrop" onClick={closePaymentModal}>
+            <div className="modal-card payment-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+                <div>
+                <div className="modal-title">Record Payment</div>
+                <div className="modal-sub">
+                    {paymentInvoice.invoiceNumber || paymentInvoice.id} • {paymentInvoice.clientName || "Customer"}
+                </div>
+                </div>
+
+                <button className="modal-close" onClick={closePaymentModal}>✕</button>
+            </div>
+
+            <div className="modal-body">
+                <div className="payment-summary">
+                <div><strong>Total:</strong> {fmtMoney(paymentInvoice.grandTotal)}</div>
+                <div><strong>Current Balance:</strong> {fmtMoney(paymentInvoice.balanceDue)}</div>
+                <div><strong>Status:</strong> {paymentInvoice.paymentStatus || "unpaid"}</div>
+                </div>
+
+                <div className="payment-form-grid">
+                <div className="payment-field">
+                    <label className="payment-label">Amount</label>
+                    <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="payment-input"
+                    value={paymentForm.amount}
+                    onChange={(e) => setPaymentForm((prev) => ({ ...prev, amount: e.target.value }))}
+                    />
+                </div>
+
+                <div className="payment-field">
+                    <label className="payment-label">Method</label>
+                    <select
+                    className="payment-input"
+                    value={paymentForm.method}
+                    onChange={(e) => setPaymentForm((prev) => ({ ...prev, method: e.target.value }))}
+                    >
+                    <option value="cash">Cash</option>
+                    <option value="check">Check</option>
+                    <option value="zelle">Zelle</option>
+                    <option value="card">Card</option>
+                    <option value="stripe">Stripe</option>
+                    <option value="bank_transfer">Bank Transfer</option>
+                    <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div className="payment-field">
+                    <label className="payment-label">Payment Date</label>
+                    <input
+                    type="date"
+                    className="payment-input"
+                    value={paymentForm.paidAt}
+                    onChange={(e) => setPaymentForm((prev) => ({ ...prev, paidAt: e.target.value }))}
+                    />
+                </div>
+
+                <div className="payment-field payment-field-full">
+                    <label className="payment-label">Note</label>
+                    <textarea
+                    className="payment-textarea"
+                    value={paymentForm.note}
+                    onChange={(e) => setPaymentForm((prev) => ({ ...prev, note: e.target.value }))}
+                    placeholder="Optional note about this payment"
+                    />
+                </div>
+                </div>
+
+                <div className="payment-actions">
+                <button className="quote-action-btn" onClick={closePaymentModal}>
+                    Cancel
+                </button>
+                <button
+                    className="fe-primary-btn"
+                    onClick={handleRecordPayment}
+                    disabled={recordingPayment}
+                >
+                    {recordingPayment ? "Recording..." : "Record Payment"}
+                </button>
+                </div>
+            </div>
+            </div>
+        </div>
+        )}
     </div>
   );
 }
