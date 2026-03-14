@@ -27,9 +27,9 @@ import { StartEstimate } from "./Pages/Estimator/Components/StartEstimate";
 import CustomersList from "./Pages/Customers/CustomersList";
 import EditEstimateRoute from "./Pages/Estimates/EditEstimateRoute";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
 
 const InvoicesFind = () => <div>Find Invoices</div>;
-const InvoicesCreate = () => <div>Create Invoice</div>;
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
@@ -87,12 +87,17 @@ function App() {
         <Route path="/crm" element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
+
             <Route path="estimates/find" element={<FindEstimates />} />
             <Route path="estimates/create" element={<StartEstimateRoute />} />
             <Route path="estimates/edit/:id" element={<EditEstimateRoute />} />
+
             <Route path="estimator" element={<Estimator />} />
+
             <Route path="invoices/find" element={<InvoicesFind />} />
-            <Route path="invoices/create" element={<InvoicesCreate />} />
+            <Route path="invoices/create" element={<InvoiceEditor />} />
+            <Route path="invoices/edit/:id" element={<InvoiceEditor />} />
+
             <Route path="customers" element={<CustomersList />} />
           </Route>
         </Route>
