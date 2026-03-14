@@ -45,6 +45,7 @@ export default function FindEstimates() {
   const [deletingId, setDeletingId] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [regeneratingId, setRegeneratingId] = useState(null);
+  const [creatingInvoiceId, setCreatingInvoiceId] = useState(null);
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -132,6 +133,40 @@ export default function FindEstimates() {
       alert(e.message);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleCreateInvoice = async (quoteId) => {
+    try {
+      setCreatingInvoiceId(quoteId);
+
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+
+      if (!jwt) {
+        throw new Error("Please log in first.");
+      }
+
+      const res = await fetch("/.netlify/functions/create-invoice-from-quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ quoteId }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to create invoice");
+      }
+
+      navigate(`/crm/invoices/edit/${data.id}`);
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setCreatingInvoiceId(null);
     }
   };
 
@@ -309,6 +344,22 @@ const handleRegeneratePdf = async (quoteId) => {
                               }}
                             >
                               Edit Quote
+                            </button>
+
+                            <button
+                              type="button"
+                              className="kebab-item"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleCreateInvoice(x.id);
+                              }}
+                              disabled={creatingInvoiceId === x.id}
+                            >
+                              {creatingInvoiceId === x.id
+                                ? "Creating Invoice..."
+                                : x.linkedInvoiceId
+                                  ? "Open Invoice"
+                                  : "Create Invoice"}
                             </button>
 
                             <button
