@@ -10,7 +10,6 @@ import {
   FiFileText,
   FiSearch,
   FiPlusCircle,
-  FiEdit,
   FiDollarSign,
   FiChevronRight,
   FiChevronDown,
