@@ -392,13 +392,14 @@ try {
           gap: 16px;
           margin-bottom: 20px;
         }
-        .section-title {
+        .section-title-invoice {
           margin: 0 0 10px;
           font-size: 12px;
           font-weight: 900;
           color: #64748b;
           text-transform: uppercase;
           letter-spacing: .08em;
+          line-height: 1;
         }
         .bill-box {
           border: 1px solid rgba(15,23,42,.08);
@@ -688,7 +689,7 @@ try {
 
             <div className="bill-grid">
               <div className="bill-box">
-                <div className="section-title">Bill To</div>
+                <div className="section-title-invoice">Bill To</div>
                 <div className="bill-name">{invoice.clientName || "Customer name"}</div>
                 <div className="bill-text">
                   {invoice.projectAddress || "Project address"}
@@ -696,13 +697,13 @@ try {
               </div>
 
               <div className="bill-box">
-                <div className="section-title">From</div>
+                <div className="section-title-invoice">From</div>
                 <div className="bill-name">{invoice.companyName || "Brushline Services"}</div>
               </div>
             </div>
 
             <div className="items-wrap">
-              <div className="section-title" style={{ marginBottom: 12 }}>Invoice Items</div>
+              <div className="section-title-invoice" style={{ marginBottom: 12 }}>Invoice Items</div>
               <div className="items-head">
                 <div>Description</div>
                 <div>Qty</div>
@@ -752,7 +753,7 @@ try {
             </div>
 
             <div style={{ marginTop: 22 }}>
-              <div className="section-title">Notes</div>
+              <div className="section-title-invoice">Notes</div>
               <div className="bill-box">
                 <div className="bill-text">{invoice.notes || "No notes added yet."}</div>
               </div>
@@ -776,7 +777,7 @@ try {
 
           <div className="invoice-side">
             <div className="invoice-side-card">
-              <div className="section-title">Invoice Details</div>
+              <div className="section-title-invoice">Invoice Details</div>
               <div className="field-grid">
                 <div className="field-row-2">
                   <div className="field">
@@ -793,10 +794,6 @@ try {
                 </div>
 
                 <div className="field-row-3">
-                  <div className="field">
-                    <label className="label">Subtotal</label>
-                    <input className="input" value={fmtMoney(subtotal)} readOnly />
-                  </div>
                   {/* <div className="field">
                     <label className="label">Tax</label>
                     <input className="input" type="number" min="0" step="0.01" value={tax} onChange={(e) => setField("tax", e.target.value)} />
@@ -815,7 +812,7 @@ try {
             </div>
 
             <div className="invoice-side-card" style={{ marginTop: 18 }}>
-              <div className="section-title">Summary</div>
+              <div className="section-title-invoice">Summary</div>
               <div className="summary-box">
                 <div className="summary-row">
                   <span>Subtotal</span>

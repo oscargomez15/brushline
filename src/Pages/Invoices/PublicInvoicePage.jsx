@@ -190,8 +190,6 @@ export default function PublicInvoicePage() {
               <div className="bill-name">{invoice.clientName || "Customer"}</div>
               <div className="bill-text">
                 {invoice.projectAddress || "—"}
-                {invoice.email ? `\n${invoice.email}` : ""}
-                {invoice.phone ? `\n${invoice.phone}` : ""}
               </div>
             </div>
 
