@@ -76,6 +76,7 @@ export default function InvoiceEditor() {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [sending, setSending] = useState(false);
+  const [openingQuote, setOpeningQuote] = useState(false);
 
   const handleSendInvoice = async () => {
 try {
@@ -245,6 +246,17 @@ try {
   if (loading) {
     return <div className="invoice-page"><div className="invoice-state">Loading invoice…</div></div>;
   }
+
+    const handleOpenLinkedQuote = async () => {
+    try {
+      if (!invoice?.linkedQuoteId) return;
+      setOpeningQuote(true);
+      window.open(`/quote/${invoice.linkedQuoteId}`, "_blank", "noopener,noreferrer");
+    } finally {
+      setOpeningQuote(false);
+    }
+  };
+
 
   return (
     <div className="invoice-page">
@@ -631,6 +643,14 @@ try {
           <div className="invoice-toolbar-actions">
             <button className="btn" onClick={() => navigate(-1)}>Back</button>
             <button className="btn" onClick={() => window.print()}>Print</button>
+            <button
+              className="btn"
+              onClick={handleOpenLinkedQuote}
+              disabled={!invoice?.linkedQuoteId || openingQuote}
+              title={invoice?.linkedQuoteId ? "Open linked quote public view" : "No linked quote available"}
+            >
+              {openingQuote ? "Opening Quote..." : "View Quote"}
+            </button>
             <button className="btn primary" onClick={handleSendInvoice} disabled={sending || !id}>
               {sending ? "Sending..." : "Send Invoice"}
             </button>
@@ -798,10 +818,6 @@ try {
                     <label className="label">Tax</label>
                     <input className="input" type="number" min="0" step="0.01" value={tax} onChange={(e) => setField("tax", e.target.value)} />
                   </div> */}
-                  <div className="field">
-                    <label className="label">Deposit Paid</label>
-                    <input className="input" type="number" min="0" step="0.01" value={depositPaid} onChange={(e) => setField("depositPaid", e.target.value)} />
-                  </div>
                 </div>
 
                 <div className="field">
