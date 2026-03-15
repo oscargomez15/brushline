@@ -65,6 +65,15 @@ exports.handler = async (event) => {
       notes: invoice.notes || "",
       terms: invoice.terms || "",
       linkedQuoteId: invoice.linkedQuoteId || "",
+      payments: Array.isArray(invoice.payments)
+        ? invoice.payments.map((p) => ({
+            id: p.id,
+            amount: Number(p.amount) || 0,
+            method: p.method || "",
+            note: p.note || "",
+            paidAt: p.paidAt || p.recordedAt || null,
+            }))
+        : [],
     };
 
     await invoicesStore.setJSON(id, {

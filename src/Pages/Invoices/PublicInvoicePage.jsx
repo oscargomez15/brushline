@@ -46,6 +46,23 @@ export default function PublicInvoicePage() {
       : "Invoice | Brushline Services";
   }, [invoice]);
 
+    const prettyMethod = (method = "") => {
+    const map = {
+        cash: "Cash",
+        check: "Check",
+        zelle: "Zelle",
+        card: "Card",
+        stripe: "Stripe",
+        bank_transfer: "Bank Transfer",
+        other: "Other",
+    };
+
+    return map[method] || method || "Payment";
+    };
+
+
+  const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
+
   useEffect(() => {
     (async () => {
       try {
@@ -202,6 +219,31 @@ export default function PublicInvoicePage() {
                   <strong>{fmtMoney(balanceDue)}</strong>
                 </div>
               </div>
+
+              {payments.length > 0 ? (
+                <div className="payment-history">
+                    <div className="payment-history-title">Payments Made</div>
+
+                    <div className="payment-history-list">
+                    {payments.map((payment) => (
+                        <div className="payment-history-row" key={payment.id}>
+                        <div className="payment-history-left">
+                            <div className="payment-history-method">
+                            {prettyMethod(payment.method)}
+                            </div>
+                            <div className="payment-history-date">
+                            {fmtDate(payment.paidAt)}
+                            </div>
+                        </div>
+
+                        <div className="payment-history-right">
+                            {fmtMoney(payment.amount)}
+                        </div>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+                ) : null}
             </div>
           </div>
 
@@ -375,7 +417,6 @@ const styles = `
   }
 
   .company-sub {
-    margin-top: 8px;
     font-size: 14px;
     line-height: 1.6;
     color: #475569;
@@ -607,6 +648,15 @@ const styles = `
   }
 
   @media (max-width: 680px) {
+
+    .payment-history-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .payment-history-right {
+        white-space: normal;
+    }
     .public-invoice-page {
       padding: 124px 12px 20px;
     }
@@ -751,5 +801,59 @@ const styles = `
     .terms-text {
     padding: 0 16px 16px;
     border-top: 1px solid rgba(15,23,42,.08);
+    }
+
+    .payment-history {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(15,23,42,.08);
+    }
+
+    .payment-history-title {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 10px;
+    }
+
+    .payment-history-list {
+    display: grid;
+    gap: 10px;
+    }
+
+    .payment-history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(15,23,42,.08);
+    border-radius: 12px;
+    background: rgba(15,23,42,.03);
+    }
+
+    .payment-history-left {
+    min-width: 0;
+    }
+
+    .payment-history-method {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+    }
+
+    .payment-history-date {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #64748b;
+    }
+
+    .payment-history-right {
+    font-size: 14px;
+    font-weight: 900;
+    color: #0f172a;
+    white-space: nowrap;
     }
 `;
