@@ -139,13 +139,6 @@ export default function Sidebar() {
               collapsed={collapsed}
               indent
               />
-              <NavItem
-              to="/crm/estimates/edit"
-              label="Edit"
-              icon={<FiEdit />}
-              collapsed={collapsed}
-              indent
-              />
           </Dropdown>
 
           <Dropdown
@@ -166,13 +159,6 @@ export default function Sidebar() {
                   to="/crm/invoices/create"
                   label="Create"
                   icon={<FiPlusCircle />}
-                  collapsed={collapsed}
-                  indent
-              />
-              <NavItem
-                  to="/crm/invoices/edit/:id"
-                  label="Edit"
-                  icon={<FiEdit />}
                   collapsed={collapsed}
                   indent
               />
@@ -226,9 +212,6 @@ export default function Sidebar() {
             <NavLink className="crm-mobile-dd-item" to="/crm/estimates/create">
               <FiPlusCircle /> <span>Create</span>
             </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/crm/estimates/edit">
-              <FiEdit /> <span>Edit</span>
-            </NavLink>
           </div>
         )}
       </div>
@@ -251,9 +234,6 @@ export default function Sidebar() {
             </NavLink>
             <NavLink className="crm-mobile-dd-item" to="/crm/invoices/create">
               <FiPlusCircle /> <span>Create</span>
-            </NavLink>
-            <NavLink className="crm-mobile-dd-item" to="/crm/invoices/edit/">
-              <FiEdit /> <span>Edit</span>
             </NavLink>
           </div>
         )}
