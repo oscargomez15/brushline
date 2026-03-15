@@ -76,7 +76,6 @@ export default function InvoiceEditor() {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [sending, setSending] = useState(false);
-  const [openingQuote, setOpeningQuote] = useState(false);
 
   const handleSendInvoice = async () => {
 try {
@@ -247,15 +246,10 @@ try {
     return <div className="invoice-page"><div className="invoice-state">Loading invoice…</div></div>;
   }
 
-    const handleOpenLinkedQuote = async () => {
-    try {
-      if (!invoice?.linkedQuoteId) return;
-      setOpeningQuote(true);
-      window.open(`/quote/${invoice.linkedQuoteId}`, "_blank", "noopener,noreferrer");
-    } finally {
-      setOpeningQuote(false);
-    }
-  };
+const handleOpenPublicInvoice = () => {
+  if (!invoice?.id) return;
+  window.open(`/invoice/${invoice.id}`, "_blank", "noopener,noreferrer");
+};
 
 
   return (
@@ -644,12 +638,11 @@ try {
             <button className="btn" onClick={() => navigate(-1)}>Back</button>
             <button className="btn" onClick={() => window.print()}>Print</button>
             <button
-              className="btn"
-              onClick={handleOpenLinkedQuote}
-              disabled={!invoice?.linkedQuoteId || openingQuote}
-              title={invoice?.linkedQuoteId ? "Open linked quote public view" : "No linked quote available"}
+            className="btn"
+            onClick={handleOpenPublicInvoice}
+            disabled={!invoice?.id}
             >
-              {openingQuote ? "Opening Quote..." : "View Quote"}
+            View Public Invoice
             </button>
             <button className="btn primary" onClick={handleSendInvoice} disabled={sending || !id}>
               {sending ? "Sending..." : "Send Invoice"}
@@ -830,18 +823,18 @@ try {
             <div className="invoice-side-card" style={{ marginTop: 18 }}>
               <div className="section-title-invoice">Summary</div>
               <div className="summary-box">
-                <div className="summary-row">
+                {/* <div className="summary-row">
                   <span>Subtotal</span>
                   <strong>{fmtMoney(subtotal)}</strong>
-                </div>
+                </div> */}
                 {/* <div className="summary-row">
                   <span>Tax</span>
                   <strong>{fmtMoney(tax)}</strong>
                 </div> */}
-                <div className="summary-row">
+                {/* <div className="summary-row">
                   <span>Deposit Paid</span>
                   <strong>{fmtMoney(depositPaid)}</strong>
-                </div>
+                </div> */}
                 <div className="summary-row total">
                   <span>Total</span>
                   <span>{fmtMoney(grandTotal)}</span>
