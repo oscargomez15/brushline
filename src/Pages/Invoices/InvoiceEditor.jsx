@@ -76,6 +76,7 @@ export default function InvoiceEditor() {
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const [sending, setSending] = useState(false);
+  const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
 
   const handleSendInvoice = async () => {
 try {
@@ -164,6 +165,20 @@ try {
   const setField = (key, value) => {
     setInvoice((prev) => ({ ...prev, [key]: value }));
   };
+
+    const prettyMethod = (method = "") => {
+    const map = {
+        cash: "Cash",
+        check: "Check",
+        zelle: "Zelle",
+        card: "Card",
+        stripe: "Stripe",
+        bank_transfer: "Bank Transfer",
+        other: "Other",
+    };
+
+    return map[method] || method || "Payment";
+    };
 
   const updateLineItem = (index, patch) => {
     setInvoice((prev) => {
@@ -626,6 +641,70 @@ const handleOpenPublicInvoice = () => {
             color: #334155;
             border-color: rgba(15,23,42,.08);
             }
+            .invoice-payments {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
+            }
+
+            .invoice-payments.empty {
+            margin-top: 16px;
+            }
+
+            .invoice-payments-title {
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 10px;
+            }
+
+            .invoice-payments-list {
+            display: grid;
+            gap: 10px;
+            }
+
+            .invoice-payment-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.03);
+            }
+
+            .invoice-payment-left {
+            min-width: 0;
+            }
+
+            .invoice-payment-method {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+            }
+
+            .invoice-payment-date {
+            margin-top: 2px;
+            font-size: 12px;
+            color: #64748b;
+            }
+
+            .invoice-payment-note {
+            margin-top: 6px;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #475569;
+            }
+
+            .invoice-payment-right {
+            font-size: 14px;
+            font-weight: 900;
+            color: #0f172a;
+            white-space: nowrap;
+            }
       `}</style>
 
       <div className="invoice-shell">
@@ -821,31 +900,75 @@ const handleOpenPublicInvoice = () => {
             </div>
 
             <div className="invoice-side-card" style={{ marginTop: 18 }}>
-              <div className="section-title-invoice">Summary</div>
-              <div className="summary-box">
-                {/* <div className="summary-row">
-                  <span>Subtotal</span>
-                  <strong>{fmtMoney(subtotal)}</strong>
-                </div> */}
-                {/* <div className="summary-row">
-                  <span>Tax</span>
-                  <strong>{fmtMoney(tax)}</strong>
-                </div> */}
-                {/* <div className="summary-row">
-                  <span>Deposit Paid</span>
-                  <strong>{fmtMoney(depositPaid)}</strong>
-                </div> */}
-                <div className="summary-row total">
-                  <span>Total</span>
-                  <span>{fmtMoney(grandTotal)}</span>
-                </div>
-              </div>
+            <div className="section-title">Summary</div>
 
-              <div className="balance-card">
+            <div className="summary-box">
+                <div className="summary-row">
+                <span>Subtotal</span>
+                <strong>{fmtMoney(subtotal)}</strong>
+                </div>
+
+                <div className="summary-row">
+                <span>Tax</span>
+                <strong>{fmtMoney(tax)}</strong>
+                </div>
+
+                <div className="summary-row">
+                <span>Payments Received</span>
+                <strong>{fmtMoney(depositPaid)}</strong>
+                </div>
+
+                <div className="summary-row total">
+                <span>Total</span>
+                <span>{fmtMoney(grandTotal)}</span>
+                </div>
+            </div>
+
+            <div className="balance-card">
                 <div className="balance-label">Balance Due</div>
                 <div className="balance-value">{fmtMoney(balanceDue)}</div>
-              </div>
+                <div className="mini-note">
+                This balance updates automatically as payments are recorded.
+                </div>
             </div>
+
+            {payments.length > 0 ? (
+                <div className="invoice-payments">
+                <div className="invoice-payments-title">Payment History</div>
+
+                <div className="invoice-payments-list">
+                    {payments
+                    .slice()
+                    .sort((a, b) => new Date(b.paidAt || b.recordedAt || 0) - new Date(a.paidAt || a.recordedAt || 0))
+                    .map((payment) => (
+                        <div className="invoice-payment-row" key={payment.id}>
+                        <div className="invoice-payment-left">
+                            <div className="invoice-payment-method">
+                            {prettyMethod(payment.method)}
+                            </div>
+                            <div className="invoice-payment-date">
+                            {fmtDate(payment.paidAt || payment.recordedAt)}
+                            </div>
+                            {payment.note ? (
+                            <div className="invoice-payment-note">{payment.note}</div>
+                            ) : null}
+                        </div>
+
+                        <div className="invoice-payment-right">
+                            {fmtMoney(payment.amount)}
+                        </div>
+                        </div>
+                    ))}
+                </div>
+                </div>
+            ) : (
+                <div className="invoice-payments empty">
+                <div className="invoice-payments-title">Payment History</div>
+                <div className="mini-note">No payments recorded yet.</div>
+                </div>
+            )}
+            </div>
+
           </div>
         </div>
       </div>
