@@ -128,6 +128,50 @@ async function buildInvoicePdfBase64(invoice) {
     }
   };
 
+  // Header
+    page.drawRectangle({
+    x: margin,
+    y: y - 56,
+    width: width - margin * 2,
+    height: 56,
+    color: colors.navy,
+    });
+
+    if (logoImage) {
+    const logoDims = logoImage.scale(0.11); // was too large before; this is tighter
+    const logoX = margin + 14;
+    const logoY = y - 46;
+
+    page.drawImage(logoImage, {
+        x: logoX,
+        y: logoY,
+        width: logoDims.width,
+        height: logoDims.height,
+    });
+    }
+
+    drawText("INVOICE", width - margin - 100, y - 22, 18, true, rgb(1, 1, 1));
+    y -= 76;
+
+    // PAID badge (top right)
+    if (balanceDue <= 0) {
+    const badgeWidth = 64;
+    const badgeHeight = 20;
+    const badgeX = width - margin - badgeWidth;
+    const badgeY = y + 40; // adjust slightly if needed
+
+    page.drawRectangle({
+        x: badgeX,
+        y: badgeY,
+        width: badgeWidth,
+        height: badgeHeight,
+        color: colors.green,
+        borderRadius: 4,
+    });
+
+    drawText("PAID", badgeX + 14, badgeY + 6, 10, true, rgb(1, 1, 1));
+    }
+
   // Top meta
     drawText("Invoice #", margin, y, 10, true, colors.muted);
     drawText("Issue Date", 220, y, 10, true, colors.muted);
