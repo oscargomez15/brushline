@@ -69,7 +69,7 @@ async function buildInvoicePdfBase64(invoice) {
 
     let logoImage = null;
     try {
-    const logoPath = path.join(__dirname, "assets", "brushline-logo.png");
+    const logoPath = path.join(__dirname, "assets", "logo.png");
     const logoBytes = fs.readFileSync(logoPath);
     logoImage = await pdfDoc.embedPng(logoBytes);
     } catch (err) {
@@ -276,37 +276,34 @@ async function buildInvoicePdfBase64(invoice) {
   }
 
   // Summary box
-  ensureSpace(150);
+    ensureSpace(120);
 
-  const boxWidth = 210;
-  const boxX = width - margin - boxWidth;
-  const boxY = y - 110;
+    const boxWidth = 210;
+    const boxHeight = 78;
+    const boxX = width - margin - boxWidth;
+    const boxY = y - boxHeight;
 
-  page.drawRectangle({
+    page.drawRectangle({
     x: boxX,
     y: boxY,
     width: boxWidth,
-    height: 110,
+    height: boxHeight,
     color: colors.soft,
     borderColor: colors.border,
     borderWidth: 1,
-  });
+    });
 
-//   drawText("Subtotal", boxX + 14, boxY + 84, 11, false, colors.muted);
-//   drawText(fmtMoney(subtotal), boxX + 130, boxY + 84, 11, true);
+    drawText("Total", boxX + 14, boxY + 52, 11, false, colors.muted);
+    drawText(fmtMoney(grandTotal), boxX + 130, boxY + 52, 11, true);
 
-//   drawText("Tax", boxX + 14, boxY + 64, 11, false, colors.muted);
-//   drawText(fmtMoney(tax), boxX + 130, boxY + 64, 11, true);
+    drawText("Payments Received", boxX + 14, boxY + 32, 11, false, colors.muted);
+    drawText(fmtMoney(paymentsReceived), boxX + 130, boxY + 32, 11, true, colors.green);
 
-  drawText("Payments Received", boxX + 14, boxY + 44, 11, false, colors.muted);
-  drawText(fmtMoney(paymentsReceived), boxX + 130, boxY + 44, 11, true, colors.green);
+    drawRule(boxY + 18);
+    drawText("Balance Due", boxX + 14, boxY + 6, 12, true);
+    drawText(fmtMoney(balanceDue), boxX + 118, boxY + 6, 14, true);
 
-  drawRule(boxY + 30);
-  drawText("Balance Due", boxX + 14, boxY + 14, 12, true);
-  drawText(fmtMoney(balanceDue), boxX + 118, boxY + 14, 14, true);
-
-  y = boxY - 24;
-
+    y = boxY - 24;
   // Payment history
   ensureSpace(80);
   drawText("Payment History", margin, y, 12, true, colors.muted);
