@@ -747,6 +747,20 @@ const handleOpenPublicInvoice = () => {
             color: #0f172a;
             white-space: nowrap;
             }
+
+            .invoice-summary-card {
+            overflow: hidden;
+            }
+
+            .invoice-summary-title {
+            margin: 0 0 12px;
+            font-size: 12px;
+            line-height: 1.2;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #64748b;
+            }
       `}</style>
 
       <div className="invoice-shell">
@@ -946,8 +960,8 @@ const handleOpenPublicInvoice = () => {
               </div>
             </div>
 
-            <div className="invoice-side-card" style={{ marginTop: 18 }}>
-            <div className="section-title">Summary</div>
+            <div className="invoice-side-card invoice-summary-card" style={{ marginTop: 18 }}>
+            <div className="invoice-summary-title">Summary</div>
 
             <div className="summary-box">
                 <div className="summary-row">
@@ -969,14 +983,8 @@ const handleOpenPublicInvoice = () => {
                 <span>Total</span>
                 <span>{fmtMoney(grandTotal)}</span>
                 </div>
-            </div>
 
-            <div className="balance-card">
-                <div className="balance-label">Balance Due</div>
-                <div className="balance-value">{fmtMoney(balanceDue)}</div>
-            </div>
-
-            {payments.length > 0 ? (
+                {payments.length > 0 ? (
                 <div className="invoice-payments">
                 <div className="invoice-payments-title">Payment History</div>
 
@@ -1011,6 +1019,12 @@ const handleOpenPublicInvoice = () => {
                 <div className="mini-note">No payments recorded yet.</div>
                 </div>
             )}
+            </div>
+
+            <div className="balance-card">
+                <div className="balance-label">Balance Due</div>
+                <div className="balance-value">{fmtMoney(balanceDue)}</div>
+            </div>
             </div>
 
           </div>
