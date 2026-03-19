@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
 
 function safeStr(v) {
@@ -50,6 +52,13 @@ function wrapText(text, maxChars = 90) {
   return lines;
 }
 
+const DEFAULT_INVOICE_TERMS = `
+Payment is due upon receipt unless otherwise agreed in writing.
+This invoice reflects the approved scope of work and any recorded payments received.
+Additional work, changes, or materials outside the approved scope may be billed separately.
+Thank you for choosing Brushline Services.
+`.trim();
+
 async function buildInvoicePdfBase64(invoice) {
   const pdfDoc = await PDFDocument.create();
   let page = pdfDoc.addPage([612, 792]); // letter
@@ -58,6 +67,14 @@ async function buildInvoicePdfBase64(invoice) {
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
+    let logoImage = null;
+    try {
+    const logoPath = path.join(__dirname, "assets", "brushline-logo.png");
+    const logoBytes = fs.readFileSync(logoPath);
+    logoImage = await pdfDoc.embedPng(logoBytes);
+    } catch (err) {
+    console.warn("Invoice PDF logo could not be loaded:", err?.message || err);
+    }
   const colors = {
     navy: rgb(11 / 255, 22 / 255, 51 / 255),
     text: rgb(15 / 255, 23 / 255, 42 / 255),
@@ -112,17 +129,44 @@ async function buildInvoicePdfBase64(invoice) {
   };
 
   // Header
-  page.drawRectangle({
+    page.drawRectangle({
     x: margin,
-    y: y - 52,
+    y: y - 56,
     width: width - margin * 2,
-    height: 52,
+    height: 56,
     color: colors.navy,
-  });
+    });
 
-  drawText(invoice?.companyName || "Brushline Services", margin + 18, y - 20, 22, true, rgb(1, 1, 1));
-  drawText("INVOICE", width - margin - 86, y - 22, 18, true, rgb(1, 1, 1));
-  y -= 72;
+    if (logoImage) {
+    const logoDims = logoImage.scale(0.22);
+    page.drawImage(logoImage, {
+        x: margin + 14,
+        y: y - 48,
+        width: logoDims.width,
+        height: logoDims.height,
+    });
+
+    drawText(
+        invoice?.companyName || "Brushline Services",
+        margin + 88,
+        y - 20,
+        20,
+        true,
+        rgb(1, 1, 1)
+    );
+    } else {
+    drawText(
+        invoice?.companyName || "Brushline Services",
+        margin + 18,
+        y - 20,
+        22,
+        true,
+        rgb(1, 1, 1)
+    );
+    }
+
+    drawText("INVOICE", width - margin - 100, y - 22, 18, true, rgb(1, 1, 1));
+    y -= 76;
 
   // Top meta
   drawText("Invoice #", margin, y, 10, true, colors.muted);
@@ -248,11 +292,11 @@ async function buildInvoicePdfBase64(invoice) {
     borderWidth: 1,
   });
 
-  drawText("Subtotal", boxX + 14, boxY + 84, 11, false, colors.muted);
-  drawText(fmtMoney(subtotal), boxX + 130, boxY + 84, 11, true);
+//   drawText("Subtotal", boxX + 14, boxY + 84, 11, false, colors.muted);
+//   drawText(fmtMoney(subtotal), boxX + 130, boxY + 84, 11, true);
 
-  drawText("Tax", boxX + 14, boxY + 64, 11, false, colors.muted);
-  drawText(fmtMoney(tax), boxX + 130, boxY + 64, 11, true);
+//   drawText("Tax", boxX + 14, boxY + 64, 11, false, colors.muted);
+//   drawText(fmtMoney(tax), boxX + 130, boxY + 64, 11, true);
 
   drawText("Payments Received", boxX + 14, boxY + 44, 11, false, colors.muted);
   drawText(fmtMoney(paymentsReceived), boxX + 130, boxY + 44, 11, true, colors.green);
@@ -304,15 +348,24 @@ async function buildInvoicePdfBase64(invoice) {
   }
 
   // Terms
-  if (invoice?.terms) {
-    ensureSpace(80);
-    drawText("Terms", margin, y, 12, true, colors.muted);
-    y -= 16;
-    wrapText(invoice.terms, 85).forEach((line) => {
-      drawText(line, margin, y, 10, false, colors.muted);
-      y -= 13;
-    });
+const termsText = safeStr(invoice?.terms) || DEFAULT_INVOICE_TERMS;
+
+if (termsText) {
+  ensureSpace(90);
+  drawRule(y + 4);
+  y -= 10;
+
+  drawText("Terms", margin, y, 12, true, colors.muted);
+  y -= 16;
+
+  const termLines = wrapText(termsText, 90);
+
+  for (const line of termLines) {
+    ensureSpace(24);
+    drawText(line, margin, y, 10, false, colors.muted);
+    y -= 13;
   }
+}
 
   const pdfBytes = await pdfDoc.save();
   return Buffer.from(pdfBytes).toString("base64");
