@@ -51,7 +51,8 @@ export default function FindEstimates() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyErr, setHistoryErr] = useState("");
   const [historyData, setHistoryData] = useState(null); // { viewCount, lastViewedAt, viewEvents, id }
-  
+  const [resendingId, setResendingId] = useState(null);
+
   async function openViewHistory(quoteId) {
   setHistoryErr("");
   setHistoryLoading(true);
@@ -110,6 +111,37 @@ export default function FindEstimates() {
   window.addEventListener("scroll", close, true);
   return () => window.removeEventListener("scroll", close, true);
 }, []);
+
+  const handleResendQuoteEmail = async (quoteId) => {
+    try {
+      setResendingId(quoteId);
+
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+
+      if (!jwt) {
+        throw new Error("Please log in first.");
+      }
+
+      const res = await fetch("/.netlify/functions/resend-quote-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ quoteId }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to resend quote email");
+
+      alert(`Quote email sent to ${data.sentTo}`);
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setResendingId(null);
+    }
+  };
 
   const handleDelete = async (id) => {
     const ok = window.confirm("Delete this estimate? This can’t be undone.");
@@ -344,6 +376,18 @@ const handleRegeneratePdf = async (quoteId) => {
                               }}
                             >
                               Edit Quote
+                            </button>
+
+                            <button
+                              type="button"
+                              className="kebab-item"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleResendQuoteEmail(x.id);
+                              }}
+                              disabled={resendingId === x.id}
+                            >
+                              {resendingId === x.id ? "Resending..." : "Resend Quote Email"}
                             </button>
 
                             <button
