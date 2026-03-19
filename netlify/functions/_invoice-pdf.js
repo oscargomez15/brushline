@@ -133,32 +133,36 @@ async function buildInvoicePdfBase64(invoice) {
     x: margin,
     y: y - 56,
     width: width - margin * 2,
-    height: 56,
+    height: 60,
     color: colors.navy,
     });
 
     if (logoImage) {
-    const logoDims = logoImage.scale(0.11); // was too large before; this is tighter
+    const maxHeight = 34;
+
+    const scale = maxHeight / logoImage.height;
+    const logoWidth = logoImage.width * scale;
+    const logoHeight = logoImage.height * scale;
+
     const logoX = margin + 14;
     const logoY = y - 46;
 
     page.drawImage(logoImage, {
         x: logoX,
         y: logoY,
-        width: logoDims.width,
-        height: logoDims.height,
+        width: logoWidth,
+        height: logoHeight,
     });
     }
 
-    drawText("INVOICE", width - margin - 100, y - 22, 18, true, rgb(1, 1, 1));
-    y -= 76;
+    drawText("INVOICE", width - margin - 110, y - 20, 18, true, rgb(1, 1, 1));
 
-    // PAID badge (top right)
     if (balanceDue <= 0) {
-    const badgeWidth = 64;
-    const badgeHeight = 20;
+    const badgeWidth = 56;
+    const badgeHeight = 16;
+
     const badgeX = width - margin - badgeWidth;
-    const badgeY = y + 40; // adjust slightly if needed
+    const badgeY = y - 44; // ⬅️ lower than INVOICE
 
     page.drawRectangle({
         x: badgeX,
@@ -166,10 +170,9 @@ async function buildInvoicePdfBase64(invoice) {
         width: badgeWidth,
         height: badgeHeight,
         color: colors.green,
-        borderRadius: 4,
     });
 
-    drawText("PAID", badgeX + 14, badgeY + 6, 10, true, rgb(1, 1, 1));
+    drawText("PAID", badgeX + 14, badgeY + 4, 9, true, rgb(1, 1, 1));
     }
 
   // Top meta
