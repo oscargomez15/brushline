@@ -39,6 +39,42 @@ export default function PublicInvoicePage() {
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+
+  const handleDownloadPdf = async () => {
+  try {
+    if (!id || !token) {
+      throw new Error("Missing invoice link information.");
+    }
+
+    setDownloadingPdf(true);
+
+    const res = await fetch(
+      `/.netlify/functions/get-public-invoice-pdf?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`
+    );
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(text || "Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Invoice-${invoice?.invoiceNumber || id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    setErr(e.message || "Failed to download PDF");
+  } finally {
+    setDownloadingPdf(false);
+  }
+};
 
   useEffect(() => {
     document.title = invoice?.invoiceNumber
@@ -128,15 +164,25 @@ export default function PublicInvoicePage() {
 
       <div className="public-invoice-shell">
         <div className="public-invoice-toolbar no-print">
-          <div>
+        <div>
             <div className="toolbar-kicker">Brushline Services</div>
             <h1>Invoice</h1>
             <p>Thank you for your business.</p>
-          </div>
+        </div>
 
-          <button className="print-btn" onClick={() => window.print()}>
+        <div className="public-invoice-toolbar-actions">
+            <button
+            className="download-btn"
+            onClick={handleDownloadPdf}
+            disabled={downloadingPdf}
+            >
+            {downloadingPdf ? "Preparing PDF..." : "Download PDF"}
+            </button>
+
+            <button className="print-btn" onClick={() => window.print()}>
             Print / Save PDF
-          </button>
+            </button>
+        </div>
         </div>
 
         <div className="public-invoice-card">
@@ -646,6 +692,15 @@ const styles = `
   }
 
   @media (max-width: 680px) {
+    .public-invoice-toolbar-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    }
+
+    .public-invoice-toolbar-actions button {
+    width: 100%;
+}
 
     .payment-history-row {
         flex-direction: column;
@@ -725,10 +780,10 @@ const styles = `
     }
   }
 
-  .status-pill.status-draft {
-  background: rgba(15,23,42,.05);
-  color: #334155;
-    }
+    .status-pill.status-draft {
+    background: rgba(15,23,42,.05);
+    color: #334155;
+        }
 
     .status-pill.status-sent {
     background: rgba(37,99,235,.12);
@@ -853,5 +908,30 @@ const styles = `
     font-weight: 900;
     color: #0f172a;
     white-space: nowrap;
+    }
+
+    .public-invoice-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    }
+
+    .download-btn {
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(15,23,42,.12);
+    background: #fff;
+    color: #0f172a;
+    font-weight: 900;
+    cursor: pointer;
+    white-space: nowrap;
+    }
+
+    .download-btn:disabled,
+    .print-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
     }
 `;

@@ -77,6 +77,48 @@ export default function InvoiceEditor() {
   const [err, setErr] = useState("");
   const [sending, setSending] = useState(false);
   const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  
+  const handleDownloadPdf = async () => {
+  try {
+    if (!id) {
+      throw new Error("Please save the invoice before downloading the PDF.");
+    }
+
+    setDownloadingPdf(true);
+
+    const user = netlifyIdentity.currentUser();
+    const jwt = user ? await user.jwt() : null;
+    if (!jwt) throw new Error("Please log in first.");
+
+    const res = await fetch(`/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(text || "Failed to download PDF");
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Invoice-${invoice?.invoiceNumber || id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    setErr(e.message || "Failed to download PDF");
+  } finally {
+    setDownloadingPdf(false);
+  }
+};
 
   const handleSendInvoice = async () => {
 try {
@@ -715,8 +757,13 @@ const handleOpenPublicInvoice = () => {
 
           <div className="invoice-toolbar-actions">
             <button className="btn" onClick={() => navigate(-1)}>Back</button>
-            <button className="btn" onClick={() => window.print()}>Print</button>
             <button
+            className="btn"
+            onClick={handleDownloadPdf}
+            disabled={downloadingPdf || !id}
+            >
+            {downloadingPdf ? "Preparing PDF..." : "Download PDF"}
+            </button>            <button
             className="btn"
             onClick={handleOpenPublicInvoice}
             disabled={!invoice?.id}
@@ -908,10 +955,10 @@ const handleOpenPublicInvoice = () => {
                 <strong>{fmtMoney(subtotal)}</strong>
                 </div>
 
-                <div className="summary-row">
+                {/* <div className="summary-row">
                 <span>Tax</span>
                 <strong>{fmtMoney(tax)}</strong>
-                </div>
+                </div> */}
 
                 <div className="summary-row">
                 <span>Payments Received</span>
@@ -927,9 +974,6 @@ const handleOpenPublicInvoice = () => {
             <div className="balance-card">
                 <div className="balance-label">Balance Due</div>
                 <div className="balance-value">{fmtMoney(balanceDue)}</div>
-                <div className="mini-note">
-                This balance updates automatically as payments are recorded.
-                </div>
             </div>
 
             {payments.length > 0 ? (
