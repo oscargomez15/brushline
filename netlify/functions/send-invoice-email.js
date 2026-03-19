@@ -29,93 +29,146 @@ function fmtMoney(n) {
   }).format(Number(n) || 0);
 }
 
-function buildInvoiceEmailHtml({ companyName, customerName, address, total, balanceDue, invoiceUrl, invoiceNumber, dueDate }) {
+function buildInvoiceEmailHtml({
+  companyName,
+  customerName,
+  address,
+  total,
+  balanceDue,
+  invoiceUrl,
+  invoiceNumber,
+  dueDate,
+}) {
   const safe = (v) =>
-    String(v ?? "").replace(/[&<>\"']/g, (m) => ({
+    String(v ?? "").replace(/[&<>"']/g, (m) => ({
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
-      "\"": "&quot;",
+      '"': "&quot;",
       "'": "&#39;",
     }[m]));
 
-  return `
-<div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
-  <div style="max-width:680px;margin:0 auto;">
-    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.10);border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(15,23,42,.08);">
+  const money = (n) => {
+    const x = Number(n || 0);
+    return x.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
+  };
 
-      <div style="background:#0f172a;padding:22px 20px;text-align:center;">
+  return `
+<div style="background:#f3f4f6;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+  <div style="max-width:680px;margin:0 auto;">
+
+    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;box-shadow:0 14px 36px rgba(15,23,42,.08);">
+
+      <!-- TOP BRAND BAR -->
+      <div style="background:#071533;padding:28px 20px;text-align:center;">
         <img
           src="https://brushlineservices.com/logo.png"
           alt="Brushline Services"
-          style="height:120px;width:auto;display:block;margin:0 auto;"
+          style="height:110px;width:auto;display:block;margin:0 auto;"
         />
       </div>
 
-      <div style="padding:14px 20px;border-bottom:1px solid rgba(15,23,42,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;">
-        <div style="font-size:16px;font-weight:700;color:rgba(15,23,42,.65);">
+      <!-- EYEBROW -->
+      <div style="padding:16px 20px;border-bottom:1px solid rgba(15,23,42,.08);background:#ffffff;">
+        <div style="font-size:14px;font-weight:800;color:#6b7280;letter-spacing:.02em;">
           Invoice Ready
         </div>
       </div>
 
-      <div style="padding:22px 20px;">
-        <h1 style="margin:0 0 8px;font-size:20px;line-height:1.25;letter-spacing:-.02em;">
+      <!-- MAIN BODY -->
+      <div style="padding:28px 20px 24px;">
+        <h1 style="margin:0 0 10px;font-size:32px;line-height:1.15;letter-spacing:-.03em;color:#0f172a;">
           Hi ${safe(customerName || "there")}, your invoice is ready
         </h1>
 
-        <p style="margin:0 0 14px;color:rgba(15,23,42,.75);font-size:14px;line-height:1.6;">
-          Thank you for choosing ${safe(companyName || "Brushline Services")}. You can view your invoice using the button below.
+        <p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#4b5563;">
+          Thank you for choosing ${safe(companyName || "Brushline Services")}. You can review your invoice online using the button below.
         </p>
 
-        <div style="background:rgba(15,23,42,.03);border:1px solid rgba(15,23,42,.08);border-radius:14px;padding:14px;margin:16px 0;">
-          <div style="display:grid;gap:12px;">
-            <div>
-              <div style="font-size:12px;font-weight:800;color:rgba(15,23,42,.60);text-transform:uppercase;letter-spacing:.08em;">Invoice #</div>
-              <div style="margin-top:6px;font-size:14px;font-weight:700;">${safe(invoiceNumber || "—")}</div>
+        <!-- SUMMARY CARD -->
+        <div style="background:#f8fafc;border:1px solid rgba(15,23,42,.08);border-radius:18px;padding:18px 16px;margin:0 0 22px;">
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">
+              Invoice #
             </div>
-
-            <div>
-              <div style="font-size:12px;font-weight:800;color:rgba(15,23,42,.60);text-transform:uppercase;letter-spacing:.08em;">Project Location</div>
-              <div style="margin-top:6px;font-size:14px;font-weight:700;">${safe(address || "N/A")}</div>
-            </div>
-
-            <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;">
-              <div>
-                <div style="font-size:12px;font-weight:800;color:rgba(15,23,42,.60);text-transform:uppercase;letter-spacing:.08em;">Total</div>
-                <div style="margin-top:6px;font-size:18px;font-weight:900;">${safe(fmtMoney(total))}</div>
-              </div>
-
-              <div>
-                <div style="font-size:12px;font-weight:800;color:rgba(15,23,42,.60);text-transform:uppercase;letter-spacing:.08em;">Balance Due</div>
-                <div style="margin-top:6px;font-size:18px;font-weight:900;">${safe(fmtMoney(balanceDue))}</div>
-              </div>
-
-              <div>
-                <div style="font-size:12px;font-weight:800;color:rgba(15,23,42,.60);text-transform:uppercase;letter-spacing:.08em;">Due Date</div>
-                <div style="margin-top:6px;font-size:14px;font-weight:700;">${safe(dueDate || "Upon receipt")}</div>
-              </div>
+            <div style="font-size:22px;font-weight:900;color:#0f172a;line-height:1.2;">
+              ${safe(invoiceNumber || "—")}
             </div>
           </div>
+
+          <div style="margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">
+              Project Location
+            </div>
+            <div style="font-size:16px;font-weight:700;color:#0f172a;line-height:1.5;">
+              ${safe(address || "N/A")}
+            </div>
+          </div>
+
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+            <tr>
+              <td valign="top" style="width:33.33%;padding:0 12px 0 0;">
+                <div style="font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">
+                  Total
+                </div>
+                <div style="font-size:28px;font-weight:900;color:#0f172a;line-height:1.1;">
+                  ${safe(money(total))}
+                </div>
+              </td>
+
+              <td valign="top" style="width:33.33%;padding:0 12px 0 12px;">
+                <div style="font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">
+                  Balance Due
+                </div>
+                <div style="font-size:28px;font-weight:900;color:#0f172a;line-height:1.1;">
+                  ${safe(money(balanceDue))}
+                </div>
+              </td>
+
+              <td valign="top" style="width:33.33%;padding:0 0 0 12px;">
+                <div style="font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">
+                  Due Date
+                </div>
+                <div style="font-size:18px;font-weight:800;color:#0f172a;line-height:1.3;">
+                  ${safe(dueDate || "Upon receipt")}
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
 
-        <div style="text-align:center;margin:18px 0 6px;">
-          <a href="${safe(invoiceUrl)}"
-             style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 16px;border-radius:12px;">
+        <!-- CTA -->
+        <div style="text-align:center;margin:0 0 16px;">
+          <a
+            href="${safe(invoiceUrl)}"
+            style="display:inline-block;background:#0b1633;color:#ffffff;text-decoration:none;font-weight:900;font-size:16px;line-height:1;padding:16px 24px;border-radius:14px;">
             View Invoice
           </a>
         </div>
 
-        <p style="margin:10px 0 0;text-align:center;font-size:12px;color:rgba(15,23,42,.60);">
-          If the button doesn’t work, copy and paste this link:<br/>
-          <span style="word-break:break-all;">${safe(invoiceUrl)}</span>
+        <p style="margin:0;text-align:center;font-size:13px;line-height:1.6;color:#6b7280;">
+          If the button doesn’t work, copy and paste this link:
+        </p>
+
+        <p style="margin:8px 0 0;text-align:center;font-size:13px;line-height:1.6;color:#2563eb;word-break:break-all;">
+          ${safe(invoiceUrl)}
         </p>
       </div>
 
-      <div style="padding:14px 20px;border-top:1px solid rgba(15,23,42,.08);background:rgba(15,23,42,.02);">
-        <div style="font-size:12px;color:rgba(15,23,42,.65);line-height:1.6;">
+      <!-- FOOTER -->
+      <div style="padding:16px 20px;border-top:1px solid rgba(15,23,42,.08);background:#fafafa;">
+        <div style="font-size:13px;line-height:1.6;color:#6b7280;">
           Questions? Reply to this email and we’ll be happy to help.
         </div>
       </div>
+    </div>
+
+    <div style="text-align:center;margin-top:14px;font-size:11px;color:#9ca3af;">
+      © ${new Date().getFullYear()} ${safe(companyName || "Brushline Services")}. All rights reserved.
     </div>
   </div>
 </div>`;

@@ -32,6 +32,7 @@ function makeInvoiceNumber() {
 
 exports.handler = async (event, context) => {
   const viewToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
+
   try {
     if (event.httpMethod !== "POST") {
       return json(405, { error: "Method not allowed" });
@@ -73,15 +74,43 @@ exports.handler = async (event, context) => {
       return json(404, { error: "Quote not found" });
     }
 
-    // Prevent duplicates: if invoice already exists, return it
-    if (quote.linkedInvoiceId) {
-      return json(200, {
-        ok: true,
-        id: quote.linkedInvoiceId,
-        existing: true,
-        url: `/invoice/${quote.linkedInvoiceId}`,
-        editUrl: `/crm/invoices/edit/${quote.linkedInvoiceId}`,
-      });
+    // Prevent duplicates only if linked invoice still exists
+    const linkedInvoiceId = safeStr(quote.linkedInvoiceId);
+
+    if (linkedInvoiceId) {
+      const existingInvoice = await invoicesStore.get(linkedInvoiceId, { type: "json" });
+
+      if (existingInvoice) {
+        return json(200, {
+          ok: true,
+          id: linkedInvoiceId,
+          existing: true,
+          url: `/invoice/${linkedInvoiceId}`,
+          editUrl: `/crm/invoices/edit/${linkedInvoiceId}`,
+        });
+      }
+
+      // stale link found, clear it
+      const staleClearedAt = new Date().toISOString();
+
+      const clearedQuote = {
+        ...quote,
+        linkedInvoiceId: null,
+        updatedAt: staleClearedAt,
+      };
+
+      await quotesStore.setJSON(quoteId, clearedQuote);
+
+      const existingQuoteIndex = await quotesIndexStore.get(quoteId, { type: "json" });
+      if (existingQuoteIndex) {
+        await quotesIndexStore.setJSON(quoteId, {
+          ...existingQuoteIndex,
+          linkedInvoiceId: null,
+          updatedAt: staleClearedAt,
+        });
+      }
+
+      quote.linkedInvoiceId = null;
     }
 
     const now = new Date().toISOString();
@@ -142,7 +171,6 @@ exports.handler = async (event, context) => {
       jobType: safeStr(quote.jobType),
       status: "draft",
 
-      // Carry over useful quote data
       lineItems: Array.isArray(quote.lineItems) ? quote.lineItems : [],
       scopeOfWork: quote.scopeOfWork || null,
       estimatorData: quote.estimatorData || null,
@@ -203,6 +231,7 @@ exports.handler = async (event, context) => {
         ...existingQuoteIndex,
         linkedInvoiceId: invoiceId,
         invoiceCreatedAt: now,
+        updatedAt: now,
       });
     }
 

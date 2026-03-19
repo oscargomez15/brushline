@@ -44,10 +44,34 @@ exports.handler = async (event, context) => {
 
     const invoicesStore = getStore("invoices", { siteID, token });
     const invoicesIndexStore = getStore("invoices_index", { siteID, token });
+    const quotesStore = getStore("quotes", { siteID, token });
+    const quotesIndexStore = getStore("quotes_index", { siteID, token });
 
     const existing = await invoicesStore.get(id, { type: "json" });
     if (!existing) {
       return json(404, { error: "Invoice not found" });
+    }
+
+    // unlink from quote if linked
+    const linkedQuoteId = safeStr(existing.linkedQuoteId || existing.sourceQuoteId);
+    if (linkedQuoteId) {
+      const quote = await quotesStore.get(linkedQuoteId, { type: "json" });
+      if (quote) {
+        const updatedQuote = {
+          ...quote,
+          linkedInvoiceId: null,
+          updatedAt: new Date().toISOString(),
+        };
+        await quotesStore.setJSON(linkedQuoteId, updatedQuote);
+      }
+
+      const quoteIndex = await quotesIndexStore.get(linkedQuoteId, { type: "json" });
+      if (quoteIndex) {
+        await quotesIndexStore.setJSON(linkedQuoteId, {
+          ...quoteIndex,
+          linkedInvoiceId: null,
+        });
+      }
     }
 
     await invoicesStore.delete(id);
