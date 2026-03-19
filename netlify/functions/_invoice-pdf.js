@@ -138,46 +138,54 @@ async function buildInvoicePdfBase64(invoice) {
     });
 
     if (logoImage) {
-    const logoWidth = 78;
-    const logoHeight = 40;
+    const logoDims = logoImage.scale(0.11); // was too large before; this is tighter
     const logoX = margin + 14;
-    const logoY = y - 48;
+    const logoY = y - 46;
 
     page.drawImage(logoImage, {
         x: logoX,
         y: logoY,
-        width: logoWidth,
-        height: logoHeight,
+        width: logoDims.width,
+        height: logoDims.height,
     });
     }
 
     drawText("INVOICE", width - margin - 100, y - 22, 18, true, rgb(1, 1, 1));
     y -= 76;
 
+    // PAID badge (top right)
+    if (balanceDue <= 0) {
+    const badgeWidth = 64;
+    const badgeHeight = 20;
+    const badgeX = width - margin - badgeWidth;
+    const badgeY = y + 40; // adjust slightly if needed
+
+    page.drawRectangle({
+        x: badgeX,
+        y: badgeY,
+        width: badgeWidth,
+        height: badgeHeight,
+        color: colors.green,
+        borderRadius: 4,
+    });
+
+    drawText("PAID", badgeX + 14, badgeY + 6, 10, true, rgb(1, 1, 1));
+    }
+
   // Top meta
-  drawText("Invoice #", margin, y, 10, true, colors.muted);
-  drawText(invoice?.invoiceNumber || invoice?.id || "—", margin, y - 16, 13, true);
+    drawText("Invoice #", margin, y, 10, true, colors.muted);
+    drawText("Issue Date", 220, y, 10, true, colors.muted);
+    drawText("Due Date", 360, y, 10, true, colors.muted);
 
-  drawText("Issue Date", 220, y, 10, true, colors.muted);
-  drawText(fmtDate(invoice?.createdAt), 220, y - 16, 12, true);
+    y -= 16;
 
-  drawText("Due Date", 360, y, 10, true, colors.muted);
-  drawText(invoice?.dueDate ? fmtDate(invoice.dueDate) : "Upon receipt", 360, y - 16, 12, true);
+    drawText(invoice.invoiceNumber, margin, y, 11, true);
+    drawText(fmtDate(invoice.createdAt), 220, y, 11, true);
+    drawText(invoice.dueDate || "Upon receipt", 360, y, 11, true);
 
-  drawText("Status", 490, y, 10, true, colors.muted);
-  drawText(
-    `${safeStr(invoice?.status || "draft").replace(/_/g, " ")} / ${safeStr(
-      invoice?.paymentStatus || "unpaid"
-    ).replace(/_/g, " ")}`,
-    490,
-    y - 16,
-    11,
-    true
-  );
-
-  y -= 38;
-  drawRule(y);
-  y -= 24;
+    y -= 38;
+    drawRule(y);
+    y -= 24;
 
   // Bill to / from
   drawText("Bill To", margin, y, 11, true, colors.muted);
@@ -261,7 +269,39 @@ async function buildInvoicePdfBase64(invoice) {
     }
   }
 
-  // Summary box
+  // Payment history directly after line items
+    ensureSpace(70);
+    y -= 6;
+
+    drawText("Payment History", margin, y, 12, true, colors.muted);
+    y -= 18;
+
+    if (!payments.length) {
+    drawText("No payments recorded.", margin, y, 11, false, colors.muted);
+    y -= 18;
+    } else {
+    for (const payment of payments) {
+        ensureSpace(30);
+
+        const paidAt = fmtDate(payment?.paidAt || payment?.recordedAt);
+        const method = prettyMethod(payment?.method);
+        const amount = fmtMoney(payment?.amount);
+
+        drawText(`${paidAt}  •  ${method}`, margin, y, 11, true);
+        drawText(amount, 500, y, 11, true);
+
+        if (payment?.note) {
+        y -= 14;
+        drawText(payment.note, margin, y, 10, false, colors.muted);
+        }
+
+        y -= 20;
+    }
+    }
+
+    y -= 8;
+
+    // Summary box after payment history
     ensureSpace(120);
 
     const boxWidth = 210;
@@ -285,38 +325,18 @@ async function buildInvoicePdfBase64(invoice) {
     drawText("Payments Received", boxX + 14, boxY + 32, 11, false, colors.muted);
     drawText(fmtMoney(paymentsReceived), boxX + 130, boxY + 32, 11, true, colors.green);
 
-    drawRule(boxY + 18);
+    // divider only inside box
+    page.drawLine({
+    start: { x: boxX, y: boxY + 18 },
+    end: { x: boxX + boxWidth, y: boxY + 18 },
+    thickness: 1,
+    color: colors.border,
+    });
+
     drawText("Balance Due", boxX + 14, boxY + 6, 12, true);
     drawText(fmtMoney(balanceDue), boxX + 118, boxY + 6, 14, true);
 
     y = boxY - 24;
-  // Payment history
-  ensureSpace(80);
-  drawText("Payment History", margin, y, 12, true, colors.muted);
-  y -= 18;
-
-  if (!payments.length) {
-    drawText("No payments recorded.", margin, y, 11, false, colors.muted);
-    y -= 16;
-  } else {
-    for (const payment of payments) {
-      ensureSpace(28);
-
-      const paidAt = fmtDate(payment?.paidAt || payment?.recordedAt);
-      const method = prettyMethod(payment?.method);
-      const amount = fmtMoney(payment?.amount);
-
-      drawText(`${paidAt}  •  ${method}`, margin, y, 11, true);
-      drawText(amount, 500, y, 11, true);
-
-      if (payment?.note) {
-        y -= 14;
-        drawText(payment.note, margin, y, 10, false, colors.muted);
-      }
-
-      y -= 20;
-    }
-  }
 
   // Notes
   if (invoice?.notes) {
