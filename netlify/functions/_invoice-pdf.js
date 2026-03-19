@@ -138,31 +138,17 @@ async function buildInvoicePdfBase64(invoice) {
     });
 
     if (logoImage) {
-    const logoDims = logoImage.scale(0.22);
-    page.drawImage(logoImage, {
-        x: margin + 14,
-        y: y - 48,
-        width: logoDims.width,
-        height: logoDims.height,
-    });
+    const logoWidth = 78;
+    const logoHeight = 40;
+    const logoX = margin + 14;
+    const logoY = y - 48;
 
-    drawText(
-        invoice?.companyName || "Brushline Services",
-        margin + 88,
-        y - 20,
-        20,
-        true,
-        rgb(1, 1, 1)
-    );
-    } else {
-    drawText(
-        invoice?.companyName || "Brushline Services",
-        margin + 18,
-        y - 20,
-        22,
-        true,
-        rgb(1, 1, 1)
-    );
+    page.drawImage(logoImage, {
+        x: logoX,
+        y: logoY,
+        width: logoWidth,
+        height: logoHeight,
+    });
     }
 
     drawText("INVOICE", width - margin - 100, y - 22, 18, true, rgb(1, 1, 1));
