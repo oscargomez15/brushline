@@ -129,23 +129,28 @@ async function buildInvoicePdfBase64(invoice) {
   };
 
   // Header
+    const headerHeight = 60;
+    const headerY = y - 56;
+    const headerCenterY = headerY + headerHeight / 2;
+
+    // Header background
     page.drawRectangle({
     x: margin,
-    y: y - 56,
+    y: headerY,
     width: width - margin * 2,
-    height: 60,
+    height: headerHeight,
     color: colors.navy,
     });
 
+    // Logo
     if (logoImage) {
-    const maxHeight = 34;
-
+    const maxHeight = 28; // slightly smaller for better balance
     const scale = maxHeight / logoImage.height;
     const logoWidth = logoImage.width * scale;
     const logoHeight = logoImage.height * scale;
 
     const logoX = margin + 14;
-    const logoY = y - 46;
+    const logoY = headerCenterY - logoHeight / 2;
 
     page.drawImage(logoImage, {
         x: logoX,
@@ -155,14 +160,25 @@ async function buildInvoicePdfBase64(invoice) {
     });
     }
 
-    drawText("INVOICE", width - margin - 110, y - 20, 18, true, rgb(1, 1, 1));
+    // Title
+    const titleText = "INVOICE";
+    const titleX = width - margin - 110;
+    const titleY = headerCenterY - 6;
 
+    page.drawText(titleText, {
+    x: titleX,
+    y: titleY,
+    size: 18,
+    font: fontBold,
+    color: rgb(1, 1, 1),
+    });
+
+    // Paid badge
     if (balanceDue <= 0) {
-    const badgeWidth = 56;
+    const badgeWidth = 52;
     const badgeHeight = 16;
-
-    const badgeX = width - margin - badgeWidth;
-    const badgeY = y - 44; // ⬅️ lower than INVOICE
+    const badgeX = width - margin - badgeWidth - 6;
+    const badgeY = headerY + 8; // top-right inside header
 
     page.drawRectangle({
         x: badgeX,
@@ -170,23 +186,34 @@ async function buildInvoicePdfBase64(invoice) {
         width: badgeWidth,
         height: badgeHeight,
         color: colors.green,
+        borderRadius: 3,
     });
 
-    drawText("PAID", badgeX + 14, badgeY + 4, 9, true, rgb(1, 1, 1));
+    page.drawText("PAID", {
+        x: badgeX + 13,
+        y: badgeY + 4,
+        size: 9,
+        font: fontBold,
+        color: rgb(1, 1, 1),
+    });
     }
 
-  // Top meta
+    // Move below header before meta
+    y = headerY - 24;
+
+    // Top meta labels
     drawText("Invoice #", margin, y, 10, true, colors.muted);
     drawText("Issue Date", 220, y, 10, true, colors.muted);
     drawText("Due Date", 360, y, 10, true, colors.muted);
 
     y -= 16;
 
-    drawText(invoice.invoiceNumber, margin, y, 11, true);
+    // Top meta values
+    drawText(invoice.invoiceNumber || "-", margin, y, 11, true);
     drawText(fmtDate(invoice.createdAt), 220, y, 11, true);
     drawText(invoice.dueDate || "Upon receipt", 360, y, 11, true);
 
-    y -= 38;
+    y -= 30;
     drawRule(y);
     y -= 24;
 
