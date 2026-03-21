@@ -964,20 +964,20 @@ const handleOpenPublicInvoice = () => {
             <div className="invoice-summary-title">Summary</div>
 
             <div className="summary-box">
-                <div className="summary-row">
+                {/* <div className="summary-row">
                 <span>Subtotal</span>
                 <strong>{fmtMoney(subtotal)}</strong>
-                </div>
+                </div> */}
 
                 {/* <div className="summary-row">
                 <span>Tax</span>
                 <strong>{fmtMoney(tax)}</strong>
                 </div> */}
-
+{/* 
                 <div className="summary-row">
                 <span>Payments Received</span>
                 <strong>{fmtMoney(depositPaid)}</strong>
-                </div>
+                </div> */}
 
                 <div className="summary-row total">
                 <span>Total</span>
