@@ -10,6 +10,39 @@ function fmtDate(value) {
   return d.toLocaleDateString();
 }
 
+function normalizePhone(value) {
+  return (value || "").toString().replace(/\D/g, "");
+}
+
+function formatPhone(value) {
+  const cleaned = normalizePhone(value);
+
+  if (!cleaned) return "—";
+
+  // US +1 support
+  if (cleaned.length === 11 && cleaned.startsWith("1")) {
+    const n = cleaned.slice(1);
+    return `(${n.slice(0, 3)}) ${n.slice(3, 6)}-${n.slice(6, 10)}`;
+  }
+
+  // Standard 10-digit US number
+  if (cleaned.length === 10) {
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+  }
+
+  // Fallback for partial / non-standard lengths
+  return value;
+}
+
+function formatPhoneInput(value) {
+  const cleaned = normalizePhone(value).slice(0, 10);
+
+  if (!cleaned) return "";
+  if (cleaned.length < 4) return `(${cleaned}`;
+  if (cleaned.length < 7) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+  return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+}
+
 export default function CustomersList() {
   const navigate = useNavigate();
 
@@ -156,7 +189,10 @@ export default function CustomersList() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify(editForm),
+        body: JSON.stringify({
+          ...editForm,
+          phone: normalizePhone(editForm.phone),
+        }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -261,14 +297,14 @@ export default function CustomersList() {
                           <div className="customers-avatar">{initial}</div>
                           <div className="customers-person-meta">
                             <div className="customers-name">{fullName}</div>
-                            <div className="customers-id">{customer.id}</div>
+                            {/* <div className="customers-id">{customer.id}</div> */}
                           </div>
                         </div>
                       </td>
 
                       <td>{fullAddress}</td>
                       <td>{customer.email || "—"}</td>
-                      <td>{customer.phone || "—"}</td>
+                      <td>{formatPhone(customer.phone)}</td>
                       <td>{fmtDate(customer.updatedAt || customer.createdAt)}</td>
 
                       
@@ -330,8 +366,10 @@ export default function CustomersList() {
               <label className="customers-label">First Name</label>
               <input
                 className="customers-input"
-                value={editForm.firstName}
-                onChange={(e) => handleEditField("firstName", e.target.value)}
+                value={formatPhoneInput(editForm.phone)}
+                onChange={(e) => handleEditField("phone", normalizePhone(e.target.value))}
+                inputMode="tel"
+                placeholder="(555) 555-5555"
               />
             </div>
 

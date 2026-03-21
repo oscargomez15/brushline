@@ -154,13 +154,6 @@ export default function Sidebar() {
                   collapsed={collapsed}
                   indent
               />
-              <NavItem
-                  to="/crm/invoices/create"
-                  label="Create"
-                  icon={<FiPlusCircle />}
-                  collapsed={collapsed}
-                  indent
-              />
           </Dropdown>
 
           <NavItem
