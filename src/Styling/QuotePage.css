@@ -239,15 +239,24 @@
 }
 
 .quote-scope-title {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
   font-weight: 700;
+}
+
+.quote-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
 }
 
 .quote-scope-area {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 10px;
+  padding: 14px;
+  margin-bottom: 0;
+  min-width: 0;
+  height: 100%;
 }
 
 .quote-scope-area-name {
@@ -263,9 +272,11 @@
 
 .quote-scope-tag {
   font-size: 12px;
-  padding: 6px 10px;
+  padding: 7px 11px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  font-weight: 600;
 }
 
 .quote-scope-notes {
@@ -1065,6 +1076,10 @@ section .quote-signature{
   .quote-wrap {
     padding: 132px 12px 20px;
   }
+
+  .quote-scope-grid {
+  grid-template-columns: 1fr;
+}
 
   .quote-header,
   .quote-meta,

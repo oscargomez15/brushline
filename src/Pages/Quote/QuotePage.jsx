@@ -560,6 +560,8 @@ const stripeTotal =
           {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
             <div className="quote-scope">
               <div className="quote-scope-title">Scope of Work</div>
+
+            <div className="quote-scope-grid">
               {quote.scopeItems.map((area) => (
                 <div key={area.areaId} className="scope-area">
                   <div className="scope-area-head">
@@ -567,7 +569,7 @@ const stripeTotal =
                   </div>
                     
                   <div className="scope-section-label">Areas to be painted</div>
-                  
+
                   {/* Paint scope */}
                   <div className="scope-chips">
                     {area.scope.map((item) => (
@@ -594,6 +596,7 @@ const stripeTotal =
                   )}
                 </div>
               ))}
+            </div>
             </div>
           ) : null}
           {quote.jobType !== "handyman" ? (
