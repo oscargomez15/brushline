@@ -565,10 +565,11 @@ const stripeTotal =
                   <div className="scope-area-head">
                     <div className="scope-area-title">{area.areaName}</div>
                   </div>
-
+                    
+                  <div className="scope-section-label">Areas to be painted</div>
+                  
                   {/* Paint scope */}
                   <div className="scope-chips">
-                    <div className="scope-section-label">Areas to be painted</div>
                     {area.scope.map((item) => (
                       <span key={item} className="scope-chip">
                         {item}
