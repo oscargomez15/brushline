@@ -559,8 +559,20 @@ const stripeTotal =
 
           {Array.isArray(quote.scopeItems) && quote.scopeItems.length > 0 ? (
             <div className="quote-scope">
-              <div className="quote-scope-title">Scope of Work</div>
+  
+            <div className="quote-scope-title">Scope of Work</div>
+            <div className="quote-prep">
+              <div className="quote-prep-title">Surface Preparation</div>
 
+              <ul className="quote-prep-list">
+                <li>Protection of floors, furniture, and surrounding areas</li>
+                <li>Filling nail holes, minor dents, and surface imperfections</li>
+                <li>Light sanding to ensure proper adhesion</li>
+                <li>Application of caulking to gaps, cracks, and joints as needed</li>
+                <li>Spot priming repaired or patched areas when necessary</li>
+                <li>General surface cleaning prior to painting</li>
+              </ul>
+            </div>
             <div className="quote-scope-grid">
               {quote.scopeItems.map((area) => (
                 <div key={area.areaId} className="scope-area">
