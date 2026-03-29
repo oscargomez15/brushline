@@ -248,11 +248,8 @@ export default function ExteriorEstimator({ customer }) {
                 <div key={s.id} className="calculations-card">
                   <h3>{s.label}</h3>
                   <div className="calculations-items">
-                    <Stat label="Length" value={`${fmt(s.lengthFt)} ft`} />
-                    <Stat label="Height" value={`${fmt(heightFt)} ft`} />
                     <Stat label="Sq. Ft." value={fmt(s.sqft)} />
                     <Stat label="Gallons" value={s.gallons} />
-                    <Stat label="Price" value={fmtMoney(s.cost)} />
                   </div>
                 </div>
               ))}
