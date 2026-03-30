@@ -23,7 +23,7 @@ const toNum = (v) => {
 export default function ExteriorEstimator({ customer }) {
   const navigate = useNavigate();
   const [showSummary, setShowSummary] = useState(false);
-
+  const [addOns, setAddons] = useState([]);
   // price control (top card)
   const [pricePerSqft, setPricePerSqft] = useState("2.50");
 
@@ -68,6 +68,28 @@ export default function ExteriorEstimator({ customer }) {
 
   const fmtMoney = (n) =>
     new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
+  
+  const addAddOn = () => {
+    setAddons((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        label: "",
+        price: "",
+        included: false,
+      },
+    ]);
+  };
+
+  const updateAddOn = (id, field, value) => {
+    setAddons((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    );
+  };
+
+  const removeAddOn = (id) => {
+    setAddons((prev) => prev.filter((item) => item.id !== id));
+  };
 
   const canCreate = useMemo(() => {
     const hasCustomer =
@@ -86,7 +108,10 @@ export default function ExteriorEstimator({ customer }) {
         areaId: "exterior",
         areaName: "Exterior",
         scope: ["Exterior Walls"],
-        extras: [],
+        extras: includedAddOns.map((item) => ({
+          label: item.label.trim(),
+          price: toNum(item.price),
+        })),
       },
     ];
   };
@@ -104,7 +129,7 @@ export default function ExteriorEstimator({ customer }) {
 
     const payload = {
       jobType: "exterior",
-      grandTotal: totals.totalCost,
+      grandTotal: grandTotal,
       totalGallons: totals.totalGallons,
 
       companyName: "Brushline Services",
@@ -156,6 +181,23 @@ export default function ExteriorEstimator({ customer }) {
 
     navigate(data.url);
   };
+
+  const includedAddOns = useMemo(() => {
+  return addOns
+    .map((item) => ({
+      ...item,
+      priceNum: toNum(item.price),
+    }))
+    .filter((item) => item.included && item.label.trim() && item.priceNum > 0);
+}, [addOns]);
+
+  const addOnsTotal = useMemo(() => {
+    return includedAddOns.reduce((sum, item) => sum + item.priceNum, 0);
+  }, [includedAddOns]);
+
+  const grandTotal = useMemo(() => {
+    return totals.totalCost + addOnsTotal;
+  }, [totals.totalCost, addOnsTotal]);
 
   return (
     <section className="exterior-calculator-wrapper">
@@ -216,7 +258,7 @@ export default function ExteriorEstimator({ customer }) {
                 </div>
                 <div className="mini-row">
                   <span className="mini-label">Estimated Total </span>
-                  <span className="mini-value">{fmtMoney(totals.totalCost)}</span>
+                  <span className="mini-value">{fmtMoney(grandTotal)}</span>
                 </div>
               </div>
             </div>
@@ -260,7 +302,9 @@ export default function ExteriorEstimator({ customer }) {
                   <Stat label="Total Sq. Ft." value={fmt(totals.totalSqft)} />
                   <Stat label="Total Gallons" value={totals.totalGallons} />
                   <Stat label="Rate" value={fmtMoney(rate)} />
-                  <Stat label="Estimated Total" value={fmtMoney(totals.totalCost)} />
+                  <Stat label="Base Total" value={fmtMoney(totals.totalCost)} />
+                  <Stat label="Add-Ons" value={fmtMoney(addOnsTotal)} />
+                  <Stat label="Estimated Total" value={fmtMoney(grandTotal)} />
                 </div>
               </div>
 
@@ -269,6 +313,91 @@ export default function ExteriorEstimator({ customer }) {
               </div>
             </div>
           </div>
+          <div className="area-card">
+  <div className="area-card-header">
+    <div className="area-card-title">
+      <div className="area-name">Additional Work / Add-Ons</div>
+      <div className="area-sub">
+        <div className="mini-row">
+          <span className="mini-label">Included Add-Ons</span>
+          <span className="mini-value">{includedAddOns.length}</span>
+        </div>
+        <div className="mini-row">
+          <span className="mini-label">Add-Ons Total</span>
+          <span className="mini-value">{fmtMoney(addOnsTotal)}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div className="area-calc-body">
+    <div style={{ display: "grid", gap: 12 }}>
+      {addOns.length === 0 ? (
+        <div className="scope-warning">
+          No add-ons yet. Add custom work like pressure washing, fascia, doors, repairs, or prep.
+        </div>
+      ) : (
+        addOns.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1.5fr) 140px auto auto",
+              gap: 10,
+              alignItems: "end",
+            }}
+          >
+            <label className="flex flex-col gap-1">
+              <span>Description</span>
+              <input
+                type="text"
+                className="dim-input"
+                placeholder="e.g. Pressure wash driveway"
+                value={item.label}
+                onChange={(e) => updateAddOn(item.id, "label", e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span>Price</span>
+              <input
+                type="text"
+                inputMode="decimal"
+                className="dim-input"
+                placeholder="e.g. 250"
+                value={item.price}
+                onChange={(e) => updateAddOn(item.id, "price", e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-1">
+              <span>Include</span>
+              <input
+                type="checkbox"
+                checked={item.included}
+                onChange={(e) => updateAddOn(item.id, "included", e.target.checked)}
+              />
+            </label>
+
+            <button
+              type="button"
+              className="remove-room-btn"
+              onClick={() => removeAddOn(item.id)}
+            >
+              Remove
+            </button>
+          </div>
+        ))
+      )}
+
+      <div>
+        <button type="button" className="add-room-btn" onClick={addAddOn}>
+          + Add Custom Add-On
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
 
         <button
