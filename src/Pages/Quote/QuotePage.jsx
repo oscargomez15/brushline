@@ -39,7 +39,7 @@ export default function QuotePage() {
 
   const [quote, setQuote] = useState(null);
   const [err, setErr] = useState("");
-
+  const [prepOpen, setPrepOpen] = useState(true);
   const [sigOpen, setSigOpen] = useState(false);
   const [typedName, setTypedName] = useState("");
   const sigRef = useRef(null);
@@ -562,16 +562,39 @@ const stripeTotal =
   
             <div className="quote-scope-title">Scope of Work</div>
             <div className="quote-prep">
-              <div className="quote-prep-title">Surface Preparation</div>
+              <button
+                type="button"
+                className={`quote-prep-toggle ${prepOpen ? "is-open" : ""}`}
+                onClick={() => setPrepOpen((v) => !v)}
+                aria-expanded={prepOpen}
+              >
+                <div className="quote-prep-toggle-left">
+                  <div className="quote-prep-kicker">Included Preparation</div>
+                  <div className="quote-prep-title">Surface Preparation</div>
+                </div>
 
-              <ul className="quote-prep-list">
-                <li>Protection of floors, furniture, and surrounding areas</li>
-                <li>Filling nail holes, minor dents, and surface imperfections</li>
-                <li>Light sanding to ensure proper adhesion</li>
-                <li>Application of caulking to gaps, cracks, and joints as needed</li>
-                <li>Spot priming repaired or patched areas when necessary</li>
-                <li>General surface cleaning prior to painting</li>
-              </ul>
+                <span className="quote-prep-icon">{prepOpen ? "−" : "+"}</span>
+              </button>
+
+              {prepOpen && (
+                <div className="quote-prep-body">
+                  <div className="quote-prep-grid">
+                    {[
+                      "Protection of floors, furniture, and surrounding areas",
+                      "Filling nail holes, minor dents, and surface imperfections",
+                      "Light sanding to ensure proper adhesion",
+                      "Application of caulking to gaps, cracks, and joints as needed",
+                      "Spot priming repaired or patched areas when necessary",
+                      "General surface cleaning prior to painting",
+                    ].map((item) => (
+                      <div key={item} className="quote-prep-item">
+                        <span className="quote-prep-check">✓</span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             <div className="quote-scope-grid">
               {quote.scopeItems.map((area) => (

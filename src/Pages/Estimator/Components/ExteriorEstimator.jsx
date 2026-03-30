@@ -286,7 +286,7 @@ export default function ExteriorEstimator({ customer }) {
               </div>
             </div>
 
-            <div className="calculations-container">
+            {/* <div className="calculations-container">
               <h3>Calculations (sq ft)</h3>
 
               {perSide.map((s) => (
@@ -314,7 +314,7 @@ export default function ExteriorEstimator({ customer }) {
               <div className="scope-warning" style={{ marginTop: 12 }}>
                 This is a quick estimate. It doesn’t subtract windows/doors or add gables yet.
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="area-card">
             
