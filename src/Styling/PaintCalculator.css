@@ -654,13 +654,24 @@
 
 /* Inputs */
 .dimensions-container label {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
   color: rgba(15, 23, 42, 0.78);
   font-weight: 700;
   font-size: 13px;
+}
+
+.dimensions-container label span {
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .dimensions-container label {
+    grid-template-columns: 1fr;
+  }
 }
 
 .dim-input {

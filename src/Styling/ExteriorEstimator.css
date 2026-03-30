@@ -1,0 +1,102 @@
+.addons-box {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(248, 250, 252, 0.85);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  display: grid;
+  gap: 12px;
+}
+
+.addons-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.addons-header h3 {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(15, 23, 42, 0.70);
+}
+
+.addons-summary {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.75);
+}
+
+.addon-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 100px 40px;
+  gap: 10px;
+  align-items: center;
+}
+
+.addon-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.7);
+}
+
+.addon-toggle input {
+  width: 16px;
+  height: 16px;
+}
+
+.addon-remove {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(185, 28, 28, 0.2);
+  background: #fff;
+  color: #b91c1c;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.addon-remove:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+.addon-add {
+  height: 44px;
+  border-radius: 12px;
+  border: 1px dashed rgba(15, 23, 42, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.addon-add:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 720px) {
+  .addon-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .addon-remove {
+    width: 100%;
+  }
+}

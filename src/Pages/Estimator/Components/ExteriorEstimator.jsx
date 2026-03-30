@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
 import ExteriorSummarySticky from "./ExteriorSummarySticky";
+import "../../../Styling/ExteriorEstimator.css";
 
 // Coverage (sq ft per gallon) – adjust if you want exterior to differ
 const SQFT_PER_GALLON_EXTERIOR = 350;
@@ -314,90 +315,63 @@ export default function ExteriorEstimator({ customer }) {
             </div>
           </div>
           <div className="area-card">
-  <div className="area-card-header">
-    <div className="area-card-title">
-      <div className="area-name">Additional Work / Add-Ons</div>
-      <div className="area-sub">
-        <div className="mini-row">
-          <span className="mini-label">Included Add-Ons</span>
-          <span className="mini-value">{includedAddOns.length}</span>
-        </div>
-        <div className="mini-row">
-          <span className="mini-label">Add-Ons Total</span>
-          <span className="mini-value">{fmtMoney(addOnsTotal)}</span>
-        </div>
-      </div>
-    </div>
-  </div>
+            
+          <div className="addons-box">
+            <div className="addons-header">
+              <h3>Additional Work / Add-Ons</h3>
 
-  <div className="area-calc-body">
-    <div style={{ display: "grid", gap: 12 }}>
-      {addOns.length === 0 ? (
-        <div className="scope-warning">
-          No add-ons yet. Add custom work like pressure washing, fascia, doors, repairs, or prep.
-        </div>
-      ) : (
-        addOns.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.5fr) 140px auto auto",
-              gap: 10,
-              alignItems: "end",
-            }}
-          >
-            <label className="flex flex-col gap-1">
-              <span>Description</span>
-              <input
-                type="text"
-                className="dim-input"
-                placeholder="e.g. Pressure wash driveway"
-                value={item.label}
-                onChange={(e) => updateAddOn(item.id, "label", e.target.value)}
-              />
-            </label>
+              <div className="addons-summary">
+                <span>Included: {includedAddOns.length}</span>
+                <span>Total: {fmtMoney(addOnsTotal)}</span>
+              </div>
+            </div>
 
-            <label className="flex flex-col gap-1">
-              <span>Price</span>
-              <input
-                type="text"
-                inputMode="decimal"
-                className="dim-input"
-                placeholder="e.g. 250"
-                value={item.price}
-                onChange={(e) => updateAddOn(item.id, "price", e.target.value)}
-              />
-            </label>
+            <div className="addons-list">
+              {addOns.map((item) => (
+                <div key={item.id} className="addon-row">
+                  <input
+                    type="text"
+                    className="dim-input"
+                    placeholder="Pressure washing driveway"
+                    value={item.label}
+                    onChange={(e) => updateAddOn(item.id, "label", e.target.value)}
+                  />
 
-            <label className="flex flex-col gap-1">
-              <span>Include</span>
-              <input
-                type="checkbox"
-                checked={item.included}
-                onChange={(e) => updateAddOn(item.id, "included", e.target.checked)}
-              />
-            </label>
+                  <input
+                    type="text"
+                    className="dim-input"
+                    placeholder="$250"
+                    value={item.price}
+                    onChange={(e) => updateAddOn(item.id, "price", e.target.value)}
+                  />
 
-            <button
-              type="button"
-              className="remove-room-btn"
-              onClick={() => removeAddOn(item.id)}
-            >
-              Remove
+                  <label className="addon-toggle">
+                    <input
+                      type="checkbox"
+                      checked={item.included}
+                      onChange={(e) =>
+                        updateAddOn(item.id, "included", e.target.checked)
+                      }
+                    />
+                    <span>Include</span>
+                  </label>
+
+                  <button
+                    type="button"
+                    className="addon-remove"
+                    onClick={() => removeAddOn(item.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button type="button" className="addon-add" onClick={addAddOn}>
+              + Add Custom Add-On
             </button>
           </div>
-        ))
-      )}
-
-      <div>
-        <button type="button" className="add-room-btn" onClick={addAddOn}>
-          + Add Custom Add-On
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+          </div>
         </div>
 
         <button
