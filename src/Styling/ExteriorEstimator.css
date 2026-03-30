@@ -90,6 +90,17 @@
   box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
 }
 
+.addons-list{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.measurements-container {
+  display: flex;
+  gap: 12px;
+}
+
 @media (max-width: 720px) {
   .addon-row {
     grid-template-columns: 1fr;

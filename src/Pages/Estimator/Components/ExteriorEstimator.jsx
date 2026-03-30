@@ -269,6 +269,7 @@ export default function ExteriorEstimator({ customer }) {
             <div className="dimensions-container">
               <h3>Measurements (ft)</h3>
 
+              <div className="measurements-container">
               {sides.map((s) => (
                 <label key={s.id} className="flex flex-col gap-1">
                   <span>{s.label} Length</span>
@@ -282,6 +283,7 @@ export default function ExteriorEstimator({ customer }) {
                   />
                 </label>
               ))}
+              </div>
             </div>
 
             <div className="calculations-container">
