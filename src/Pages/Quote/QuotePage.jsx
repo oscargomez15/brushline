@@ -580,7 +580,7 @@ const stripeTotal =
                 <div className="quote-prep-body">
                   <div className="quote-prep-grid">
                     {[
-                      "Protection of floors, furniture, and surrounding areas",
+                      "Protection of floors, furniture, and surrounding areas (if applicable)",
                       "Filling nail holes, minor dents, and surface imperfections",
                       "Light sanding to ensure proper adhesion",
                       "Application of caulking to gaps, cracks, and joints as needed",
