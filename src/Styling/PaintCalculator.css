@@ -630,6 +630,7 @@
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 14px;
+  align-items: start;
 }
 
 /* Panels */
@@ -639,6 +640,7 @@
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(248, 250, 252, 0.80);
   padding: 12px;
+  align-self: start;
 }
 
 .dimensions-container h3,
