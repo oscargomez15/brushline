@@ -865,8 +865,8 @@
 
 /* ---------- Exterior helpers ---------- */
 .exterior-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
