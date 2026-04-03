@@ -1542,10 +1542,14 @@ section .quote-signature{
 }
 
 .paint-card-image {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 85%;
+  max-height: 140px;
   object-fit: contain;
-  display: block;
+  transition: transform 0.2s ease;
+}
+
+.paint-card:hover .paint-card-image {
+  transform: scale(1.05);
 }
 
 .paint-card-placeholder {
@@ -1626,7 +1630,14 @@ section .quote-signature{
   }
 
   .paint-card-image-wrap {
-    height: 120px;
+    width: 100%;
+    height: 160px; /* adjust if needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    overflow: hidden;
   }
 
   .paint-card-body {
@@ -1642,5 +1653,15 @@ section .quote-signature{
   .paint-card-diff,
   .paint-card-meta {
     font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .paint-card-image-wrap {
+    height: 120px;
+  }
+
+  .paint-card-image {
+    max-height: 100px;
   }
 }
