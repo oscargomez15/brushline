@@ -99,6 +99,7 @@ export default function QuotePage() {
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
+  
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -433,6 +434,7 @@ const jobLabel =
     });
 
   const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
+  const paintAdjustment = Number(quote.paintAdjustment) || 0;
 
   const effectiveCurrentKey =
     quote.selectedPackageKey && quote.selectedPackageKey !== "custom"
@@ -830,7 +832,8 @@ const stripeTotal =
 
             <div className="pkg-grid">
               {showPkgs.map((p, idx) => {
-                const newTotal = Number(p.total) || 0;
+                const basePackageTotal = Number(p.total) || 0;
+                const newTotal = basePackageTotal + paintAdjustment;
 
                 // Decide selection
                 const isSelected = (effectiveCurrentKey === p.key);
