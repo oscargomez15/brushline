@@ -135,7 +135,8 @@ exports.handler = async (event) => {
     try {
       const indexStore = getStore("quotes_index", { siteID, token });
       const existing = await indexStore.get(id, { type: "json" });
-        await indexStore.setJSON(id, {
+
+      await indexStore.setJSON(id, {
         ...(existing || {}),
         id,
         grandTotal: updated.grandTotal,
@@ -143,7 +144,10 @@ exports.handler = async (event) => {
         selectedPackageKey: updated.selectedPackageKey,
         selectedPaintGrade: updated.selectedPaintGrade,
         paintAdjustment: updated.paintAdjustment,
-        });
+      });
+    } catch (indexErr) {
+      console.error("quotes_index update failed:", indexErr);
+    }
 
     return json(200, { ok: true, quote: updated });
   } catch (err) {

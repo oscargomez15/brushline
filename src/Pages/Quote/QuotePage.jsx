@@ -445,31 +445,39 @@ const jobLabel =
     // Optional: if you want to hide "custom" if it ever appears
     showPkgs = showPkgs.filter((p) => p.key !== "custom");
 
-  async function handleSelectPaint(productKey) {
-    if (!quote) return;
-    if (productKey === currentPaintKey) return;
+    async function handleSelectPaint(productKey) {
+      if (!quote) return;
+      if (productKey === currentPaintKey) return;
 
-    const res = await fetch("/.netlify/functions/apply-paint", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: quote.id,
-        paintGrade: productKey,
-        t: t || "",
-      }),
-    });
+      try {
+        const res = await fetch("/.netlify/functions/apply-paint", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: quote.id,
+            paintGrade: productKey,
+            t: t || "",
+          }),
+        });
 
-  const data = await res.json().catch(() => ({}));
+        const data = await res.json().catch(() => ({}));
 
-  if (!res.ok) {
-    alert(data?.error || "Unable to update paint selection.");
-    return;
-  }
+        console.log("apply-paint status:", res.status);
+        console.log("apply-paint response:", data);
 
-  setQuote(data.quote || data);
-}
+        if (!res.ok) {
+          alert(data?.error || data?.message || "Unable to update paint selection.");
+          return;
+        }
+
+        setQuote(data.quote || data);
+      } catch (e) {
+        console.error("apply-paint request failed:", e);
+        alert(e.message || "Unable to update paint selection.");
+      }
+    }
 
     const closeSignatureModal = () => {
     setSigOpen(false);
