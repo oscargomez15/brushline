@@ -1396,3 +1396,225 @@ section .quote-signature{
     padding: 0 16px 16px;
   }
 }
+
+.paint-section {
+  margin-top: 24px;
+}
+
+.paint-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.paint-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.paint-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+.paint-card.is-selected {
+  border-color: #0f172a;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+}
+
+.paint-card-image-wrap {
+  position: relative;
+  height: 180px;
+  background: rgba(248, 250, 252, 0.9);
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.paint-card-image-wrap.is-placeholder .paint-card-placeholder {
+  display: grid;
+}
+
+.paint-card-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.paint-card-placeholder {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.45);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.paint-card-body {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.paint-card-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.paint-card-meta {
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.6);
+  font-weight: 700;
+}
+
+.paint-card-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.paint-card-diff {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.paint-selected {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #059669;
+}
+
+.paint-section {
+  margin-top: 24px;
+}
+
+.paint-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.paint-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+
+.paint-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+.paint-card.is-selected {
+  border-color: #0f172a;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
+}
+
+.paint-card-image-wrap {
+  position: relative;
+  height: 180px;
+  background: rgba(248, 250, 252, 0.9);
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.paint-card-image-wrap.is-placeholder .paint-card-placeholder {
+  display: grid;
+}
+
+.paint-card-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.paint-card-placeholder {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.45);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.paint-card-body {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.paint-card-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.paint-card-meta {
+  font-size: 13px;
+  color: rgba(15, 23, 42, 0.6);
+  font-weight: 700;
+}
+
+.paint-card-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.paint-card-diff {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.paint-selected {
+  color: #059669;
+}
+
+@media (max-width: 980px) {
+  .paint-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .paint-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .paint-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .paint-grid {
+    grid-template-columns: 1fr;
+  }
+}

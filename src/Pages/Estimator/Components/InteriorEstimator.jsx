@@ -38,11 +38,17 @@ import {
   return next;
 };
 
+const WALL_SHEEN_OPTIONS = [
+  { label: "Flat", value: "flat" },
+  { label: "Eggshell", value: "eggshell" },
+  { label: "Satin", value: "satin" },
+];
+
 export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = null, initialPaintGrade=null  }) => {
     const navigate = useNavigate();
 
     const [wallPricePerSqft, setWallPricePerSqft] = useState(
-      initialPricing?.wallPricePerSqft || "1.25"
+      initialPricing?.wallPricePerSqft || "1.00"
     );
     const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState(
       initialPricing?.ceilingPricePerSqft || "1.25"
@@ -57,6 +63,7 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
     const [paintGrade, setPaintGrade] = useState(
       initialPaintGrade || "promar200"
     );
+    const [wallSheen, setWallSheen] = useState("satin");
     const [isColorChange, setIsColorChange] = useState(false);
     const [materialsMarkupPct, setMaterialsMarkupPct] = useState("20");
     const [areas, setAreas] = useState(
@@ -67,12 +74,13 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
     setAreas(Array.isArray(initialAreas) ? initialAreas : []);
 
       if (initialPricing) {
-        setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.25");
+        setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.00");
         setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
         setDoorPrice(initialPricing.doorPrice || "100");
         setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
         setIsColorChange(initialPricing.isColorChange || false);
         setMaterialsMarkupPct(initialPricing.materialsMarkupPct || "20");
+        setWallSheen(initialPricing.wallSheen || "satin");
       } else {
         setWallPricePerSqft("1.25");
         setCeilingPricePerSqft("1.25");
@@ -80,6 +88,7 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
         setBaseboardPricePerLf("1.25");
         setIsColorChange(false);
         setMaterialsMarkupPct("20");
+        setWallSheen("eggshell");
       }
       setIsColorChange(initialPricing?.isColorChange || false);
     setPaintGrade(initialPaintGrade || "promar200");
@@ -291,6 +300,7 @@ function detectPackageKey(areas) {
     jobType: "interior",
     grandTotal:finalGrandTotal,
     totalGallons: totalJobGallons,
+    wallSheen,
 
     companyName: "Brushline Services",
     validForDays: 30,
@@ -314,16 +324,19 @@ function detectPackageKey(areas) {
     estimatorData: {
       areas,
       pricing: {
-        wallPricePerSqft,
-        ceilingPricePerSqft,
-        doorPrice,
-        baseboardPricePerLf,
-        isColorChange,
-        materialsMarkupPct,
-      },
+          wallPricePerSqft,
+          ceilingPricePerSqft,
+          doorPrice,
+          baseboardPricePerLf,
+          isColorChange,
+          materialsMarkupPct,
+          wallSheen,
+        },
       paintGrade,
+      originalPaintGrade: paintGrade,
       materials: {
         paintGrade,
+        originalPaintGrade: paintGrade,
         totalGallons: totalJobGallons,
         paintPricePerGallon,
         baseMaterialCost: totalPaintMaterialCost,
@@ -437,6 +450,21 @@ function detectPackageKey(areas) {
                         </option>
                         ))}
                     </select>
+                    </label>
+
+                    <label>
+                      <span>Wall Sheen</span>
+                      <select
+                        className="dim-input"
+                        value={wallSheen}
+                        onChange={(e) => setWallSheen(e.target.value)}
+                      >
+                        {WALL_SHEEN_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
                     </label>
 
                     <label>

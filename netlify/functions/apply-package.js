@@ -42,10 +42,14 @@ exports.handler = async (event) => {
       ),
     }));
 
+    const packageTotal = Number(pkg.total) || 0;
+    const paintAdjustment = Number(quote.paintAdjustment) || 0;
+
     const updated = {
       ...quote,
       selectedPackageKey: packageKey,
-      grandTotal: Number(pkg.total) || quote.grandTotal,
+      grandTotal: packageTotal + paintAdjustment,
+      packageBaseTotal: packageTotal,
       scopeItems: updatedScopeItems,
 
       // require re-approval after scope change

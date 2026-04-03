@@ -28,6 +28,57 @@ const FEATURES_BY_KEY = {
   ],
 };
 
+const PAINT_PRODUCTS = {
+  promar200: {
+    key: "promar200",
+    name: "Promar 200",
+    pricePerGallon: 31.95,
+    image: "/paint-placeholders/promar200.png",
+  },
+  cashmere: {
+    key: "cashmere",
+    name: "Cashmere",
+    pricePerGallon: 38.95,
+    image: "/paint-placeholders/cashmere.png",
+  },
+  superpaint: {
+    key: "superpaint",
+    name: "SuperPaint",
+    pricePerGallon: 46.95,
+    image: "/paint-placeholders/superpaint.png",
+  },
+  duration: {
+    key: "duration",
+    name: "Duration",
+    pricePerGallon: 57.95,
+    image: "/paint-placeholders/duration.png",
+  },
+  emerald: {
+    key: "emerald",
+    name: "Emerald",
+    pricePerGallon: 65.95,
+    image: "/paint-placeholders/emerald.png",
+  },
+  emerald_rain_refresh: {
+    key: "emerald_rain_refresh",
+    name: "Emerald Rain Refresh",
+    pricePerGallon: 74.45,
+    image: "/paint-placeholders/emerald-rain-refresh.png",
+  },
+};
+
+const ALLOWED_PAINTS_BY_SHEEN = {
+  satin: ["superpaint", "emerald"],
+  eggshell: ["promar200", "cashmere", "emerald"],
+  flat: ["promar200", "cashmere", "emerald"],
+};
+
+function titleCase(value) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -163,15 +214,20 @@ const signatureUrl =
   };
   
   const handleSelectPackage = async (packageKey) => {
-  const res = await fetch("/.netlify/functions/apply-package", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, t: t || "", packageKey })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.error || "Failed to change scope");
-  setQuote(data.quote);
-};
+    try {
+      const res = await fetch("/.netlify/functions/apply-package", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, t: t || "", packageKey }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to change scope");
+      setQuote(data.quote);
+    } catch (e) {
+      alert(e.message);
+    }
+  };
 
   const handleDownloadPdf = async () => {
     try {
@@ -321,33 +377,99 @@ const jobLabel =
       ? "Handyman / Misc"
       : "Interior Painting";
   const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
-  const currentTotal = Number(quote.grandTotal) || 0;
-  const EPS = 0.01;
+
+  const pricing = quote?.estimatorData?.pricing || {};
+  const wallSheen = pricing.wallSheen || "eggshell";
+
+  const allowedPaintKeys =
+    ALLOWED_PAINTS_BY_SHEEN[wallSheen] || ALLOWED_PAINTS_BY_SHEEN.eggshell;
+
+  const currentPaintKey =
+    quote?.paintGrade ||
+    quote?.materials?.paintGrade ||
+    quote?.estimatorData?.paintGrade ||
+    "promar200";
+
+  const originalPaintKey =
+    quote?.originalPaintGrade ||
+    quote?.materials?.originalPaintGrade ||
+    quote?.estimatorData?.paintGrade ||
+    currentPaintKey;
+
+  const totalGallons =
+    Number(quote?.materials?.totalGallons) ||
+    Number(quote?.totalGallons) ||
+    0;
+
+  const materialsMarkupPct =
+    Number(quote?.materials?.materialsMarkupPct) ||
+    Number(pricing?.materialsMarkupPct) ||
+    0;
+
+  const originalPaintProduct =
+    PAINT_PRODUCTS[originalPaintKey] || PAINT_PRODUCTS.promar200;
+
+  const paintOptions = allowedPaintKeys
+    .map((key) => PAINT_PRODUCTS[key])
+    .filter(Boolean)
+    .map((product) => {
+      const materialBase = totalGallons * product.pricePerGallon;
+      const materialWithMarkup =
+        materialBase * (1 + materialsMarkupPct / 100);
+
+      const originalMaterialBase = totalGallons * originalPaintProduct.pricePerGallon;
+      const originalMaterialWithMarkup =
+        originalMaterialBase * (1 + materialsMarkupPct / 100);
+
+      const diff = materialWithMarkup - originalMaterialWithMarkup;
+
+      return {
+        ...product,
+        materialBase,
+        materialWithMarkup,
+        diff,
+        isSelected: product.key === currentPaintKey,
+      };
+    });
 
   const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
-
-  // If selectedPackageKey is "custom" (or wrong), infer the current package by matching totals.
-  const inferred = pkgs.reduce(
-    (best, p) => {
-      const t = Number(p.total) || 0;
-      const d = Math.abs(t - currentTotal);
-      return d < best.diff ? { diff: d, key: p.key } : best;
-    },
-    { diff: Infinity, key: null }
-  );
 
   const effectiveCurrentKey =
     quote.selectedPackageKey && quote.selectedPackageKey !== "custom"
       ? quote.selectedPackageKey
-      : inferred.diff <= EPS
-        ? inferred.key
-        : quote.selectedPackageKey;
+      : null;
 
   // ✅ Never show a package card if it results in the same total (prevents identical upgrades)
     let showPkgs = pkgs;
 
     // Optional: if you want to hide "custom" if it ever appears
     showPkgs = showPkgs.filter((p) => p.key !== "custom");
+
+  async function handleSelectPaint(productKey) {
+    if (!quote) return;
+    if (productKey === currentPaintKey) return;
+
+    const res = await fetch("/.netlify/functions/apply-paint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: quote.id,
+        paintGrade: productKey,
+        t: t || "",
+      }),
+    });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    alert(data?.error || "Unable to update paint selection.");
+    return;
+  }
+
+  setQuote(data.quote || data);
+}
 
     const closeSignatureModal = () => {
     setSigOpen(false);
@@ -634,6 +756,63 @@ const stripeTotal =
             </div>
             </div>
           ) : null}
+
+          {quote.jobType === "interior" && paintOptions.length > 0 && (
+            <div className="paint-section">
+              <div className="pkg-head">
+                <div className="pkg-title">Choose Your Paint Line</div>
+                <div className="pkg-subtitle">
+                  Wall sheen selected: <strong>{titleCase(wallSheen)}</strong>
+                </div>
+              </div>
+
+              <div className="paint-grid">
+                {paintOptions.map((product) => (
+                  <button
+                    key={product.key}
+                    type="button"
+                    className={`paint-card ${product.isSelected ? "is-selected" : ""}`}
+                    onClick={() => handleSelectPaint(product.key)}
+                  >
+                    <div className="paint-card-image-wrap">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="paint-card-image"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                          e.currentTarget.parentElement.classList.add("is-placeholder");
+                        }}
+                      />
+                      <div className="paint-card-placeholder">Product Image</div>
+                    </div>
+
+                    <div className="paint-card-body">
+                      <div className="paint-card-name">{product.name}</div>
+                      <div className="paint-card-meta">
+                        {titleCase(wallSheen)} wall finish
+                      </div>
+                      <div className="paint-card-price">
+                        {fmtMoney(product.pricePerGallon)} / gallon
+                      </div>
+
+                      <div className="paint-card-diff">
+                        {product.isSelected ? (
+                          <span className="paint-selected">Selected</span>
+                        ) : product.diff > 0 ? (
+                          <span>Upgrade: +{fmtMoney(product.diff)}</span>
+                        ) : product.diff < 0 ? (
+                          <span>Downgrade: {fmtMoney(Math.abs(product.diff))}</span>
+                        ) : (
+                          <span>No price change</span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {quote.jobType !== "handyman" ? (
           <div className="pkg-section">
             <div className="pkg-head">
