@@ -1476,7 +1476,39 @@
 @media (max-width: 380px) {
   .pkg-grid,
   .paint-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  
+  .paint-card-image-wrap {
+    height: 90px;
+  }
+
+  .paint-card-image {
+    max-height: 75px;
+    max-width: 80%;
+  }
+
+  .paint-card-body,
+  .pkg-card {
+    padding: 10px;
+  }
+
+  .paint-card-name,
+  .pkg-name {
+    font-size: 14px;
+  }
+
+  .paint-card-price,
+  .paint-card-diff,
+  .paint-card-meta,
+  .pkg-feature,
+  .pkg-subtitle {
+    font-size: 11px;
+  }
+
+  .pkg-price {
+    font-size: 18px;
   }
 }
 

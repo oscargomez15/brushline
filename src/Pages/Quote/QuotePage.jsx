@@ -90,7 +90,7 @@ export default function QuotePage() {
 
   const [quote, setQuote] = useState(null);
   const [err, setErr] = useState("");
-  const [prepOpen, setPrepOpen] = useState(true);
+  const [prepOpen, setPrepOpen] = useState(false);
   const [sigOpen, setSigOpen] = useState(false);
   const [typedName, setTypedName] = useState("");
   const sigRef = useRef(null);
@@ -766,7 +766,7 @@ const stripeTotal =
           {quote.jobType === "interior" && paintOptions.length > 0 && (
             <div className="paint-section">
               <div className="pkg-head">
-                <div className="pkg-title">Choose Your Paint Line</div>
+                <div className="pkg-title">Select Your Paint Line</div>
                 <div className="pkg-subtitle">
                   Wall sheen selected: <strong>{titleCase(wallSheen)}</strong>
                 </div>
