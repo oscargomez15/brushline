@@ -58,6 +58,7 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
       initialPaintGrade || "promar200"
     );
     const [isColorChange, setIsColorChange] = useState(false);
+    const [materialsMarkupPct, setMaterialsMarkupPct] = useState("20");
     const [areas, setAreas] = useState(
       Array.isArray(initialAreas) && initialAreas.length > 0 ? initialAreas : []
     );
@@ -65,17 +66,21 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
   useEffect(() => {
     setAreas(Array.isArray(initialAreas) ? initialAreas : []);
 
-    if (initialPricing) {
-      setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.25");
-      setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
-      setDoorPrice(initialPricing.doorPrice || "100");
-      setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
-    } else {
-      setWallPricePerSqft("1.25");
-      setCeilingPricePerSqft("1.25");
-      setDoorPrice("100");
-      setBaseboardPricePerLf("1.25");
-    }
+      if (initialPricing) {
+        setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.25");
+        setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
+        setDoorPrice(initialPricing.doorPrice || "100");
+        setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
+        setIsColorChange(initialPricing.isColorChange || false);
+        setMaterialsMarkupPct(initialPricing.materialsMarkupPct || "20");
+      } else {
+        setWallPricePerSqft("1.25");
+        setCeilingPricePerSqft("1.25");
+        setDoorPrice("100");
+        setBaseboardPricePerLf("1.25");
+        setIsColorChange(false);
+        setMaterialsMarkupPct("20");
+      }
       setIsColorChange(initialPricing?.isColorChange || false);
     setPaintGrade(initialPaintGrade || "promar200");
   }, [initialAreas, initialPricing, initialPaintGrade]);
@@ -166,6 +171,16 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
         () => computeJobTotals(perArea, paintPricePerGallon),
         [perArea, paintPricePerGallon]
         );
+
+        const materialsMarkupRate = (parseFloat(materialsMarkupPct) || 0) / 100;
+
+        const totalMaterialsWithMarkup = useMemo(() => {
+          return totalPaintMaterialCost * (1 + materialsMarkupRate);
+        }, [totalPaintMaterialCost, materialsMarkupRate]);
+
+        const finalGrandTotal = useMemo(() => {
+          return grandTotal + totalMaterialsWithMarkup;
+        }, [grandTotal, totalMaterialsWithMarkup]);
     
       const sensors = useSensors(
       useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -205,11 +220,14 @@ function detectPackageKey(areas) {
     });
   };
 
-  // Uses YOUR existing calc functions (computeAreaCalc + computeJobTotals)
   const computeGrandTotalForAreas = (areasVariant) => {
     const perAreaVariant = areasVariant.map((a) => computeAreaCalc(a, pricing));
     const totals = computeJobTotals(perAreaVariant, paintPricePerGallon);
-    return totals.grandTotal;
+
+    const materialsWithMarkup =
+      totals.totalPaintMaterialCost * (1 + ((parseFloat(materialsMarkupPct) || 0) / 100));
+
+    return totals.grandTotal + materialsWithMarkup;
   };
 
   const buildScopeItems = (areas) => {
@@ -271,7 +289,7 @@ function detectPackageKey(areas) {
   const payload = {
     id: editingQuoteId || undefined,
     jobType: "interior",
-    grandTotal,
+    grandTotal:finalGrandTotal,
     totalGallons: totalJobGallons,
 
     companyName: "Brushline Services",
@@ -294,16 +312,26 @@ function detectPackageKey(areas) {
     scopePackages,
 
     estimatorData: {
-    areas,
-    pricing: {
-      wallPricePerSqft,
-      ceilingPricePerSqft,
-      doorPrice,
-      baseboardPricePerLf,
-      isColorChange,
+      areas,
+      pricing: {
+        wallPricePerSqft,
+        ceilingPricePerSqft,
+        doorPrice,
+        baseboardPricePerLf,
+        isColorChange,
+        materialsMarkupPct,
+      },
+      paintGrade,
+      materials: {
+        paintGrade,
+        totalGallons: totalJobGallons,
+        paintPricePerGallon,
+        baseMaterialCost: totalPaintMaterialCost,
+        materialsMarkupPct: parseFloat(materialsMarkupPct) || 0,
+        totalMaterialsWithMarkup,
+        includedInPrice: true,
+      },
     },
-    paintGrade,
-  },
   };
 
   const endpoint = editingQuoteId
@@ -411,6 +439,17 @@ function detectPackageKey(areas) {
                     </select>
                     </label>
 
+                    <label>
+                      <span>Materials Markup (%)</span>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        className="dim-input"
+                        value={materialsMarkupPct}
+                        onChange={(e) => setMaterialsMarkupPct(e.target.value)}
+                      />
+                    </label>
+
                     <label className="price-checkbox">
                       <span>Change of Color</span>
                       <input
@@ -465,17 +504,18 @@ function detectPackageKey(areas) {
                 + Add Area
                 </button>
     
-                <SummarySticky
+              <SummarySticky
                 showSummary={showSummary}
                 setShowSummary={setShowSummary}
-                grandTotal={grandTotal}
+                grandTotal={finalGrandTotal}
                 totalJobHours={totalJobHours}
                 totalJobGallons={totalJobGallons}
                 paintGrade={paintGrade}
                 totalPaintMaterialCost={totalPaintMaterialCost}
+                totalMaterialsWithMarkup={totalMaterialsWithMarkup}
                 fmtMoney={fmtMoney}
                 fmtHours={fmtHours}
-                />
+              />
             </form>
             <button type="button" className="generate-btn add" onClick={handleGenerateQuote}>
             Generate Client Quote
