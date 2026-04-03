@@ -1,5 +1,5 @@
 export const AREA_OPTIONS = [
- "Foyer", "Hallway","Living Room","Kitchen","Dining Room","Utility Room", "Pantry",
+ "Foyer", "Guest Room Hallway","Living Room","Kitchen","Dining Room","Utility Room", "Pantry",
  "Guest Room","Master Bedroom", "Master Bathroom", "Guest Bathroom", "Office","Garage", "Closet", "Walk-in Closet", "Toilet Room"
 ];
 
