@@ -731,7 +731,7 @@ const stripeTotal =
                     <div className="scope-area-title">{area.areaName}</div>
                   </div>
                     
-                  <div className="scope-section-label">Areas to be painted</div>
+                  <div className="scope-section-label">Surfaces to be painted</div>
 
                   {/* Paint scope */}
                   <div className="scope-chips">
