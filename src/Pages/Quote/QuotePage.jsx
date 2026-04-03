@@ -33,19 +33,19 @@ const PAINT_PRODUCTS = {
     key: "promar200",
     name: "Promar 200",
     pricePerGallon: 31.95,
-    image: "/paint-placeholders/promar200.png",
+    image: "/images/promar-200-interior.jpg",
   },
   cashmere: {
     key: "cashmere",
     name: "Cashmere",
     pricePerGallon: 38.95,
-    image: "/paint-placeholders/cashmere.png",
+    image: "/images/cashmere-interior.jpg",
   },
   superpaint: {
     key: "superpaint",
     name: "SuperPaint",
     pricePerGallon: 46.95,
-    image: "/paint-placeholders/superpaint.png",
+    image: "/images/super-paint-interior.jpg",
   },
   duration: {
     key: "duration",
@@ -57,7 +57,7 @@ const PAINT_PRODUCTS = {
     key: "emerald",
     name: "Emerald",
     pricePerGallon: 65.95,
-    image: "/paint-placeholders/emerald.png",
+    image: "/images/emerald-interior.jpg",
   },
   emerald_rain_refresh: {
     key: "emerald_rain_refresh",
@@ -391,12 +391,6 @@ const jobLabel =
     quote?.estimatorData?.paintGrade ||
     "promar200";
 
-  const originalPaintKey =
-    quote?.originalPaintGrade ||
-    quote?.materials?.originalPaintGrade ||
-    quote?.estimatorData?.paintGrade ||
-    currentPaintKey;
-
   const totalGallons =
     Number(quote?.materials?.totalGallons) ||
     Number(quote?.totalGallons) ||
@@ -407,31 +401,33 @@ const jobLabel =
     Number(pricing?.materialsMarkupPct) ||
     0;
 
-  const originalPaintProduct =
-    PAINT_PRODUCTS[originalPaintKey] || PAINT_PRODUCTS.promar200;
 
-  const paintOptions = allowedPaintKeys
-    .map((key) => PAINT_PRODUCTS[key])
-    .filter(Boolean)
-    .map((product) => {
-      const materialBase = totalGallons * product.pricePerGallon;
-      const materialWithMarkup =
-        materialBase * (1 + materialsMarkupPct / 100);
 
-      const originalMaterialBase = totalGallons * originalPaintProduct.pricePerGallon;
-      const originalMaterialWithMarkup =
-        originalMaterialBase * (1 + materialsMarkupPct / 100);
+const currentPaintProduct =
+  PAINT_PRODUCTS[currentPaintKey] || PAINT_PRODUCTS[allowedPaintKeys[0]];
 
-      const diff = materialWithMarkup - originalMaterialWithMarkup;
+const paintOptions = allowedPaintKeys
+  .map((key) => PAINT_PRODUCTS[key])
+  .filter(Boolean)
+  .map((product) => {
+    const materialBase = totalGallons * product.pricePerGallon;
+    const materialWithMarkup = materialBase * (1 + materialsMarkupPct / 100);
 
-      return {
-        ...product,
-        materialBase,
-        materialWithMarkup,
-        diff,
-        isSelected: product.key === currentPaintKey,
-      };
-    });
+    const currentMaterialBase =
+      totalGallons * currentPaintProduct.pricePerGallon;
+    const currentMaterialWithMarkup =
+      currentMaterialBase * (1 + materialsMarkupPct / 100);
+
+    const diff = materialWithMarkup - currentMaterialWithMarkup;
+
+    return {
+      ...product,
+      materialBase,
+      materialWithMarkup,
+      diff,
+      isSelected: product.key === currentPaintKey,
+    };
+  });
 
   const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
   const paintAdjustment = Number(quote.paintAdjustment) || 0;
@@ -802,9 +798,6 @@ const stripeTotal =
                       <div className="paint-card-meta">
                         {titleCase(wallSheen)} wall finish
                       </div>
-                      <div className="paint-card-price">
-                        {fmtMoney(product.pricePerGallon)} / gallon
-                      </div>
 
                       <div className="paint-card-diff">
                         {product.isSelected ? (
@@ -812,7 +805,7 @@ const stripeTotal =
                         ) : product.diff > 0 ? (
                           <span>Upgrade: +{fmtMoney(product.diff)}</span>
                         ) : product.diff < 0 ? (
-                          <span>Downgrade: {fmtMoney(Math.abs(product.diff))}</span>
+                          <span>Downgrade: -{fmtMoney(Math.abs(product.diff))}</span>
                         ) : (
                           <span>No price change</span>
                         )}

@@ -1090,7 +1090,7 @@ section .quote-signature{
 /* ===== Responsive ===== */
 @media (max-width: 980px) {
   .pkg-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .quote-upgrades-grid {
@@ -1603,18 +1603,44 @@ section .quote-signature{
 
 @media (max-width: 640px) {
   .paint-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 380px) {
+  .pkg-grid,
   .paint-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .paint-grid {
-    grid-template-columns: 1fr;
+  .pkg-card,
+  .paint-card {
+    border-radius: 14px;
+  }
+
+  .pkg-price {
+    font-size: 22px;
+  }
+
+  .paint-card-image-wrap {
+    height: 120px;
+  }
+
+  .paint-card-body {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .paint-card-name {
+    font-size: 16px;
+  }
+
+  .paint-card-price,
+  .paint-card-diff,
+  .paint-card-meta {
+    font-size: 12px;
   }
 }
