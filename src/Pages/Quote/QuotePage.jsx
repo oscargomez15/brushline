@@ -450,7 +450,7 @@ const jobLabel =
       if (productKey === currentPaintKey) return;
 
       try {
-        const res = await fetch("/.netlify/functions/apply-paint", {
+        const res = await fetch("/.netlify/functions/apply-paint-grade", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
