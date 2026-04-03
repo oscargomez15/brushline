@@ -57,7 +57,7 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
     const [paintGrade, setPaintGrade] = useState(
       initialPaintGrade || "promar200"
     );
-
+    const [isColorChange, setIsColorChange] = useState(false);
     const [areas, setAreas] = useState(
       Array.isArray(initialAreas) && initialAreas.length > 0 ? initialAreas : []
     );
@@ -76,7 +76,7 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
       setDoorPrice("100");
       setBaseboardPricePerLf("1.25");
     }
-
+      setIsColorChange(initialPricing?.isColorChange || false);
     setPaintGrade(initialPaintGrade || "promar200");
   }, [initialAreas, initialPricing, initialPaintGrade]);
 
@@ -125,15 +125,23 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
         );
     
       // Pricing object passed into calc engine
-     const pricing = useMemo(
-      () => ({
-        wallRate: parseFloat(wallPricePerSqft) || 0,
-        ceilingRate: parseFloat(ceilingPricePerSqft) || 0,
-        doorRate: parseFloat(doorPrice) || 0,
-        baseboardRate: parseFloat(baseboardPricePerLf) || 0,
-      }),
-      [wallPricePerSqft, ceilingPricePerSqft, doorPrice, baseboardPricePerLf]
-    );
+      const pricing = useMemo(
+        () => ({
+          wallRate: parseFloat(wallPricePerSqft) || 0,
+          ceilingRate: parseFloat(ceilingPricePerSqft) || 0,
+          doorRate: parseFloat(doorPrice) || 0,
+          baseboardRate: parseFloat(baseboardPricePerLf) || 0,
+          paintCoverageSqftPerGallon: isColorChange ? 175 : 350,
+          isColorChange,
+        }),
+        [
+          wallPricePerSqft,
+          ceilingPricePerSqft,
+          doorPrice,
+          baseboardPricePerLf,
+          isColorChange,
+        ]
+      );
     
       // Per-area calculations (pure)
       const perArea = useMemo(
@@ -292,6 +300,7 @@ function detectPackageKey(areas) {
       ceilingPricePerSqft,
       doorPrice,
       baseboardPricePerLf,
+      isColorChange,
     },
     paintGrade,
   },
@@ -400,6 +409,15 @@ function detectPackageKey(areas) {
                         </option>
                         ))}
                     </select>
+                    </label>
+
+                    <label className="price-checkbox">
+                      <span>Change of Color</span>
+                      <input
+                        type="checkbox"
+                        checked={isColorChange}
+                        onChange={(e) => setIsColorChange(e.target.checked)}
+                      />
                     </label>
                 </div>
                 </div>

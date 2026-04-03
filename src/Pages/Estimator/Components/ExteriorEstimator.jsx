@@ -401,11 +401,11 @@ export default function ExteriorEstimator({ customer }) {
   );
 }
 
-function Stat({ label, value }) {
-  return (
-    <div>
-      <div className="calculation-label">{label}</div>
-      <div>{value}</div>
-    </div>
-  );
-}
+// function Stat({ label, value }) {
+//   return (
+//     <div>
+//       <div className="calculation-label">{label}</div>
+//       <div>{value}</div>
+//     </div>
+//   );
+// }

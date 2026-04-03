@@ -25,6 +25,8 @@ const parseIntSafe = (v) => {
 };
 
 export function computeAreaCalc(area, pricing) {
+  const standardCoverageSqftPerGallon = SQFT_PER_GALLON;
+  const wallCoverageSqftPerGallon = pricing.isColorChange ? 175 : SQFT_PER_GALLON;
   const wallsOn = !!area.paintWalls;
   const ceilingOn = !!area.paintCeiling;
   const doorsOn = !!area.paintDoors;
@@ -76,10 +78,21 @@ export function computeAreaCalc(area, pricing) {
   const baseboardCost = baseboardOn ? baseboardLf * pricing.baseboardRate : 0;
 
   // Gallons (ceil up like you do now)
-  const wallGallons = wallsOn ? Math.ceil(wallSqft / SQFT_PER_GALLON) : 0;
-  const ceilingGallons = ceilingOn ? Math.ceil(ceilingSqft / SQFT_PER_GALLON) : 0;
-  const doorGallons = doorsOn ? Math.ceil(doorSqft / SQFT_PER_GALLON) : 0;
-  const baseboardGallons = baseboardOn ? Math.ceil(baseboardSqft / SQFT_PER_GALLON) : 0;
+  const wallGallons = wallsOn
+    ? Math.ceil(wallSqft / wallCoverageSqftPerGallon)
+    : 0;
+
+  const ceilingGallons = ceilingOn
+    ? Math.ceil(ceilingSqft / standardCoverageSqftPerGallon)
+    : 0;
+
+  const doorGallons = doorsOn
+    ? Math.ceil(doorSqft / standardCoverageSqftPerGallon)
+    : 0;
+
+  const baseboardGallons = baseboardOn
+    ? Math.ceil(baseboardSqft / standardCoverageSqftPerGallon)
+    : 0;
 
   // Hours (keep same behavior: only walls+ceiling hours)
   const wallHours = wallsOn ? Math.ceil(wallSqft / SQFT_PER_HOUR) : 0;
