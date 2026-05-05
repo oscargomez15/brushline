@@ -1,6 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 const { buildQuotePdfBase64 } = require("./_pdf");
-const sgMail = require("@sendgrid/mail");
+
+const { Resend } = require("resend");
 
 function safeStr(v) {
   return (v || "").toString().trim();
@@ -115,14 +116,12 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
 }
 
 async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
-  const apiKey = process.env.SENDGRID_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.QUOTE_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM;
 
   if (!apiKey || !from || !to) {
-    throw new Error("Missing SendGrid configuration");
+    throw new Error("Missing Resend configuration");
   }
-
-  sgMail.setApiKey(apiKey);
 
   const customerName =
     safeStr(quote?.clientName) ||
@@ -161,25 +160,39 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
     quoteUrl: publicUrl,
   });
 
-  await sgMail.send({
-    to,
-    from,
-    subject,
-    text,
-    html,
-    ...(pdfBase64
-      ? {
-          attachments: [
-            {
-              content: pdfBase64,
-              filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
-              type: "application/pdf",
-              disposition: "attachment",
-            },
-          ],
-        }
-      : {}),
-  });
+const resend = new Resend(apiKey);
+
+await resend.emails.send({
+  from,
+  to,
+  subject,
+  text,
+  html,
+  attachments: pdfBase64
+    ? [
+        {
+          filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
+          content: Buffer.from(pdfBase64, "base64"),
+        },
+      ]
+    : [],
+});const resend = new Resend(apiKey);
+
+await resend.emails.send({
+  from,
+  to,
+  subject,
+  text,
+  html,
+  attachments: pdfBase64
+    ? [
+        {
+          filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
+          content: Buffer.from(pdfBase64, "base64"),
+        },
+      ]
+    : [],
+});
 }
 
 exports.handler = async (event, context) => {
