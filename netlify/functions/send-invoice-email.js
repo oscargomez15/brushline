@@ -1,6 +1,5 @@
 const { getStore } = require("@netlify/blobs");
-const sgMail = require("@sendgrid/mail");
-
+const { Resend } = require("resend");
 function safeStr(v) {
   return (v || "").toString().trim();
 }
@@ -185,7 +184,7 @@ exports.handler = async (event, context) => {
 
     const siteID = process.env.NETLIFY_SITE_ID;
     const token = process.env.NETLIFY_AUTH_TOKEN;
-    const apiKey = process.env.SENDGRID_API_KEY;
+    const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.QUOTE_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM;
     const publicBase = process.env.PUBLIC_INVOICE_BASE_URL;
     const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL;
@@ -195,7 +194,7 @@ exports.handler = async (event, context) => {
     }
 
     if (!apiKey || !from) {
-      return json(500, { error: "Missing SendGrid env vars" });
+      return json(500, { error: "Missing Resend env vars" });
     }
 
     let body;
@@ -236,8 +235,6 @@ exports.handler = async (event, context) => {
 
     const invoiceUrl = `${base.replace(/\/$/, "")}/${encodeURIComponent(invoice.id)}?t=${encodeURIComponent(invoice.viewToken)}`;
 
-    sgMail.setApiKey(apiKey);
-
     const subject = `Invoice ${safeStr(invoice.invoiceNumber) || invoice.id} from ${safeStr(invoice.companyName) || "Brushline Services"}`;
 
     const text = [
@@ -267,7 +264,9 @@ exports.handler = async (event, context) => {
       dueDate: invoice.dueDate || "Upon receipt",
     });
 
-    await sgMail.send({
+    const resend = new Resend(apiKey);
+
+    await resend.emails.send({
       to,
       from,
       subject,
