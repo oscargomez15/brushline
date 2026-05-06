@@ -1,6 +1,6 @@
 const { getStore } = require("@netlify/blobs");
 
-const sgMail = require("@sendgrid/mail");
+const { Resend } = require("resend");
 
 function safeStr(v) {
   return (v || "").toString().trim();
@@ -12,22 +12,20 @@ function buildQuoteLink(baseUrl, id) {
 }
 
 async function sendApprovalEmail(updatedQuote, quoteId) {
-  const apiKey = process.env.SENDGRID_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.APPROVAL_NOTIFY_TO;
   const from = process.env.APPROVAL_NOTIFY_FROM;
 
-  console.log("SendGrid env check:", {
-    hasApiKey: !!process.env.SENDGRID_API_KEY,
+  console.log("Resend env check:", {
+    hasApiKey: !!process.env.RESEND_API_KEY,
     to: process.env.APPROVAL_NOTIFY_TO ? "set" : "missing",
     from: process.env.APPROVAL_NOTIFY_FROM ? "set" : "missing",
   });
 
   if (!apiKey || !to || !from) {
-    console.warn("SendGrid env vars missing; skipping approval email.");
+    console.warn("Resend env vars missing; skipping approval email.");
     return;
   }
-
-  sgMail.setApiKey(apiKey);
 
   const customerName =
     safeStr(updatedQuote?.clientName) ||
@@ -164,7 +162,9 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
   </div>
   `;
 
-  await sgMail.send({
+  const resend = new Resend(apiKey);
+
+  await resend.emails.send({
     to,
     from,
     subject,

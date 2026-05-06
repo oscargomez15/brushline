@@ -176,22 +176,6 @@ await resend.emails.send({
         },
       ]
     : [],
-});const resend = new Resend(apiKey);
-
-await resend.emails.send({
-  from,
-  to,
-  subject,
-  text,
-  html,
-  attachments: pdfBase64
-    ? [
-        {
-          filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
-          content: Buffer.from(pdfBase64, "base64"),
-        },
-      ]
-    : [],
 });
 }
 
