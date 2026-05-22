@@ -73,6 +73,13 @@ const ALLOWED_PAINTS_BY_SHEEN = {
   flat: ["promar200", "cashmere", "emerald"],
 };
 
+const EXTERIOR_PAINT_OPTIONS = [
+  { key: "superpaint", label: "Super Paint", pricePerGallon: 45.99 },
+  { key: "duration", label: "Duration", pricePerGallon: 51.95 },
+  { key: "emerald", label: "Emerald", pricePerGallon: 66.95 },
+  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh", pricePerGallon: 75.45 },
+];
+
 function titleCase(value) {
   if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -98,7 +105,29 @@ export default function QuotePage() {
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  
+  const exterior = quote?.exterior || {};
 
+  const [selectedExteriorPaint, setSelectedExteriorPaint] = useState(
+    exterior.paintType || "superpaint"
+  );
+
+  const selectedPaint = EXTERIOR_PAINT_OPTIONS.find(
+  (p) => p.key === selectedExteriorPaint
+  );
+
+  const originalPaintCost = Number(exterior.paintMaterialCost || 0);
+  const gallons = Number(
+    exterior.paintGallons ||
+    exterior.totalGallons ||
+    quote?.totalGallons ||
+    0
+  );
+  const newPaintCost = gallons * Number(selectedPaint?.pricePerGallon || 0);
+
+  const paintPriceDifference = newPaintCost - originalPaintCost;
+
+  const displayedGrandTotal = Number(quote.grandTotal || 0) + paintPriceDifference;
   
   const customerName =
   quote?.clientName ||
@@ -292,6 +321,12 @@ const signatureUrl =
       }
     })();
   }, [loadQuote]);
+
+  useEffect(() => {
+  if (quote?.jobType === "exterior" && quote?.exterior?.paintType) {
+    setSelectedExteriorPaint(quote.exterior.paintType);
+  }
+}, [quote?.jobType, quote?.exterior?.paintType]);
 
   const depositPaid =
   quote?.depositPaid === true || quote?.depositStatus === "paid";
@@ -611,7 +646,7 @@ const stripeTotal =
 
             <div className="quote-detail-card">
               <div className="quote-detail-label">ESTIMATE TOTAL</div>
-              <div className="quote-detail-value quote-total">{fmtMoney(quote.grandTotal)}</div>
+              <div className="quote-detail-value quote-total">{fmtMoney(displayedGrandTotal)}</div>
             </div>
           </div>
 
@@ -678,7 +713,7 @@ const stripeTotal =
                 {/* TOTAL */}
                 <div className="quote-items-row total">
                   <div>Total</div>
-                  <div className="right">{fmtMoney(quote.grandTotal)}</div>
+                  <div className="right">{fmtMoney(displayedGrandTotal)}</div>
                 </div>
 
               </div>
@@ -816,6 +851,52 @@ const stripeTotal =
               </div>
             </div>
           )}
+
+          {quote.jobType === "exterior" && (
+            <section className="paint-upgrade-section">
+              <div className="paint-upgrade-header">
+                <h2>Selected Exterior Paint</h2>
+                <p>
+                  Your proposal was created with{" "}
+                  <strong>{exterior.paintLabel}</strong>. You can upgrade or downgrade below.
+                </p>
+              </div>
+
+              <div className="paint-options-grid">
+                {EXTERIOR_PAINT_OPTIONS.map((paint) => {
+                  const optionCost = gallons * paint.pricePerGallon;
+                  const diff = optionCost - originalPaintCost;
+                  const isSelected = selectedExteriorPaint === paint.key;
+
+                  return (
+                    <button
+                      key={paint.key}
+                      type="button"
+                      className={`paint-option-card ${isSelected ? "selected" : ""}`}
+                      onClick={() => setSelectedExteriorPaint(paint.key)}
+                    >
+                      <h3>{paint.label}</h3>
+
+                      <p>${paint.pricePerGallon.toFixed(2)} / gallon</p>
+
+                      <strong>
+                        {diff === 0
+                          ? "Current selection"
+                          : diff > 0
+                          ? `+${fmtMoney(diff)}`
+                          : `-${fmtMoney(Math.abs(diff))}`}
+                      </strong>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="paint-total-preview">
+                <span>Updated Proposal Total</span>
+                <strong>{fmtMoney(displayedGrandTotal)}</strong>
+              </div>
+            </section>
+          )}
           {quote.jobType !== "handyman" ? (
           <div className="pkg-section">
             <div className="pkg-head">
@@ -897,7 +978,7 @@ const stripeTotal =
             <div className="pkg-footer">
               <div className="pkg-footer-left">
                 <div className="pkg-footer-label">PACKAGE TOTAL</div>
-                <div className="pkg-footer-amt">{fmtMoney(quote.grandTotal)}</div>
+                <div className="pkg-footer-amt">{fmtMoney(displayedGrandTotal)}</div>
               </div>
 
               <div className="pkg-footer-right">

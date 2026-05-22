@@ -15,18 +15,11 @@ const defaultSides = [
 ];
 
 const EXTERIOR_PAINT_OPTIONS = [
-  { key: "superpaint", label: "Super Paint" },
-  { key: "duration", label: "Duration" },
-  { key: "emerald", label: "Emerald" },
-  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh" },
+  { key: "superpaint", label: "Super Paint", pricePerGallon: 45.99 },
+  { key: "duration", label: "Duration", pricePerGallon: 51.95 },
+  { key: "emerald", label: "Emerald", pricePerGallon: 66.95 },
+  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh", pricePerGallon: 75.45 },
 ];
-
-const PAINT_PRICES = {
-  superpaint: 45.99,
-  duration: 51.95,
-  emerald: 66.95,
-  emerald_rain_refresh: 75.45,
-};
 
 const toNum = (v) => {
   if (v == null) return 0;
@@ -70,6 +63,10 @@ export default function ExteriorEstimator({ customer }) {
       };
     });
   }, [sides, heightFt, rate]);
+
+  const selectedPaint = EXTERIOR_PAINT_OPTIONS.find(
+  (paint) => paint.key === paintType
+);
 
   const totals = useMemo(() => {
     const totalSqft = perSide.reduce((sum, s) => sum + (s.sqft || 0), 0);
@@ -169,8 +166,10 @@ export default function ExteriorEstimator({ customer }) {
       pricePerSqft: rate,
 
       paintType,
+      paintLabel: selectedPaint?.label || "",
+
       paintPricePerGallon:
-        PAINT_PRICES[paintType],
+        selectedPaint?.pricePerGallon || 0,
 
       paintGallons:
         totals.totalGallons,
@@ -222,11 +221,12 @@ export default function ExteriorEstimator({ customer }) {
   const addOnsTotal = useMemo(() => {
     return includedAddOns.reduce((sum, item) => sum + item.priceNum, 0);
   }, [includedAddOns]);
-  const paintCost = useMemo(() => {
-  const gallonPrice = PAINT_PRICES[paintType] || 0;
 
-  return totals.totalGallons * gallonPrice;
-}, [paintType, totals.totalGallons]);
+  const paintCost = useMemo(() => {
+    const gallonPrice = selectedPaint?.pricePerGallon || 0;
+
+    return totals.totalGallons * gallonPrice;
+  }, [selectedPaint, totals.totalGallons]);
 
 const grandTotal = useMemo(() => {
   return totals.totalCost + addOnsTotal + paintCost;
@@ -312,7 +312,7 @@ const grandTotal = useMemo(() => {
               <div className="mini-row">
                 <span className="mini-label">Estimated Total</span>
                 <span className="mini-value">
-                  {fmtMoney(grandTotal + paintCost)}
+                  {fmtMoney(grandTotal)}
                 </span>
               </div>
               </div>
@@ -463,16 +463,18 @@ const grandTotal = useMemo(() => {
         </button>
       </div>
 
-      <ExteriorSummarySticky
-        showSummary={showSummary}
-        setShowSummary={setShowSummary}
-        totalSqft={totals.totalSqft}
-        totalGallons={totals.totalGallons}
-        ratePerSqft={rate}
-        grandTotal={totals.totalCost}
-        fmtMoney={fmtMoney}
-        fmt={fmt}
-      />
+    <ExteriorSummarySticky
+      showSummary={showSummary}
+      setShowSummary={setShowSummary}
+      totalSqft={totals.totalSqft}
+      totalGallons={totals.totalGallons}
+      ratePerSqft={rate}
+      grandTotal={grandTotal}
+      paintType={paintType}
+      paintCost={paintCost}
+      paintPricePerGallon={selectedPaint?.pricePerGallon || 0}      fmtMoney={fmtMoney}
+      fmt={fmt}
+    />
     </section>
   );
 }
