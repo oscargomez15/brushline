@@ -458,8 +458,8 @@ const grandTotal = useMemo(() => {
       grandTotal={grandTotal}
       paintType={paintType}
       paintCost={paintCost}
-      paintPricePerGallon={selectedPaint?.pricePerGallon || 0}      fmtMoney={fmtMoney}
-      fmt={fmt}
+      paintPricePerGallon={selectedPaint?.pricePerGallon || 0}
+      fmtMoney={fmtMoney}
     />
     </section>
   );

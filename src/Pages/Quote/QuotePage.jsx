@@ -74,10 +74,30 @@ const ALLOWED_PAINTS_BY_SHEEN = {
 };
 
 const EXTERIOR_PAINT_OPTIONS = [
-  { key: "superpaint", label: "Super Paint", pricePerGallon: 45.99 },
-  { key: "duration", label: "Duration", pricePerGallon: 51.95 },
-  { key: "emerald", label: "Emerald", pricePerGallon: 66.95 },
-  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh", pricePerGallon: 75.45 },
+  {
+    key: "superpaint",
+    label: "Super Paint",
+    pricePerGallon: 45.99,
+    image: "/images/superpaint-ext.jpg",
+  },
+  {
+    key: "duration",
+    label: "Duration",
+    pricePerGallon: 51.95,
+    image: "/images/duration-ext.jpg",
+  },
+  {
+    key: "emerald",
+    label: "Emerald",
+    pricePerGallon: 66.95,
+    image: "/images/emerald-ext.jpg",
+  },
+  {
+    key: "emerald_rain_refresh",
+    label: "Emerald Rain Refresh",
+    pricePerGallon: 75.45,
+    image: "/images/emerald-rain-ext.jpg",
+  },
 ];
 
 function titleCase(value) {
@@ -212,6 +232,11 @@ const signatureUrl =
 
   const handleApprove = async (signatureDataUrl, typedName) => {
     setApproving(true);
+
+    const selectedExteriorPaintProduct = EXTERIOR_PAINT_OPTIONS.find(
+      (p) => p.key === selectedExteriorPaint
+    );
+
     try {
       const res = await fetch("/.netlify/functions/approve-quote", {
         method: "POST",
@@ -221,6 +246,20 @@ const signatureUrl =
           t: t || "",
           signatureDataUrl,
           typedName,
+
+          exteriorPaintSelection:
+            quote?.jobType === "exterior"
+              ? {
+                  paintType: selectedExteriorPaint,
+                  paintLabel: selectedExteriorPaintProduct?.label || "",
+                  paintPricePerGallon:
+                    selectedExteriorPaintProduct?.pricePerGallon || 0,
+                  paintGallons: gallons,
+                  paintMaterialCost: newPaintCost,
+                  paintPriceDifference,
+                  updatedGrandTotal: displayedGrandTotal,
+                }
+              : null,
         }),
       });
 
@@ -229,6 +268,7 @@ const signatureUrl =
 
       setQuote((q) => ({
         ...q,
+        ...(data.quote || {}),
         status: "approved",
         approvedAt: data.approvedAt,
         signature: data.signature,
@@ -243,7 +283,7 @@ const signatureUrl =
       setApproving(false);
     }
   };
-  
+    
   const handleSelectPackage = async (packageKey) => {
     try {
       const res = await fetch("/.netlify/functions/apply-package", {

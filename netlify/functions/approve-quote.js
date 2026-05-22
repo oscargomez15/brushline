@@ -199,7 +199,12 @@ exports.handler = async (event) => {
       return json(500, { error: "Missing Netlify env vars" });
     }
 
-    const { id, signatureDataUrl, typedName } = JSON.parse(event.body || "{}");
+    const {
+      id,
+      signatureDataUrl,
+      typedName,
+      exteriorPaintSelection,
+    } = JSON.parse(event.body || "{}");
 
     if (!id) return json(400, { error: "Missing quote id" });
     if (!signatureDataUrl) return json(400, { error: "Missing signature" });
@@ -217,9 +222,27 @@ exports.handler = async (event) => {
     const quote = await quotes.get(id, { type: "json" });
     if (!quote) return json(404, { error: "Quote not found" });
 
-    // Prevent double approval
     if (quote.status === "approved") {
-      return json(400, { error: "Quote already approved" });
+    return json(400, { error: "Quote already approved" });
+    }
+    let quoteToApprove = { ...quote };
+
+    if (quote.jobType === "exterior" && exteriorPaintSelection) {
+      quoteToApprove = {
+        ...quoteToApprove,
+        grandTotal: Number(exteriorPaintSelection.updatedGrandTotal || quote.grandTotal || 0),
+        paintAdjustment: Number(exteriorPaintSelection.paintPriceDifference || 0),
+
+        exterior: {
+          ...(quote.exterior || {}),
+          paintType: exteriorPaintSelection.paintType,
+          paintLabel: exteriorPaintSelection.paintLabel,
+          paintPricePerGallon: Number(exteriorPaintSelection.paintPricePerGallon || 0),
+          paintGallons: Number(exteriorPaintSelection.paintGallons || 0),
+          paintMaterialCost: Number(exteriorPaintSelection.paintMaterialCost || 0),
+          paintPriceDifference: Number(exteriorPaintSelection.paintPriceDifference || 0),
+        },
+      };
     }
 
     const now = new Date().toISOString();
@@ -242,12 +265,12 @@ exports.handler = async (event) => {
       ip: event.headers["x-nf-client-connection-ip"] || null,
     };
     
-    const total = Number(quote.grandTotal || 0);
+    const total = Number(quoteToApprove.grandTotal || 0);
     const depositPercent = Number(quote.depositPercent || 0.4);
     const depositRequired = Math.round(total * depositPercent * 100) / 100;
 
     const updatedQuote = {
-      ...quote,
+      ...quoteToApprove,
       status: "approved",
       approvedAt: now,
       signature,
@@ -277,6 +300,9 @@ exports.handler = async (event) => {
         status: "approved",
         approvedAt: now,
         signature,
+        grandTotal: updatedQuote.grandTotal,
+        paintAdjustment: updatedQuote.paintAdjustment || 0,
+        exterior: updatedQuote.exterior || idx.exterior || null,
       });
     }
 
