@@ -282,40 +282,6 @@ const grandTotal = useMemo(() => {
                   ))}
                 </select>
               </label>
-
-              <div className="exterior-meta">
-              <div className="mini-row">
-                <span className="mini-label">Paint Type</span>
-                <span className="mini-value">
-                  {
-                    EXTERIOR_PAINT_OPTIONS.find(
-                      (p) => p.key === paintType
-                    )?.label
-                  }
-                </span>
-              </div>
-
-              <div className="mini-row">
-                <span className="mini-label">Paint Material</span>
-                <span className="mini-value">
-                  {fmtMoney(paintCost)}
-                </span>
-              </div>
-
-              <div className="mini-row">
-                <span className="mini-label">Estimated Labor</span>
-                <span className="mini-value">
-                  {fmtMoney(totals.totalCost)}
-                </span>
-              </div>
-
-              <div className="mini-row">
-                <span className="mini-label">Estimated Total</span>
-                <span className="mini-value">
-                  {fmtMoney(grandTotal)}
-                </span>
-              </div>
-              </div>
             </div>
           </div>
         </div>
