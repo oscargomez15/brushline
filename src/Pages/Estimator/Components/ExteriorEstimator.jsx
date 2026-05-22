@@ -14,6 +14,20 @@ const defaultSides = [
   { id: "left", label: "Left", length: "" },
 ];
 
+const EXTERIOR_PAINT_OPTIONS = [
+  { key: "superpaint", label: "Super Paint" },
+  { key: "duration", label: "Duration" },
+  { key: "emerald", label: "Emerald" },
+  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh" },
+];
+
+const PAINT_PRICES = {
+  superpaint: 45.99,
+  duration: 51.95,
+  emerald: 66.95,
+  emerald_rain_refresh: 75.45,
+};
+
 const toNum = (v) => {
   if (v == null) return 0;
   const normalized = String(v).trim().replace(/\s+/g, "").replace(",", ".");
@@ -27,6 +41,7 @@ export default function ExteriorEstimator({ customer }) {
   const [addOns, setAddons] = useState([]);
   // price control (top card)
   const [pricePerSqft, setPricePerSqft] = useState("2.50");
+  const [paintType, setPaintType] = useState("superpaint");
 
   // measurements
   const [soffitHeight, setSoffitHeight] = useState("10");
@@ -149,20 +164,32 @@ export default function ExteriorEstimator({ customer }) {
       note: "Thanks for having us out — excited about this project!",
       scopeItems: buildScopeItems(),
 
-      exterior: {
-        soffitHeight: heightFt,
-        pricePerSqft: rate,
-        totalSqft: totals.totalSqft,
-        totalGallons: totals.totalGallons,
-        sides: perSide.map((s) => ({
-          id: s.id,
-          label: s.label,
-          length: s.lengthFt,
-          sqft: s.sqft,
-          gallons: s.gallons,
-          cost: s.cost,
-        })),
-      },
+    exterior: {
+      soffitHeight: heightFt,
+      pricePerSqft: rate,
+
+      paintType,
+      paintPricePerGallon:
+        PAINT_PRICES[paintType],
+
+      paintGallons:
+        totals.totalGallons,
+
+      paintMaterialCost:
+        paintCost,
+
+      totalSqft: totals.totalSqft,
+      totalGallons: totals.totalGallons,
+
+      sides: perSide.map((s) => ({
+        id: s.id,
+        label: s.label,
+        length: s.lengthFt,
+        sqft: s.sqft,
+        gallons: s.gallons,
+        cost: s.cost,
+      })),
+    },
     };
 
     const res = await fetch("/.netlify/functions/create-quote", {
@@ -195,10 +222,17 @@ export default function ExteriorEstimator({ customer }) {
   const addOnsTotal = useMemo(() => {
     return includedAddOns.reduce((sum, item) => sum + item.priceNum, 0);
   }, [includedAddOns]);
+  const paintCost = useMemo(() => {
+  const gallonPrice = PAINT_PRICES[paintType] || 0;
 
-  const grandTotal = useMemo(() => {
-    return totals.totalCost + addOnsTotal;
-  }, [totals.totalCost, addOnsTotal]);
+  return totals.totalGallons * gallonPrice;
+}, [paintType, totals.totalGallons]);
+
+const grandTotal = useMemo(() => {
+  return totals.totalCost + addOnsTotal + paintCost;
+}, [totals.totalCost, addOnsTotal, paintCost]);
+
+
 
   return (
     <section className="exterior-calculator-wrapper">
@@ -234,11 +268,53 @@ export default function ExteriorEstimator({ customer }) {
                 />
               </label>
 
+              <label>
+                <span>Paint Type</span>
+                <select
+                  className="dim-input"
+                  value={paintType}
+                  onChange={(e) => setPaintType(e.target.value)}
+                >
+                  {EXTERIOR_PAINT_OPTIONS.map((paint) => (
+                    <option key={paint.key} value={paint.key}>
+                      {paint.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
               <div className="exterior-meta">
-                <div className="mini-row">
-                  <span className="mini-label">Coverage</span>
-                  <span className="mini-value">{SQFT_PER_GALLON_EXTERIOR} sq ft/gal</span>
-                </div>
+              <div className="mini-row">
+                <span className="mini-label">Paint Type</span>
+                <span className="mini-value">
+                  {
+                    EXTERIOR_PAINT_OPTIONS.find(
+                      (p) => p.key === paintType
+                    )?.label
+                  }
+                </span>
+              </div>
+
+              <div className="mini-row">
+                <span className="mini-label">Paint Material</span>
+                <span className="mini-value">
+                  {fmtMoney(paintCost)}
+                </span>
+              </div>
+
+              <div className="mini-row">
+                <span className="mini-label">Estimated Labor</span>
+                <span className="mini-value">
+                  {fmtMoney(totals.totalCost)}
+                </span>
+              </div>
+
+              <div className="mini-row">
+                <span className="mini-label">Estimated Total</span>
+                <span className="mini-value">
+                  {fmtMoney(grandTotal + paintCost)}
+                </span>
+              </div>
               </div>
             </div>
           </div>
