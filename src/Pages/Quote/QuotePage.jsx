@@ -894,10 +894,6 @@ const stripeTotal =
                       <div className="paint-card-body">
                         <div className="paint-card-name">{paint.label}</div>
 
-                        <div className="paint-card-meta">
-                          Exterior finish • {fmtMoney(paint.pricePerGallon)} / gallon
-                        </div>
-
                         <div className="paint-card-diff">
                           {isSelected ? (
                             <span className="paint-selected">Selected</span>
@@ -913,11 +909,6 @@ const stripeTotal =
                     </button>
                   );
                 })}
-              </div>
-
-              <div className="paint-total-preview">
-                <span>Updated Proposal Total</span>
-                <strong>{fmtMoney(displayedGrandTotal)}</strong>
               </div>
             </section>
           )}
