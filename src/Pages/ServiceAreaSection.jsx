@@ -6,7 +6,7 @@ import estero from '../Assets/cities/painter-in-estero.jpg';
 import naples from '../Assets/cities/painter-in-naples.jpg';
 import '../Styling/ServiceAreaSection.css';
 import { Link } from 'react-router-dom';
-import { FaArrowRight, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 
 export const ServiceAreaSection = () => {
   const cities = [

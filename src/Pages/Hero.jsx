@@ -1,11 +1,8 @@
 import { motion } from 'framer-motion';
 import {
   FaArrowRight,
-  FaCheck,
   FaPhone,
   FaStar,
-  FaPaintRoller,
-  FaHome,
 } from 'react-icons/fa';
 
 import GoogleLogo from '../Assets/google-logo.webp';
