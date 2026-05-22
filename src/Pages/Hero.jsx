@@ -1,68 +1,179 @@
 import { motion } from 'framer-motion';
-import { FaCheck, FaPhone, FaStar } from 'react-icons/fa';
-import GoogleLogo from '../Assets/google-logo.webp'
-import '../Styling/Hero.css'
+import {
+  FaArrowRight,
+  FaCheck,
+  FaPhone,
+  FaStar,
+  FaPaintRoller,
+  FaHome,
+} from 'react-icons/fa';
+
+import GoogleLogo from '../Assets/google-logo.webp';
+import '../Styling/Hero.css';
 
 export const Hero = () => {
-
   return (
-    <section className='hero-page' id='home'>
-    <div className="hero-overlay">    
-      <div className="hero-benefits">
-          <div className="benefit-item">
-              <FaCheck/>
-              <p> No-cost estimates.</p>
-          </div>
-          <div className="benefit-item">
-              <FaCheck/>
-              <p>10+ years experience</p>
-          </div>
-          <div className="benefit-item">
-              <FaCheck/>
-              <p>5-star rated</p>
-          </div>
-          <div className="testimonial-review">
-            <div className="testimonial-google">
-              <img src={GoogleLogo} alt="google logo" />
+    <section className='modern-hero' id='home'>
+      {/* Background */}
+      <div className='hero-bg-overlay'></div>
+
+      <picture>
+        <source
+          srcSet='/images/exterior-painting-fort-myers-brushlie.webp'
+          type='image/webp'
+        />
+
+        <img
+          src='/images/exterior-painting-fort-myers-brushlie-resized.webp'
+          alt='Exterior painting in Southwest Florida'
+          className='hero-bg-image'
+          fetchPriority='high'
+          loading='eager'
+        />
+      </picture>
+
+      {/* Main Content */}
+      <div className='hero-content-wrapper'>
+        <div className='hero-left'>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className='hero-badge'
+          >
+            <FaStar />
+            Trusted Painting Company in Southwest Florida
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            Premium Painting Solutions For Homes & Businesses
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            Brushline Services helps homeowners and businesses across Cape Coral,
+            Fort Myers, Naples, Estero, and Bonita Springs transform their
+            properties with clean finishes, expert craftsmanship, and dependable
+            service.
+          </motion.p>
+
+          {/* CTA Buttons */}
+<motion.div
+            className='hero-actions'
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1 }}
+          >
+            <a href='#contact' className='primary-btn'>
+              Get Free Estimate
+              <FaArrowRight />
+            </a>
+
+            <a
+              href='tel:2397773713'
+              className='secondary-btn'
+              onClick={() => {
+                if (window.gtag) {
+                  window.gtag('event', 'conversion', {
+                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
+                  });
+                }
+              }}
+            >
+              <FaPhone />
+              (239) 777-3713
+            </a>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            className='hero-stats'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1 }}
+          >
+            <div className='stat-card'>
+              <h3>10+</h3>
+              <p>Years Experience</p>
             </div>
-            <div className="testimonial-text">
-              <FaStar/><FaStar/><FaStar/><FaStar/><FaStar/>
-              <p>Over 20+ Homes Transformed</p>
+
+            <div className='stat-card'>
+              <h3>5★</h3>
+              <p>Rated Service</p>
             </div>
-          </div>
-      </div> 
-    </div>
-    <picture>
-      <source srcSet='/images/exterior-painting-fort-myers-brushlie.webp' type='image/webp'/>
-      <img src='/images/exterior-painting-fort-myers-brushlie-resized.webp' alt="exterior-paint-fort-myers" fetchPriority='high' loading='eager' className='background-image' />
-    </picture>
- 
-      <div className="hero-container">
-          <div className='text-container'>
-            <div className="title-container">
-              <motion.h1
-              className='heading'
-              initial={{scale:0.5}}
-              whileInView={{scale:1}}
-              transition={{duration:1}}> Expert Painting, Lasting Results </motion.h1>
-              <motion.p
-              initial={{opacity:0}}
-              whileInView={{opacity:1}}
-              transition={{duration:1}}> We help homeowners and businesses across SWFL elevate their spaces with clean, precise, and lasting finishes. We’re proud to serve Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs with honesty and excellence.  Let us show you the difference, request a free quote today!  </motion.p>
+
+            <div className='stat-card'>
+              <h3>50+</h3>
+              <p>Homes Transformed</p>
             </div>
-              <div className="btn-group">
-                <a href="#contact"><button tabIndex='-1' className='button'>GET FREE QUOTE</button></a>
-                <div className='phoneButton'>
-                  <a href="tel:2397773713" onClick={() =>{
-                            if (window.gtag) {
-                            window.gtag('event', 'conversion', {
-                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                            });
-                            }}} > <FaPhone/> (239)777-3713</a>
-                </div>
+          </motion.div>
+        </div>
+
+        {/* Right Side Cards */}
+        <motion.div
+          className='hero-right'
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
+
+        <div className="service-card hero-contact-card">
+          <h3>Request Your Free Estimate</h3>
+          <p>Tell us a little about your project and we’ll reach out shortly.</p>
+
+          <form className="hero-contact-form">
+            <input type="text" name="name" placeholder="Name" required />
+
+            <input type="email" name="email" placeholder="Email" required />
+
+            <input type="tel" name="phone" placeholder="Phone number" required />
+
+            <select name="service" required defaultValue="">
+              <option value="" disabled>
+                Service needed
+              </option>
+              <option value="painting">Painting</option>
+              <option value="drywall">Drywall</option>
+              <option value="handyman">Handyman</option>
+              <option value="cleaning">Cleaning</option>
+            </select>
+
+            <textarea
+              name="message"
+              placeholder="Message (optional)"
+              rows="4"
+            ></textarea>
+
+            <button type="submit">
+              Send Request <FaArrowRight />
+            </button>
+          </form>
+        </div>
+
+          <div className='service-card review-card'>
+            <img src={GoogleLogo} alt='Google logo' />
+
+            <div>
+              <div className='stars'>
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
               </div>
+
+              <p>Highly rated by homeowners across SWFL</p>
+            </div>
           </div>
+        </motion.div>
       </div>
     </section>
-  )
-}
+  );
+};

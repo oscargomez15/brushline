@@ -53,7 +53,12 @@ export const Contact = () => {
         });
     }
 
-    const isFormValid = Object.values(form).every((value) => value.trim() !== '');
+    const isFormValid =
+    form.name.trim() &&
+    form.address.trim() &&
+    form.email.trim() &&
+    form.phone.trim() &&
+    form.service.trim();    
     
     useEffect(() => {
     if (showModal) {
@@ -70,7 +75,7 @@ export const Contact = () => {
 
   return (
     <section className='contact-page light-orange' id='contact'>
-        <motion.div className="contact-form-container cartoon-box"
+        <motion.div className="contact-card-modern"
         initial={{ x: -100, opacity: 0 }}
         whileInView={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
@@ -107,7 +112,13 @@ export const Contact = () => {
 
                     <div className="form-field full-width">
                         <label htmlFor="service">Type of Service*</label>
-                        <input type="text" name='service' id='service' value={form.service} onChange={handleChange} placeholder='Interior Painting' required/>
+                        <select name="service" id="service" value={form.service} onChange={handleChange} required>
+                        <option value="" disabled>Select a service</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Drywall">Drywall</option>
+                        <option value="Handyman">Handyman</option>
+                        <option value="Cleaning">Cleaning</option>
+                        </select>
                     </div>
 
                     <div className="form-field full-width">

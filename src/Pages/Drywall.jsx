@@ -268,7 +268,18 @@ export const Drywall = () => {
                         <p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Serving Naples, Bonita Springs, Fort Myers and Cape Coral. Our experienced team delivers high-quality results—on time and on budget. Contact us today for a free estimate!</p>
                 </div>
 
-                <div className="contact-mini">
+                <div className="contact-mini glass-form">
+                    <div className="form-header">
+                        <span className="form-badge">
+                            FREE ESTIMATE
+                        </span>
+
+                        <h3>Request Your Quote</h3>
+
+                        <p>
+                            Fill out the form below and we'll reach out within 24 hours.
+                        </p>
+                    </div>
                     <div className="field-group-container">
                         <div className="field-group">
                             <label htmlFor="name">Name*</label>
@@ -303,16 +314,16 @@ export const Drywall = () => {
                     
                     <div className="button-group">
                         <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-hero">
-                            <div className="benefit-item">
+                        <div className="benefits-glass">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p> No-cost estimates.</p>
                             </div>
-                            <div className="benefit-item">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p>10+ years of experience</p>
                             </div>
-                            <div className="benefit-item">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p>5-star rated</p>
                             </div>
@@ -359,24 +370,30 @@ export const Drywall = () => {
             </div>
         </section>
         
-        <div className="list-container-wrapper light-orange">
-            <motion.section className="list-container card"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.2 }}>
+        <section className="painting-services-section">
+        <motion.div
+            className="painting-services-container"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.2 }}
+        >
+            <div className="painting-services-header">
+            <span>Drywall Services</span>
+            <h2>Clean Drywall Repairs, Installation & Finishing</h2>
+            <p>
+                From small patches to full drywall installation, we help restore and
+                finish walls with clean workmanship, smooth textures, and reliable service.
+            </p>
+            </div>
 
-                <div className="sub-heading">
-                    <h1><span>Drywall Services</span> we offer</h1>
-                    <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
-                </div>
-                <div className="painting-list">
-                    {services.map((service, index) => (
-                        <PaintingCard key={index} {...service}/>
-                    ))}
-                </div>
-            </motion.section>
-        </div>
+            <div className="painting-services-grid">
+            {services.map((service, index) => (
+                <PaintingCard key={index} {...service} />
+            ))}
+            </div>
+        </motion.div>
+        </section>
 
         <SignatureDivider/>
 
@@ -389,25 +406,58 @@ export const Drywall = () => {
         <SignatureDivider/>
 
 
-        <div className="cta-wrapper light-orange">
-            <motion.section className="card cta-card cartoon-box"
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Restore Your Walls – Contact Us Now</h1>
-                        <div className="cta-button-group">
-                            <a href="tel:2397773713" onClick={() =>{
-                            if (window.gtag) {
-                            window.gtag('event', 'conversion', {
-                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                            });
-                            }}}><button className="button"> CALL NOW </button></a>
-                            <p>OR</p>
-                            <a href="#contact"><button className="button"> CONTACT US </button></a>
-                        </div>
+        <div className="cta-wrapper">
+        <motion.section
+            className="cta-card"
+            initial={{ scale: 0.95, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+        >
+            <span className="cta-tag">
+            Drywall Repair • Installation • Texture Match
+            </span>
 
-            </motion.section>
+            <h2>Restore Your Walls — Contact Us Today</h2>
+
+            <p>
+            From drywall repairs and water damage restoration to full
+            installations, Brushline delivers clean craftsmanship and
+            seamless finishes.
+            </p>
+
+            <div className="cta-button-group">
+
+            <a
+                href="tel:2397773713"
+                onClick={()=>{
+                if(window.gtag){
+                    window.gtag('event','conversion',{
+                    send_to:'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
+                    })
+                }
+                }}
+            >
+                <button className="button">
+                Call Now
+                </button>
+            </a>
+
+            <a href="#contact">
+                <button className="button">
+                Contact Us
+                </button>
+            </a>
+
+            </div>
+
+            <div className="cta-benefits">
+            <span>✓ Free estimates</span>
+            <span>✓ Texture matching</span>
+            <span>✓ Fast scheduling</span>
+            </div>
+
+        </motion.section>
         </div>
 
         <SignatureDivider/>

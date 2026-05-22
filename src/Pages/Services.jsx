@@ -1,72 +1,89 @@
-import React from 'react'
-import '../Styling/Services.css'
-import { motion } from 'framer-motion'
-import roller from '../Assets/icons/roller.webp'
-import cleaning from '../Assets/icons/cleaning.webp'
-import drywall from '../Assets/icons/drywall.webp'
-import pwgun from '../Assets/icons/pressure-wash.webp'
-import { Link } from 'react-router-dom'
-import { FaArrowRight } from 'react-icons/fa'
+import React from 'react';
+import '../Styling/Services.css';
+import { motion } from 'framer-motion';
+import roller from '../Assets/icons/roller.webp';
+import cleaning from '../Assets/icons/cleaning.webp';
+import drywall from '../Assets/icons/drywall.webp';
+import pwgun from '../Assets/icons/pressure-wash.webp';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 
 export const Services = () => {
-  const servicesInfo = [{
-    title: <h2>Interior & Exterior Painting</h2>,
-    description:"Refreshing living spaces with vibrant colors indoors and enhancing curb appeal.",
-    icon:<img src={roller} alt="painting service" className='service-icon'/>,
-    route: "/painting"
-  },{
-    title: <h2>Drywall Install & Repair</h2>,
-    description:"We specialize in repairing holes, dents, imperfections and installing drywall panels.",
-    icon: <img src={drywall} alt="drywall repair service" className='service-icon'/>,
-    route: "/drywall"
-  },{
-    title: <h2>House Cleaning</h2>,
-    description: "From deep cleaning to regular maintenance, we make your space shine!",
-    icon: <img src={cleaning} alt="cleaning service" className='service-icon'/>,
-    route: "/cleaning"
-  },{
-    title:<h2>Pressure Wash</h2>,
-    description: "Clean and restore your property's exterior, removing dirt, grime, and stains.",
-    icon:<img src={pwgun} alt="pressure wash service" className='service-icon'/>
-}]
+  const servicesInfo = [
+    {
+      title: 'Interior & Exterior Painting',
+      description:
+        'Premium interior and exterior painting designed to refresh your space and protect your property.',
+      icon: roller,
+      route: '/painting',
+    },
+    {
+      title: 'Drywall Install & Repair',
+      description:
+        'Clean drywall repairs, patching, texture matching, and panel installation for a seamless finish.',
+      icon: drywall,
+      route: '/drywall',
+    },
+    {
+      title: 'House Cleaning',
+      description:
+        'Detailed cleaning services for homes, rentals, and businesses that need a fresh, polished look.',
+      icon: cleaning,
+      route: '/cleaning',
+    },
+    {
+      title: 'Pressure Washing',
+      description:
+        'Restore driveways, walls, patios, and exterior surfaces by removing dirt, grime, and stains.',
+      icon: pwgun,
+      route: '/pressure-washing',
+    },
+  ];
 
   return (
-    <section className='service-page light-orange' id='services'>
-        <div className="services-content">
-            <div className="sub-heading">
-                <h1><span>Services</span> we offer</h1>
-                <p> Discover a range of expert services tailored to meet your needs, delivered with precision and care.</p>
-            </div>
+    <section className="services-section" id="services">
+      <div className="services-container">
+        <motion.div
+          className="services-header"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <span>Our Services</span>
+          <h2>Professional Services Built Around Your Property</h2>
+        </motion.div>
 
-            <div className="services-list">
-            {servicesInfo.map ((service,id) => {
-              return (
-                <motion.div
-                className={`service-${id}`}
-                key={id}
-                initial={{scale:1,x:-20, opacity:0}}
-                whileHover={{scale:1.1, cursor:"pointer"}}
-                whileInView={{x:0,opacity:1}}
-                transition={{
-                  x:{duration:id*0.5}
-                }}>
-                  <Link to={service.route} className='service-item cartoon-box'>
-                  {service.icon}
-                  <div className="service-text">
-                    {service.title}
-                    <p>{service.description}</p>
+        <div className="services-grid">
+          {servicesInfo.map((service, id) => (
+            <motion.div
+              key={id}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: id * 0.12 }}
+            >
+              <Link to={service.route} className="service-card-modern">
+                <div className="service-icon-wrap">
+                  <img src={service.icon} alt={`${service.title} icon`} />
+                </div>
+
+                <div className="service-card-content">
+                  <h3>{service.title}</h3>
+                  <p>{service.description}</p>
+                </div>
+
+                <div className="service-card-footer">
+                  <span>Explore Service</span>
+                  <div className="service-arrow">
+                    <FaArrowRight />
                   </div>
-                    <motion.div className="explore-container">
-                      <div className="explore-button button">
-                      Explore <FaArrowRight/>
-                      </div>
-                    </motion.div>
-                   </Link>
-                </motion.div>
-              )
-            })}
-            </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
+      </div>
     </section>
-  )
-}
+  );
+};

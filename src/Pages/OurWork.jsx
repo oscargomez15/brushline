@@ -1,13 +1,13 @@
-import React from 'react'
-import '../Styling/Gallery.css'
+import React from 'react';
+import '../Styling/Gallery.css';
 import { SwiperGallery } from '../Components/SwiperGallery';
+
 export const OurWork = () => {
   return (
-    <section className='gallery-page light-orange' id='gallery'>
-      <div className="gallery-content">
-        <SwiperGallery/>
-        {/* <button className='button view-more-btn'>view more <FaArrowRight/></button> */}
+    <section className="gallery-section" id="gallery">
+      <div className="gallery-container">
+        <SwiperGallery />
       </div>
     </section>
-  )
-}
+  );
+};

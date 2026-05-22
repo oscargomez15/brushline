@@ -67,8 +67,15 @@ export const Hamburger = () => {
             }}
             className='exit-icon'
             onClick={handleClick}/>
-            <header>
-                <img src={logo} alt="brushline-logo" loading='lazy' />
+            <header className="mobile-nav-header">
+
+                <img
+                src={logo}
+                alt="Brushline Services"
+                loading="lazy"
+                className="mobile-nav-logo"
+                />
+
             </header>
             <ul className='hamburger-links'>
                 <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}> Home</a></li>

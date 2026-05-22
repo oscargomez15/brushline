@@ -1,69 +1,86 @@
-import React from 'react'
-import '../Styling/WhyUs.css'
-import { motion } from 'framer-motion'
+import React from 'react';
+import '../Styling/WhyUs.css';
+import { motion } from 'framer-motion';
+import {
+  FaCheckCircle,
+  FaComments,
+  FaLayerGroup,
+  FaPaintRoller,
+} from 'react-icons/fa';
+
 export const WhyUs = () => {
+  const reasons = [
+    {
+      icon: <FaCheckCircle />,
+      title: 'Clean Job Sites, Always',
+      description:
+        'We respect your home and workspace. Expect spotless job sites, organized tools, and full cleanup after every project.',
+    },
+    {
+      icon: <FaComments />,
+      title: 'Customer-First Communication',
+      description:
+        'Clear communication, responsiveness, and professionalism are at the center of every project we take on.',
+    },
+    {
+      icon: <FaLayerGroup />,
+      title: 'All-in-One Convenience',
+      description:
+        'From painting and drywall to handyman services and cleaning, we help simplify your project with one trusted team.',
+    },
+    {
+      icon: <FaPaintRoller />,
+      title: 'Attention to Detail',
+      description:
+        'We focus on the details that matter — sharp lines, smooth finishes, and craftsmanship built to last.',
+    },
+  ];
+
   return (
-    <section className='chooseus-wrapper'>
-      <div className="chooseus">
-        <motion.div className="chooseus-text"
-          initial={{scale:1,x:-40, opacity:0}}
-          whileInView={{x:0,opacity:1}}
-          transition={{
-            x:{duration:0.5}
-          }}>
-          <h1>What makes us <span>different?</span></h1>
-          <p>Discover why homeowners and businesses trust Brushline for their painting and home service needs.
-            From exceptional quality to a customer-first approach, we go above and beyond to ensure your satisfaction.
-            Here are just a few reasons why we stand out in the industry.
+    <section className="whyus-section">
+      <div className="whyus-container">
+        <motion.div
+          className="whyus-header"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <span>Why Choose Us</span>
+
+          <h2>Built Around Quality, Communication & Reliability</h2>
+
+          <p>
+            Brushline Services is committed to delivering high-quality work,
+            dependable communication, and a smooth experience from start to finish.
           </p>
         </motion.div>
-        <motion.div className="whyus-reasons"
-          initial={{scale:1,x:40, opacity:0}}
-          whileInView={{x:0,opacity:1}}
-          transition={{
-            x:{duration:0.5}
-          }}>
-          <div className="reason">
-            <div className="number-container cartoon-box">
-              <h2>1</h2>
-            </div>
-            <div className="reason-text ">
-              <h2>Clean Job Sites, Always</h2>
-              <p>We respect your space. Expect spotless job sites and full cleanup.</p>
-            </div>
-          </div>
 
-          <div className="reason">
-            <div className="number-container cartoon-box">
-              <h2>2</h2>
-            </div>
-            <div className="reason-text">
-              <h2>Customer-First Mentality</h2>
-              <p>We listen, we communicate, and we care. Every decision is made with your satisfaction in mind.</p>
-            </div>
-          </div>
+        <div className="whyus-grid">
+          {reasons.map((reason, index) => (
+            <motion.div
+              key={index}
+              className="whyus-card"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.45,
+                delay: index * 0.12,
+              }}
+            >
+              <div className="whyus-icon">
+                {reason.icon}
+              </div>
 
-          <div className="reason">
-            <div className="number-container cartoon-box">
-              <h2>3</h2>
-            </div>
-            <div className="reason-text">
-              <h2>All-in-One Convenience</h2>
-              <p>From painting and drywall to handyman fixes and cleaning, we handle it all — saving you time, stress, and extra bills.</p>
-            </div>
-          </div>
-
-          <div className="reason">
-            <div className="number-container cartoon-box">
-              <h2>4</h2>
-            </div>
-            <div className="reason-text">
-              <h2>Attention to Detail</h2>
-              <p>We treat your home like our own, ensuring every edge, corner, and coat meets the highest standards.</p>
-            </div>
-          </div>
-        </motion.div>
+              <div className="whyus-card-content">
+                <h3>{reason.title}</h3>
+                <p>{reason.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
-  )
-}
+  );
+};

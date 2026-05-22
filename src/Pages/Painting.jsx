@@ -6,7 +6,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
 import ReactCompareImage from 'react-compare-image';
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
-import colorConsultation from '../Assets/color-consultation.jpg'
 import { Link } from 'react-router-dom';
 
 import beforeAccent from '../Assets/before-accent-wall-painting-fort-myers.jpg'
@@ -44,10 +43,10 @@ import { IoLocation } from 'react-icons/io5';
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
 import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
-import ColorVisualizer from '../Components/ColorVisualizer.jsx';
 import { Reviews } from './Reviews.jsx';
 import { SignatureDivider } from '../Components/SignatureDivider.jsx';
 import { ServiceAreaSection } from './ServiceAreaSection.jsx';
+
 
 export const Painting = () => {
 
@@ -385,7 +384,18 @@ const variants = {
                         <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
                 </div>
 
-                <div className="contact-mini">
+                <div className="contact-mini glass-form">
+                    <div className="form-header">
+                        <span className="form-badge">
+                            FREE ESTIMATE
+                        </span>
+
+                        <h3>Request Your Quote</h3>
+
+                        <p>
+                            Fill out the form below and we'll reach out within 24 hours.
+                        </p>
+                    </div>
                     <div className="field-group-container">
                         <div className="field-group">
                             <label htmlFor="name">Name*</label>
@@ -420,18 +430,20 @@ const variants = {
                     
                     <div className="button-group">
                         <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-hero">
-                            <div className="benefit-item">
-                                <FaCheck/>
-                                <p> No-cost estimates.</p>
+                        <div className="benefits-glass">
+                            <div className="benefit-pill">
+                            <FaCheck />
+                            <span>No-cost estimates</span>
                             </div>
-                            <div className="benefit-item">
-                                <FaCheck/>
-                                <p>10+ years of experience</p>
+
+                            <div className="benefit-pill">
+                            <FaCheck />
+                            <span>10+ Years Experience</span>
                             </div>
-                            <div className="benefit-item">
-                                <FaCheck/>
-                                <p>5-star rated</p>
+
+                            <div className="benefit-pill">
+                            <FaCheck />
+                            <span>5-Star Rated</span>
                             </div>
                         </div>
                     </div>
@@ -477,81 +489,163 @@ const variants = {
             </div>
         </section>
         
-        <div className="list-container-wrapper light-orange">
-            <motion.section className="list-container card"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.2 }}>
+        <div className="painting-services-section">
+        <motion.section
+            className="painting-services-container"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.2 }}
+        >
+            <div className="painting-services-header">
+            <span>Painting Services</span>
+            <h2>Interior & Exterior Painting Built To Last</h2>
+            <p>
+                Whether you're refreshing your home or updating a commercial property,
+                we’ve got every surface covered with clean prep, premium products, and
+                lasting craftsmanship.
+            </p>
+            </div>
 
-                <div className="sub-heading">
-                    <h1><span>Painting Services</span> we offer</h1>
-                    <p>Whether you're refreshing your home or updating a commercial property, we’ve got every surface covered.</p>
-                </div>
-                <div className="painting-list">
-                    {services.map((service, index) => (
-                        <PaintingCard key={index} {...service}/>
-                    ))}
-                </div>
-            </motion.section>
+            <div className="painting-services-grid">
+            {services.map((service, index) => (
+                <PaintingCard key={index} {...service} />
+            ))}
+            </div>
+        </motion.section>
         </div>
+                <SignatureDivider/>
+
+         <section className="color-suite-section">
+  <motion.div
+    className="color-suite-container"
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: 'easeOut' }}
+    viewport={{ once: true, amount: 0.4 }}
+  >
+    <form className="color-suite-form">
+      <div className="color-form-copy">
+        <span>Free Consultation</span>
+        <h3>Need Help Choosing The Right Colors?</h3>
+        <p>
+          Tell us about your project and we’ll help you choose colors and
+          finishes that match your home, lighting, and style.
+        </p>
+      </div>
+
+      <div className="color-form-fields">
+        <div className="field-group-container">
+          <div className="field-group">
+            <label>Name*</label>
+            <input type="text" placeholder="Your name" />
+          </div>
+
+          <div className="field-group">
+            <label>Email*</label>
+            <input type="email" placeholder="Your email" />
+          </div>
+        </div>
+
+        <div className="field-group-container">
+          <div className="field-group">
+            <label>Phone*</label>
+            <input type="text" placeholder="Phone number" />
+          </div>
+
+          <div className="field-group">
+            <label>Address*</label>
+            <input type="text" placeholder="Project address" />
+          </div>
+        </div>
+
+        <div className="field-group">
+          <label>Message (Optional)</label>
+          <textarea
+            rows="4"
+            placeholder="Tell us about your project or colors you’re considering"
+          ></textarea>
+        </div>
+
+        <p className="privacy-notice">
+          By submitting this form, you agree to our{' '}
+          <Link to="/privacy" target="_blank">Privacy Policy</Link>.
+        </p>
+
+        <div className="color-consult-actions">
+          <button type="submit">Get Consultation</button>
+          <p>
+            <FaCheck /> No-cost consultation, no obligation.
+          </p>
+        </div>
+      </div>
+    </form>
+  </motion.div>
+</section>
 
         <SignatureDivider/>
 
-        <div className="paint-jobs-wrapper light-orange">
-            <motion.section className="card paint-jobs"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="sub-heading paint-jobs-title">
-                    <h1 className='section-subtitle'> Our <span>Painting Jobs</span></h1>
-                    <p>See the difference a professional paint job can make. Our gallery showcases real before-and-after photos from homes and commercial properties
-                    we’ve transformed throughout Lee County and Collier County, including Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. <br/> Find out how much it will cost to transform your space.</p>
-                    <a href="#contact"><button className="button">GET FREE QUOTE</button></a>
+        <section className="paint-showcase-section">
+        <motion.div
+            className="paint-showcase-container"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.4 }}
+        >
+            <div className="paint-showcase-copy">
+            <span>Before & After</span>
+            <h2>See The Difference A Professional Finish Makes</h2>
+            <p>
+                Explore real before-and-after photos from homes and commercial
+                properties we’ve transformed across Lee County and Collier County.
+            </p>
 
+            <a href="#contact" className="paint-showcase-btn">
+                Get Free Quote
+            </a>
+            </div>
+
+            <div className="paint-showcase-slider">
+            <AnimatePresence custom={direction} mode="wait">
+                <motion.div
+                key={currentIndex}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                className="compare-image-container"
+                >
+                <ReactCompareImage
+                    leftImage={sliderData[currentIndex].left}
+                    rightImage={sliderData[currentIndex].right}
+                    wrapperStyle={{ height: '100%' }}
+                    sliderLineColor="#ffffff"
+                    handleSize={44}
+                    className="compare-image"
+                />
+
+                <div className="slider-text">
+                    <p>{sliderData[currentIndex].text}</p>
+                    <p className="slider-location">
+                    <IoLocation /> {sliderData[currentIndex].location}
+                    </p>
                 </div>
-                <div className="slider-image-container single">
-                    <div className="slider-nav">
-                        <div className="slider-item">
-                        <AnimatePresence custom={direction} mode="wait">
-                            <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={variants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.2, ease: 'easeInOut' }}
-                            className='compare-image-container'
-                            >
-                            <ReactCompareImage
-                                leftImage={sliderData[currentIndex].left}
-                                rightImage={sliderData[currentIndex].right}
-                                wrapperStyle={{height:'100%'}}
-                                sliderLineColor="#ffffff"
-                                handleSize={40}
-                                className="compare-image"
-                                />
-                            <div className="slider-text">
-                                <p>{sliderData[currentIndex].text}</p>
-                                <p className="slider-location">
-                                <IoLocation /> {sliderData[currentIndex].location}
-                                </p>
-                            </div>
-                            <div className="arrow-slider-container nav-before">
-                                <MdNavigateBefore onClick={handlePrev}/>
-                            </div>
-                            <div className="arrow-slider-container nav-next">
-                                <MdNavigateNext onClick={handleNext}/>
-                            </div>
-                            </motion.div>
-                        </AnimatePresence>
-                        </div>
-                    </div>
-                </div>
-            </motion.section>
-        </div>
+
+                <button className="arrow-slider-container nav-before" onClick={handlePrev}>
+                    <MdNavigateBefore />
+                </button>
+
+                <button className="arrow-slider-container nav-next" onClick={handleNext}>
+                    <MdNavigateNext />
+                </button>
+                </motion.div>
+            </AnimatePresence>
+            </div>
+        </motion.div>
+        </section>
 
         <SignatureDivider/>
         <div className="reviews-paint">
@@ -560,111 +654,52 @@ const variants = {
         <SignatureDivider/>
 
 
-        <div className="cta-wrapper light-orange">
-            <motion.section className="card cta-card cartoon-box"
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Ready to start your painting project?</h1>
-                        <div className="cta-button-group">
-                            <a href="tel:2397773713" onClick={() =>{
-                            if (window.gtag) {
-                            window.gtag('event', 'conversion', {
-                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                            });
-                            }}}><button className="button"> CALL NOW </button></a>
-                            <p>OR</p>
-                            <a href="#contact"><button className="button"> CONTACT US </button></a>
-                        </div>
+        <div className="cta-wrapper">
+        <motion.section
+            className="cta-card-modern"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.4 }}
+        >
+            <div className="cta-glow"></div>
 
-            </motion.section>
-        </div>
+            <div className="cta-content">
+            <span>Free Estimates • Fast Scheduling</span>
 
-        <SignatureDivider/>
+            <h2>
+                Ready To Start Your
+                <br />
+                Painting Project?
+            </h2>
 
+            <p>
+                From interior repainting to exterior transformations,
+                Brushline Services delivers clean finishes, reliable
+                communication, and professional results across Southwest Florida.
+            </p>
 
-        <div className="color-consult-wrapper light-orange">
-            <motion.section className="card color-consultation-wrapper"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: 'easeOut' }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <div className="color-consultation">
-                    <div className="sub-heading">
-                        <h1> In need of <span>color consultation?</span> </h1>
-                        <p> If picking the right colors is holding you back from getting this project done, it's time to call the professionals.
-                            We can help you choose the right colors for your home or business. </p>
-                            <div className="contact-mini">
-                                <div className="field-group-container">
-                                    <div className="field-group">
-                                        <label htmlFor="">Name*</label>
-                                        <input type="text" />
-                                    </div>
+            <div className="cta-button-group">
+                <a
+                href="tel:2397773713"
+                className="cta-primary-btn"
+                onClick={() => {
+                    if (window.gtag) {
+                    window.gtag('event', 'conversion', {
+                        send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
+                    });
+                    }
+                }}
+                >
+                Call Now
+                </a>
 
-                                    <div className="field-group">
-                                        <label htmlFor="">Email*</label>
-                                        <input type="email" />
-                                    </div>
-                                </div>
-
-                                <div className="field-group-container">
-                                    <div className="field-group">
-                                        <label htmlFor="">Phone*</label>
-                                        <input type="text" />
-                                    </div>
-
-                                    <div className="field-group">
-                                        <label htmlFor="">Address*</label>
-                                        <input type="text" />
-                                    </div>
-                                </div>
-                                <div className="field-group">
-                                    <label htmlFor="">Message (Optional)</label>
-                                    <textarea name="" id="" cols="30" rows="2" placeholder='Add more details about your project'></textarea>
-                                </div>
-                                <p class="privacy-notice">
-                                By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-                            </p>
-                            </div>
-
-                            <div className="button-group">
-                                <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET CONSULTATION </button>
-                                <p><FaCheck style={{color:'#2561e8'}}/> No-cost consultation, no obligation.</p>
-                            </div>
-                    </div>
-                    <img src={colorConsultation} alt="color-consultation" />
-
-                </div>
-            </motion.section>
-        </div>
-        <SignatureDivider/>
-
-        <div className="color-visual-wrapper light-orange">
-            <ColorVisualizer/>
-        </div>
-        <SignatureDivider/>
-
-
-        <div className="cta-wrapper light-orange">
-            <motion.section className="card cta-card cartoon-box"
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Let’s Get Rolling, We’re just a click away.</h1>
-                        <div className="cta-button-group">
-                            <a href="tel:2397773713" onClick={() =>{
-                            if (window.gtag) {
-                            window.gtag('event', 'conversion', {
-                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                            });
-                            }}}><button className="button"> CALL NOW </button></a>
-                            <p>OR</p>
-                            <a href="#contact"><button className="button"> CONTACT US </button></a>
-                        </div>
-
-            </motion.section>
+                <a href="#contact" className="cta-secondary-btn">
+                Contact Us
+                </a>
+            </div>
+            </div>
+        </motion.section>
         </div>
 
         <SignatureDivider/>
@@ -672,6 +707,7 @@ const variants = {
         <ServiceAreaSection/>
 
         <SignatureDivider/>
+        <Contact/>
 
         <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
@@ -751,6 +787,8 @@ const variants = {
                     </ol>
                 </div>
 
+                
+
                 <div className="questions-container">
                     <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                         <h2>Custom Request</h2>
@@ -772,7 +810,7 @@ const variants = {
         </div>
         <SignatureDivider/>
 
-        <Contact/>
+
     </div>
   )
 }

@@ -1,0 +1,40 @@
+.premium-divider {
+  background: #f6efe4;
+  padding: 28px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.premium-divider-line {
+  width: min(420px, 35vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(7, 21, 51, 0.16),
+    transparent
+  );
+}
+
+.premium-divider-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ffb84d;
+  box-shadow:
+    0 0 0 6px rgba(255, 184, 77, 0.16),
+    0 10px 24px rgba(7, 21, 51, 0.12);
+}
+
+@media (max-width: 640px) {
+  .premium-divider {
+    padding: 20px 18px;
+  }
+
+  .premium-divider-line {
+    width: 30vw;
+  }
+}

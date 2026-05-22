@@ -26,21 +26,20 @@ export const Home = () => {
       </script>     
     </Helmet>
         <Hero/>
-      <div className="home-wrapper page">
-        <Services/>
-        <SignatureDivider/>
-        <ServiceAreaSection/>
-        <SignatureDivider/>
-        <div className="reviews-paint">
-          <Reviews/>
-        </div>
-        <SignatureDivider/>
-        <WhyUs/>
-        <SignatureDivider/>
-        <OurWork/>
-        <SignatureDivider/>
-        <Contact/>
-      </div>
+    <div className="home-wrapper page">
+      <Services />
+      <ServiceAreaSection />
+
+      <SignatureDivider />
+
+      <Reviews />
+      <WhyUs />
+
+      <SignatureDivider />
+
+      <OurWork />
+      <Contact />
+    </div>
     </div>
   )
 }

@@ -18,7 +18,7 @@ export const Navigation = () => {
   // }, [location]); 
 
 
-  useEffect(()=> {
+  useEffect(()=> { 
     const handleScroll = () => {
       if(window.scrollY > 250){
         setSticky(true)
@@ -29,62 +29,73 @@ export const Navigation = () => {
     window.addEventListener('scroll', handleScroll)
   })
   return (
-    <nav className={`${isSticky ? 'sticky-nav' : ''} ${isPaintingPage ? 'coloredBackground' : ''} nav-desktop`}>
-        <div className="nav-wrapper-mb">
-          <div className="navigation-mob">
-            <Hamburger/>
-          </div>
-        </div>
-        
-        <div className="nav-wrapper">
-          <header>
-              <img src={logo} fetchPriority='high' alt="Brushline Service Logo" />
-          </header>
+    <nav className={`modern-nav ${isSticky ? 'sticky-nav' : ''} ${isPaintingPage ? 'coloredBackground' : ''}`}>
+  <div className="nav-wrapper-mb">
+    <div className="navigation-mob">
+      <Hamburger />
+    </div>
+  </div>
 
-          <ul>
-              <li><a href="/">HOME</a></li>
-              <li>
-                <a href="#services" className='services-container'>SERVICES <IoIosArrowDown size="20"/></a>
-                <ul className='dropdown'>
-                  <li> <Link to="/painting">Painting </Link> </li>
-                  <li> <Link to="/drywall"> Drywall </Link> </li>
-                  <li> <Link to="/cleaning"> Cleaning  </Link></li>
-                  {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
+  <div className="modern-nav-wrapper">
+    <header>
+      <Link to="/">
+        <img src={logo} fetchPriority="high" alt="Brushline Services Logo" />
+      </Link>
+    </header>
 
-                </ul>
-              </li>
+    <ul className="modern-nav-links">
+      <li><Link to="/">Home</Link></li>
 
-              <li>
-                <a href="#services" className='services-container'>SERVICE AREA <IoIosArrowDown size="20"/></a>
-                <ul className='dropdown'>
-                  <li> <Link to="/service-area/cape-coral-painter">Cape Coral</Link></li>
-                  <li> <Link to="/service-area/fort-myers-painter">Fort Myers</Link> </li>
-                  <li> <Link to="/service-area/estero-painter">Estero</Link> </li>
-                  <li> <Link to="/service-area/bonita-springs-painter">Bonita Springs</Link></li>
-                  <li> <Link to="/service-area/naples-painter">Naples</Link></li>
+      <li className="nav-dropdown-parent">
+        <a href="#services" className="nav-services-container">
+          Services <IoIosArrowDown size="18" />
+        </a>
 
-                  {/* <li> <a href="/"> <MdOutlineWaterDrop/> Pressure Wash</a>  </li> */}
+        <ul className="dropdown">
+          <li><Link to="/painting">Painting</Link></li>
+          <li><Link to="/drywall">Drywall</Link></li>
+          <li><Link to="/cleaning">Cleaning</Link></li>
+        </ul>
+      </li>
 
-                </ul>
-              </li>
+      <li className="nav-dropdown-parent">
+        <a href="#services" className="nav-services-container">
+          Service Area <IoIosArrowDown size="18" />
+        </a>
 
-              <li><a href="/#gallery">GALLERY</a></li>
-              <li><a href="/#reviews">REVIEWS</a></li>
-          </ul>
+        <ul className="dropdown">
+          <li><Link to="/service-area/cape-coral-painter">Cape Coral</Link></li>
+          <li><Link to="/service-area/fort-myers-painter">Fort Myers</Link></li>
+          <li><Link to="/service-area/estero-painter">Estero</Link></li>
+          <li><Link to="/service-area/bonita-springs-painter">Bonita Springs</Link></li>
+          <li><Link to="/service-area/naples-painter">Naples</Link></li>
+        </ul>
+      </li>
 
-          <ul>
-            <li className='no-underline nav-contact'>
-              <a href="tel:7867507518" onClick={() =>{
-                  if (window.gtag) {
-                  window.gtag('event', 'conversion', {
-                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                  });
-                  }}}> <FaPhoneAlt/> (239) 777-3713</a>
-              
-              <a href="#contact"><button className='button nav-cta'>CONTACT US</button></a>
-            </li>
-          </ul>
-        </div>
-    </nav>
+      <li><a href="/#gallery">Gallery</a></li>
+      <li><a href="/#reviews">Reviews</a></li>
+    </ul>
+
+    <div className="modern-nav-actions">
+      <a
+        href="tel:2397773713"
+        className="nav-phone"
+        onClick={() => {
+          if (window.gtag) {
+            window.gtag('event', 'conversion', {
+              send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
+            });
+          }
+        }}
+      >
+        <FaPhoneAlt /> (239) 777-3713
+      </a>
+
+      <a href="/#contact" className="nav-quote-btn">
+        Contact Us
+      </a>
+    </div>
+  </div>
+</nav>
   )
 }

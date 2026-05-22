@@ -249,7 +249,18 @@ export const Cleaning = () => {
                     <p>Let us handle the mess — you focus on what matters. Reach out using the contact form.</p>
                 </div>
 
-                <div className="contact-mini">
+                <div className="contact-mini glass-form">
+                    <div className="form-header">
+                        <span className="form-badge">
+                            FREE ESTIMATE
+                        </span>
+
+                        <h3>Request Your Quote</h3>
+
+                        <p>
+                            Fill out the form below and we'll reach out within 24 hours.
+                        </p>
+                    </div>
                     <div className="field-group-container">
                         <div className="field-group">
                             <label htmlFor="name">Name*</label>
@@ -284,16 +295,16 @@ export const Cleaning = () => {
 
                     <div className="button-group">
                         <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-hero">
-                            <div className="benefit-item">
+                        <div className="benefits-glass">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p> No-cost estimates.</p>
                             </div>
-                            <div className="benefit-item">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p>10+ years of experience</p>
                             </div>
-                            <div className="benefit-item">
+                            <div className="benefit-pill">
                                 <FaCheck/>
                                 <p>5-star rated</p>
                             </div>
@@ -341,41 +352,67 @@ export const Cleaning = () => {
                     </div>
                 </section>
         
-        <div className="list-container-wrapper light-orange">
-            <div className="list-container card">
-                <div className="sub-heading">
-                <h1><span>Cleaning Services</span> we offer</h1>
-                <p>No matter if you need a one-time deep clean or ongoing upkeep, our professional team delivers spotless results for homes and businesses throughout Naples, Fort Myers, Estero, Bonita Springs, and Cape Coral. </p>
-                </div>
-                <div className="painting-list">
-                    {services.map((service, index) => (
-                        <PaintingCard key={index} {...service}/>
-                    ))}
-                </div>
+        <section className="painting-services-section">
+        <motion.div
+            className="painting-services-container"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: true, amount: 0.2 }}
+        >
+            <div className="painting-services-header">
+            <span>Cleaning Services</span>
+            <h2>Spotless Cleaning For Homes & Businesses</h2>
+            <p>
+                From one-time deep cleans to move-out and rental cleaning, our team
+                helps keep your home or business fresh, organized, and ready to enjoy.
+            </p>
             </div>
-        </div>
+
+            <div className="painting-services-grid">
+            {services.map((service, index) => (
+                <PaintingCard key={index} {...service} />
+            ))}
+            </div>
+        </motion.div>
+        </section>
 
         <SignatureDivider/>
         
 
-        <div className="cta-wrapper light-orange">
-            <motion.section className="card cta-card cartoon-box"
-                initial={{ scale: 0.8, opacity: 0 }}
-                whileInView={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}>
-                <h1 className='section-subtitle'>Ready to Experience a Cleaner Space? </h1>
-                        <div className="cta-button-group">
-                            <a href="tel:2397773713" onClick={() =>{
-                            if (window.gtag) {
-                            window.gtag('event', 'conversion', {
-                                send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                            });
-                            }}}><button className="button"> CALL NOW </button></a>
-                            <p>OR</p>
-                            <a href="#contact"><button className="button"> CONTACT US </button></a>
-                        </div>
-            </motion.section>
+        <div className="cta-wrapper">
+        <motion.section
+            className="cta-card"
+            initial={{ scale: 0.95, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+        >
+            <span className="cta-tag">Residential • Rental • Deep Cleaning</span>
+
+            <h2>Ready To Experience A Cleaner Space?</h2>
+
+            <p>
+            Schedule a cleaning service with Brushline and enjoy a fresh, polished
+            space without the stress.
+            </p>
+
+            <div className="cta-button-group">
+            <a href="tel:2397773713">
+                <button className="button">Call Now</button>
+            </a>
+
+            <a href="#contact">
+                <button className="button">Contact Us</button>
+            </a>
+            </div>
+
+            <div className="cta-benefits">
+            <span>✓ Free estimates</span>
+            <span>✓ Flexible scheduling</span>
+            <span>✓ Detail-focused service</span>
+            </div>
+        </motion.section>
         </div>
 
         <SignatureDivider/>

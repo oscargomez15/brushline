@@ -1,146 +1,91 @@
-import React from 'react'
-import { IoIosHammer, IoLogoGoogle, IoMdMail } from 'react-icons/io'
-import { AiOutlineFacebook } from 'react-icons/ai'
-import '../Styling/Footer.css'
-import mascotLogo from '../Assets/logo/brushline-logo-white-letters.webp'
-import { FaInstagram, FaPhone, FaTiktok } from 'react-icons/fa'
-import {PiStarFourFill} from 'react-icons/pi'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import '../Styling/Footer.css';
+import mascotLogo from '../Assets/logo/brushline-logo-white-letters.webp';
+import { Link } from 'react-router-dom';
+import { FaInstagram, FaPhone, FaTiktok, FaArrowRight } from 'react-icons/fa';
+import { AiOutlineFacebook } from 'react-icons/ai';
+import { IoLogoGoogle, IoMdMail } from 'react-icons/io';
 
 export const Footer = () => {
   return (
-    <footer>
-      <div className="footer-content">
-        <div className="footer-logo footer-section">
-          <img src={mascotLogo} alt="brushline footer logo" loading='lazy' height="250px"/>
+    <footer className="footer-modern">
+      <div className="footer-container">
+        <div className="footer-brand">
+          <img src={mascotLogo} alt="Brushline Services logo" loading="lazy" />
+
+          <p>
+            Premium painting, drywall, handyman, and cleaning services for
+            homeowners and businesses across Southwest Florida.
+          </p>
+
+          <a href="/#contact" className="footer-cta">
+            Get Free Estimate <FaArrowRight />
+          </a>
         </div>
-        {/* Footer to be displayed only on screens less than 1380px*/}
 
-        <div className='footer-info-mb'>
-          <div className="site-map footer-section">
-            <ul className='footer-list'>
-              <li><h2>Sitemap</h2></li>
-              <li> <a href="/#home">Home</a></li>
-              <li><a href="/#gallery">Gallery</a></li>
-              <li><a href="/#services">Services</a></li>
-              <li><a href="/#reviews">Reviews</a></li>
-              <li><a href="#contact">Contact us</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <ul className='footer-list'>
-              <li><h2 className='phone-contact'> Contact </h2></li>
-              <li className='footer-item-mb'><FaPhone/> <a href='tel:+12397773713' onClick={() =>{
-                  if (window.gtag) {
-                  window.gtag('event', 'conversion', {
-                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                  });
-                  }}}>(239)777-3713</a></li>
-              <li className='footer-item-mb'> <IoMdMail/> <a href="contact@brushlineservices.com">contact@brushlineservices.com</a>  </li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <ul className='footer-list'>
-              <li><p><span>Business Hours</span></p></li>
-              <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <ul className='service-area-section'>
-            <li><p><span>Service Areas</span></p></li>
-              <li>
-                <PiStarFourFill className='signature-symbol'/><p>Fort Myers</p>
-              </li>
-              <li>
-                  <PiStarFourFill className='signature-symbol'/><p>Cape Coral</p>
-              </li>
-              <li>
-                  <PiStarFourFill className='signature-symbol'/><p>Estero</p>
-              </li>
-              <li>
-                  <PiStarFourFill className='signature-symbol'/><p>Naples</p> 
-              </li>
-              <li>
-                  <PiStarFourFill className='signature-symbol'/><p>Bonita Springs</p>
-              </li>
-            </ul>
-          </div>
+        <div className="footer-column">
+          <h3>Sitemap</h3>
+          <a href="/#home">Home</a>
+          <a href="/#services">Services</a>
+          <a href="/#gallery">Gallery</a>
+          <a href="/#reviews">Reviews</a>
+          <a href="/#contact">Contact</a>
         </div>
-        {/* Footer to be displayed only on screens greater than 1380px*/}
-          <div className="site-map footer-section footer-sitemap-desktop">
-            <ul className='footer-list'>
-              <p><span>Sitemap</span></p>
-              <li><a href="/">Home</a></li>
-              <li><a href="/#gallery">Gallery</a></li>
-              <li><a href="/#services">Services</a></li>
-              <li><a href="/#reviews">Reviews</a></li>
-              <li><a href="#contact">Contact us</a></li>
-            </ul>
+
+        <div className="footer-column">
+          <h3>Service Areas</h3>
+          <Link to="/service-area/fort-myers-painter">Fort Myers</Link>
+          <Link to="/service-area/cape-coral-painter">Cape Coral</Link>
+          <Link to="/service-area/estero-painter">Estero</Link>
+          <Link to="/service-area/naples-painter">Naples</Link>
+          <Link to="/service-area/bonita-springs-painter">Bonita Springs</Link>
+        </div>
+
+        <div className="footer-column footer-contact">
+          <h3>Contact</h3>
+
+          <a
+            href="tel:+12397773713"
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'conversion', {
+                  send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
+                });
+              }
+            }}
+          >
+            <FaPhone /> (239) 777-3713
+          </a>
+
+          <a href="mailto:contact@brushlineservices.com">
+            <IoMdMail /> contact@brushlineservices.com
+          </a>
+
+          <div className="footer-hours">
+            <h3>Business Hours</h3>
+            <p>8:00 AM - 6:00 PM</p>
           </div>
 
-          <div className="footer-section footer-sitemap-desktop">
-            <ul className='footer-list'>
-              <p><span>Business Hours</span></p>
-              <li className='no-underline no-pointer'>8:00 am - 6:00 pm</li>
-              <p><span>Service Areas</span></p>
-              <ul className='no-underline no-pointer service-area'>
-                <li><Link to={'/service-area/fort-myers-painter'}>Fort Myers</Link></li>
-                <li><PiStarFourFill className='signature-symbol'/></li>
-                <li><Link to={'/service-area/cape-coral-painter'}>Cape Coral</Link></li>
-                <li><PiStarFourFill className='signature-symbol'/></li>
-                <li><Link to={'/service-area/estero-painter'}>Estero</Link></li>
-                <li><PiStarFourFill className='signature-symbol'/></li>
-                <li><Link to={'/service-area/naples-painter'}>Naples</Link></li>
-                <li><PiStarFourFill className='signature-symbol'/></li>
-                <li><Link to={'/service-area/bonita-springs-painter'}>Bonita Springs</Link></li>
-              </ul>
-            </ul>
+          <div className="footer-socials">
+            <a href="https://www.facebook.com/BrushlineServices/" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <AiOutlineFacebook />
+            </a>
+            <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" target="_blank" rel="noreferrer" aria-label="Google">
+              <IoLogoGoogle />
+            </a>
+            <a href="https://www.tiktok.com/@brushlinepainting" target="_blank" rel="noreferrer" aria-label="TikTok">
+              <FaTiktok />
+            </a>
+            <a href="https://www.instagram.com/brushlinefl/" target="_blank" rel="noreferrer" aria-label="Instagram">
+              <FaInstagram />
+            </a>
           </div>
-
-
-          <div className="socials footer-section footer-socials-desktop">
-            <div className='footer-list'>
-              <p><span>Contact</span></p>
-              <div className="contact-container">
-                <FaPhone/>
-                <a href='tel:+12397773713'
-                onClick={() =>{
-                  if (window.gtag) {
-                  window.gtag('event', 'conversion', {
-                    send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
-                  });
-                  }}}>(239)777-3713</a> <br/>
-              </div>
-              <div className="contact-container">
-                <IoMdMail/>
-                <a href="email:contact@brushlineservices.com">contact@brushlineservices.com</a>
-              </div>
-
-              <div className="socials-list">
-                <a href="https://www.facebook.com/BrushlineServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
-                <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
-                <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
-                <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
-              </div>
-            </div>
-          </div>
-
-        <div className="footer-icon">
-          <IoIosHammer size="lg"/>
         </div>
       </div>
 
-      <div className='socials-wrapper'>
-        <a href="https://www.facebook.com/BrushlineServices/" aria-label='visit our facebook page' target='_blank' rel='noreferrer'> <AiOutlineFacebook size="md"/> </a>
-        <a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" aria-label='visit our google page' target='_blank' rel='noreferrer'> <IoLogoGoogle size="md"/></a>
-        <a href="https://www.tiktok.com/@brushlinepainting" aria-label='vist our tik tok page' target='_blank' rel='noreferrer'><FaTiktok size="md"/></a>
-        <a href="https://www.instagram.com/brushlinefl/" aria-label='vist our instagram page' target='_blank' rel='noreferrer'><FaInstagram size="md"/></a>
+      <div className="footer-bottom">
+        <p>© Copyright 2025. Brushline LLC. All Rights Reserved.</p>
       </div>
-
-      <p className='copyright'> © Copyright 2025. Brushline LLC. All Rights Reserved.</p>
     </footer>
-  )
-}
+  );
+};

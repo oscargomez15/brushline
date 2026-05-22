@@ -1,18 +1,12 @@
-import React from 'react'
-import { LuPaintbrush } from "react-icons/lu";
-import { motion } from 'framer-motion'
+import React from 'react';
+import '../Styling/SignatureDivider.css';
+
 export const SignatureDivider = () => {
   return (
-    <div className='signature-divider'>
-        <motion.div className="divider-container"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}>
-            <div className="left-line"></div>
-            <LuPaintbrush/>
-            <div className="right-line"></div>
-        </motion.div>
+    <div className="premium-divider" aria-hidden="true">
+      <div className="premium-divider-line"></div>
+      <div className="premium-divider-dot"></div>
+      <div className="premium-divider-line"></div>
     </div>
-  )
-}
+  );
+};
