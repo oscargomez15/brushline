@@ -15,10 +15,30 @@ const defaultSides = [
 ];
 
 const EXTERIOR_PAINT_OPTIONS = [
-  { key: "superpaint", label: "Super Paint", pricePerGallon: 45.99 },
-  { key: "duration", label: "Duration", pricePerGallon: 51.95 },
-  { key: "emerald", label: "Emerald", pricePerGallon: 66.95 },
-  { key: "emerald_rain_refresh", label: "Emerald Rain Refresh", pricePerGallon: 75.45 },
+  {
+    key: "superpaint",
+    label: "Super Paint",
+    pricePerGallon: 45.99,
+    image: "/images/superpaint-ext.jpg",
+  },
+  {
+    key: "duration",
+    label: "Duration",
+    pricePerGallon: 51.95,
+    image: "/images/duration-ext.jpg",
+  },
+  {
+    key: "emerald",
+    label: "Emerald",
+    pricePerGallon: 66.95,
+    image: "/images/emerald-ext.jpg",
+  },
+  {
+    key: "emerald_rain_refresh",
+    label: "Emerald Rain Refresh",
+    pricePerGallon: 75.45,
+    image: "/images/emerald-rain-ext.jpg",
+  },
 ];
 
 const toNum = (v) => {

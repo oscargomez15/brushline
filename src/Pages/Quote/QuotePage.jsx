@@ -855,16 +855,16 @@ const stripeTotal =
           )}
 
           {quote.jobType === "exterior" && (
-            <section className="paint-upgrade-section">
-              <div className="paint-upgrade-header">
-                <h2>Selected Exterior Paint</h2>
-                <p>
+            <section className="paint-section">
+              <div className="pkg-head">
+                <div className="pkg-title">Select Your Exterior Paint Line</div>
+                <div className="pkg-subtitle">
                   Your proposal was created with{" "}
-                  <strong>{exterior.paintLabel}</strong>. You can upgrade or downgrade below.
-                </p>
+                  <strong>{exterior.paintLabel}</strong>
+                </div>
               </div>
 
-              <div className="paint-options-grid">
+              <div className="paint-grid exterior-paint-grid">
                 {EXTERIOR_PAINT_OPTIONS.map((paint) => {
                   const optionCost = gallons * paint.pricePerGallon;
                   const diff = optionCost - originalPaintCost;
@@ -874,20 +874,42 @@ const stripeTotal =
                     <button
                       key={paint.key}
                       type="button"
-                      className={`paint-option-card ${isSelected ? "selected" : ""}`}
+                      className={`paint-card ${isSelected ? "is-selected" : ""}`}
                       onClick={() => setSelectedExteriorPaint(paint.key)}
                     >
-                      <h3>{paint.label}</h3>
+                      <div className="paint-card-image-wrap">
+                        <img
+                          src={paint.image}
+                          alt={paint.label}
+                          className="paint-card-image"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            e.currentTarget.parentElement.classList.add("is-placeholder");
+                          }}
+                        />
 
-                      <p>${paint.pricePerGallon.toFixed(2)} / gallon</p>
+                        <div className="paint-card-placeholder">Product Image</div>
+                      </div>
 
-                      <strong>
-                        {diff === 0
-                          ? "Current selection"
-                          : diff > 0
-                          ? `+${fmtMoney(diff)}`
-                          : `-${fmtMoney(Math.abs(diff))}`}
-                      </strong>
+                      <div className="paint-card-body">
+                        <div className="paint-card-name">{paint.label}</div>
+
+                        <div className="paint-card-meta">
+                          Exterior finish • {fmtMoney(paint.pricePerGallon)} / gallon
+                        </div>
+
+                        <div className="paint-card-diff">
+                          {isSelected ? (
+                            <span className="paint-selected">Selected</span>
+                          ) : diff > 0 ? (
+                            <span>Upgrade: +{fmtMoney(diff)}</span>
+                          ) : diff < 0 ? (
+                            <span>Downgrade: -{fmtMoney(Math.abs(diff))}</span>
+                          ) : (
+                            <span>No price change</span>
+                          )}
+                        </div>
+                      </div>
                     </button>
                   );
                 })}
