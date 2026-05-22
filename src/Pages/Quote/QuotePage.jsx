@@ -1009,7 +1009,7 @@ const stripeTotal =
                         ? "Opening Checkout..."
                         : `Pay ${fmtMoney(
                             quote.depositRequired ||
-                            Math.round((Number(quote.grandTotal || 0) * 0.4) * 100) / 100
+                            Math.round((Number(displayedGrandTotal|| 0) * 0.4) * 100) / 100
                           )} Deposit`}
                   </button>
                 )}

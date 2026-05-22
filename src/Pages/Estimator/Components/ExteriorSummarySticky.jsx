@@ -6,7 +6,6 @@ export default function ExteriorSummarySticky({
   totalSqft,
   totalGallons,
   ratePerSqft,
-  laborTotal,
   paintType,
   paintCost,
   paintPricePerGallon,
@@ -43,17 +42,17 @@ export default function ExteriorSummarySticky({
           <div className="total-items">
             <div className="mini-row-summary">
               <span className="mini-label">Total Sq Ft</span>
-              <span className="mini-value">{fmt(totalSqft)}</span>
+              <span className="mini-value"> {fmt(totalSqft)}</span>
             </div>
 
             <div className="mini-row-summary">
               <span className="mini-label">Gallons Needed</span>
-              <span className="mini-value">{totalGallons} gal</span>
+              <span className="mini-value"> {totalGallons} gal</span>
             </div>
 
             <div className="mini-row-summary">
               <span className="mini-label">Paint Type</span>
-              <span className="mini-value">{paintType}</span>
+              <span className="mini-value"> {paintType}</span>
             </div>
 
             <div className="mini-row-summary">
@@ -65,22 +64,17 @@ export default function ExteriorSummarySticky({
 
             <div className="mini-row-summary">
               <span className="mini-label">Paint Cost</span>
-              <span className="mini-value">{fmtMoney(paintCost)}</span>
-            </div>
-
-            <div className="mini-row-summary">
-              <span className="mini-label">Labor</span>
-              <span className="mini-value">{fmtMoney(laborTotal)}</span>
+              <span className="mini-value"> {fmtMoney(paintCost)}</span>
             </div>
 
             <div className="mini-row-summary">
               <span className="mini-label">Add-ons</span>
-              <span className="mini-value">{fmtMoney(addOnsTotal)}</span>
+              <span className="mini-value"> {fmtMoney(addOnsTotal)}</span>
             </div>
 
             <div className="mini-row-summary">
               <span className="mini-label">Rate</span>
-              <span className="mini-value">{fmtMoney(ratePerSqft)} / sq ft</span>
+              <span className="mini-value"> {fmtMoney(ratePerSqft)} / sq ft</span>
             </div>
 
             <div className="mini-row-summary estimate-total-row">
