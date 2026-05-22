@@ -127,8 +127,9 @@ export default function QuotePage() {
 
   const paintPriceDifference = newPaintCost - originalPaintCost;
 
-  const displayedGrandTotal = Number(quote.grandTotal || 0) + paintPriceDifference;
-  
+const displayedGrandTotal =
+  Number(quote?.grandTotal || 0) + paintPriceDifference;
+
   const customerName =
   quote?.clientName ||
   quote?.customer?.fullName ||
@@ -464,7 +465,8 @@ const paintOptions = allowedPaintKeys
     };
   });
 
-  const deposit = Math.round((Number(quote.grandTotal) || 0) * 0.4 * 100) / 100;
+  const deposit =
+    Math.round((Number(displayedGrandTotal) || 0) * 0.4 * 100) / 100;
   const paintAdjustment = Number(quote.paintAdjustment) || 0;
 
   const effectiveCurrentKey =
