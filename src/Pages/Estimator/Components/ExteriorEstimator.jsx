@@ -264,8 +264,8 @@ const paintCost = useMemo(() => {
 }, [finishPaintCost, primerCost]);
 
 const grandTotal = useMemo(() => {
-  return totals.totalCost + addOnsTotal + paintCost;
-}, [totals.totalCost, addOnsTotal, paintCost]);
+  return totals.totalCost + addOnsTotal + paintCost+primerCost;
+}, [totals.totalCost, addOnsTotal, paintCost, primerCost]);
 
 
 
