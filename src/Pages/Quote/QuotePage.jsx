@@ -28,6 +28,26 @@ const FEATURES_BY_KEY = {
   ],
 };
 
+const preparationItems =
+  quote.jobType === "exterior"
+    ? [
+        "Pressure wash walls, trim, soffits, fascia, gutters, and downspouts to remove dirt, mildew, and surface contaminants.",
+        "Caulk windows, doors, and applicable joints using Sherwin-Williams 950A Acrylic Latex Sealant to improve weather protection and finish quality.",
+        "Patch minor stucco cracks and imperfections using an elastomeric patching compound for a smoother, longer-lasting finish.",
+        "Prime applicable surfaces using Sherwin-Williams Loxon Primer to promote adhesion and coating performance.",
+        `Apply two finish coats using the selected Sherwin-Williams ${
+          quote?.selectedPaintLabel || quote?.exterior?.paintLabel || "paint system"
+        } for durability, coverage, and long-term protection.`,
+      ]
+    : [
+        "Protect floors, furniture, and adjacent surfaces.",
+        "Fill minor nail holes and surface imperfections.",
+        "Caulk gaps where applicable.",
+        "Light sanding of repaired areas for a smooth finish.",
+        "Spot prime repaired areas where needed.",
+        "Apply Sherwin Williams paint using the selected finish and sheen.",
+      ];
+
 const PAINT_PRODUCTS = {
   promar200: {
     key: "promar200",
@@ -784,14 +804,7 @@ const stripeTotal =
               {prepOpen && (
                 <div className="quote-prep-body">
                   <div className="quote-prep-grid">
-                    {[
-                      "Protection of floors, furniture, and surrounding areas (if applicable)",
-                      "Filling nail holes, minor dents, and surface imperfections",
-                      "Light sanding to ensure proper adhesion",
-                      "Application of caulking to gaps, cracks, and joints as needed",
-                      "Spot priming repaired or patched areas when necessary",
-                      "General surface cleaning prior to painting",
-                    ].map((item) => (
+                    {preparationItems.map((item) => (
                       <div key={item} className="quote-prep-item">
                         <span className="quote-prep-check">✓</span>
                         <span>{item}</span>
@@ -808,16 +821,19 @@ const stripeTotal =
                     <div className="scope-area-title">{area.areaName}</div>
                   </div>
                     
-                  <div className="scope-section-label">Surfaces to be painted</div>
+                  {quote.jobType === "interior" && (
+                    <>
+                      <div className="scope-section-label">Surfaces to be painted</div>
 
-                  {/* Paint scope */}
-                  <div className="scope-chips">
-                    {area.scope.map((item) => (
-                      <span key={item} className="scope-chip">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                      <div className="scope-chips">
+                        {area.scope.map((item) => (
+                          <span key={item} className="scope-chip">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
 
                   {/* Extra work */}
                   {Array.isArray(area.extras) && area.extras.length > 0 && (
