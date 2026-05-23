@@ -13,6 +13,9 @@ export default function ExteriorSummarySticky({
   grandTotal,
   fmtMoney,
   fmt,
+  primerGallons,
+  primerPricePerGallon,
+  primerCost,
 }) {
   return (
     <div className={`summary-sticky ${showSummary ? "" : "is-hidden"}`}>
@@ -51,6 +54,18 @@ export default function ExteriorSummarySticky({
             </div>
 
             <div className="mini-row-summary">
+              <span className="mini-label">Primer</span>
+              <span className="mini-value">
+                {primerGallons} gal × {fmtMoney(primerPricePerGallon)}
+              </span>
+            </div>
+
+            <div className="mini-row-summary">
+              <span className="mini-label">Primer Cost</span>
+              <span className="mini-value">{fmtMoney(primerCost)}</span>
+            </div>
+
+            <div className="mini-row-summary">
               <span className="mini-label">Paint Type</span>
               <span className="mini-value"> {paintType}</span>
             </div>
@@ -66,6 +81,8 @@ export default function ExteriorSummarySticky({
               <span className="mini-label">Paint Cost</span>
               <span className="mini-value"> {fmtMoney(paintCost)}</span>
             </div>
+
+
 
             <div className="mini-row-summary">
               <span className="mini-label">Add-ons</span>

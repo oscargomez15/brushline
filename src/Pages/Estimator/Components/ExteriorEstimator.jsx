@@ -14,6 +14,8 @@ const defaultSides = [
   { id: "left", label: "Left", length: "" },
 ];
 
+const LOXON_PRIMER_PRICE = 24.95;
+
 const EXTERIOR_PAINT_OPTIONS = [
   {
     key: "superpaint",
@@ -182,6 +184,9 @@ export default function ExteriorEstimator({ customer }) {
       scopeItems: buildScopeItems(),
 
     exterior: {
+      primerType: "Sherwin Williams Loxon Primer",
+      primerGallons,
+
       soffitHeight: heightFt,
       pricePerSqft: rate,
 
@@ -242,11 +247,21 @@ export default function ExteriorEstimator({ customer }) {
     return includedAddOns.reduce((sum, item) => sum + item.priceNum, 0);
   }, [includedAddOns]);
 
-  const paintCost = useMemo(() => {
-    const gallonPrice = selectedPaint?.pricePerGallon || 0;
+const finishPaintCost = useMemo(() => {
+  const gallonPrice = selectedPaint?.pricePerGallon || 0;
 
-    return totals.totalGallons * gallonPrice;
-  }, [selectedPaint, totals.totalGallons]);
+  return totals.totalGallons * gallonPrice;
+}, [selectedPaint, totals.totalGallons]);
+
+const primerGallons = totals.totalGallons;
+
+const primerCost = useMemo(() => {
+  return primerGallons * LOXON_PRIMER_PRICE;
+}, [primerGallons]);
+
+const paintCost = useMemo(() => {
+  return finishPaintCost + primerCost;
+}, [finishPaintCost, primerCost]);
 
 const grandTotal = useMemo(() => {
   return totals.totalCost + addOnsTotal + paintCost;
@@ -455,11 +470,16 @@ const grandTotal = useMemo(() => {
       totalSqft={totals.totalSqft}
       totalGallons={totals.totalGallons}
       ratePerSqft={rate}
-      grandTotal={grandTotal}
-      paintType={paintType}
+      paintType={selectedPaint?.label}
       paintCost={paintCost}
-      paintPricePerGallon={selectedPaint?.pricePerGallon || 0}
+      finishPaintCost={finishPaintCost}
+      primerGallons={primerGallons}
+      primerPricePerGallon={LOXON_PRIMER_PRICE}
+      primerCost={primerCost}
+      addOnsTotal={addOnsTotal}
+      grandTotal={grandTotal}
       fmtMoney={fmtMoney}
+      fmt={fmt}
     />
     </section>
   );
