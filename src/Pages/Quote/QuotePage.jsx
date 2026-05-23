@@ -28,25 +28,6 @@ const FEATURES_BY_KEY = {
   ],
 };
 
-const preparationItems =
-  quote.jobType === "exterior"
-    ? [
-        "Pressure wash walls, trim, soffits, fascia, gutters, and downspouts to remove dirt, mildew, and surface contaminants.",
-        "Caulk windows, doors, and applicable joints using Sherwin-Williams 950A Acrylic Latex Sealant to improve weather protection and finish quality.",
-        "Patch minor stucco cracks and imperfections using an elastomeric patching compound for a smoother, longer-lasting finish.",
-        "Prime applicable surfaces using Sherwin-Williams Loxon Primer to promote adhesion and coating performance.",
-        `Apply two finish coats using the selected Sherwin-Williams ${
-          quote?.selectedPaintLabel || quote?.exterior?.paintLabel || "paint system"
-        } for durability, coverage, and long-term protection.`,
-      ]
-    : [
-        "Protect floors, furniture, and adjacent surfaces.",
-        "Fill minor nail holes and surface imperfections.",
-        "Caulk gaps where applicable.",
-        "Light sanding of repaired areas for a smooth finish.",
-        "Spot prime repaired areas where needed.",
-        "Apply Sherwin Williams paint using the selected finish and sheen.",
-      ];
 
 const PAINT_PRODUCTS = {
   promar200: {
@@ -628,6 +609,26 @@ const stripeFee =
 const stripeTotal =
   quote.depositStripeChargeTotal ??
   Math.round((baseDeposit + stripeFee) * 100) / 100;
+
+  const preparationItems =
+  quote.jobType === "exterior"
+    ? [
+        "Pressure wash walls, trim, soffits, fascia, gutters, and downspouts to remove dirt, mildew, and surface contaminants.",
+        "Caulk windows, doors, and applicable joints using Sherwin-Williams 950A Acrylic Latex Sealant to improve weather protection and finish quality.",
+        "Patch minor stucco cracks and imperfections using an elastomeric patching compound for a smoother, longer-lasting finish.",
+        "Prime applicable surfaces using Sherwin-Williams Loxon Primer to promote adhesion and coating performance.",
+        `Apply two finish coats using the selected Sherwin-Williams ${
+          quote?.selectedPaintLabel || quote?.exterior?.paintLabel || "paint system"
+        } for durability, coverage, and long-term protection.`,
+      ]
+    : [
+        "Protect floors, furniture, and adjacent surfaces.",
+        "Fill minor nail holes and surface imperfections.",
+        "Caulk gaps where applicable.",
+        "Light sanding of repaired areas for a smooth finish.",
+        "Spot prime repaired areas where needed.",
+        "Apply Sherwin Williams paint using the selected finish and sheen.",
+      ];
 
   return (
     <div className="quote-wrap">
