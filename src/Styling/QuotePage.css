@@ -1660,3 +1660,109 @@
 
   font-size:15px;
 }
+
+.quote-addons-section {
+  margin-top: 2rem;
+  padding: 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+}
+
+.quote-addons-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.quote-addons-header h3 {
+  margin: 0;
+  color: #071533;
+  font-size: 1.4rem;
+}
+
+.quote-addons-header p {
+  margin: 0.4rem 0 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.quote-addons-header strong {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #071533;
+  color: #ffb84d;
+  white-space: nowrap;
+}
+
+.quote-addons-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.quote-addon-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.quote-addon-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.quote-addon-name {
+  color: #071533;
+  font-weight: 800;
+}
+
+.quote-addon-price {
+  color: #64748b;
+  font-weight: 700;
+}
+
+.quote-addon-toggle {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  background: #071533;
+  color: #ffffff;
+}
+
+.quote-addon-line.is-excluded {
+  opacity: 0.55;
+}
+
+.quote-addon-line.is-excluded .quote-addon-name,
+.quote-addon-line.is-excluded .quote-addon-price {
+  text-decoration: line-through;
+}
+
+.quote-addon-line.is-excluded .quote-addon-toggle {
+  background: #ffb84d;
+  color: #071533;
+}
+
+@media (max-width: 640px) {
+  .quote-addons-header,
+  .quote-addon-line {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quote-addon-toggle {
+    width: 100%;
+  }
+}

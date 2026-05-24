@@ -126,7 +126,8 @@ export default function QuotePage() {
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
-  
+  const [excludedAddOns, setExcludedAddOns] = useState({});
+
   const exterior = quote?.exterior || {};
 
   const [selectedExteriorPaint, setSelectedExteriorPaint] = useState(
@@ -148,8 +149,10 @@ export default function QuotePage() {
 
   const paintPriceDifference = newPaintCost - originalPaintCost;
 
-const displayedGrandTotal =
-  Number(quote?.grandTotal || 0) + paintPriceDifference;
+  const displayedGrandTotal =
+    Number(quote?.grandTotal || 0) +
+    paintPriceDifference -
+    excludedAddOnsTotal;
 
   const customerName =
   quote?.clientName ||
@@ -170,7 +173,17 @@ const signatureUrl =
   quote?.projectAddress ||
   quote?.customer?.address ||
   "";
-  
+
+  const exteriorAddOns =
+  quote?.jobType === "exterior"
+    ? quote?.scopeItems?.flatMap((area) => area.extras || []) || []
+    : [];
+
+  const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
+    const isExcluded = excludedAddOns[index];
+    return isExcluded ? sum + Number(item.price || 0) : sum;
+  }, 0);
+    
   const handleToggleLineItem = async (lineIndex) => {
     try {
       setTogglingLineIndex(lineIndex);
@@ -913,7 +926,7 @@ const stripeTotal =
             </div>
           )}
 
-          {quot.jobType === "exterior" && (
+          {quote.jobType === "exterior" && (
             <div className="quote-exterior-scope">
               <h3>Scope of Work</h3>
 
@@ -969,6 +982,55 @@ const stripeTotal =
                 </p>
               </div>
             </div>
+          )}
+
+          {quote?.jobType === "exterior" && exteriorAddOns.length > 0 && (
+            <section className="quote-addons-section">
+              <div className="quote-addons-header">
+                <div>
+                  <h3>Additional Work</h3>
+                  <p>
+                    These optional items are included in your proposal. You may remove
+                    any item below and the total will update automatically.
+                  </p>
+                </div>
+
+                <strong>{fmtMoney(exteriorAddOns.length ? exteriorAddOns.reduce((s, i) => s + Number(i.price || 0), 0) - excludedAddOnsTotal : 0)}</strong>
+              </div>
+
+              <div className="quote-addons-list">
+                {exteriorAddOns.map((item, index) => {
+                  const isExcluded = excludedAddOns[index];
+
+                  return (
+                    <div
+                      key={`${item.label}-${index}`}
+                      className={`quote-addon-line ${isExcluded ? "is-excluded" : ""}`}
+                    >
+                      <div className="quote-addon-info">
+                        <span className="quote-addon-name">{item.label}</span>
+                        <span className="quote-addon-price">
+                          {fmtMoney(Number(item.price || 0))}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="quote-addon-toggle"
+                        onClick={() =>
+                          setExcludedAddOns((prev) => ({
+                            ...prev,
+                            [index]: !prev[index],
+                          }))
+                        }
+                      >
+                        {isExcluded ? "Restore" : "Remove"}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
           )}
 
           {quote.jobType === "exterior" && (
