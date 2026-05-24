@@ -1609,3 +1609,24 @@ button {
     height: 50px;
   }
 }
+
+
+.quote-addon-toggle:disabled,
+.paint-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.quote-addon-line.is-excluded .quote-addon-toggle:disabled {
+  background: #e5e7eb;
+  color: #64748b;
+}
+
+.paint-card:disabled {
+  pointer-events: none;
+}
+
+.quote-addons-section.is-locked,
+.paint-section.is-locked {
+  position: relative;
+}

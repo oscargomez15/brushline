@@ -127,6 +127,11 @@ export default function QuotePage() {
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [excludedAddOns, setExcludedAddOns] = useState({});
+  const isApproved = quote?.status === "approved";
+
+  const getAddonIsExcluded = (item, index) => {
+    return Boolean(excludedAddOns[index] || item.excluded);
+  };
 
   const exterior = quote?.exterior || {};
 
@@ -159,17 +164,22 @@ export default function QuotePage() {
       ) || []
     : [];
 
-  const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
-    return excludedAddOns[index] ? sum + Number(item.price || 0) : sum;
-  }, 0);
+const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
+  return getAddonIsExcluded(item, index)
+    ? sum + Number(item.price || 0)
+    : sum;
+}, 0);
 
   const includedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
-    return excludedAddOns[index] ? sum : sum + Number(item.price || 0);
+    return getAddonIsExcluded(item, index)
+      ? sum
+      : sum + Number(item.price || 0);
   }, 0);
 
 
-  const displayedGrandTotal =
-    Number(quote?.grandTotal || 0) +
+const displayedGrandTotal = isApproved
+  ? Number(quote?.grandTotal || 0)
+  : Number(quote?.grandTotal || 0) +
     paintPriceDifference -
     excludedAddOnsTotal;
 
@@ -960,30 +970,6 @@ const stripeTotal =
                 </p>
 
                 <p>
-                  Surface preparation may include pressure washing exterior walls,
-                  trim, soffits, fascia, gutters, and surrounding painted surfaces
-                  to remove dirt, mildew, chalking, and contaminants that may
-                  impact adhesion.
-                </p>
-
-                <p>
-                  Minor stucco cracks and surface imperfections will be repaired
-                  using elastomeric patching materials to provide a sound and
-                  paint-ready substrate.
-                </p>
-
-                <p>
-                  Windows, doors, and exterior joints may be sealed using
-                  Sherwin-Williams 950A sealant where necessary to improve
-                  weather resistance and moisture protection.
-                </p>
-
-                <p>
-                  Sherwin-Williams Loxon Primer may be applied where required
-                  to promote proper adhesion and coating performance.
-                </p>
-
-                <p>
                   Two finish coats using the Sherwin-Williams paint line selected
                   during proposal approval will be applied where required to
                   achieve proper coverage, uniform appearance, and long-term
@@ -999,8 +985,7 @@ const stripeTotal =
           )}
 
           {quote?.jobType === "exterior" && exteriorAddOns.length > 0 && (
-            <section className="quote-addons-section">
-              <div className="quote-addons-header">
+            <section className={`quote-addons-section ${isApproved ? "is-locked" : ""}`}>              <div className="quote-addons-header">
                 <div>
                   <h3>Additional Work</h3>
                   <p>
@@ -1014,8 +999,7 @@ const stripeTotal =
 
               <div className="quote-addons-list">
                   {exteriorAddOns.map((item, index) => {
-                    const isExcluded = excludedAddOns[index] || item.excluded;
-
+                    const isExcluded = getAddonIsExcluded(item, index);
                     return (
                       <div
                         key={`${item.label}-${index}`}
@@ -1031,14 +1015,17 @@ const stripeTotal =
                       <button
                         type="button"
                         className="quote-addon-toggle"
-                        onClick={() =>
+                        disabled={isApproved}
+                        onClick={() => {
+                          if (isApproved) return;
+
                           setExcludedAddOns((prev) => ({
                             ...prev,
                             [index]: !prev[index],
-                          }))
-                        }
+                          }));
+                        }}
                       >
-                        {isExcluded ? "Restore" : "Remove"}
+                        {isExcluded ? "Excluded" : "Included"}
                       </button>
                     </div>
                   );
@@ -1048,8 +1035,7 @@ const stripeTotal =
           )}
 
           {quote.jobType === "exterior" && (
-            <section className="paint-section">
-              <div className="pkg-head">
+            <section className={`paint-section ${isApproved ? "is-locked" : ""}`}>              <div className="pkg-head">
                 <div className="pkg-title">Select Your Exterior Paint Line</div>
                 <div className="pkg-subtitle">
                   Your proposal was created with{" "}
@@ -1064,12 +1050,16 @@ const stripeTotal =
                   const isSelected = selectedExteriorPaint === paint.key;
 
                   return (
-                    <button
-                      key={paint.key}
-                      type="button"
-                      className={`paint-card ${isSelected ? "is-selected" : ""}`}
-                      onClick={() => setSelectedExteriorPaint(paint.key)}
-                    >
+                      <button
+                        key={paint.key}
+                        type="button"
+                        className={`paint-card ${isSelected ? "is-selected" : ""}`}
+                        disabled={isApproved}
+                        onClick={() => {
+                          if (isApproved) return;
+                          setSelectedExteriorPaint(paint.key);
+                        }}
+                      >
                       <div className="paint-card-image-wrap">
                         <img
                           src={paint.image}
@@ -1140,12 +1130,16 @@ const stripeTotal =
                 const features = FEATURES_BY_KEY[p.key] ?? [];
 
                 return (
-                  <button
-                    key={p.key}
-                    type="button"
-                    className={`pkg-card ${isSelected ? "is-selected" : ""} ${isRecommended ? "is-recommended" : ""}`}
-                    onClick={() => handleSelectPackage(p.key)}
-                  >
+                    <button
+                      key={p.key}
+                      type="button"
+                      className={`pkg-card ${isSelected ? "is-selected" : ""} ${isRecommended ? "is-recommended" : ""}`}
+                      disabled={isApproved}
+                      onClick={() => {
+                        if (isApproved) return;
+                        handleSelectPackage(p.key);
+                      }}
+                    >
                     <div className="pkg-radio" aria-hidden="true">
                       <span className="pkg-radio-dot" />
                     </div>
