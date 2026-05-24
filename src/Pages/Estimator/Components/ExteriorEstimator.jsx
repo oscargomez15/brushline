@@ -50,17 +50,44 @@ const toNum = (v) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-export default function ExteriorEstimator({ customer }) {
+export default function ExteriorEstimator({ customer, existingQuote=null, mode='create' }) {
   const navigate = useNavigate();
+  
   const [showSummary, setShowSummary] = useState(false);
-  const [addOns, setAddons] = useState([]);
+  const [addOns, setAddons] = useState(() => {
+  const extras = existingQuote?.scopeItems?.[0]?.extras || [];
+
+  return extras.map((item) => ({
+    id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    label: item.label || "",
+    price: item.price?.toString() || "",
+    included: true,
+  }));
+});
   // price control (top card)
-  const [pricePerSqft, setPricePerSqft] = useState("2.50");
-  const [paintType, setPaintType] = useState("superpaint");
+  const [pricePerSqft, setPricePerSqft] = useState(
+    exteriorData.pricePerSqft?.toString() || "2.50"
+  );
+
+  const [paintType, setPaintType] = useState(
+  exteriorData.paintType || "superpaint"
+);
 
   // measurements
-  const [soffitHeight, setSoffitHeight] = useState("10");
-  const [sides, setSides] = useState(defaultSides);
+  const [soffitHeight, setSoffitHeight] = useState(
+  exteriorData.soffitHeight?.toString() || "10"
+  );
+  const [sides, setSides] = useState(() => {
+    if (Array.isArray(exteriorData.sides) && exteriorData.sides.length > 0) {
+      return exteriorData.sides.map((side) => ({
+        id: side.id,
+        label: side.label,
+        length: side.length?.toString() || "",
+      }));
+    }
+
+    return defaultSides;
+  });
 
   const updateSide = (id, value) => {
     setSides((prev) => prev.map((s) => (s.id === id ? { ...s, length: value } : s)));

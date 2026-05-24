@@ -227,7 +227,16 @@ export const Estimator = () => {
               initialPaintGrade={interiorInitialPaintGrade}
             />
           ) : jobType === "exterior" ? (
-            <ExteriorEstimator customer={customer} />
+            <ExteriorEstimator
+              key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-exterior"}
+              customer={customer}
+              existingQuote={
+                editingQuoteData?.jobType === "exterior" ? editingQuoteData : null
+              }
+              mode={
+                isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"
+              }
+            />
           ) : (
             <HandymanEstimator
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-handyman"}
