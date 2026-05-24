@@ -913,6 +913,64 @@ const stripeTotal =
             </div>
           )}
 
+          {jobType === "exterior" && (
+            <div className="quote-exterior-scope">
+              <h3>Scope of Work</h3>
+
+              <div className="quote-scope-description">
+                <p>
+                  Brushline Services will provide complete exterior painting services
+                  designed to restore, protect, and enhance the appearance of your
+                  property. All preparation and coating procedures will be performed
+                  using professional application methods and industry best practices
+                  to ensure long-term durability and a high-quality finish.
+                </p>
+
+                <p>
+                  Exterior surfaces included in this proposal may include exterior
+                  walls, soffits, fascia, gutters, trim, garage doors, front entry
+                  doors, and side doors (where applicable).
+                </p>
+
+                <p>
+                  Surface preparation may include pressure washing exterior walls,
+                  trim, soffits, fascia, gutters, and surrounding painted surfaces
+                  to remove dirt, mildew, chalking, and contaminants that may
+                  impact adhesion.
+                </p>
+
+                <p>
+                  Minor stucco cracks and surface imperfections will be repaired
+                  using elastomeric patching materials to provide a sound and
+                  paint-ready substrate.
+                </p>
+
+                <p>
+                  Windows, doors, and exterior joints may be sealed using
+                  Sherwin-Williams 950A sealant where necessary to improve
+                  weather resistance and moisture protection.
+                </p>
+
+                <p>
+                  Sherwin-Williams Loxon Primer may be applied where required
+                  to promote proper adhesion and coating performance.
+                </p>
+
+                <p>
+                  Two finish coats using the Sherwin-Williams paint line selected
+                  during proposal approval will be applied where required to
+                  achieve proper coverage, uniform appearance, and long-term
+                  protection.
+                </p>
+
+                <p>
+                  Reasonable precautions will be taken to protect landscaping,
+                  fixtures, windows, and surrounding property during the project.
+                </p>
+              </div>
+            </div>
+          )}
+
           {quote.jobType === "exterior" && (
             <section className="paint-section">
               <div className="pkg-head">

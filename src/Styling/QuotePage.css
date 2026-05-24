@@ -1622,3 +1622,41 @@
     grid-template-columns: 1fr;
   }
 }
+.quote-exterior-scope{
+  margin-top:32px;
+  padding:28px;
+  background:#fff;
+
+  border:1px solid rgba(15,23,42,.08);
+  border-radius:20px;
+
+  box-shadow:
+  0 12px 30px rgba(15,23,42,.05);
+}
+
+.quote-exterior-scope h3{
+  font-size:22px;
+
+  color:#0f172a;
+
+  margin-bottom:18px;
+
+  font-weight:800;
+}
+
+.quote-scope-description{
+  display:flex;
+  flex-direction:column;
+
+  gap:14px;
+}
+
+.quote-scope-description p{
+  margin:0;
+
+  line-height:1.75;
+
+  color:#475569;
+
+  font-size:15px;
+}
