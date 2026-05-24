@@ -459,7 +459,6 @@ const grandTotal = useMemo(() => {
               </div>
             </div> */}
           </div>
-          <div className="area-card">
             
           <div className="addons-box">
             <div className="addons-header">
@@ -515,7 +514,6 @@ const grandTotal = useMemo(() => {
             <button type="button" className="addon-add" onClick={addAddOn}>
               + Add Custom Add-On
             </button>
-          </div>
           </div>
         </div>
 

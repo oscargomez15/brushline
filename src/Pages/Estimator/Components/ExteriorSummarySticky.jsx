@@ -8,7 +8,6 @@ export default function ExteriorSummarySticky({
   totalGallons,
   ratePerSqft,
   paintType,
-  paintCost,
   paintPricePerGallon,
   addOnsTotal,
   grandTotal,
