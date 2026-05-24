@@ -148,13 +148,23 @@ export default function QuotePage() {
   const newPaintCost = gallons * Number(selectedPaint?.pricePerGallon || 0);
 
   const paintPriceDifference = newPaintCost - originalPaintCost;
-  const exteriorAddOns =
-  quote?.jobType === "exterior"
-    ? quote?.scopeItems?.flatMap((area) => area.extras || []) || []
+  const isExterior = quote?.jobType === "exterior";
+
+  const exteriorAddOns = isExterior
+    ? quote?.scopeItems?.flatMap((area) =>
+        (area.extras || []).map((extra) => ({
+          ...extra,
+          areaName: area.areaName,
+        }))
+      ) || []
     : [];
+
   const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
-  const isExcluded = excludedAddOns[index];
-    return isExcluded ? sum + Number(item.price || 0) : sum;
+    return excludedAddOns[index] ? sum + Number(item.price || 0) : sum;
+  }, 0);
+
+  const includedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
+    return excludedAddOns[index] ? sum : sum + Number(item.price || 0);
   }, 0);
 
 
@@ -260,6 +270,13 @@ const signatureUrl =
           signatureDataUrl,
           typedName,
 
+          exteriorExcludedAddOns:
+            quote?.jobType === "exterior"
+              ? Object.keys(excludedAddOns)
+                  .filter((key) => excludedAddOns[key])
+                  .map(Number)
+              : [],
+
           exteriorPaintSelection:
             quote?.jobType === "exterior"
               ? {
@@ -270,6 +287,7 @@ const signatureUrl =
                   paintGallons: gallons,
                   paintMaterialCost: newPaintCost,
                   paintPriceDifference,
+                  excludedAddOnsTotal,
                   updatedGrandTotal: displayedGrandTotal,
                 }
               : null,
@@ -611,8 +629,8 @@ const paintOptions = allowedPaintKeys
   };
 
   const baseDeposit =
-  quote.depositRequired ||
-  Math.round((Number(quote.grandTotal || 0) * 0.4) * 100) / 100;
+    quote.depositRequired ||
+    Math.round((Number(displayedGrandTotal || 0) * 0.4) * 100) / 100;
 
 const stripeFee =
   quote.depositProcessingFee ??
@@ -994,7 +1012,7 @@ const stripeTotal =
                   </p>
                 </div>
 
-                <strong>{fmtMoney(exteriorAddOns.length ? exteriorAddOns.reduce((s, i) => s + Number(i.price || 0), 0) - excludedAddOnsTotal : 0)}</strong>
+                <strong>{fmtMoney(includedAddOnsTotal)}</strong>
               </div>
 
               <div className="quote-addons-list">
