@@ -913,7 +913,7 @@ const stripeTotal =
             </div>
           )}
 
-          {jobType === "exterior" && (
+          {quot.jobType === "exterior" && (
             <div className="quote-exterior-scope">
               <h3>Scope of Work</h3>
 
