@@ -148,6 +148,11 @@ export default function QuotePage() {
   const newPaintCost = gallons * Number(selectedPaint?.pricePerGallon || 0);
 
   const paintPriceDifference = newPaintCost - originalPaintCost;
+  
+  const exteriorAddOns =
+  quote?.jobType === "exterior"
+    ? quote?.scopeItems?.flatMap((area) => area.extras || []) || []
+    : [];
 
   const displayedGrandTotal =
     Number(quote?.grandTotal || 0) +
@@ -174,10 +179,7 @@ const signatureUrl =
   quote?.customer?.address ||
   "";
 
-  const exteriorAddOns =
-  quote?.jobType === "exterior"
-    ? quote?.scopeItems?.flatMap((area) => area.extras || []) || []
-    : [];
+
 
   const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
     const isExcluded = excludedAddOns[index];
