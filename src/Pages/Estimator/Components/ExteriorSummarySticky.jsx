@@ -1,4 +1,5 @@
 import React from "react";
+import '../../../Styling/SummarySticky.css';
 
 export default function ExteriorSummarySticky({
   showSummary,
@@ -42,61 +43,67 @@ export default function ExteriorSummarySticky({
         )}
 
         {showSummary && (
-          <div className="total-items">
-            <div className="mini-row-summary">
-              <span className="mini-label">Total Sq Ft</span>
-              <span className="mini-value"> {fmt(totalSqft)}</span>
+          <div className="total-items summary-grid">
+            <div className="summary-group">
+              <h3>Measurements</h3>
+
+              <div className="summary-row">
+                <span>Total Sq Ft</span>
+                <strong>{fmt(totalSqft)}</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Gallons Needed</span>
+                <strong>{totalGallons} gal</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Rate</span>
+                <strong>{fmtMoney(ratePerSqft)} / sq ft</strong>
+              </div>
             </div>
 
-            <div className="mini-row-summary">
-              <span className="mini-label">Gallons Needed</span>
-              <span className="mini-value"> {totalGallons} gal</span>
+            <div className="summary-group">
+              <h3>Materials</h3>
+
+              <div className="summary-row">
+                <span>Primer</span>
+                <strong>{primerGallons} gal × {fmtMoney(primerPricePerGallon)}</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Primer Cost</span>
+                <strong>{fmtMoney(primerCost)}</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Paint Type</span>
+                <strong>{paintType}</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Paint Price</span>
+                <strong>{fmtMoney(paintPricePerGallon)} / gal</strong>
+              </div>
+
+              <div className="summary-row">
+                <span>Paint Cost</span>
+                <strong>{fmtMoney(paintCost)}</strong>
+              </div>
             </div>
 
-            <div className="mini-row-summary">
-              <span className="mini-label">Primer</span>
-              <span className="mini-value">
-                {primerGallons} gal × {fmtMoney(primerPricePerGallon)}
-              </span>
-            </div>
+            <div className="summary-group total-summary-card">
+              <h3>Total</h3>
 
-            <div className="mini-row-summary">
-              <span className="mini-label">Primer Cost</span>
-              <span className="mini-value">{fmtMoney(primerCost)}</span>
-            </div>
+              <div className="summary-row">
+                <span>Add-ons</span>
+                <strong>{fmtMoney(addOnsTotal)}</strong>
+              </div>
 
-            <div className="mini-row-summary">
-              <span className="mini-label">Paint Type</span>
-              <span className="mini-value"> {paintType}</span>
-            </div>
-
-            <div className="mini-row-summary">
-              <span className="mini-label">Paint Price</span>
-              <span className="mini-value">
-                {fmtMoney(paintPricePerGallon)} / gal
-              </span>
-            </div>
-
-            <div className="mini-row-summary">
-              <span className="mini-label">Paint Cost</span>
-              <span className="mini-value"> {fmtMoney(paintCost)}</span>
-            </div>
-
-
-
-            <div className="mini-row-summary">
-              <span className="mini-label">Add-ons</span>
-              <span className="mini-value"> {fmtMoney(addOnsTotal)}</span>
-            </div>
-
-            <div className="mini-row-summary">
-              <span className="mini-label">Rate</span>
-              <span className="mini-value"> {fmtMoney(ratePerSqft)} / sq ft</span>
-            </div>
-
-            <div className="mini-row-summary estimate-total-row">
-              <span className="mini-label">Estimate Total</span>
-              <span className="mini-value">{fmtMoney(grandTotal)}</span>
+              <div className="summary-row grand">
+                <span>Estimate Total</span>
+                <strong>{fmtMoney(grandTotal)}</strong>
+              </div>
             </div>
           </div>
         )}
