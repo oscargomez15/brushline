@@ -1013,14 +1013,14 @@ const stripeTotal =
               </div>
 
               <div className="quote-addons-list">
-                {exteriorAddOns.map((item, index) => {
-                  const isExcluded = excludedAddOns[index];
+                  {exteriorAddOns.map((item, index) => {
+                    const isExcluded = excludedAddOns[index] || item.excluded;
 
-                  return (
-                    <div
-                      key={`${item.label}-${index}`}
-                      className={`quote-addon-line ${isExcluded ? "is-excluded" : ""}`}
-                    >
+                    return (
+                      <div
+                        key={`${item.label}-${index}`}
+                        className={`quote-addon-line ${isExcluded ? "is-excluded" : ""}`}
+                      >
                       <div className="quote-addon-info">
                         <span className="quote-addon-name">{item.label}</span>
                         <span className="quote-addon-price">

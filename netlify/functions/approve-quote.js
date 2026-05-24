@@ -229,10 +229,28 @@ exports.handler = async (event) => {
     let quoteToApprove = { ...quote };
 
     if (quote.jobType === "exterior") {
+
       const excludedIndexes = Array.isArray(exteriorExcludedAddOns)
         ? exteriorExcludedAddOns.map(Number)
         : [];
 
+      // Put it RIGHT HERE
+      let globalExtraIndex = 0;
+
+      const updatedScopeItems = (quote.scopeItems || []).map((area) => ({
+        ...area,
+
+        extras: (area.extras || []).map((extra) => {
+          const currentIndex = globalExtraIndex++;
+
+          return {
+            ...extra,
+            excluded: excludedIndexes.includes(currentIndex),
+          };
+        }),
+      }));
+
+      // Then use it here
       quoteToApprove = {
         ...quoteToApprove,
 
@@ -256,29 +274,27 @@ exports.handler = async (event) => {
                 paintPricePerGallon: Number(
                   exteriorPaintSelection.paintPricePerGallon || 0
                 ),
-                paintGallons: Number(exteriorPaintSelection.paintGallons || 0),
+                paintGallons: Number(
+                  exteriorPaintSelection.paintGallons || 0
+                ),
                 paintMaterialCost: Number(
                   exteriorPaintSelection.paintMaterialCost || 0
                 ),
                 paintPriceDifference: Number(
                   exteriorPaintSelection.paintPriceDifference || 0
                 ),
+
+                excludedAddOns: excludedIndexes,
+                excludedAddOnsTotal: Number(
+                  exteriorPaintSelection.excludedAddOnsTotal || 0
+                ),
               }
             : {}),
 
-          excludedAddOns: excludedIndexes,
-          excludedAddOnsTotal: Number(
-            exteriorPaintSelection?.excludedAddOnsTotal || 0
-          ),
         },
 
-        scopeItems: (quote.scopeItems || []).map((area) => ({
-          ...area,
-          extras: (area.extras || []).map((extra, index) => ({
-            ...extra,
-            excluded: excludedIndexes.includes(index),
-          })),
-        })),
+        // Use it here
+        scopeItems: updatedScopeItems,
       };
     }
 
