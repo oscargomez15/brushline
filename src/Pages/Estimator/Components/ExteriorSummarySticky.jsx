@@ -17,6 +17,10 @@ export default function ExteriorSummarySticky({
   primerGallons,
   primerPricePerGallon,
   primerCost,
+  rawMaterialCost,
+  materialMarkup,
+  materialMarkupAmount,
+  totalMaterialCost,
 }) {
   return (
     <div className={`summary-sticky ${showSummary ? "" : "is-hidden"}`}>
