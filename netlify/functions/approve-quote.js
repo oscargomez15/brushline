@@ -204,6 +204,7 @@ exports.handler = async (event) => {
       signatureDataUrl,
       typedName,
       exteriorPaintSelection,
+      exteriorExcludedAddOns = [],
     } = JSON.parse(event.body || "{}");
 
     if (!id) return json(400, { error: "Missing quote id" });
@@ -227,21 +228,57 @@ exports.handler = async (event) => {
     }
     let quoteToApprove = { ...quote };
 
-    if (quote.jobType === "exterior" && exteriorPaintSelection) {
+    if (quote.jobType === "exterior") {
+      const excludedIndexes = Array.isArray(exteriorExcludedAddOns)
+        ? exteriorExcludedAddOns.map(Number)
+        : [];
+
       quoteToApprove = {
         ...quoteToApprove,
-        grandTotal: Number(exteriorPaintSelection.updatedGrandTotal || quote.grandTotal || 0),
-        paintAdjustment: Number(exteriorPaintSelection.paintPriceDifference || 0),
+
+        grandTotal: Number(
+          exteriorPaintSelection?.updatedGrandTotal ||
+          quote.grandTotal ||
+          0
+        ),
+
+        paintAdjustment: Number(
+          exteriorPaintSelection?.paintPriceDifference || 0
+        ),
 
         exterior: {
           ...(quote.exterior || {}),
-          paintType: exteriorPaintSelection.paintType,
-          paintLabel: exteriorPaintSelection.paintLabel,
-          paintPricePerGallon: Number(exteriorPaintSelection.paintPricePerGallon || 0),
-          paintGallons: Number(exteriorPaintSelection.paintGallons || 0),
-          paintMaterialCost: Number(exteriorPaintSelection.paintMaterialCost || 0),
-          paintPriceDifference: Number(exteriorPaintSelection.paintPriceDifference || 0),
+
+          ...(exteriorPaintSelection
+            ? {
+                paintType: exteriorPaintSelection.paintType,
+                paintLabel: exteriorPaintSelection.paintLabel,
+                paintPricePerGallon: Number(
+                  exteriorPaintSelection.paintPricePerGallon || 0
+                ),
+                paintGallons: Number(exteriorPaintSelection.paintGallons || 0),
+                paintMaterialCost: Number(
+                  exteriorPaintSelection.paintMaterialCost || 0
+                ),
+                paintPriceDifference: Number(
+                  exteriorPaintSelection.paintPriceDifference || 0
+                ),
+              }
+            : {}),
+
+          excludedAddOns: excludedIndexes,
+          excludedAddOnsTotal: Number(
+            exteriorPaintSelection?.excludedAddOnsTotal || 0
+          ),
         },
+
+        scopeItems: (quote.scopeItems || []).map((area) => ({
+          ...area,
+          extras: (area.extras || []).map((extra, index) => ({
+            ...extra,
+            excluded: excludedIndexes.includes(index),
+          })),
+        })),
       };
     }
 
@@ -303,6 +340,7 @@ exports.handler = async (event) => {
         grandTotal: updatedQuote.grandTotal,
         paintAdjustment: updatedQuote.paintAdjustment || 0,
         exterior: updatedQuote.exterior || idx.exterior || null,
+        scopeItems: updatedQuote.scopeItems || idx.scopeItems || [],
       });
     }
 

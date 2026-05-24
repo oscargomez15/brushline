@@ -647,9 +647,6 @@ const stripeTotal =
         "Caulk windows, doors, and applicable joints using Sherwin-Williams 950A Acrylic Latex Sealant to improve weather protection and finish quality.",
         "Patch minor stucco cracks and imperfections using an elastomeric patching compound for a smoother, longer-lasting finish.",
         "Prime applicable surfaces using Sherwin-Williams Loxon Primer to promote adhesion and coating performance.",
-        `Apply two finish coats using the selected Sherwin-Williams ${
-          quote?.selectedPaintLabel || quote?.exterior?.paintLabel || "paint system"
-        } for durability, coverage, and long-term protection.`,
       ]
     : [
         "Protect floors, furniture, and adjacent surfaces.",
