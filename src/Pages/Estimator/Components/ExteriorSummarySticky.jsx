@@ -86,10 +86,30 @@ export default function ExteriorSummarySticky({
                 <strong>{fmtMoney(paintPricePerGallon)} / gal</strong>
               </div>
 
-              <div className="summary-row">
-                <span>Paint Cost</span>
-                <strong>{fmtMoney(paintCost)}</strong>
-              </div>
+            <div className="summary-row">
+              <span>Raw Materials</span>
+              <strong>
+                {fmtMoney(rawMaterialCost)}
+              </strong>
+            </div>
+
+            <div className="summary-row">
+              <span>
+                Material Markup ({materialMarkup}%)
+              </span>
+
+              <strong>
+                {fmtMoney(materialMarkupAmount)}
+              </strong>
+            </div>
+
+            <div className="summary-row">
+              <span>Total Materials</span>
+
+              <strong>
+                {fmtMoney(totalMaterialCost)}
+              </strong>
+            </div>
             </div>
 
             <div className="summary-group total-summary-card">

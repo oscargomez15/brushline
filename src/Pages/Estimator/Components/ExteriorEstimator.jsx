@@ -55,6 +55,14 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
   const navigate = useNavigate();
   const exteriorData = existingQuote?.exterior || {};
   const [showSummary, setShowSummary] = useState(false);
+  const [materialMarkup, setMaterialMarkup] = useState(
+  exteriorData.materialMarkup || 20
+  );
+  const endpoint = existingQuote?.id
+  ? "/.netlify/functions/update-quote"
+  : "/.netlify/functions/create-quote";
+
+  const method = existingQuote?.id ? "PUT" : "POST";
   const [addOns, setAddons] = useState(() => {
   const extras = existingQuote?.scopeItems?.[0]?.extras || [];
 
@@ -179,56 +187,62 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
     ];
   };
 
-  const handleGenerateQuote = async () => {
-    if (!canCreate) return;
+ const handleGenerateQuote = async () => {
+  if (!canCreate) return;
 
-    const user = netlifyIdentity.currentUser();
-    const token = user ? await user.jwt() : null;
+  const user = netlifyIdentity.currentUser();
+  const token = user ? await user.jwt() : null;
 
-    if (!token) {
-      alert("You must be logged in to generate a quote.");
-      return;
-    }
+  if (!token) {
+    alert("You must be logged in to generate a quote.");
+    return;
+  }
 
-    const payload = {
-      jobType: "exterior",
-      grandTotal: grandTotal,
-      totalGallons: totals.totalGallons,
+  const payload = {
+    id: existingQuote?.id || undefined,
 
-      companyName: "Brushline Services",
-      validForDays: 30,
+    jobType: "exterior",
+    grandTotal,
+    totalGallons: totals.totalGallons,
 
-      customerId: customer?.customerId || null,
-      customer: {
-        firstName: customer?.firstName || "",
-        lastName: customer?.lastName || "",
-        address: customer?.address || "",
-        unit: customer?.unit || "",
-        email: customer?.email || "",
-        phone: customer?.phone || "",
-      },
+    companyName: "Brushline Services",
+    validForDays: 30,
 
-      note: "Thanks for having us out — excited about this project!",
-      scopeItems: buildScopeItems(),
+    customerId: customer?.customerId || null,
+
+    customer: {
+      firstName: customer?.firstName || "",
+      lastName: customer?.lastName || "",
+      address: customer?.address || "",
+      unit: customer?.unit || "",
+      email: customer?.email || "",
+      phone: customer?.phone || "",
+    },
+
+    note: "Thanks for having us out — excited about this project!",
+    scopeItems: buildScopeItems(),
 
     exterior: {
       primerType: "Sherwin Williams Loxon Primer",
       primerGallons,
+      primerPricePerGallon: LOXON_PRIMER_PRICE,
+      primerMaterialCost: primerCost,
 
       soffitHeight: heightFt,
       pricePerSqft: rate,
 
       paintType,
       paintLabel: selectedPaint?.label || "",
-
       paintPricePerGallon:
         selectedPaint?.pricePerGallon || 0,
 
-      paintGallons:
-        totals.totalGallons,
+      paintGallons: totals.totalGallons,
+      paintMaterialCost: finishPaintCost,
 
-      paintMaterialCost:
-        paintCost,
+      materialMarkup,
+      rawMaterialCost,
+      materialMarkupAmount,
+      totalMaterialCost,
 
       totalSqft: totals.totalSqft,
       totalGallons: totals.totalGallons,
@@ -242,25 +256,26 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
         cost: s.cost,
       })),
     },
-    };
-
-    const res = await fetch("/.netlify/functions/create-quote", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      alert(data?.error || "Failed to create quote");
-      return;
-    }
-
-    navigate(data.url);
   };
+
+  const res = await fetch(endpoint, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data?.error || "Failed to create quote");
+    return;
+  }
+
+  navigate(data.url);
+};
 
   const includedAddOns = useMemo(() => {
   return addOns
@@ -277,7 +292,6 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
 
 const finishPaintCost = useMemo(() => {
   const gallonPrice = selectedPaint?.pricePerGallon || 0;
-
   return totals.totalGallons * gallonPrice;
 }, [selectedPaint, totals.totalGallons]);
 
@@ -287,13 +301,23 @@ const primerCost = useMemo(() => {
   return primerGallons * LOXON_PRIMER_PRICE;
 }, [primerGallons]);
 
-const paintCost = useMemo(() => {
+const rawMaterialCost = useMemo(() => {
   return finishPaintCost + primerCost;
 }, [finishPaintCost, primerCost]);
 
+const markupMultiplier =
+  1 + materialMarkup / 100;
+
+const totalMaterialCost = useMemo(() => {
+  return rawMaterialCost * markupMultiplier;
+}, [rawMaterialCost, markupMultiplier]);
+
+const materialMarkupAmount =
+  totalMaterialCost - rawMaterialCost;
+
 const grandTotal = useMemo(() => {
-  return totals.totalCost + addOnsTotal + paintCost ;
-}, [totals.totalCost, addOnsTotal, paintCost]);
+  return totals.totalCost + addOnsTotal + totalMaterialCost;
+}, [totals.totalCost, addOnsTotal, totalMaterialCost]);
 
 
 
@@ -343,6 +367,20 @@ const grandTotal = useMemo(() => {
                       {paint.label}
                     </option>
                   ))}
+                </select>
+              </label>
+
+              <label>
+                <span>Material Markup</span>
+
+                <select
+                  className="dim-input"
+                  value={materialMarkup}
+                  onChange={(e) => setMaterialMarkup(Number(e.target.value))}
+                >
+                  <option value={15}>15%</option>
+                  <option value={20}>20%</option>
+                  <option value={25}>25%</option>
                 </select>
               </label>
             </div>
@@ -499,7 +537,7 @@ const grandTotal = useMemo(() => {
       totalGallons={totals.totalGallons}
       ratePerSqft={rate}
       paintType={selectedPaint?.label}
-      paintCost={paintCost}
+      paintCost={finishPaintCost}
       finishPaintCost={finishPaintCost}
       primerGallons={primerGallons}
       primerPricePerGallon={LOXON_PRIMER_PRICE}
@@ -508,10 +546,19 @@ const grandTotal = useMemo(() => {
       grandTotal={grandTotal}
       fmtMoney={fmtMoney}
       fmt={fmt}
+      materialMarkup={materialMarkup}
+      materialMarkupAmount={
+        materialMarkupAmount
+      }
+      rawMaterialCost={
+        rawMaterialCost
+      }
+      totalMaterialCost={totalMaterialCost}
     />
     </section>
   );
 }
+
 
 // function Stat({ label, value }) {
 //   return (
