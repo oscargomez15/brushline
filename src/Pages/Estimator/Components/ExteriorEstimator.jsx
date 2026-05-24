@@ -51,8 +51,9 @@ const toNum = (v) => {
 };
 
 export default function ExteriorEstimator({ customer, existingQuote=null, mode='create' }) {
-  const navigate = useNavigate();
   
+  const navigate = useNavigate();
+  const exteriorData = existingQuote?.exterior || {};
   const [showSummary, setShowSummary] = useState(false);
   const [addOns, setAddons] = useState(() => {
   const extras = existingQuote?.scopeItems?.[0]?.extras || [];
@@ -292,7 +293,7 @@ const paintCost = useMemo(() => {
 
 const grandTotal = useMemo(() => {
   return totals.totalCost + addOnsTotal + paintCost+primerCost;
-}, [totals.totalCost, addOnsTotal, paintCost, primerCost]);
+}, [totals.totalCost, addOnsTotal, paintCost]);
 
 
 
