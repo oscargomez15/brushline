@@ -128,8 +128,10 @@ export default function QuotePage() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const isApproved = quote?.status === "approved";
 
-  const getAddonIsExcluded = (item) => {
-    return Boolean(item.excluded);
+  const [excludedAddOns, setExcludedAddOns] = useState({});
+
+  const getAddonIsExcluded = (item, index) => {
+    return Boolean(excludedAddOns[index] || item.excluded);
   };
 
   const exterior = quote?.exterior || {};
@@ -163,14 +165,14 @@ export default function QuotePage() {
       ) || []
     : [];
 
-  const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item) => {
-    return getAddonIsExcluded(item)
+  const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
+    return getAddonIsExcluded(item, index)
       ? sum + Number(item.price || 0)
       : sum;
   }, 0);
 
-  const includedAddOnsTotal = exteriorAddOns.reduce((sum, item) => {
-    return getAddonIsExcluded(item)
+  const includedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
+    return getAddonIsExcluded(item, index)
       ? sum
       : sum + Number(item.price || 0);
   }, 0);
@@ -279,7 +281,14 @@ const signatureUrl =
           signatureDataUrl,
           typedName,
 
-          exteriorExcludedAddOns: [],
+          exteriorExcludedAddOns:
+          quote?.jobType === "exterior"
+            ? exteriorAddOns
+                .map((item, index) =>
+                  getAddonIsExcluded(item, index) ? index : null
+                )
+                .filter((v) => v !== null)
+            : [],
 
           exteriorPaintSelection:
             quote?.jobType === "exterior"
@@ -969,7 +978,7 @@ const stripeTotal =
                   </div>
                 </div>
               {exteriorAddOns.map((item, index) => {
-              const isExcluded = getAddonIsExcluded(item);
+              const isExcluded = getAddonIsExcluded(item, index);
 
               return (
                 <div
@@ -986,6 +995,27 @@ const stripeTotal =
                   <div className="quote-scope-line-price">
                     {isExcluded ? "Excluded" : fmtMoney(Number(item.price || 0))}
                   </div>
+                  <button
+                    type="button"
+                    className="quote-scope-line-toggle"
+                    disabled={isApproved}
+                    onClick={() => {
+                      if (isApproved) return;
+
+                      setExcludedAddOns((prev) => ({
+                        ...prev,
+                        [index]: !prev[index],
+                      }));
+                    }}
+                  >
+                    {isApproved
+                      ? isExcluded
+                        ? "Excluded"
+                        : "Included"
+                      : isExcluded
+                        ? "Restore"
+                        : "Remove"}
+                  </button>
                 </div>
               );
             })}

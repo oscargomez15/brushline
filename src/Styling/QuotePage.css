@@ -1713,3 +1713,40 @@ button {
   color: var(--quote-muted);
   text-decoration: none;
 }
+
+.quote-scope-line-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quote-scope-line-toggle {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--quote-navy);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.quote-scope-line-toggle:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.quote-scope-line-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.quote-scope-line-item.is-excluded .quote-scope-line-toggle {
+  background: var(--quote-gold);
+  color: var(--quote-navy);
+}
+
+@media (max-width: 640px) {
+  .quote-scope-line-actions {
+    justify-content: space-between;
+  }
+}
