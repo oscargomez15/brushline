@@ -959,9 +959,10 @@ const stripeTotal =
                     <div className="quote-scope-line-title">Complete Exterior Painting</div>
                     <p>
                       Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and
-                      long-term protection. Areas to be painted are: exterior walls, ceilings, soffits, fascia,
+                      long-term protection. 
+                      <br/><br/>Areas to be painted are: exterior walls, ceilings, soffits, fascia,
                       gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
-                      <br/>
+                      <br/> <br/>
                       Reasonable precautions will be taken to protect landscaping, fixtures,
                       windows, and surrounding property during the project.
                     </p>
