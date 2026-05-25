@@ -505,27 +505,59 @@ const grandTotal = useMemo(() => {
             </button>
           </div>
 
-          <section className="estimator-card exterior-scope-editor">
-            <h3>Exterior Scope Details</h3>
+          <section className="scope-editor-card">
 
-            <label>
-              Work Title
-              <input
-                type="text"
-                value={exteriorScopeTitle}
-                onChange={(e) => setExteriorScopeTitle(e.target.value)}
-              />
-            </label>
+            <div className="scope-editor-header">
+              <div>
+                <h3>Exterior Scope Details</h3>
 
-            <label>
-              Additional Details
-              <textarea
-                rows={5}
-                value={exteriorAdditionalDetails}
-                onChange={(e) => setExteriorAdditionalDetails(e.target.value)}
-                placeholder="Example: Includes painting garage side door, pressure washing garage door, extra caulking around windows, etc."
-              />
-            </label>
+                <p>
+                  Customize what appears on the customer proposal.
+                  Add project-specific notes when needed.
+                </p>
+              </div>
+
+              <div className="scope-editor-badge">
+                Quote Page
+              </div>
+            </div>
+
+            <div className="scope-editor-grid">
+
+              <div className="scope-input-group">
+                <label>Work Title</label>
+
+                <input
+                  type="text"
+                  className="scope-input"
+                  value={exteriorScopeTitle}
+                  onChange={(e) =>
+                    setExteriorScopeTitle(e.target.value)
+                  }
+                  placeholder="Complete Exterior Painting"
+                />
+              </div>
+
+              <div className="scope-input-group scope-full">
+                <label>Additional Details</label>
+
+                <textarea
+                  className="scope-textarea"
+                  rows={5}
+                  value={exteriorAdditionalDetails}
+                  onChange={(e) =>
+                    setExteriorAdditionalDetails(
+                      e.target.value
+                    )
+                  }
+                  placeholder={
+                    "Example:\n• Replace damaged trim near garage\n• Pressure wash pool deck\n• Additional stucco repairs rear elevation"
+                  }
+                />
+              </div>
+
+            </div>
+
           </section>
         </div>
 
