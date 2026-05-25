@@ -972,58 +972,29 @@ const stripeTotal =
                     {fmtMoney(exteriorBasePrice)}
                   </div>
                 </div>
+              {exteriorAddOns.map((item, index) => {
+              const isExcluded = getAddonIsExcluded(item, index);
+
+              return (
+                <div
+                  key={`${item.label}-${index}`}
+                  className={`quote-scope-line-item ${isExcluded ? "is-excluded" : ""}`}
+                >
+                  <div className="quote-scope-line-main">
+                    <div className="quote-scope-line-title">{item.label}</div>
+                    <p>
+                      Additional work item included as part of this proposal.
+                    </p>
+                  </div>
+
+                  <div className="quote-scope-line-price">
+                    {isExcluded ? "Excluded" : fmtMoney(Number(item.price || 0))}
+                  </div>
+                </div>
+              );
+            })}
               </div>
             </div>
-          )}
-
-          {quote?.jobType === "exterior" && exteriorAddOns.length > 0 && (
-            <section className={`quote-addons-section ${isApproved ? "is-locked" : ""}`}>              <div className="quote-addons-header">
-                <div>
-                  <h3>Additional Work</h3>
-                  <p>
-                    These optional items are included in your proposal. You may remove
-                    any item below and the total will update automatically.
-                  </p>
-                </div>
-
-                <strong>{fmtMoney(includedAddOnsTotal)}</strong>
-              </div>
-
-              <div className="quote-addons-list">
-                  {exteriorAddOns.map((item, index) => {
-                    const isExcluded = getAddonIsExcluded(item, index);
-                    return (
-                      <div
-                        key={`${item.label}-${index}`}
-                        className={`quote-addon-line ${isExcluded ? "is-excluded" : ""}`}
-                      >
-                      <div className="quote-addon-info">
-                        <span className="quote-addon-name">{item.label}</span>
-                        <span className="quote-addon-price">
-                          {fmtMoney(Number(item.price || 0))}
-                        </span>
-                      </div>
-
-                      <button
-                        type="button"
-                        className="quote-addon-toggle"
-                        disabled={isApproved}
-                        onClick={() => {
-                          if (isApproved) return;
-
-                          setExcludedAddOns((prev) => ({
-                            ...prev,
-                            [index]: !prev[index],
-                          }));
-                        }}
-                      >
-                        {isExcluded ? "Excluded" : "Included"}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
           )}
 
           {quote.jobType === "exterior" && (

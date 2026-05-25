@@ -1699,3 +1699,17 @@ button {
     font-size: 16px;
   }
 }
+
+.quote-scope-line-item.is-excluded {
+  opacity: 0.55;
+}
+
+.quote-scope-line-item.is-excluded .quote-scope-line-title,
+.quote-scope-line-item.is-excluded p {
+  text-decoration: line-through;
+}
+
+.quote-scope-line-item.is-excluded .quote-scope-line-price {
+  color: var(--quote-muted);
+  text-decoration: none;
+}
