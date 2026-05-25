@@ -1819,3 +1819,87 @@ button {
     min-width: auto;
   }
 }
+
+.quote-scope-line-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+  padding: 18px 20px;
+}
+
+.quote-scope-line-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.quote-scope-line-actions {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.quote-scope-line-price {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--quote-green);
+
+  line-height: 1;
+  text-align: right;
+}
+
+.quote-scope-line-toggle {
+  min-width: 92px;
+  height: 38px;
+
+  border: none;
+  border-radius: 999px;
+
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 900;
+
+  background: var(--quote-navy);
+  color: white;
+
+  cursor: pointer;
+}
+
+.quote-scope-line-item.is-excluded .quote-scope-line-price {
+  color: #94a3b8;
+}
+
+@media (max-width: 700px) {
+
+  .quote-scope-line-item {
+    flex-direction: column;
+  }
+
+  .quote-scope-line-actions {
+
+    width: 100%;
+
+    flex-direction: row;
+
+    justify-content: space-between;
+
+    align-items: center;
+  }
+
+  .quote-scope-line-price {
+    text-align: left;
+  }
+
+}
