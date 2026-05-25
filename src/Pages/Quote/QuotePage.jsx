@@ -74,6 +74,15 @@ const ALLOWED_PAINTS_BY_SHEEN = {
   flat: ["promar200", "cashmere", "emerald"],
 };
 
+const DEFAULT_EXTERIOR_SCOPE_TITLE = "Complete Exterior Painting";
+
+const DEFAULT_EXTERIOR_SCOPE_DESCRIPTION = `Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and long-term protection.
+
+Areas to be painted are: exterior walls, ceilings, soffits, fascia, gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
+
+Reasonable precautions will be taken to protect landscaping, fixtures, windows, and surrounding property during the project.`;
+
+
 const EXTERIOR_PAINT_OPTIONS = [
   {
     key: "superpaint",
@@ -672,6 +681,15 @@ const stripeTotal =
     displayedGrandTotal -
     includedAddOnsTotal;
 
+    const exteriorScopeTitle =
+      quote?.exteriorScope?.title || DEFAULT_EXTERIOR_SCOPE_TITLE;
+
+    const exteriorScopeDescription =
+      quote?.exteriorScope?.description || DEFAULT_EXTERIOR_SCOPE_DESCRIPTION;
+
+    const exteriorAdditionalDetails =
+      quote?.exteriorScope?.additionalDetails || "";
+
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -961,15 +979,34 @@ const stripeTotal =
               <div className="quote-scope-line-items">
                 <div className="quote-scope-line-item">
                   <div className="quote-scope-line-main">
-                    <div className="quote-scope-line-title">Complete Exterior Painting</div>
+                    <div className="quote-scope-line-title">{exteriorScopeTitle}</div>
                     <p>
-                      Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and
-                      long-term protection. 
-                      <br/><br/>Areas to be painted are: exterior walls, ceilings, soffits, fascia,
-                      gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
-                      <br/> <br/>
-                      Reasonable precautions will be taken to protect landscaping, fixtures,
-                      windows, and surrounding property during the project.
+                      {exteriorScopeDescription.split("\n").map((line, index) => (
+                        <React.Fragment key={index}>
+                          {line}
+                          {index < exteriorScopeDescription.split("\n").length - 1 && (
+                            <>
+                              <br />
+                              <br />
+                            </>
+                          )}
+                        </React.Fragment>
+                      ))}
+
+                  {exteriorAdditionalDetails ? (
+                    <>
+                      <br />
+                      <br />
+                      <strong>Additional Details:</strong>
+                      <br />
+                      {exteriorAdditionalDetails.split("\n").map((line, index) => (
+                        <React.Fragment key={index}>
+                          {line}
+                          {index < exteriorAdditionalDetails.split("\n").length - 1 && <br />}
+                        </React.Fragment>
+                      ))}
+                    </>
+                  ) : null}
                     </p>
                   </div>
 

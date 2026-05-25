@@ -90,7 +90,8 @@ exports.handler = async (event, context) => {
         payload.grandTotal != null
         ? payload.grandTotal
         : existing.grandTotal,
-        exterior: payload.exterior || existing.exterior || null,
+      exterior: payload.exterior || existing.exterior || null,
+      exteriorScope: payload.exteriorScope || existing.exteriorScope || null,
     };
 
     await quotesStore.setJSON(id, updatedQuote);
@@ -106,7 +107,8 @@ exports.handler = async (event, context) => {
       projectAddress: updatedQuote.projectAddress || "",
       status: updatedQuote.status || "awaiting_approval",
       approvedAt: updatedQuote.approvedAt || null,
-       exterior: updatedQuote.exterior || null,
+      exterior: updatedQuote.exterior || null,
+      exteriorScope: updatedQuote.exteriorScope || null,
     });
 
     const pdfBase64 = await buildQuotePdfBase64(updatedQuote);

@@ -42,6 +42,13 @@ const EXTERIOR_PAINT_OPTIONS = [
     image: "/images/emerald-rain-ext.jpg",
   },
 ];
+const DEFAULT_EXTERIOR_SCOPE_TITLE = "Complete Exterior Painting";
+
+const DEFAULT_EXTERIOR_SCOPE_DESCRIPTION = `Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and long-term protection.
+
+Areas to be painted are: exterior walls, ceilings, soffits, fascia, gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
+
+Reasonable precautions will be taken to protect landscaping, fixtures, windows, and surrounding property during the project.`;
 
 const toNum = (v) => {
   if (v == null) return 0;
@@ -57,6 +64,13 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
   const [showSummary, setShowSummary] = useState(false);
   const [materialMarkup, setMaterialMarkup] = useState(
   exteriorData.materialMarkup || 20
+  );
+  const [exteriorScopeTitle, setExteriorScopeTitle] = useState(
+    existingQuote?.exteriorScope?.title || DEFAULT_EXTERIOR_SCOPE_TITLE
+  );
+
+  const [exteriorAdditionalDetails, setExteriorAdditionalDetails] = useState(
+    existingQuote?.exteriorScope?.additionalDetails || ""
   );
   const endpoint = existingQuote?.id
   ? "/.netlify/functions/update-quote"
@@ -217,6 +231,11 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
       unit: customer?.unit || "",
       email: customer?.email || "",
       phone: customer?.phone || "",
+    },
+    exteriorScope: {
+      title: exteriorScopeTitle.trim() || DEFAULT_EXTERIOR_SCOPE_TITLE,
+      description: DEFAULT_EXTERIOR_SCOPE_DESCRIPTION,
+      additionalDetails: exteriorAdditionalDetails.trim(),
     },
 
     note: "Thanks for having us out — excited about this project!",
@@ -428,36 +447,6 @@ const grandTotal = useMemo(() => {
               ))}
               </div>
             </div>
-
-            {/* <div className="calculations-container">
-              <h3>Calculations (sq ft)</h3>
-
-              {perSide.map((s) => (
-                <div key={s.id} className="calculations-card">
-                  <h3>{s.label}</h3>
-                  <div className="calculations-items">
-                    <Stat label="Sq. Ft." value={fmt(s.sqft)} />
-                    <Stat label="Gallons" value={s.gallons} />
-                  </div>
-                </div>
-              ))}
-
-              <div className="calculations-card">
-                <h3>Total</h3>
-                <div className="calculations-items">
-                  <Stat label="Total Sq. Ft." value={fmt(totals.totalSqft)} />
-                  <Stat label="Total Gallons" value={totals.totalGallons} />
-                  <Stat label="Rate" value={fmtMoney(rate)} />
-                  <Stat label="Base Total" value={fmtMoney(totals.totalCost)} />
-                  <Stat label="Add-Ons" value={fmtMoney(addOnsTotal)} />
-                  <Stat label="Estimated Total" value={fmtMoney(grandTotal)} />
-                </div>
-              </div>
-
-              <div className="scope-warning" style={{ marginTop: 12 }}>
-                This is a quick estimate. It doesn’t subtract windows/doors or add gables yet.
-              </div>
-            </div> */}
           </div>
             
           <div className="addons-box">
@@ -515,6 +504,29 @@ const grandTotal = useMemo(() => {
               + Add Custom Add-On
             </button>
           </div>
+
+          <section className="estimator-card exterior-scope-editor">
+            <h3>Exterior Scope Details</h3>
+
+            <label>
+              Work Title
+              <input
+                type="text"
+                value={exteriorScopeTitle}
+                onChange={(e) => setExteriorScopeTitle(e.target.value)}
+              />
+            </label>
+
+            <label>
+              Additional Details
+              <textarea
+                rows={5}
+                value={exteriorAdditionalDetails}
+                onChange={(e) => setExteriorAdditionalDetails(e.target.value)}
+                placeholder="Example: Includes painting garage side door, pressure washing garage door, extra caulking around windows, etc."
+              />
+            </label>
+          </section>
         </div>
 
         <button

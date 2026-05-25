@@ -200,6 +200,14 @@ function makeId() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+const DEFAULT_EXTERIOR_SCOPE_TITLE = "Complete Exterior Painting";
+
+const DEFAULT_EXTERIOR_SCOPE_DESCRIPTION = `Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and long-term protection.
+
+Areas to be painted are: exterior walls, ceilings, soffits, fascia, gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
+
+Reasonable precautions will be taken to protect landscaping, fixtures, windows, and surrounding property during the project.`;
+
 exports.handler = async (event, context) => {
   try {
     if (event.httpMethod !== "POST") {
@@ -289,6 +297,21 @@ exports.handler = async (event, context) => {
 
     const id = makeId();
     const viewToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
+    const exteriorScope =
+      jobType === "exterior"
+        ? {
+            title:
+              safeStr(payload?.exteriorScope?.title) ||
+              DEFAULT_EXTERIOR_SCOPE_TITLE,
+
+            description:
+              safeStr(payload?.exteriorScope?.description) ||
+              DEFAULT_EXTERIOR_SCOPE_DESCRIPTION,
+
+            additionalDetails:
+              safeStr(payload?.exteriorScope?.additionalDetails),
+          }
+        : null;
 
     const quote = {
       id,
@@ -315,6 +338,7 @@ exports.handler = async (event, context) => {
       viewedAt: null,
       viewedBy: null,
       estimatorData: payload.estimatorData || null,
+      exteriorScope,
     };
 
     await store.setJSON(id, quote);
@@ -329,6 +353,8 @@ exports.handler = async (event, context) => {
       projectAddress: quote.projectAddress || quote.customer?.address || "",
       status: payload.status || "awaiting_approval",
       approvedAt: null,
+
+      exteriorScope: quote.exteriorScope || null,
     });
 
     // ✅ Email the customer the quote link (do not fail quote creation if email fails)
