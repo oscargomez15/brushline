@@ -958,40 +958,18 @@ const stripeTotal =
                   <div className="quote-scope-line-main">
                     <div className="quote-scope-line-title">Complete Exterior Painting</div>
                     <p>
-                      Includes preparation and painting of exterior walls, soffits, fascia,
-                      gutters, trim, garage doors, front entry doors, and side doors where
-                      applicable.
+                      Includes preparation and two finish coats using the selected Sherwin-Williams paint line where required for proper coverage, uniform appearance, and
+                      long-term protection. Areas to be painted are: exterior walls, ceilings, soffits, fascia,
+                      gutters, trim, garage doors (if applicable), front entry doors (if applicable), and side doors (if applicable).
+                      <br/>
+                      Reasonable precautions will be taken to protect landscaping, fixtures,
+                      windows, and surrounding property during the project.
                     </p>
                   </div>
 
                   <div className="quote-scope-line-price">
                     {fmtMoney(exteriorBasePrice)}
                   </div>
-                </div>
-
-                <div className="quote-scope-line-item">
-                  <div className="quote-scope-line-main">
-                    <div className="quote-scope-line-title">Surface Protection</div>
-                    <p>
-                      Reasonable precautions will be taken to protect landscaping, fixtures,
-                      windows, and surrounding property during the project.
-                    </p>
-                  </div>
-
-                  <div className="quote-scope-line-price">Included</div>
-                </div>
-
-                <div className="quote-scope-line-item">
-                  <div className="quote-scope-line-main">
-                    <div className="quote-scope-line-title">Paint Application</div>
-                    <p>
-                      Two finish coats using the selected Sherwin-Williams paint line will be
-                      applied where required for proper coverage, uniform appearance, and
-                      long-term protection.
-                    </p>
-                  </div>
-
-                  <div className="quote-scope-line-price">Included</div>
                 </div>
               </div>
             </div>
