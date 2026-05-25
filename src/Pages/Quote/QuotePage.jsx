@@ -987,7 +987,6 @@ const stripeTotal =
                           {index < exteriorScopeDescription.split("\n").length - 1 && (
                             <>
                               <br />
-                              <br />
                             </>
                           )}
                         </React.Fragment>
