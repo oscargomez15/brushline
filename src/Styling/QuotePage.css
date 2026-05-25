@@ -1647,3 +1647,55 @@ button {
 .paint-section.is-locked {
   position: relative;
 }
+
+.quote-scope-line-items {
+  display: grid;
+  gap: 12px;
+}
+
+.quote-scope-line-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid var(--quote-border-soft);
+  border-radius: 16px;
+  background: var(--quote-surface-soft);
+}
+
+.quote-scope-line-main {
+  min-width: 0;
+}
+
+.quote-scope-line-title {
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--quote-text);
+}
+
+.quote-scope-line-main p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--quote-muted);
+}
+
+.quote-scope-line-price {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--quote-green);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .quote-scope-line-item {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .quote-scope-line-price {
+    font-size: 16px;
+  }
+}

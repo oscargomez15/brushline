@@ -518,8 +518,6 @@ const jobLabel =
     Number(pricing?.materialsMarkupPct) ||
     0;
 
-
-
 const currentPaintProduct =
   PAINT_PRODUCTS[currentPaintKey] || PAINT_PRODUCTS[allowedPaintKeys[0]];
 
@@ -666,6 +664,8 @@ const stripeTotal =
         "Spot prime repaired areas where needed.",
         "Apply Sherwin Williams paint using the selected finish and sheen.",
       ];
+
+  const exteriorBasePrice = Number(quote?.grandTotal || 0) - includedAddOnsTotal;
 
   return (
     <div className="quote-wrap">
@@ -953,33 +953,46 @@ const stripeTotal =
           {quote.jobType === "exterior" && (
             <div className="quote-exterior-scope">
               <h3>Scope of Work</h3>
+              <div className="quote-scope-line-items">
+                <div className="quote-scope-line-item">
+                  <div className="quote-scope-line-main">
+                    <div className="quote-scope-line-title">Complete Exterior Painting</div>
+                    <p>
+                      Includes preparation and painting of exterior walls, soffits, fascia,
+                      gutters, trim, garage doors, front entry doors, and side doors where
+                      applicable.
+                    </p>
+                  </div>
 
-              <div className="quote-scope-description">
-                <p>
-                  Brushline Services will provide complete exterior painting services
-                  designed to restore, protect, and enhance the appearance of your
-                  property. All preparation and coating procedures will be performed
-                  using professional application methods and industry best practices
-                  to ensure long-term durability and a high-quality finish.
-                </p>
+                  <div className="quote-scope-line-price">
+                    {fmtMoney(exteriorBasePrice)}
+                  </div>
+                </div>
 
-                <p>
-                  Exterior surfaces included in this proposal may include exterior
-                  walls, soffits, fascia, gutters, trim, garage doors, front entry
-                  doors, and side doors (where applicable).
-                </p>
+                <div className="quote-scope-line-item">
+                  <div className="quote-scope-line-main">
+                    <div className="quote-scope-line-title">Surface Protection</div>
+                    <p>
+                      Reasonable precautions will be taken to protect landscaping, fixtures,
+                      windows, and surrounding property during the project.
+                    </p>
+                  </div>
 
-                <p>
-                  Two finish coats using the Sherwin-Williams paint line selected
-                  during proposal approval will be applied where required to
-                  achieve proper coverage, uniform appearance, and long-term
-                  protection.
-                </p>
+                  <div className="quote-scope-line-price">Included</div>
+                </div>
 
-                <p>
-                  Reasonable precautions will be taken to protect landscaping,
-                  fixtures, windows, and surrounding property during the project.
-                </p>
+                <div className="quote-scope-line-item">
+                  <div className="quote-scope-line-main">
+                    <div className="quote-scope-line-title">Paint Application</div>
+                    <p>
+                      Two finish coats using the selected Sherwin-Williams paint line will be
+                      applied where required for proper coverage, uniform appearance, and
+                      long-term protection.
+                    </p>
+                  </div>
+
+                  <div className="quote-scope-line-price">Included</div>
+                </div>
               </div>
             </div>
           )}
