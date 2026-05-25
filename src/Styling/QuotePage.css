@@ -1750,3 +1750,72 @@ button {
     justify-content: space-between;
   }
 }
+
+.quote-scope-line-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* changed */
+  gap: 20px;
+
+  padding: 18px 20px;
+}
+
+.quote-scope-line-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.quote-scope-line-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  flex-shrink: 0;
+}
+
+.quote-scope-line-price {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--quote-green);
+
+  min-width: 110px;
+  text-align: right;
+}
+
+.quote-scope-line-toggle {
+  min-width: 92px;
+
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 999px;
+
+  padding: 0 16px;
+
+  font-size: 13px;
+  font-weight: 900;
+}
+
+@media (max-width: 700px) {
+  .quote-scope-line-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .quote-scope-line-actions {
+    width: 100%;
+
+    justify-content: space-between;
+
+    padding-top: 8px;
+  }
+
+  .quote-scope-line-price {
+    text-align: left;
+    min-width: auto;
+  }
+}

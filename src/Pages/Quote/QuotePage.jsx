@@ -991,31 +991,37 @@ const stripeTotal =
                       Additional work item included as part of this proposal.
                     </p>
                   </div>
+                  <div className="quote-scope-line-actions">
 
-                  <div className="quote-scope-line-price">
-                    {isExcluded ? "Excluded" : fmtMoney(Number(item.price || 0))}
-                  </div>
-                  <button
-                    type="button"
-                    className="quote-scope-line-toggle"
-                    disabled={isApproved}
-                    onClick={() => {
-                      if (isApproved) return;
-
-                      setExcludedAddOns((prev) => ({
-                        ...prev,
-                        [index]: !prev[index],
-                      }));
-                    }}
-                  >
-                    {isApproved
-                      ? isExcluded
+                    <div className="quote-scope-line-price">
+                      {isExcluded
                         ? "Excluded"
-                        : "Included"
-                      : isExcluded
-                        ? "Restore"
-                        : "Remove"}
-                  </button>
+                        : fmtMoney(Number(item.price || 0))}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="quote-scope-line-toggle"
+                      disabled={isApproved}
+                      onClick={() => {
+                        if (isApproved) return;
+
+                        setExcludedAddOns((prev) => ({
+                          ...prev,
+                          [index]: !prev[index],
+                        }));
+                      }}
+                    >
+                      {isApproved
+                        ? isExcluded
+                          ? "Excluded"
+                          : "Included"
+                        : isExcluded
+                          ? "Restore"
+                          : "Remove"}
+                    </button>
+
+                  </div>
                 </div>
               );
             })}
