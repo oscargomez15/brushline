@@ -126,11 +126,10 @@ export default function QuotePage() {
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
-  const [excludedAddOns, setExcludedAddOns] = useState({});
   const isApproved = quote?.status === "approved";
 
-  const getAddonIsExcluded = (item, index) => {
-    return Boolean(excludedAddOns[index] || item.excluded);
+  const getAddonIsExcluded = (item) => {
+    return Boolean(item.excluded);
   };
 
   const exterior = quote?.exterior || {};
@@ -164,14 +163,14 @@ export default function QuotePage() {
       ) || []
     : [];
 
-const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
-  return getAddonIsExcluded(item, index)
-    ? sum + Number(item.price || 0)
-    : sum;
-}, 0);
+  const excludedAddOnsTotal = exteriorAddOns.reduce((sum, item) => {
+    return getAddonIsExcluded(item)
+      ? sum + Number(item.price || 0)
+      : sum;
+  }, 0);
 
-  const includedAddOnsTotal = exteriorAddOns.reduce((sum, item, index) => {
-    return getAddonIsExcluded(item, index)
+  const includedAddOnsTotal = exteriorAddOns.reduce((sum, item) => {
+    return getAddonIsExcluded(item)
       ? sum
       : sum + Number(item.price || 0);
   }, 0);
@@ -280,12 +279,7 @@ const signatureUrl =
           signatureDataUrl,
           typedName,
 
-          exteriorExcludedAddOns:
-            quote?.jobType === "exterior"
-              ? Object.keys(excludedAddOns)
-                  .filter((key) => excludedAddOns[key])
-                  .map(Number)
-              : [],
+          exteriorExcludedAddOns: [],
 
           exteriorPaintSelection:
             quote?.jobType === "exterior"
@@ -665,7 +659,9 @@ const stripeTotal =
         "Apply Sherwin Williams paint using the selected finish and sheen.",
       ];
 
-  const exteriorBasePrice = Number(quote?.grandTotal || 0) - includedAddOnsTotal;
+  const exteriorBasePrice =
+    displayedGrandTotal -
+    includedAddOnsTotal;
 
   return (
     <div className="quote-wrap">
@@ -973,7 +969,7 @@ const stripeTotal =
                   </div>
                 </div>
               {exteriorAddOns.map((item, index) => {
-              const isExcluded = getAddonIsExcluded(item, index);
+              const isExcluded = getAddonIsExcluded(item);
 
               return (
                 <div
