@@ -1903,3 +1903,50 @@ button {
   }
 
 }
+
+.quote-items-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  align-items: start;
+  column-gap: 28px;
+  row-gap: 8px;
+  padding: 16px;
+  border-top: 1px solid var(--quote-border-soft);
+}
+
+.quote-items-row .desc {
+  min-width: 0;
+  max-width: 100%;
+  padding-right: 12px;
+  font-weight: 600;
+}
+
+.quote-line-text {
+  display: block;
+  line-height: 1.35;
+}
+
+.quote-line-text strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 900;
+  color: var(--quote-text);
+}
+
+.quote-line-description {
+  display: block;
+  max-width: 620px;
+  font-size: 15px;
+  line-height: 1.35;
+  color: rgba(15, 23, 42, 0.72);
+  font-weight: 400;
+}
+
+.quote-items-row .right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  text-align: right;
+  white-space: nowrap;
+}
