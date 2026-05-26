@@ -799,7 +799,29 @@ const stripeTotal =
                     >
                       <div className="desc">
                         <span className={isExcluded ? "quote-line-text excluded" : "quote-line-text"}>
-                          {item.description}
+
+                          {item.title ? (
+                            <>
+                              <strong>{item.title}</strong>
+
+                              {item.description && (
+                                <>
+                                  <br />
+                                  <span
+                                    style={{
+                                      opacity: 0.8,
+                                      fontWeight: 400,
+                                    }}
+                                  >
+                                    {item.description}
+                                  </span>
+                                </>
+                              )}
+                            </>
+                          ) : (
+                            item.description
+                          )}
+
                         </span>
                       </div>
 

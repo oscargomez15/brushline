@@ -29,12 +29,13 @@ export default function HandymanEstimator({
     if (initialQuote?.lineItems?.length) {
       return initialQuote.lineItems.map((it) => ({
         id: makeId(),
+        title: it.title || "",
         desc: it.description || "",
         price: String(it.price ?? ""),
       }));
     }
 
-    return [{ id: makeId(), desc: "", price: "" }];
+    return [{ id: makeId(), title: "", desc: "", price: "" }];
   });
 
   const [saving, setSaving] = useState(false);
@@ -50,9 +51,9 @@ export default function HandymanEstimator({
       activeCustomer?.lastName?.trim() &&
       activeCustomer?.address?.trim();
 
-    const hasValidLine = items.some(
-      (it) => it.desc.trim() && safeNumber(it.price) > 0
-    );
+  const hasValidLine = items.some(
+    (it) => it.title.trim() && it.desc.trim() && safeNumber(it.price) > 0
+  );
 
     return !!hasCustomer && hasValidLine && grandTotal > 0;
   }, [activeCustomer, items, grandTotal]);
@@ -60,7 +61,7 @@ export default function HandymanEstimator({
   const addRow = () => {
     setItems((prev) => [
       ...prev,
-      { id: makeId(), desc: "", price: "" },
+      { id: makeId(), title: "", desc: "", price: "" },
     ]);
   };
 
@@ -75,13 +76,14 @@ export default function HandymanEstimator({
   const saveQuote = async () => {
     if (!canCreate || saving) return;
 
-    const lineItems = items
-      .map((it) => ({
-        description: it.desc.trim(),
-        price: safeNumber(it.price),
-        excluded: false,
-      }))
-      .filter((it) => it.description && it.price > 0);
+  const lineItems = items
+    .map((it) => ({
+      title: it.title.trim(),
+      description: it.desc.trim(),
+      price: safeNumber(it.price),
+      excluded: false,
+    }))
+    .filter((it) => it.title && it.description && it.price > 0);
 
     const payload = {
       jobType: "handyman",
@@ -190,51 +192,59 @@ export default function HandymanEstimator({
           padding: 12,
         }}
       >
-        {items.map((it, idx) => (
-          <div
-            key={it.id}
+      {items.map((it, idx) => (
+        <div
+          key={it.id}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1.5fr 140px 44px",
+            gap: 10,
+            alignItems: "center",
+            marginBottom: 10,
+          }}
+        >
+          <input
+            type="text"
+            value={it.title}
+            placeholder={`Title ${idx + 1} (e.g., Ceiling Fan Install)`}
+            onChange={(e) => updateRow(it.id, { title: e.target.value })}
+            className="dim-input"
+          />
+
+          <input
+            type="text"
+            value={it.desc}
+            placeholder="Description of work"
+            onChange={(e) => updateRow(it.id, { desc: e.target.value })}
+            className="dim-input"
+          />
+
+          <input
+            type="text"
+            value={it.price}
+            placeholder="$0.00"
+            inputMode="decimal"
+            onChange={(e) => updateRow(it.id, { price: e.target.value })}
+            className="dim-input"
+          />
+
+          <button
+            type="button"
+            onClick={() => removeRow(it.id)}
+            title="Remove"
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 140px 44px",
-              gap: 10,
-              alignItems: "center",
-              marginBottom: 10,
+              height: 42,
+              borderRadius: 10,
+              border: "1px solid rgba(15,23,42,.18)",
+              background: "white",
+              cursor: "pointer",
             }}
+            disabled={items.length === 1}
           >
-            <input
-              type="text"
-              value={it.desc}
-              placeholder={`Item ${idx + 1} (e.g., Install ceiling fan)`}
-              onChange={(e) => updateRow(it.id, { desc: e.target.value })}
-              className="dim-input"
-            />
-
-            <input
-              type="text"
-              value={it.price}
-              placeholder="$0.00"
-              inputMode="decimal"
-              onChange={(e) => updateRow(it.id, { price: e.target.value })}
-              className="dim-input"
-            />
-
-            <button
-              type="button"
-              onClick={() => removeRow(it.id)}
-              title="Remove"
-              style={{
-                height: 42,
-                borderRadius: 10,
-                border: "1px solid rgba(15,23,42,.18)",
-                background: "white",
-                cursor: "pointer",
-              }}
-              disabled={items.length === 1}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
+            ✕
+          </button>
+        </div>
+      ))}
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 6 }}>
           <button type="button" className="add-area-btn" onClick={addRow}>
