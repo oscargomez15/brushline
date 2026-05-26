@@ -806,7 +806,6 @@ const stripeTotal =
 
                               {item.description && (
                                 <>
-                                  <br />
                                   <span className="quote-line-description">
                                     {item.description}
                                   </span>
