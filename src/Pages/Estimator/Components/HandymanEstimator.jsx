@@ -195,29 +195,27 @@ export default function HandymanEstimator({
       {items.map((it, idx) => (
         <div
           key={it.id}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1.5fr 140px 44px",
-            gap: 10,
-            alignItems: "center",
-            marginBottom: 10,
-          }}
+          className="handyman-item-row"
         >
-          <input
-            type="text"
-            value={it.title}
-            placeholder={`Title ${idx + 1} (e.g., Ceiling Fan Install)`}
-            onChange={(e) => updateRow(it.id, { title: e.target.value })}
-            className="dim-input"
-          />
+          <div className="handyman-item-main">
 
-          <input
-            type="text"
-            value={it.desc}
-            placeholder="Description of work"
-            onChange={(e) => updateRow(it.id, { desc: e.target.value })}
-            className="dim-input"
-          />
+            <input
+              type="text"
+              value={it.title}
+              placeholder={`Title ${idx + 1} (e.g., Interior Painting)`}
+              onChange={(e) => updateRow(it.id, { title: e.target.value })}
+              className="dim-input handyman-title-input"
+            />
+
+            <textarea
+              value={it.desc}
+              placeholder="Description of work"
+              onChange={(e) => updateRow(it.id, { desc: e.target.value })}
+              className="dim-input handyman-description-input"
+              rows={3}
+            />
+
+          </div>
 
           <input
             type="text"
@@ -225,20 +223,14 @@ export default function HandymanEstimator({
             placeholder="$0.00"
             inputMode="decimal"
             onChange={(e) => updateRow(it.id, { price: e.target.value })}
-            className="dim-input"
+            className="dim-input handyman-price-input"
           />
 
           <button
             type="button"
             onClick={() => removeRow(it.id)}
             title="Remove"
-            style={{
-              height: 42,
-              borderRadius: 10,
-              border: "1px solid rgba(15,23,42,.18)",
-              background: "white",
-              cursor: "pointer",
-            }}
+            className="handyman-remove-btn"
             disabled={items.length === 1}
           >
             ✕
