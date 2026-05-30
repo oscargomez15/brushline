@@ -1950,3 +1950,44 @@ button {
   text-align: right;
   white-space: nowrap;
 }
+@media (max-width: 768px) {
+  .quote-items-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .quote-items-row.head {
+    display: none;
+  }
+
+  .quote-items-row .desc {
+    width: 100%;
+    padding-right: 0;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .quote-line-text,
+  .quote-line-description {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+    line-height: 1.45;
+  }
+
+  .quote-items-row .right {
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .quote-toggle-line-btn {
+    flex-shrink: 0;
+  }
+}
