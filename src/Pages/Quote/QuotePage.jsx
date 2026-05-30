@@ -690,6 +690,14 @@ const stripeTotal =
     const exteriorAdditionalDetails =
       quote?.exteriorScope?.additionalDetails || "";
 
+    const renderTextWithBreaks = (text = "") =>
+      text.split("\n").map((line, index, arr) => (
+        <React.Fragment key={index}>
+          {line}
+          {index < arr.length - 1 && <br />}
+        </React.Fragment>
+      ));
+
   return (
     <div className="quote-wrap">
       <div className="quote-shell">
@@ -806,9 +814,9 @@ const stripeTotal =
 
                               {item.description && (
                                 <>
-                                  <span className="quote-line-description">
-                                    {item.description}
-                                  </span>
+                              <span className="quote-line-description">
+                                {renderTextWithBreaks(item.description)}
+                              </span>
                                 </>
                               )}
                             </>
