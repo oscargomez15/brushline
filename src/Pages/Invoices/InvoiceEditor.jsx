@@ -80,6 +80,7 @@ export default function InvoiceEditor() {
   const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [recordingPayment, setRecordingPayment] = useState(false);
   const [paymentForm, setPaymentForm] = useState({
     amount: "",
@@ -381,18 +382,23 @@ try {
     return <div className="invoice-page"><div className="invoice-state">Loading invoice…</div></div>;
   }
 
-const handleOpenPublicInvoice = () => {
+const handlePreviewInvoice = () => {
   if (!invoice?.id) return;
-  window.open(`/invoice/${invoice.id}`, "_blank", "noopener,noreferrer");
+  setPreviewOpen(true);
 };
 
+const previewUrl = invoice?.id
+  ? `/invoice/${encodeURIComponent(invoice.id)}${
+      invoice.viewToken ? `?t=${encodeURIComponent(invoice.viewToken)}` : ""
+    }`
+  : "";
 
   return (
     <div className="invoice-page">
       <style>{`
         .invoice-page {
-          padding: 24px;
-          background: #f4f6f8;
+          padding: 28px 24px 48px;
+          background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
           min-height: 100vh;
         }
         .invoice-shell {
@@ -405,9 +411,9 @@ const handleOpenPublicInvoice = () => {
         .invoice-card,
         .invoice-side-card {
           background: #fff;
-          border: 1px solid rgba(15,23,42,.08);
-          border-radius: 18px;
-          box-shadow: 0 10px 28px rgba(15,23,42,.06);
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(15,23,42,.045);
         }
         .invoice-toolbar {
           display: flex;
@@ -421,6 +427,11 @@ const handleOpenPublicInvoice = () => {
           margin: 0;
           font-size: 26px;
           color: #0f172a;
+        }
+        .invoice-toolbar-context {
+          margin-top: 4px;
+          color: #64748b;
+          font-size: 13px;
         }
         .invoice-toolbar-left p {
           margin: 6px 0 0;
@@ -458,7 +469,7 @@ const handleOpenPublicInvoice = () => {
         }
         .invoice-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1.5fr) 340px;
+          grid-template-columns: minmax(0, 1fr) 360px;
           gap: 18px;
         }
         .invoice-card {
@@ -476,8 +487,16 @@ const handleOpenPublicInvoice = () => {
           border-bottom: 1px solid rgba(15,23,42,.08);
           margin-bottom: 20px;
         }
+        .invoice-eyebrow {
+          margin-bottom: 6px;
+          color: #64748b;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: .1em;
+          text-transform: uppercase;
+        }
         .brand-title {
-          font-size: 30px;
+          font-size: 26px;
           font-weight: 950;
           letter-spacing: -.03em;
           margin: 0;
@@ -504,7 +523,7 @@ const handleOpenPublicInvoice = () => {
         .invoice-badge.draft { background: rgba(239,68,68,.08); color: #991b1b; border-color: rgba(239,68,68,.15); }
         .meta-grid {
           display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 14px;
           margin-bottom: 20px;
         }
@@ -909,11 +928,69 @@ const handleOpenPublicInvoice = () => {
         }
         .payment-field textarea { min-height: 88px; resize: vertical; }
         .payment-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+        .invoice-preview-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 1100;
+          display: grid;
+          place-items: center;
+          padding: 24px;
+          background: rgba(15, 23, 42, .68);
+          backdrop-filter: blur(4px);
+        }
+        .invoice-preview-dialog {
+          display: grid;
+          grid-template-rows: auto minmax(0, 1fr);
+          width: min(1180px, 100%);
+          height: min(88vh, 900px);
+          overflow: hidden;
+          border-radius: 18px;
+          background: #fff;
+          box-shadow: 0 28px 80px rgba(15, 23, 42, .35);
+        }
+        .invoice-preview-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 15px 18px;
+          border-bottom: 1px solid #e2e8f0;
+          background: #fff;
+        }
+        .invoice-preview-head h2 {
+          margin: 0;
+          color: #0f172a;
+          font-size: 18px;
+        }
+        .invoice-preview-head p {
+          margin: 3px 0 0;
+          color: #64748b;
+          font-size: 13px;
+        }
+        .invoice-preview-frame {
+          width: 100%;
+          height: 100%;
+          border: 0;
+          background: #f8fafc;
+        }
+        .invoice-preview-close {
+          width: 38px;
+          height: 38px;
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          background: #f8fafc;
+          color: #334155;
+          font-size: 24px;
+          line-height: 1;
+          cursor: pointer;
+        }
         @media (max-width: 560px) {
           .payment-form-grid { grid-template-columns: 1fr; }
           .payment-field.full { grid-column: auto; }
           .payment-dialog-actions { flex-direction: column-reverse; }
           .payment-dialog-actions button { width: 100%; }
+          .invoice-preview-backdrop { padding: 8px; }
+          .invoice-preview-dialog { height: 94vh; border-radius: 14px; }
         }
       `}</style>
 
@@ -921,10 +998,12 @@ const handleOpenPublicInvoice = () => {
         <div className="invoice-toolbar">
           <div className="invoice-toolbar-left">
             <h1>{isEdit ? "Invoice" : "Create Invoice"}</h1>
+            <div className="invoice-toolbar-context">
+              Manage invoice details, payments, and delivery.
+            </div>
           </div>
 
           <div className="invoice-toolbar-actions">
-            <button className="btn" onClick={() => navigate(-1)}>Back</button>
             <button
             className="btn"
             onClick={handleDownloadPdf}
@@ -933,10 +1012,10 @@ const handleOpenPublicInvoice = () => {
             {downloadingPdf ? "Preparing PDF..." : "Download PDF"}
             </button>            <button
             className="btn"
-            onClick={handleOpenPublicInvoice}
+            onClick={handlePreviewInvoice}
             disabled={!invoice?.id}
             >
-            View Public Invoice
+            Preview Invoice
             </button>
             <button className="btn primary" onClick={handleSendInvoice} disabled={sending || !id}>
               {sending ? "Sending..." : "Send Invoice"}
@@ -954,10 +1033,8 @@ const handleOpenPublicInvoice = () => {
             
             <div className="invoice-head">
               <div>
-                <h2 className="brand-title">{invoice.companyName || "Brushline Services"}</h2>
-                <div className="brand-sub">
-                  Painting & Home Improvement Services<br />
-                </div>
+                <div className="invoice-eyebrow">Invoice Overview</div>
+                <h2 className="brand-title">{invoice.invoiceNumber || "Draft Invoice"}</h2>
               </div>
 
               <div style={{ textAlign: "right" }}>
@@ -980,14 +1057,6 @@ const handleOpenPublicInvoice = () => {
             </div>
 
             <div className="meta-grid">
-              <div className="meta-box">
-                <div className="meta-label">Invoice #</div>
-                <div className="meta-value">{invoice.invoiceNumber || "Draft"}</div>
-              </div>
-              <div className="meta-box">
-                <div className="meta-label">Issue Date</div>
-                <div className="meta-value">{fmtDate(invoice.createdAt)}</div>
-              </div>
               <div className="meta-box">
                 <div className="meta-label">Due Date</div>
                 <div className="meta-value">{fmtDate(invoice.dueDate)}</div>
@@ -1063,13 +1132,6 @@ const handleOpenPublicInvoice = () => {
               </div>
             </div>
 
-            <div style={{ marginTop: 22 }}>
-              <div className="section-title-invoice">Notes</div>
-              <div className="bill-box">
-                <div className="bill-text">{invoice.notes || "No notes added yet."}</div>
-              </div>
-            </div>
-
             <details className="terms-editor-card" style={{ marginTop: 12 }}>
             <summary className="terms-editor-summary">
                 <span className="label" style={{ marginBottom: 0 }}>Invoice Terms</span>
@@ -1090,29 +1152,18 @@ const handleOpenPublicInvoice = () => {
             <div className="invoice-side-card">
               <div className="section-title-invoice">Invoice Details</div>
               <div className="field-grid">
-                <div className="field-row-2">
-                  <div className="field">
-                    <label className="label">Due Date</label>
-                    <input className="input" type="date" value={invoice.dueDate ? String(invoice.dueDate).slice(0, 10) : ""} onChange={(e) => setField("dueDate", e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="field-row-2">
-                  <div className="field">
-                    <label className="label">Email</label>
-                    <input className="input" value={invoice.email || ""} onChange={(e) => setField("email", e.target.value)} />
-                  </div>
-                </div>
-
-                <div className="field-row-3">
-                  {/* <div className="field">
-                    <label className="label">Tax</label>
-                    <input className="input" type="number" min="0" step="0.01" value={tax} onChange={(e) => setField("tax", e.target.value)} />
-                  </div> */}
+                <div className="field">
+                  <label className="label">Due Date</label>
+                  <input className="input" type="date" value={invoice.dueDate ? String(invoice.dueDate).slice(0, 10) : ""} onChange={(e) => setField("dueDate", e.target.value)} />
                 </div>
 
                 <div className="field">
-                  <label className="label">Internal Notes</label>
+                  <label className="label">Customer Email</label>
+                  <input className="input" type="email" value={invoice.email || ""} onChange={(e) => setField("email", e.target.value)} />
+                </div>
+
+                <div className="field">
+                  <label className="label">Invoice Notes</label>
                   <textarea className="textarea" value={invoice.notes || ""} onChange={(e) => setField("notes", e.target.value)} />
                 </div>
               </div>
@@ -1140,6 +1191,10 @@ const handleOpenPublicInvoice = () => {
                 <div className="summary-row total">
                 <span>Total</span>
                 <span>{fmtMoney(grandTotal)}</span>
+                </div>
+                <div className="summary-row">
+                <span>Payments Received</span>
+                <strong>{fmtMoney(depositPaid)}</strong>
                 </div>
 
                 {payments.length > 0 ? (
@@ -1243,6 +1298,40 @@ const handleOpenPublicInvoice = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        ) : null}
+        {previewOpen ? (
+          <div
+            className="invoice-preview-backdrop"
+            onMouseDown={() => setPreviewOpen(false)}
+          >
+            <div
+              className="invoice-preview-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="invoice-preview-title"
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              <div className="invoice-preview-head">
+                <div>
+                  <h2 id="invoice-preview-title">Client Invoice Preview</h2>
+                  <p>This is the invoice your customer will see.</p>
+                </div>
+                <button
+                  type="button"
+                  className="invoice-preview-close"
+                  aria-label="Close preview"
+                  onClick={() => setPreviewOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <iframe
+                className="invoice-preview-frame"
+                src={previewUrl}
+                title="Client invoice preview"
+              />
             </div>
           </div>
         ) : null}

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import netlifyIdentity from "netlify-identity-widget";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat("en-US", {
@@ -43,15 +44,26 @@ export default function PublicInvoicePage() {
 
   const handleDownloadPdf = async () => {
   try {
-    if (!id || !token) {
-      throw new Error("Missing invoice link information.");
+    if (!id) {
+      throw new Error("Missing invoice information.");
     }
 
     setDownloadingPdf(true);
+    setErr("");
 
-    const res = await fetch(
-      `/.netlify/functions/get-public-invoice-pdf?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`
-    );
+    let endpoint = `/.netlify/functions/get-public-invoice-pdf?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`;
+    const options = {};
+
+    if (!token) {
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+      if (!jwt) throw new Error("This invoice link is missing its access token.");
+
+      endpoint = `/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`;
+      options.headers = { Authorization: `Bearer ${jwt}` };
+    }
+
+    const res = await fetch(endpoint, options);
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
@@ -105,9 +117,19 @@ export default function PublicInvoicePage() {
         setLoading(true);
         setErr("");
 
-        const res = await fetch(
-          `/.netlify/functions/get-public-invoice?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`
-        );
+        let endpoint = `/.netlify/functions/get-public-invoice?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`;
+        const options = {};
+
+        if (!token) {
+          const user = netlifyIdentity.currentUser();
+          const jwt = user ? await user.jwt() : null;
+          if (!jwt) throw new Error("This invoice link is missing its access token.");
+
+          endpoint = `/.netlify/functions/get-invoice?id=${encodeURIComponent(id)}`;
+          options.headers = { Authorization: `Bearer ${jwt}` };
+        }
+
+        const res = await fetch(endpoint, options);
 
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -180,7 +202,7 @@ export default function PublicInvoicePage() {
             </button>
 
             <button className="print-btn" onClick={() => window.print()}>
-            Print / Save PDF
+            Print
             </button>
         </div>
         </div>
@@ -590,6 +612,11 @@ const styles = `
     background: #0f172a;
     color: #fff;
     font-weight: 900;
+  }
+
+  .summary-row.balance span,
+  .summary-row.balance strong {
+    color: #fff !important;
   }
 
   .items-section {

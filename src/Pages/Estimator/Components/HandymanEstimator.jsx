@@ -22,6 +22,9 @@ export default function HandymanEstimator({
   initialQuote = null,
   mode = "create",
   onSaved,
+  quoteJobType = "handyman",
+  heading = "Handyman / Misc Estimate",
+  itemExample = "Interior Painting",
 }) {
   const activeCustomer = customer || initialQuote?.customer || null;
 
@@ -95,7 +98,7 @@ export default function HandymanEstimator({
     .filter((it) => it.title && it.description && it.price > 0);
 
     const payload = {
-      jobType: "handyman",
+      jobType: quoteJobType,
 
       customerId: activeCustomer?.customerId || initialQuote?.customerId || null,
       customer: {
@@ -185,33 +188,38 @@ export default function HandymanEstimator({
   };
 
   return (
-    <div style={{ width: "100%" }}>
-      <h2 style={{ marginBottom: 6 }}>
-        {mode === "edit" ? "Edit Handyman Estimate" : "Handyman / Misc Estimate"}
+    <div className="quick-estimator">
+      <div className="quick-estimator-heading">
+      <div className="quick-estimator-kicker">Quick Line Items</div>
+      <h2>
+        {mode === "edit" ? `Edit ${heading}` : heading}
       </h2>
 
-      <p style={{ marginTop: 0, opacity: 0.8 }}>
-        Add each task and price. Total updates automatically.
+      <p>
+        Build a clear scope of work with a fixed price for each item.
       </p>
+      </div>
 
       <div
-        style={{
-          border: "1px solid rgba(15,23,42,.12)",
-          borderRadius: 12,
-          padding: 12,
-        }}
+        className="quick-items-panel"
       >
+      <div className="quick-items-panel-head">
+        <div>
+          <h3>Work Items</h3>
+          <p>{items.length} {items.length === 1 ? "item" : "items"} in this estimate</p>
+        </div>
+      </div>
       {items.map((it, idx) => (
         <div
           key={it.id}
-          className="handyman-item-row"
+          className="handyman-item-row quick-item-card"
         >
           <div className="handyman-item-main">
 
             <input
               type="text"
               value={it.title}
-              placeholder={`Title ${idx + 1} (e.g., Interior Painting)`}
+              placeholder={`Title ${idx + 1} (e.g., ${itemExample})`}
               onChange={(e) => updateRow(it.id, { title: e.target.value })}
               className="dim-input handyman-title-input"
             />
@@ -248,24 +256,24 @@ export default function HandymanEstimator({
         </div>
       ))}
 
-        <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 6 }}>
-          <button type="button" className="add-area-btn" onClick={addRow}>
+        <div className="quick-items-footer">
+          <button type="button" className="quick-add-item-btn" onClick={addRow}>
             + Add item
           </button>
 
-          <div style={{ marginLeft: "auto", fontWeight: 800 }}>
-            Total: {money(grandTotal)}
+          <div className="quick-estimate-total">
+            <span>Estimate total</span>
+            <strong>{money(grandTotal)}</strong>
           </div>
         </div>
       </div>
 
-      <div style={{ marginTop: 14, display: "flex", gap: 10 }}>
+      <div className="quick-estimator-actions">
         <button
           type="button"
-          className="add-area-btn add"
+          className="quick-create-btn"
           onClick={saveQuote}
           disabled={!canCreate || saving}
-          style={{ opacity: canCreate && !saving ? 1 : 0.6 }}
         >
           {saving
             ? mode === "edit"

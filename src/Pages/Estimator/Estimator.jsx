@@ -10,6 +10,10 @@ export const Estimator = () => {
   const location = useLocation();
   const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
   const [step, setStep] = useState(() => localStorage.getItem("estimateStep") || "customer");
+  const [estimateMethod, setEstimateMethod] = useState(
+    () => localStorage.getItem("estimateMethod") || ""
+  );
+  const [customerModalOpen, setCustomerModalOpen] = useState(false);
 
   const [editingQuoteData, setEditingQuoteData] = useState(
     location.state?.editingQuoteData || null
@@ -35,6 +39,19 @@ export const Estimator = () => {
       setEditingQuoteData(null);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (!editingQuoteData?.id) return;
+    if (!["interior", "exterior"].includes(editingQuoteData.jobType)) return;
+
+    const method = editingQuoteData.estimatorData ? "detailed" : "quick";
+    setJobType(editingQuoteData.jobType);
+    setEstimateMethod(method);
+    setStep("calculator");
+    localStorage.setItem("jobType", editingQuoteData.jobType);
+    localStorage.setItem("estimateMethod", method);
+    localStorage.setItem("estimateStep", "calculator");
+  }, [editingQuoteData]);
 
   const interiorInitialAreas =
     editingQuoteData?.jobType === "interior"
@@ -70,8 +87,7 @@ export const Estimator = () => {
   };
 
   const editCustomer = () => {
-    setStep("customer");
-    localStorage.setItem("estimateStep", "customer");
+    setCustomerModalOpen(true);
   };
 
   if (step === "calculator" && (!customer || !jobType)) {
@@ -87,6 +103,21 @@ export const Estimator = () => {
     setJobType(type);
     localStorage.setItem("jobType", type);
 
+    setEstimateMethod(type === "handyman" ? "quick" : "");
+    if (type === "handyman") {
+      localStorage.setItem("estimateMethod", "quick");
+      setStep("calculator");
+      localStorage.setItem("estimateStep", "calculator");
+    } else {
+      localStorage.removeItem("estimateMethod");
+      setStep("estimateMethod");
+      localStorage.setItem("estimateStep", "estimateMethod");
+    }
+  };
+
+  const chooseEstimateMethod = (method) => {
+    setEstimateMethod(method);
+    localStorage.setItem("estimateMethod", method);
     setStep("calculator");
     localStorage.setItem("estimateStep", "calculator");
   };
@@ -97,6 +128,12 @@ export const Estimator = () => {
 
     setStep("jobType");
     localStorage.setItem("estimateStep", "jobType");
+  };
+
+  const handleCustomerChange = (cust) => {
+    setCustomer(cust);
+    localStorage.setItem("estimateCustomer", JSON.stringify(cust));
+    setCustomerModalOpen(false);
   };
 
   if (step === "customer") {
@@ -163,6 +200,59 @@ export const Estimator = () => {
     );
   }
 
+  if (step === "estimateMethod" && (jobType === "interior" || jobType === "exterior")) {
+    const paintingLabel = jobType === "interior" ? "Interior Painting" : "Exterior Painting";
+
+    return (
+      <section className="paint-calculator-wrapper">
+        <div className="content-wrapper-jobs">
+          <h1>How would you like to estimate?</h1>
+          <p>Choose the level of detail that fits this {paintingLabel.toLowerCase()} project.</p>
+
+          <div className="estimate-method-grid">
+            <button
+              type="button"
+              className="estimate-method-card"
+              onClick={() => chooseEstimateMethod("detailed")}
+            >
+              <span className="estimate-method-kicker">Measurement based</span>
+              <strong>Detailed Calculator</strong>
+              <span>
+                Calculate pricing from walls, dimensions, surfaces, and production details.
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className="estimate-method-card"
+              onClick={() => chooseEstimateMethod("quick")}
+            >
+              <span className="estimate-method-kicker">Simple and flexible</span>
+              <strong>Quick Line Items</strong>
+              <span>
+                Add your own work descriptions and prices without measuring every wall.
+              </span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="collapse-area-btn"
+            onClick={() => {
+              setJobType("");
+              localStorage.removeItem("jobType");
+              setStep("jobType");
+              localStorage.setItem("estimateStep", "jobType");
+            }}
+            style={{ marginTop: 12 }}
+          >
+            Back
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper">
@@ -176,24 +266,14 @@ export const Estimator = () => {
 
             setJobType("");
             localStorage.removeItem("jobType");
+            setEstimateMethod("");
+            localStorage.removeItem("estimateMethod");
 
             setStep("jobType");
             localStorage.setItem("estimateStep", "jobType");
           }}
         >
           Change Job Type
-        </button>
-
-        <button
-          type="button"
-          className="collapse-area-btn"
-          onClick={() => {
-            setStep("customer");
-            localStorage.setItem("estimateStep", "customer");
-          }}
-          style={{ marginLeft: 8 }}
-        >
-          Change Customer
         </button>
 
         {customer && (
@@ -218,13 +298,33 @@ export const Estimator = () => {
         )}
 
         <div className="sub-heading">
-          {jobType === "interior" ? (
+          {jobType === "interior" && estimateMethod === "quick" ? (
+            <HandymanEstimator
+              key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-interior-quick"}
+              customer={customer}
+              initialQuote={editingQuoteData?.jobType === "interior" ? editingQuoteData : null}
+              mode={isEditing && editingQuoteData?.jobType === "interior" ? "edit" : "create"}
+              quoteJobType="interior"
+              heading="Interior Painting Estimate"
+              itemExample="Walls, ceilings, trim, or complete rooms"
+            />
+          ) : jobType === "interior" ? (
             <InteriorEstimator
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-interior"}
               customer={customer}
               initialAreas={interiorInitialAreas}
               initialPricing={interiorInitialPricing}
               initialPaintGrade={interiorInitialPaintGrade}
+            />
+          ) : jobType === "exterior" && estimateMethod === "quick" ? (
+            <HandymanEstimator
+              key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-exterior-quick"}
+              customer={customer}
+              initialQuote={editingQuoteData?.jobType === "exterior" ? editingQuoteData : null}
+              mode={isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"}
+              quoteJobType="exterior"
+              heading="Exterior Painting Estimate"
+              itemExample="Siding, trim, doors, or preparation"
             />
           ) : jobType === "exterior" ? (
             <ExteriorEstimator
@@ -246,6 +346,39 @@ export const Estimator = () => {
             />
           )}
         </div>
+
+        {customerModalOpen && (
+          <div
+            className="estimate-customer-modal-backdrop"
+            onMouseDown={() => setCustomerModalOpen(false)}
+          >
+            <div
+              className="estimate-customer-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="change-estimate-customer-title"
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              <div className="estimate-customer-modal-head">
+                <div>
+                  <h2 id="change-estimate-customer-title">Change Customer</h2>
+                  <p>Create a new customer or select one already in your CRM.</p>
+                </div>
+                <button
+                  type="button"
+                  className="estimate-customer-modal-close"
+                  aria-label="Close customer selection"
+                  onClick={() => setCustomerModalOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="estimate-customer-modal-body">
+                <StartEstimate initialCustomer={null} onNext={handleCustomerChange} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
