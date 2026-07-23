@@ -474,7 +474,19 @@ button:disabled {
 }
 
 .compare-image-container img {
+  width: 100% !important;
+  height: 100% !important;
   object-fit: cover;
+  object-position: center;
+}
+
+.compare-image-container > [data-testid="container"] {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.compare-image-container > [data-testid="container"] > div {
+  height: 100% !important;
 }
 
 .slider-text {

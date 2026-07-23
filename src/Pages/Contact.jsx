@@ -183,7 +183,10 @@ export const Contact = () => {
                 >
                     <div className="modal-text">
                         <h2><TbSquareRoundedCheckFilled/> Message Sent</h2>
-                        <p>Thanks for reaching out! We'll get back to you within 24 hours.</p>
+                        <p>
+                            Thanks for reaching out! Our team will contact you within the next
+                            24 hours to discuss your project and the next steps.
+                        </p>
                     </div>
                     <button onClick={() => setShowModal(false)} className='button'>Close</button>
                 </motion.div>

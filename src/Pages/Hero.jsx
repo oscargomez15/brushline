@@ -33,7 +33,7 @@ export const Hero = () => {
       formElement.reset();
       setContactStatus({
         type: 'success',
-        message: 'Thanks! Your request was sent successfully.',
+        message: 'Thanks! Your request was sent. Our team will contact you within 24 hours to discuss your project and next steps.',
       });
     } catch (error) {
       setContactStatus({
@@ -159,7 +159,7 @@ export const Hero = () => {
 
         <div className="service-card hero-contact-card">
           <h3>Request Your Free Estimate</h3>
-          <p>Tell us a little about your project and we’ll reach out shortly.</p>
+          <p>Tell us about your project and we’ll contact you within 24 hours to discuss the next steps.</p>
 
           <form className="hero-contact-form" onSubmit={handleContactSubmit}>
             <input type="text" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{position:'absolute', left:'-10000px'}} />
