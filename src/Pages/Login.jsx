@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../Styling/Login.css";
 
 export const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const destination = location.state?.from || "/crm/dashboard";
 
   const [mode, setMode] = useState("login"); // "login" | "signup" | "recovery"
   const [email, setEmail] = useState("");
@@ -18,9 +20,9 @@ export const Login = () => {
   useEffect(() => {
     // If already logged in, go straight to estimator
     const user = netlifyIdentity.currentUser();
-    if (user) navigate("/crm/dashboard", { replace: true });
+    if (user) navigate(destination, { replace: true });
 
-    const onLogin = () => navigate("/crm/dashboard", { replace: true });
+    const onLogin = () => navigate(destination, { replace: true });
 
     // If you want to handle signup/login events globally
     netlifyIdentity.on("login", onLogin);
@@ -28,7 +30,7 @@ export const Login = () => {
     return () => {
       netlifyIdentity.off("login", onLogin);
     };
-  }, [navigate]);
+  }, [destination, navigate]);
 
 const handleLogin = async (e) => {
   e.preventDefault();
@@ -41,7 +43,7 @@ const handleLogin = async (e) => {
     await netlifyIdentity.gotrue.login(email, password, true);
 
     // optional: you can navigate here OR rely on the "login" event listener
-    navigate("/crm/dashboard", { replace: true });
+    navigate(destination, { replace: true });
   } catch (err) {
     setError(err?.message || "Login failed. Check your email/password.");
   } finally {

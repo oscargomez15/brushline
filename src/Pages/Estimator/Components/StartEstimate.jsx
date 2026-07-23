@@ -25,6 +25,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
   const placesServiceRef = useRef(null);
   const debounceRef = useRef(null);
   const customerSearchDebounceRef = useRef(null);
+  const customerSearchRequestRef = useRef(null);
 
   useEffect(() => {
     const fn = initialCustomer?.firstName || "";
@@ -142,7 +143,9 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     const q = customerSearch.trim();
 
     if (!q) {
+      customerSearchRequestRef.current?.abort();
       setCustomerResults([]);
+      setSearchingCustomers(false);
       setSearchErr("");
       return;
     }
@@ -152,6 +155,10 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
     }
 
     customerSearchDebounceRef.current = setTimeout(async () => {
+      customerSearchRequestRef.current?.abort();
+      const controller = new AbortController();
+      customerSearchRequestRef.current = controller;
+
       try {
         setSearchingCustomers(true);
         setSearchErr("");
@@ -163,6 +170,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
         const res = await fetch(
           `/.netlify/functions/list-customers?q=${encodeURIComponent(q)}&limit=8`,
           {
+            signal: controller.signal,
             headers: {
               Authorization: `Bearer ${jwt}`,
             },
@@ -174,16 +182,20 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
 
         setCustomerResults(data.items || []);
       } catch (e) {
+        if (e.name === "AbortError") return;
         setSearchErr(e.message);
       } finally {
-        setSearchingCustomers(false);
+        if (customerSearchRequestRef.current === controller) {
+          setSearchingCustomers(false);
+        }
       }
-    }, 250);
+    }, 120);
 
     return () => {
       if (customerSearchDebounceRef.current) {
         clearTimeout(customerSearchDebounceRef.current);
       }
+      customerSearchRequestRef.current?.abort();
     };
   }, [customerSearch, mode]);
 

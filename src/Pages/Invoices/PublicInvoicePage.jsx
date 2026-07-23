@@ -187,15 +187,6 @@ export default function PublicInvoicePage() {
 
         <div className="public-invoice-card">
           <div className="invoice-head">
-            <div>
-              <div className="company-name">
-                {invoice.companyName || "Brushline Services"}
-              </div>
-              <div className="company-sub">
-                Painting and Home Improvement Services
-              </div>
-            </div>
-
             <div className="invoice-head-right">
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
                     <div className={`status-pill pay-${invoice.paymentStatus || "unpaid"}`}>
@@ -248,7 +239,7 @@ export default function PublicInvoicePage() {
               <div className="summary-list">
                 <div className="summary-row">
                   <span>Total</span>
-                  <strong>{fmtMoney(subtotal)}</strong>
+                  <strong>{fmtMoney(grandTotal)}</strong>
                 </div>
                 {/* <div className="summary-row">
                   <span>Tax</span>
@@ -258,12 +249,8 @@ export default function PublicInvoicePage() {
                   <span>Deposit Paid</span>
                   <strong>{fmtMoney(depositPaid)}</strong>
                 </div>
-                <div className="summary-row total">
-                  <span>Total</span>
-                  <strong>{fmtMoney(grandTotal)}</strong>
-                </div>
                 <div className="summary-row balance">
-                  <span>Balance Due</span>
+                  <span>Pending Balance</span>
                   <strong>{fmtMoney(balanceDue)}</strong>
                 </div>
               </div>

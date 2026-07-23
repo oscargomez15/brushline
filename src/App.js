@@ -57,8 +57,6 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    netlifyIdentity.init();
-
     const hash = window.location.hash || "";
     if (hash.includes("invite_token")) netlifyIdentity.open("signup");
     if (hash.includes("recovery_token")) netlifyIdentity.open("login");

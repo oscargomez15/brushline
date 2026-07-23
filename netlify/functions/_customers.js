@@ -69,13 +69,11 @@ const customer = {
 }
 
 async function listAllCustomers(store) {
-  const out = [];
   const { blobs } = await store.list();
-
-  for (const blob of blobs) {
-    const customer = await store.get(blob.key, { type: "json" });
-    if (customer) out.push(customer);
-  }
+  const customers = await Promise.all(
+    blobs.map((blob) => store.get(blob.key, { type: "json" }))
+  );
+  const out = customers.filter(Boolean);
 
   out.sort((a, b) => {
     const aTime = new Date(a.updatedAt || a.createdAt || 0).getTime();

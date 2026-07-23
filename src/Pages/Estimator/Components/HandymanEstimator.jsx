@@ -39,6 +39,10 @@ export default function HandymanEstimator({
   });
 
   const [saving, setSaving] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+
+  const pendingDeleteItem =
+    items.find((item) => item.id === pendingDeleteId) || null;
 
   const grandTotal = useMemo(
     () => items.reduce((sum, it) => sum + safeNumber(it.price), 0),
@@ -65,8 +69,13 @@ export default function HandymanEstimator({
     ]);
   };
 
-  const removeRow = (id) => {
-    setItems((prev) => (prev.length === 1 ? prev : prev.filter((x) => x.id !== id)));
+  const confirmRemoveRow = () => {
+    if (!pendingDeleteId) return;
+
+    setItems((prev) =>
+      prev.length === 1 ? prev : prev.filter((x) => x.id !== pendingDeleteId)
+    );
+    setPendingDeleteId(null);
   };
 
   const updateRow = (id, patch) => {
@@ -228,8 +237,9 @@ export default function HandymanEstimator({
 
           <button
             type="button"
-            onClick={() => removeRow(it.id)}
-            title="Remove"
+            onClick={() => setPendingDeleteId(it.id)}
+            title="Remove item"
+            aria-label={`Remove ${it.title.trim() || `item ${idx + 1}`}`}
             className="handyman-remove-btn"
             disabled={items.length === 1}
           >
@@ -266,6 +276,45 @@ export default function HandymanEstimator({
             : "Create Quote"}
         </button>
       </div>
+
+      {pendingDeleteItem && (
+        <div
+          className="handyman-delete-overlay"
+          onMouseDown={() => setPendingDeleteId(null)}
+        >
+          <div
+            className="handyman-delete-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="handyman-delete-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="handyman-delete-icon" aria-hidden="true">×</div>
+            <h3 id="handyman-delete-title">Remove this item?</h3>
+            <p>
+              <strong>{pendingDeleteItem.title.trim() || "Untitled item"}</strong>{" "}
+              will be removed from this estimate. This cannot be undone.
+            </p>
+            <div className="handyman-delete-actions">
+              <button
+                type="button"
+                className="handyman-delete-cancel"
+                onClick={() => setPendingDeleteId(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="handyman-delete-confirm"
+                onClick={confirmRemoveRow}
+                autoFocus
+              >
+                Remove Item
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
