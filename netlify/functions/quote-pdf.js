@@ -1,5 +1,6 @@
 // quote-pdf (patched)
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 const { buildQuotePdfBase64 } = require("./_pdf");
 
 function json(statusCode, body) {
@@ -55,7 +56,7 @@ exports.handler = async (event, context) => {
       // Always regenerate on POST
       const newPdfBase64 = await buildQuotePdfBase64(quote);
       await pdfsStore.set(id, newPdfBase64); // overwrite
-      const filename = `Quote-${quote.quoteNumber || quote.id}.pdf`;
+      const filename = `Quote-${getQuoteNumber(quote)}.pdf`;
       return {
         statusCode: 200,
         headers: {
@@ -85,7 +86,7 @@ exports.handler = async (event, context) => {
         await pdfsStore.set(id, pdfBase64); // store new one
       }
 
-      const filename = `Quote-${quote.quoteNumber || quote.id}.pdf`;
+      const filename = `Quote-${getQuoteNumber(quote)}.pdf`;
 
       return {
         statusCode: 200,

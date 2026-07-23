@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 
 const { Resend } = require("resend");
 
@@ -41,7 +42,7 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
   const total = Number(updatedQuote?.grandTotal || 0);
   const deposit = Math.round(total * 0.4 * 100) / 100;
 
-  const quoteNumber = updatedQuote?.quoteNumber || quoteId;
+  const quoteNumber = getQuoteNumber(updatedQuote || { id: quoteId });
   const link = buildQuoteLink(process.env.PUBLIC_QUOTE_BASE_URL, quoteId);
   const approvedAt = updatedQuote?.approvedAt
     ? new Date(updatedQuote.approvedAt).toLocaleString("en-US", {

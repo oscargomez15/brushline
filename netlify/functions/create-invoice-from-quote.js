@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 
 function safeStr(v) {
   return (v || "").toString().trim();
@@ -154,7 +155,7 @@ exports.handler = async (event, context) => {
       source: "quote",
       sourceQuoteId: quote.id,
       linkedQuoteId: quote.id,
-      quoteNumber: safeStr(quote.quoteNumber),
+      quoteNumber: getQuoteNumber(quote),
 
       customerId: safeStr(quote.customerId) || null,
       customer,

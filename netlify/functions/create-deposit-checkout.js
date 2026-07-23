@@ -1,5 +1,6 @@
 const Stripe = require("stripe");
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 
 function json(statusCode, body) {
   return {
@@ -163,7 +164,7 @@ exports.handler = async (event) => {
       },
 
       payment_intent_data: {
-        description: `Deposit for quote ${quote.quoteNumber || quoteId} - ${customerName}`,
+        description: `Deposit for quote ${getQuoteNumber(quote)} - ${customerName}`,
         metadata: {
           quoteId,
           token: publicToken,
@@ -178,7 +179,7 @@ exports.handler = async (event) => {
             currency: "usd",
             unit_amount: Math.round(stripeChargeTotal * 100),
             product_data: {
-              name: `Deposit for Quote ${quote.quoteNumber || quoteId}`,
+              name: `Deposit for Quote ${getQuoteNumber(quote)}`,
               description: `Deposit $ ${depositRequired.toFixed(
                 2
               )} + Card processing fee $ ${processingFee.toFixed(2)}`,

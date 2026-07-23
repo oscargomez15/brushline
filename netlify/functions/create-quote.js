@@ -1,6 +1,7 @@
 const { getStore } = require("@netlify/blobs");
 const { DEFAULT_TERMS_TEXT, DEFAULT_TERMS_VERSION } = require("./_terms");
 const { buildQuotePdfBase64 } = require("./_pdf");
+const { makeQuoteNumber } = require("./_quote-number");
 
 const { Resend } = require("resend");
 
@@ -296,6 +297,8 @@ exports.handler = async (event, context) => {
     }
 
     const id = makeId();
+    const createdAt = new Date().toISOString();
+    const quoteNumber = makeQuoteNumber(new Date(createdAt));
     const viewToken = Math.random().toString(36).slice(2) + Date.now().toString(36);
     const exteriorScope =
       jobType === "exterior"
@@ -315,7 +318,8 @@ exports.handler = async (event, context) => {
 
     const quote = {
       id,
-      createdAt: new Date().toISOString(),
+      quoteNumber,
+      createdAt,
       createdBy: { id: user.sub, email: user.email },
       ...payload,
 
@@ -345,6 +349,7 @@ exports.handler = async (event, context) => {
 
     await indexStore.setJSON(id, {
       id,
+      quoteNumber,
       customerId: quote.customerId,
       createdAt: quote.createdAt,
       jobType: quote.jobType,

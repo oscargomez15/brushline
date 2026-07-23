@@ -1,0 +1,56 @@
+{
+  "version": "5",
+  "remote": {
+    "https://edge.netlify.com/": "fd941d61d88673d5f28aab283fb86fcc50f08a3bc80ee5470498fcfa88c65cfb",
+    "https://edge.netlify.com/bootstrap/config.ts": "6a2ce0e544e15e8f8883a5c18da5948e37fd0f2619f68cb31f3af53c51817025",
+    "https://edge.netlify.com/bootstrap/context.ts": "e97240232121e2f369f6546ce961490f34d961ea1ea54be3ff09633e3f08373f",
+    "https://edge.netlify.com/bootstrap/cookie.ts": "8b0baae708989ca183c6f3b4ab3d029e6abcbc2e43f93edeb0ff447b3bbc3a05",
+    "https://edge.netlify.com/bootstrap/edge_function.ts": "b8253e86aa83c67341f5cfedeba5049d77fbf84dcab7eceff7566b7728ae9b39",
+    "https://edge.netlify.com/bootstrap/globals/types.ts": "eaa6148ded3121d8dee62dd91c86e7fe76601df0f3ca8d7962243a30f4c8935f"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@aws-sdk/client-lex-runtime-service@^3.632.0",
+        "npm:@aws-sdk/client-lex-runtime-v2@^3.635.0",
+        "npm:@aws-sdk/credential-provider-cognito-identity@^3.632.0",
+        "npm:@babel/plugin-proposal-private-property-in-object@^7.21.11",
+        "npm:@dnd-kit/core@^6.3.1",
+        "npm:@dnd-kit/sortable@10",
+        "npm:@dnd-kit/utilities@^3.2.2",
+        "npm:@netlify/blobs@^10.6.0",
+        "npm:@testing-library/jest-dom@^5.17.0",
+        "npm:@testing-library/react@^13.4.0",
+        "npm:@testing-library/user-event@^13.5.0",
+        "npm:autoprefixer@^10.4.19",
+        "npm:aws-amplify@^6.5.1",
+        "npm:aws-sdk@^2.1678.0",
+        "npm:emailjs-com@^3.2.0",
+        "npm:framer-motion@^11.3.27",
+        "npm:gh-pages@^6.1.1",
+        "npm:lodash.throttle@^4.1.1",
+        "npm:lottie-react@^2.4.0",
+        "npm:lucide-react@0.539",
+        "npm:netlify-cli@^26.2.0",
+        "npm:netlify-identity-widget@^1.9.2",
+        "npm:pdf-lib@^1.17.1",
+        "npm:pdfkit@~0.17.2",
+        "npm:postcss-cli@11",
+        "npm:postcss@^8.4.39",
+        "npm:react-amplified@~0.1.1",
+        "npm:react-compare-image@^3.5.0",
+        "npm:react-dom@^18.3.1",
+        "npm:react-helmet@^6.1.0",
+        "npm:react-icons@^5.5.0",
+        "npm:react-router@^7.1.1",
+        "npm:react-scripts@5.0.1",
+        "npm:react-signature-canvas@^1.1.0-alpha.2",
+        "npm:react@^18.3.1",
+        "npm:resend@^6.12.2",
+        "npm:stripe@^20.4.1",
+        "npm:swiper@^11.1.9",
+        "npm:web-vitals@^2.1.4"
+      ]
+    }
+  }
+}

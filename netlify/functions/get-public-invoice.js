@@ -65,6 +65,7 @@ exports.handler = async (event) => {
       notes: invoice.notes || "",
       terms: invoice.terms || "",
       linkedQuoteId: invoice.linkedQuoteId || "",
+      quoteNumber: invoice.quoteNumber || "",
       payments: Array.isArray(invoice.payments)
         ? invoice.payments.map((p) => ({
             id: p.id,

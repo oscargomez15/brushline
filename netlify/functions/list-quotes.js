@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 
 function json(statusCode, body) {
   return {
@@ -45,7 +46,10 @@ exports.handler = async (event) => {
     rows.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     console.log("has list:", typeof indexStore.list);
 
-    return json(200, { items: rows, cursor: result.cursor || null });
+    return json(200, {
+      items: rows.map((row) => ({ ...row, quoteNumber: getQuoteNumber(row) })),
+      cursor: result.cursor || null,
+    });
   } catch (err) {
     console.error("list-quotes crashed:", err);
     return json(500, { error: "list-quotes failed", message: err?.message || String(err) });

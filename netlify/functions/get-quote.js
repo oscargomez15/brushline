@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 
 function json(statusCode, body) {
   return {
@@ -32,7 +33,7 @@ exports.handler = async (event) => {
 
     if (!quote) return json(404, { error: "Quote not found" });
 
-    return json(200, quote);
+    return json(200, { ...quote, quoteNumber: getQuoteNumber(quote) });
   } catch (err) {
     console.error("get-quote crashed:", err);
     return json(500, { error: "get-quote failed", message: err?.message || String(err) });

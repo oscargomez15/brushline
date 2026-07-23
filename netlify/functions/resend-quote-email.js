@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { getQuoteNumber } = require("./_quote-number");
 const { buildQuotePdfBase64 } = require("./_pdf");
 
 const { Resend } = require("resend");
@@ -171,7 +172,7 @@ await resend.emails.send({
   attachments: pdfBase64
     ? [
         {
-          filename: `Quote-${quote.quoteNumber || quote.id}.pdf`,
+          filename: `Quote-${getQuoteNumber(quote)}.pdf`,
           content: Buffer.from(pdfBase64, "base64"),
         },
       ]

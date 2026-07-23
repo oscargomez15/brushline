@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
+import { getQuoteNumber } from "../../utils/quoteNumber";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n) || 0);
@@ -78,6 +79,14 @@ export default function InvoiceEditor() {
   const [sending, setSending] = useState(false);
   const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [recordingPayment, setRecordingPayment] = useState(false);
+  const [paymentForm, setPaymentForm] = useState({
+    amount: "",
+    method: "zelle",
+    note: "",
+    paidAt: new Date().toISOString().slice(0, 10),
+  });
   
   const handleDownloadPdf = async () => {
   try {
@@ -203,6 +212,75 @@ try {
   const balanceDue = Number(invoice.balanceDue) > 0 || grandTotal === 0
     ? Number(invoice.balanceDue) || 0
     : Math.max(0, grandTotal - depositPaid);
+
+  const openPaymentModal = () => {
+    setErr("");
+    setPaymentForm({
+      amount: balanceDue > 0 ? balanceDue.toFixed(2) : "",
+      method: "zelle",
+      note: "",
+      paidAt: new Date().toISOString().slice(0, 10),
+    });
+    setPaymentOpen(true);
+  };
+
+  const closePaymentModal = () => {
+    if (!recordingPayment) setPaymentOpen(false);
+  };
+
+  const handleRecordPayment = async () => {
+    try {
+      const amount = Number(paymentForm.amount);
+      if (!id) throw new Error("Please save the invoice before recording a payment.");
+      if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a payment amount greater than $0.");
+      if (amount > balanceDue) throw new Error(`Payment cannot exceed the ${fmtMoney(balanceDue)} balance.`);
+
+      setRecordingPayment(true);
+      setErr("");
+
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+      if (!jwt) throw new Error("Please log in first.");
+
+      const res = await fetch("/.netlify/functions/record-invoice-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          invoiceId: id,
+          amount,
+          method: paymentForm.method,
+          note: paymentForm.note,
+          paidAt: paymentForm.paidAt
+            ? new Date(`${paymentForm.paidAt}T12:00:00`).toISOString()
+            : new Date().toISOString(),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || "Failed to record payment");
+
+      setInvoice((prev) => ({
+        ...prev,
+        payments: [...(Array.isArray(prev.payments) ? prev.payments : []), data.payment],
+        depositPaid: data.depositPaid,
+        balanceDue: data.balanceDue,
+        paymentStatus: data.paymentStatus,
+      }));
+      setPaymentOpen(false);
+      if (data.emailSent) {
+        alert(`Payment recorded and receipt emailed to ${data.emailSentTo}.`);
+      } else {
+        alert(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`);
+      }
+    } catch (e) {
+      setErr(e.message || "Failed to record payment");
+    } finally {
+      setRecordingPayment(false);
+    }
+  };
 
   const setField = (key, value) => {
     setInvoice((prev) => ({ ...prev, [key]: value }));
@@ -752,7 +830,7 @@ const handleOpenPublicInvoice = () => {
             overflow: hidden;
             }
 
-            .invoice-summary-title {
+        .invoice-summary-title {
             margin: 0 0 12px;
             font-size: 12px;
             line-height: 1.2;
@@ -760,7 +838,83 @@ const handleOpenPublicInvoice = () => {
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: #64748b;
-            }
+        }
+        .payment-cta {
+          margin: 14px 0 4px;
+          width: 100%;
+          border: 0;
+          border-radius: 12px;
+          padding: 13px 16px;
+          background: #2563eb;
+          color: #fff;
+          font-weight: 800;
+          cursor: pointer;
+          box-shadow: 0 8px 18px rgba(37, 99, 235, .2);
+        }
+        .payment-cta:hover { background: #1d4ed8; }
+        .payment-cta:disabled { cursor: not-allowed; opacity: .55; box-shadow: none; }
+        .payment-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 1000;
+          display: grid;
+          place-items: center;
+          padding: 20px;
+          background: rgba(15, 23, 42, .55);
+          backdrop-filter: blur(3px);
+        }
+        .payment-dialog {
+          width: min(620px, 100%);
+          overflow: hidden;
+          border-radius: 20px;
+          background: #fff;
+          box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+        }
+        .payment-dialog-head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 22px 24px 18px;
+          border-bottom: 1px solid rgba(15, 23, 42, .08);
+        }
+        .payment-dialog-head h2 { margin: 0 0 4px; font-size: 22px; color: #0f172a; }
+        .payment-dialog-head p { margin: 0; color: #64748b; font-size: 14px; }
+        .payment-close { border: 0; background: #f1f5f9; border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 18px; }
+        .payment-dialog-body { padding: 22px 24px 24px; }
+        .payment-balance-summary {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+          padding: 15px 17px;
+          border-radius: 14px;
+          background: #eff6ff;
+          color: #1e3a8a;
+        }
+        .payment-balance-summary strong { font-size: 20px; }
+        .payment-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .payment-field { display: grid; gap: 7px; }
+        .payment-field.full { grid-column: 1 / -1; }
+        .payment-field label { color: #475569; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+        .payment-field input, .payment-field select, .payment-field textarea {
+          width: 100%;
+          box-sizing: border-box;
+          border: 1px solid #cbd5e1;
+          border-radius: 11px;
+          padding: 11px 12px;
+          background: #fff;
+          color: #0f172a;
+          font: inherit;
+        }
+        .payment-field textarea { min-height: 88px; resize: vertical; }
+        .payment-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+        @media (max-width: 560px) {
+          .payment-form-grid { grid-template-columns: 1fr; }
+          .payment-field.full { grid-column: auto; }
+          .payment-dialog-actions { flex-direction: column-reverse; }
+          .payment-dialog-actions button { width: 100%; }
+        }
       `}</style>
 
       <div className="invoice-shell">
@@ -816,7 +970,11 @@ const handleOpenPublicInvoice = () => {
                 </div>
                 </div>
                 <div style={{ marginTop: 10, fontSize: 13, color: "#64748b" }}>
-                  Linked Quote: {invoice.linkedQuoteId || "—"}
+                  Linked Quote: {invoice.linkedQuoteId ? getQuoteNumber({
+                    id: invoice.linkedQuoteId,
+                    quoteNumber: invoice.quoteNumber,
+                    createdAt: invoice.createdAt,
+                  }) : "—"}
                 </div>
               </div>
             </div>
@@ -1025,10 +1183,69 @@ const handleOpenPublicInvoice = () => {
                 <div className="balance-label">Balance Due</div>
                 <div className="balance-value">{fmtMoney(balanceDue)}</div>
             </div>
+            <button
+              type="button"
+              className="payment-cta"
+              onClick={openPaymentModal}
+              disabled={!id || balanceDue <= 0}
+            >
+              {balanceDue <= 0 ? "Invoice Paid in Full" : "Record Payment"}
+            </button>
             </div>
 
           </div>
         </div>
+        {paymentOpen ? (
+          <div className="payment-backdrop" onMouseDown={closePaymentModal}>
+            <div className="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="record-payment-title" onMouseDown={(e) => e.stopPropagation()}>
+              <div className="payment-dialog-head">
+                <div>
+                  <h2 id="record-payment-title">Record Payment</h2>
+                  <p>{invoice.invoiceNumber || "Invoice"} · {invoice.clientName || "Customer"}</p>
+                </div>
+                <button type="button" className="payment-close" aria-label="Close" onClick={closePaymentModal}>×</button>
+              </div>
+              <div className="payment-dialog-body">
+                <div className="payment-balance-summary">
+                  <span>Current balance</span>
+                  <strong>{fmtMoney(balanceDue)}</strong>
+                </div>
+                <div className="payment-form-grid">
+                  <div className="payment-field">
+                    <label htmlFor="payment-amount">Amount</label>
+                    <input id="payment-amount" type="number" min="0.01" max={balanceDue} step="0.01" value={paymentForm.amount} onChange={(e) => setPaymentForm((prev) => ({ ...prev, amount: e.target.value }))} autoFocus />
+                  </div>
+                  <div className="payment-field">
+                    <label htmlFor="payment-method">Method</label>
+                    <select id="payment-method" value={paymentForm.method} onChange={(e) => setPaymentForm((prev) => ({ ...prev, method: e.target.value }))}>
+                      <option value="cash">Cash</option>
+                      <option value="check">Check</option>
+                      <option value="zelle">Zelle</option>
+                      <option value="card">Card</option>
+                      <option value="stripe">Stripe</option>
+                      <option value="bank_transfer">Bank Transfer</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div className="payment-field">
+                    <label htmlFor="payment-date">Payment date</label>
+                    <input id="payment-date" type="date" value={paymentForm.paidAt} onChange={(e) => setPaymentForm((prev) => ({ ...prev, paidAt: e.target.value }))} />
+                  </div>
+                  <div className="payment-field full">
+                    <label htmlFor="payment-note">Note (optional)</label>
+                    <textarea id="payment-note" placeholder="Check number or other payment details" value={paymentForm.note} onChange={(e) => setPaymentForm((prev) => ({ ...prev, note: e.target.value }))} />
+                  </div>
+                </div>
+                <div className="payment-dialog-actions">
+                  <button type="button" className="btn" onClick={closePaymentModal} disabled={recordingPayment}>Cancel</button>
+                  <button type="button" className="btn primary" onClick={handleRecordPayment} disabled={recordingPayment}>
+                    {recordingPayment ? "Recording…" : `Record ${fmtMoney(paymentForm.amount)}`}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

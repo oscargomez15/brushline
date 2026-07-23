@@ -226,7 +226,11 @@ export default function PublicInvoicePage() {
 {/* 
             <div className="meta-card">
               <div className="meta-label">Linked Quote</div>
-              <div className="meta-value">{invoice.linkedQuoteId || "—"}</div>
+              <div className="meta-value">{invoice.linkedQuoteId ? getQuoteNumber({
+                id: invoice.linkedQuoteId,
+                quoteNumber: invoice.quoteNumber,
+                createdAt: invoice.createdAt,
+              }) : "—"}</div>
             </div> */}
           </div>
 

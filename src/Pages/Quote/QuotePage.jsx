@@ -3,6 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
 import netlifyIdentity from "netlify-identity-widget";
+import { getQuoteNumber } from "../../utils/quoteNumber";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
@@ -391,7 +392,7 @@ const signatureUrl =
 
       const a = document.createElement("a");
       a.href = blobUrl;
-      a.download = `Quote-${quote?.quoteNumber || quote?.id || id}.pdf`;
+      a.download = `Quote-${getQuoteNumber(quote || { id })}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -747,7 +748,7 @@ const stripeTotal =
         <section className="quote-meta">
           <div className="quote-meta-item">
             <div className="quote-meta-label">PROPOSAL #</div>
-            <div className="quote-meta-value">{quote.quoteNumber || quote.id}</div>
+            <div className="quote-meta-value">{getQuoteNumber(quote)}</div>
           </div>
           <div className="quote-meta-item">
             <div className="quote-meta-label">DATE</div>

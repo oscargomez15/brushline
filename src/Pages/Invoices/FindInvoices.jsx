@@ -140,7 +140,11 @@ export default function FindInvoices() {
         );
 
         closePaymentModal();
-        alert("Payment recorded successfully.");
+        if (data.emailSent) {
+          alert(`Payment recorded and receipt emailed to ${data.emailSentTo}.`);
+        } else {
+          alert(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`);
+        }
     } catch (e) {
         alert(e.message);
     } finally {

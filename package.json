@@ -43,6 +43,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "npm run build && netlify dev --dir build --functions netlify/functions --framework #static --port 8888 --no-open",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -69,6 +70,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.1.1"
+    "gh-pages": "^6.1.1",
+    "netlify-cli": "^26.2.0"
   }
 }

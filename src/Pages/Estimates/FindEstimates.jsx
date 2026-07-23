@@ -1,5 +1,6 @@
 import "../../Styling/FindEstimate.css";
 import netlifyIdentity from "netlify-identity-widget";
+import { getQuoteNumber } from "../../utils/quoteNumber";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -241,7 +242,7 @@ const handleRegeneratePdf = async (quoteId) => {
     if (!needle) return items;
 
     return items.filter((x) => {
-      const hay = `${x.id} ${x.clientName} ${x.projectAddress} ${x.jobType}`.toLowerCase();
+      const hay = `${x.id} ${getQuoteNumber(x)} ${x.clientName} ${x.projectAddress} ${x.jobType}`.toLowerCase();
       return hay.includes(needle);
     });
   }, [items, q]);
@@ -315,7 +316,7 @@ const handleRegeneratePdf = async (quoteId) => {
                         <div className="fe-avatar" aria-hidden="true">{clientInitial}</div>
                         <div className="fe-client-meta">
                           <div className="fe-client-name">{x.clientName || "—"}</div>
-                          <div className="fe-client-id">#{x.quoteNumber || x.id}</div>
+                          <div className="fe-client-id">#{getQuoteNumber(x)}</div>
                         </div>
                       </div>
                     </td>

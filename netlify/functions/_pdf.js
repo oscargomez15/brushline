@@ -1,6 +1,7 @@
 // netlify/functions/_pdf.js
 const { getStore } = require("@netlify/blobs");
 const PDFDocument = require("pdfkit");
+const { getQuoteNumber } = require("./_quote-number");
 const path = require("path");
 const fs = require("fs");
 
@@ -116,7 +117,7 @@ function buildQuotePdfBuffer(quote) {
 
 
       // Meta
-      const proposalNum = quote.quoteNumber || quote.id;
+      const proposalNum = getQuoteNumber(quote);
       const created = quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : "";
       const customer =
         quote.clientName ||
