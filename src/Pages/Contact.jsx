@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import emailjs from 'emailjs-com'
 import '../Styling/Contact.css'
 import fullBodyMascot from '../Assets/Transparent-03.webp'
 import {AnimatePresence, motion } from 'framer-motion'
@@ -17,6 +16,8 @@ export const Contact = () => {
 
     const [form, setForm] = useState(defaultFormValues)
     const [showModal, setShowModal] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState('');
 
 
     const handleChange = (event) => {
@@ -30,6 +31,7 @@ export const Contact = () => {
         setForm( () => (defaultFormValues))
     }
 
+    /* Legacy EmailJS submission retained temporarily for reference.
     const handleSubmit = (event) => {
         event.preventDefault();
         resetForm();
@@ -43,7 +45,7 @@ export const Contact = () => {
             email:form.email
         }
 
-        emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
+        Promise.resolve()
             .then(() => {
         setShowModal(true); // ✅ Show modal
         resetForm();
@@ -51,6 +53,30 @@ export const Contact = () => {
         .catch((error) => {
         console.error('Failed to send message:', error);
         });
+    }
+
+    */
+    const handleSecureSubmit = async (event) => {
+        event.preventDefault();
+        setSubmitting(true);
+        setSubmitError('');
+
+        try {
+            const response = await fetch('/.netlify/functions/send-contact-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form)
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || 'Failed to send message.');
+
+            setShowModal(true);
+            resetForm();
+        } catch (error) {
+            setSubmitError(error.message || 'Failed to send message. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     const isFormValid =
@@ -85,7 +111,8 @@ export const Contact = () => {
                     <h1>Contact us and get your <span>free quote</span></h1>
                     <p>Get your free quote by filling the information below and we'll get back to you within 24 hours.</p>
                 </div>
-                <form action="Submit">
+                <form onSubmit={handleSecureSubmit}>
+                    <input type="text" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{position:'absolute', left:'-10000px'}} />
                     <div className="form-row">
                         <div className="form-field">
                             <label htmlFor="name">Name*</label>
@@ -129,7 +156,10 @@ export const Contact = () => {
                         </p>
                     </div>
 
-                    <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> Send Message </button>
+                    {submitError && <p role="alert" style={{color:'#b91c1c', fontWeight:700}}>{submitError}</p>}
+                    <button className='button' type="submit" disabled={!isFormValid || submitting}>
+                        {submitting ? 'Sending...' : 'Send Message'}
+                    </button>
 
                 </form>
             </div>

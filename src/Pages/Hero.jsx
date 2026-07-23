@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   FaArrowRight,
@@ -9,6 +10,41 @@ import GoogleLogo from '../Assets/google-logo.webp';
 import '../Styling/Hero.css';
 
 export const Hero = () => {
+  const [contactStatus, setContactStatus] = useState({ type: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    const formElement = event.currentTarget;
+    const formData = new FormData(formElement);
+
+    setSubmitting(true);
+    setContactStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch('/.netlify/functions/send-contact-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData.entries())),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || 'Failed to send request.');
+
+      formElement.reset();
+      setContactStatus({
+        type: 'success',
+        message: 'Thanks! Your request was sent successfully.',
+      });
+    } catch (error) {
+      setContactStatus({
+        type: 'error',
+        message: error.message || 'We could not send your request. Please try again.',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section className='modern-hero' id='home'>
       {/* Background */}
@@ -125,7 +161,8 @@ export const Hero = () => {
           <h3>Request Your Free Estimate</h3>
           <p>Tell us a little about your project and we’ll reach out shortly.</p>
 
-          <form className="hero-contact-form">
+          <form className="hero-contact-form" onSubmit={handleContactSubmit}>
+            <input type="text" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{position:'absolute', left:'-10000px'}} />
             <input type="text" name="name" placeholder="Name" required />
 
             <input type="email" name="email" placeholder="Email" required />
@@ -148,8 +185,21 @@ export const Hero = () => {
               rows="4"
             ></textarea>
 
-            <button type="submit">
-              Send Request <FaArrowRight />
+            {contactStatus.message && (
+              <div
+                role={contactStatus.type === 'error' ? 'alert' : 'status'}
+                style={{
+                  color: contactStatus.type === 'error' ? '#fecaca' : '#bbf7d0',
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                {contactStatus.message}
+              </div>
+            )}
+
+            <button type="submit" disabled={submitting}>
+              {submitting ? 'Sending...' : 'Send Request'} {!submitting && <FaArrowRight />}
             </button>
           </form>
         </div>
