@@ -17,6 +17,31 @@ function makeId() {
   return crypto.randomUUID?.() || String(Date.now() + Math.random());
 }
 
+function compressPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const maxDimension = 1400;
+      const scale = Math.min(1, maxDimension / Math.max(image.width, image.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(image.width * scale);
+      canvas.height = Math.round(image.height * scale);
+      const context = canvas.getContext("2d");
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.78));
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Could not read this photo."));
+    };
+    image.src = objectUrl;
+  });
+}
+
 export default function HandymanEstimator({
   customer,
   initialQuote = null,
@@ -35,13 +60,15 @@ export default function HandymanEstimator({
         title: it.title || "",
         desc: it.description || "",
         price: String(it.price ?? ""),
+        photos: Array.isArray(it.photos) ? it.photos : [],
       }));
     }
 
-    return [{ id: makeId(), title: "", desc: "", price: "" }];
+    return [{ id: makeId(), title: "", desc: "", price: "", photos: [] }];
   });
 
   const [saving, setSaving] = useState(false);
+  const [uploadingPhotoId, setUploadingPhotoId] = useState(null);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
 
   const pendingDeleteItem =
@@ -68,7 +95,7 @@ export default function HandymanEstimator({
   const addRow = () => {
     setItems((prev) => [
       ...prev,
-      { id: makeId(), title: "", desc: "", price: "" },
+      { id: makeId(), title: "", desc: "", price: "", photos: [] },
     ]);
   };
 
@@ -85,6 +112,62 @@ export default function HandymanEstimator({
     setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   };
 
+  const addPhotos = async (item, files) => {
+    const remainingSlots = Math.max(0, 3 - (item.photos?.length || 0));
+    const selected = Array.from(files || []).slice(0, remainingSlots);
+    if (!selected.length) return;
+
+    try {
+      setUploadingPhotoId(item.id);
+      const user = netlifyIdentity.currentUser();
+      const token = user ? await user.jwt() : null;
+      if (!token) throw new Error("You must be logged in.");
+
+      const uploaded = [];
+      for (const file of selected) {
+        const dataUrl = await compressPhoto(file);
+        const response = await fetch("/.netlify/functions/upload-estimate-photo", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ dataUrl }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "Failed to upload photo.");
+        uploaded.push({ id: data.id, url: data.url, name: file.name });
+      }
+
+      setItems((prev) =>
+        prev.map((row) =>
+          row.id === item.id
+            ? { ...row, photos: [...(row.photos || []), ...uploaded].slice(0, 3) }
+            : row
+        )
+      );
+    } catch (error) {
+      alert(error.message || "Failed to upload photo.");
+    } finally {
+      setUploadingPhotoId(null);
+    }
+  };
+
+  const removePhoto = (itemId, photoId) => {
+    setItems((prev) =>
+      prev.map((row) =>
+        row.id === itemId
+          ? {
+              ...row,
+              photos: (row.photos || []).filter(
+                (photo) => (photo.id || photo.url) !== photoId
+              ),
+            }
+          : row
+      )
+    );
+  };
+
   const saveQuote = async () => {
     if (!canCreate || saving) return;
 
@@ -94,6 +177,7 @@ export default function HandymanEstimator({
       description: it.desc.trim(),
       price: safeNumber(it.price),
       excluded: false,
+      photos: Array.isArray(it.photos) ? it.photos : [],
     }))
     .filter((it) => it.title && it.description && it.price > 0);
 
@@ -231,6 +315,38 @@ export default function HandymanEstimator({
               className="dim-input handyman-description-input"
               rows={3}
             />
+
+            <div className="quick-item-photos">
+              {(it.photos || []).map((photo) => (
+                <div className="quick-item-photo" key={photo.id || photo.url}>
+                  <img src={photo.url} alt={photo.name || `${it.title || "Work item"} reference`} />
+                  <button
+                    type="button"
+                    aria-label="Remove photo"
+                    onClick={() => removePhoto(it.id, photo.id || photo.url)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              {(it.photos?.length || 0) < 3 && (
+                <label className="quick-photo-upload">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    onChange={(event) => {
+                      addPhotos(it, event.target.files);
+                      event.target.value = "";
+                    }}
+                    disabled={uploadingPhotoId === it.id}
+                  />
+                  <span>{uploadingPhotoId === it.id ? "Uploading..." : "+ Add photos"}</span>
+                  <small>Up to 3</small>
+                </label>
+              )}
+            </div>
 
           </div>
 

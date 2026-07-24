@@ -1,5 +1,9 @@
 const { getStore } = require("@netlify/blobs");
 
+let dashboardCache = null;
+let dashboardCacheTime = 0;
+const DASHBOARD_CACHE_MS = 30 * 1000;
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -36,8 +40,20 @@ exports.handler = async (event, context) => {
       });
     }
 
+    if (
+      dashboardCache &&
+      Date.now() - dashboardCacheTime < DASHBOARD_CACHE_MS
+    ) {
+      return json(200, dashboardCache);
+    }
+
     const indexStore = getStore("quotes_index", { siteID, token });
     const { blobs } = await indexStore.list();
+    const items = (
+      await Promise.all(
+        blobs.map((blob) => indexStore.get(blob.key, { type: "json" }))
+      )
+    ).filter(Boolean);
 
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -56,10 +72,7 @@ exports.handler = async (event, context) => {
 
     const recentApprovedQuotes = [];
 
-    for (const blob of blobs) {
-      const item = await indexStore.get(blob.key, { type: "json" });
-      if (!item) continue;
-
+    for (const item of items) {
       const status = normalizeStatus(item.status);
 
       if (item.createdAt) {
@@ -95,7 +108,7 @@ exports.handler = async (event, context) => {
       const amount = Number(item.grandTotal) || 0;
 
       recentApprovedQuotes.push({
-        id: item.id || blob.key,
+        id: item.id,
         clientName: item.clientName || "Unnamed Client",
         grandTotal: amount,
         approvedAt: item.approvedAt,
@@ -132,7 +145,7 @@ exports.handler = async (event, context) => {
         ? Math.round((approvedQuotesYTD / totalQuotesYTD) * 1000) / 10
         : 0;
 
-    return json(200, {
+    const dashboard = {
       year: currentYear,
       approvedRevenueYTD: Math.round(approvedRevenueYTD * 100) / 100,
       approvedQuotesYTD,
@@ -144,7 +157,12 @@ exports.handler = async (event, context) => {
       draftQuotesYTD,
       closingRateYTD,
       recentApprovedQuotes: recentApprovedQuotes.slice(0, 5),
-    });
+    };
+
+    dashboardCache = dashboard;
+    dashboardCacheTime = Date.now();
+
+    return json(200, dashboard);
   } catch (err) {
     console.error("dashboard-stats failed:", err);
     return json(500, {

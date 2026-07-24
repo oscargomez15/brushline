@@ -2,6 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import "../../Styling/Dashboard.css";
 
+const DASHBOARD_CACHE_KEY = "brushlineDashboardStats";
+
+function readCachedDashboard() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(DASHBOARD_CACHE_KEY) || "null");
+    return cached?.stats || null;
+  } catch {
+    return null;
+  }
+}
+
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, {
     style: "currency",
@@ -53,14 +64,15 @@ function RevenueChart({ data }) {
 }
 
 export default function Dashboard() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState(readCachedDashboard);
   const [err, setErr] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !readCachedDashboard());
 
   useEffect(() => {
     const load = async () => {
+      const hasCachedStats = Boolean(readCachedDashboard());
       try {
-        setLoading(true);
+        if (!hasCachedStats) setLoading(true);
         setErr("");
 
         const user = netlifyIdentity.currentUser();
@@ -77,8 +89,14 @@ export default function Dashboard() {
         if (!res.ok) throw new Error(data?.error || "Failed to load dashboard stats");
 
         setStats(data);
+        localStorage.setItem(
+          DASHBOARD_CACHE_KEY,
+          JSON.stringify({ stats: data, cachedAt: Date.now() })
+        );
       } catch (e) {
-        setErr(e.message || "Failed to load dashboard");
+        if (!hasCachedStats) {
+          setErr(e.message || "Failed to load dashboard");
+        }
       } finally {
         setLoading(false);
       }

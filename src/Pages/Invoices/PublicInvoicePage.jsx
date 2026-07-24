@@ -19,6 +19,7 @@ function normalizeItems(invoice) {
   if (Array.isArray(invoice?.lineItems)) {
     return invoice.lineItems.map((item, i) => ({
       id: item.id || `line-${i + 1}`,
+      title: item.title || "",
       description: item.description || item.name || `Line item ${i + 1}`,
       qty: Number(item.qty ?? item.quantity ?? 1) || 0,
       unitPrice: Number(item.unitPrice ?? item.price ?? 0) || 0,
@@ -210,6 +211,14 @@ export default function PublicInvoicePage() {
         <div className="public-invoice-card">
           <div className="invoice-head">
             <div className="invoice-head-right">
+              <div className="invoice-bill-to">
+                <div className="section-kicker">Bill To</div>
+                <div className="bill-name">{invoice.clientName || "Customer"}</div>
+                <div className="bill-text">
+                  {invoice.projectAddress || "—"}
+                </div>
+              </div>
+              <div className="invoice-head-status">
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" }}>
                     <div className={`status-pill pay-${invoice.paymentStatus || "unpaid"}`}>
                         {(invoice.paymentStatus || "unpaid").replace(/_/g, " ")}
@@ -217,6 +226,7 @@ export default function PublicInvoicePage() {
                 </div>
               <div className="invoice-no">
                 Invoice #{invoice.invoiceNumber || invoice.id}
+              </div>
               </div>
             </div>
           </div>
@@ -310,9 +320,7 @@ export default function PublicInvoicePage() {
             <div className="items-table">
               <div className="items-head">
                 <div>Description</div>
-                <div className="center">Qty</div>
-                <div className="right">Unit Price</div>
-                <div className="right">Line Total</div>
+                <div className="right">Amount</div>
               </div>
 
               {items.length === 0 ? (
@@ -322,18 +330,13 @@ export default function PublicInvoicePage() {
                   <div className="items-row" key={item.id}>
                     <div className="item-desc">
                       <div className="mobile-label">Description</div>
+                      {item.title ? (
+                        <div className="invoice-item-title">{item.title}</div>
+                      ) : null}
                       {item.description || "—"}
                     </div>
-                    <div className="center">
-                      <div className="mobile-label">Qty</div>
-                      {item.qty}
-                    </div>
-                    <div className="right">
-                      <div className="mobile-label">Unit Price</div>
-                      {fmtMoney(item.unitPrice)}
-                    </div>
                     <div className="right strong">
-                      <div className="mobile-label">Line Total</div>
+                      <div className="mobile-label">Amount</div>
                       {fmtMoney(item.total)}
                     </div>
                   </div>
@@ -444,6 +447,8 @@ const styles = `
 
   .public-invoice-card {
     padding: 28px;
+    display: flex;
+    flex-direction: column;
   }
 
   .public-invoice-state {
@@ -480,7 +485,63 @@ const styles = `
   }
 
   .invoice-head-right {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .invoice-bill-to {
+    padding: 17px 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #f8fafc;
+  }
+
+  .invoice-bill-to .bill-name {
+    margin-top: 7px;
+  }
+
+  .invoice-bill-to .bill-text {
+    margin-top: 4px;
+  }
+
+  .invoice-head-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
     text-align: right;
+  }
+
+  .invoice-head-status .invoice-no {
+    margin-top: 0;
+  }
+
+  .invoice-head {
+    order: 1;
+  }
+
+  .meta-grid {
+    order: 2;
+  }
+
+  .items-section {
+    order: 3;
+  }
+
+  .bill-grid {
+    order: 4;
+  }
+
+  .notes-grid {
+    order: 5;
+  }
+
+  .footer-note {
+    order: 6;
   }
 
   .status-pill {
@@ -566,6 +627,20 @@ const styles = `
     gap: 16px;
   }
 
+  .bill-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bill-grid > .bill-card:first-child {
+    display: none;
+  }
+
+  .bill-grid > .bill-card:last-child {
+    padding: 22px;
+    border-color: #dbe3ee;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
   .bill-name {
     margin-top: 10px;
     font-size: 18px;
@@ -583,18 +658,36 @@ const styles = `
   }
 
   .summary-list {
-    margin-top: 10px;
+    margin-top: 14px;
     display: grid;
-    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .summary-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    display: grid;
+    gap: 7px;
+    align-content: center;
+    min-height: 84px;
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
     font-size: 14px;
     color: #334155;
+  }
+
+  .summary-row span {
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+  }
+
+  .summary-row strong {
+    color: #0f172a;
+    font-size: 21px;
   }
 
   .summary-row.total {
@@ -606,9 +699,10 @@ const styles = `
   }
 
   .summary-row.balance {
-    margin-top: 4px;
-    padding: 12px 14px;
+    margin-top: 0;
+    padding: 14px 16px;
     border-radius: 12px;
+    border-color: #0f172a;
     background: #0f172a;
     color: #fff;
     font-weight: 900;
@@ -640,7 +734,7 @@ const styles = `
   .items-head,
   .items-row {
     display: grid;
-    grid-template-columns: minmax(0, 1.8fr) 90px 140px 140px;
+    grid-template-columns: minmax(0, 1fr) 160px;
     gap: 12px;
     align-items: center;
     padding: 14px 16px;
@@ -665,6 +759,13 @@ const styles = `
     padding: 18px 16px;
     color: #64748b;
     font-size: 14px;
+  }
+
+  .invoice-item-title {
+    margin-bottom: 5px;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 900;
   }
 
   .strong {
@@ -705,6 +806,10 @@ const styles = `
 
     .bill-grid,
     .notes-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .summary-list {
       grid-template-columns: 1fr;
     }
   }

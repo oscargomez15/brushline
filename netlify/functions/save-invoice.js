@@ -78,6 +78,7 @@ exports.handler = async (event, context) => {
 
           return {
             id: safeStr(item?.id) || `line-${i + 1}`,
+            title: safeStr(item?.title),
             description: safeStr(item?.description || item?.name || `Line item ${i + 1}`),
             qty,
             unitPrice,

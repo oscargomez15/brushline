@@ -30,6 +30,7 @@ const emptyInvoice = {
   tax: 0,
   grandTotal: 0,
   depositPaid: 0,
+  depositRequired: 0,
   balanceDue: 0,
   companyName: "Brushline Services",
   linkedQuoteId: "",
@@ -44,6 +45,7 @@ function normalizeItems(invoice) {
 
       return {
         id: item.id || `line-${i}`,
+        title: item.title || "",
         description: item.description || item.name || `Line item ${i + 1}`,
         qty,
         unitPrice,
@@ -213,11 +215,19 @@ try {
   const balanceDue = Number(invoice.balanceDue) > 0 || grandTotal === 0
     ? Number(invoice.balanceDue) || 0
     : Math.max(0, grandTotal - depositPaid);
+  const depositRequired =
+    Number(invoice.depositRequired) > 0
+      ? Number(invoice.depositRequired)
+      : Math.round(grandTotal * 0.4 * 100) / 100;
+  const downPaymentRemaining = Math.min(
+    balanceDue,
+    Math.max(0, depositRequired - Math.min(depositPaid, depositRequired))
+  );
 
   const openPaymentModal = () => {
     setErr("");
     setPaymentForm({
-      amount: balanceDue > 0 ? balanceDue.toFixed(2) : "",
+      amount: "0",
       method: "zelle",
       note: "",
       paidAt: new Date().toISOString().slice(0, 10),
@@ -912,6 +922,45 @@ const previewUrl = invoice?.id
           color: #1e3a8a;
         }
         .payment-balance-summary strong { font-size: 20px; }
+        .payment-quick-amounts {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          margin-bottom: 18px;
+          padding: 14px 16px;
+          border: 1px solid #dbeafe;
+          border-radius: 14px;
+          background: #f8fbff;
+        }
+        .payment-quick-amounts-label {
+          display: grid;
+          gap: 3px;
+          color: #334155;
+          font-size: 13px;
+        }
+        .payment-quick-amounts-label strong {
+          color: #0f172a;
+          font-size: 15px;
+        }
+        .payment-down-payment-btn {
+          flex: 0 0 auto;
+          min-height: 40px;
+          padding: 0 14px;
+          border: 1px solid #2563eb;
+          border-radius: 10px;
+          background: #fff;
+          color: #1d4ed8;
+          font-weight: 850;
+          cursor: pointer;
+        }
+        .payment-down-payment-btn:hover:not(:disabled) {
+          background: #eff6ff;
+        }
+        .payment-down-payment-btn:disabled {
+          cursor: not-allowed;
+          opacity: .5;
+        }
         .payment-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .payment-field { display: grid; gap: 7px; }
         .payment-field.full { grid-column: 1 / -1; }
@@ -989,6 +1038,8 @@ const previewUrl = invoice?.id
           .payment-field.full { grid-column: auto; }
           .payment-dialog-actions { flex-direction: column-reverse; }
           .payment-dialog-actions button { width: 100%; }
+          .payment-quick-amounts { align-items: stretch; flex-direction: column; }
+          .payment-down-payment-btn { width: 100%; }
           .invoice-preview-backdrop { padding: 8px; }
           .invoice-preview-dialog { height: 94vh; border-radius: 14px; }
         }
@@ -1265,10 +1316,29 @@ const previewUrl = invoice?.id
                   <span>Current balance</span>
                   <strong>{fmtMoney(balanceDue)}</strong>
                 </div>
+                <div className="payment-quick-amounts">
+                  <div className="payment-quick-amounts-label">
+                    <span>Down payment remaining</span>
+                    <strong>{fmtMoney(downPaymentRemaining)}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className="payment-down-payment-btn"
+                    onClick={() =>
+                      setPaymentForm((prev) => ({
+                        ...prev,
+                        amount: downPaymentRemaining.toFixed(2),
+                      }))
+                    }
+                    disabled={downPaymentRemaining <= 0}
+                  >
+                    Use Down Payment
+                  </button>
+                </div>
                 <div className="payment-form-grid">
                   <div className="payment-field">
                     <label htmlFor="payment-amount">Amount</label>
-                    <input id="payment-amount" type="number" min="0.01" max={balanceDue} step="0.01" value={paymentForm.amount} onChange={(e) => setPaymentForm((prev) => ({ ...prev, amount: e.target.value }))} autoFocus />
+                    <input id="payment-amount" type="number" min="0" max={balanceDue} step="0.01" value={paymentForm.amount} onChange={(e) => setPaymentForm((prev) => ({ ...prev, amount: e.target.value }))} autoFocus />
                   </div>
                   <div className="payment-field">
                     <label htmlFor="payment-method">Method</label>
@@ -1293,7 +1363,7 @@ const previewUrl = invoice?.id
                 </div>
                 <div className="payment-dialog-actions">
                   <button type="button" className="btn" onClick={closePaymentModal} disabled={recordingPayment}>Cancel</button>
-                  <button type="button" className="btn primary" onClick={handleRecordPayment} disabled={recordingPayment}>
+                  <button type="button" className="btn primary" onClick={handleRecordPayment} disabled={recordingPayment || Number(paymentForm.amount) <= 0}>
                     {recordingPayment ? "Recording…" : `Record ${fmtMoney(paymentForm.amount)}`}
                   </button>
                 </div>

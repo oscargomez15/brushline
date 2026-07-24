@@ -136,6 +136,7 @@ export default function QuotePage() {
   const [togglingLineIndex, setTogglingLineIndex] = useState(null);
   const [startingDeposit, setStartingDeposit] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
   const isApproved = quote?.status === "approved";
 
   const [excludedAddOns, setExcludedAddOns] = useState({});
@@ -783,8 +784,7 @@ const stripeTotal =
           </div>
 
           {/* ✅ Handyman / Misc items (line items table) */}
-          {quote.jobType === "handyman" &&
-          Array.isArray(quote.lineItems) &&
+          {Array.isArray(quote.lineItems) &&
           quote.lineItems.length > 0 && (
             <div className="quote-items">
               <div className="quote-items-title">Service Details</div>
@@ -826,6 +826,29 @@ const stripeTotal =
                           )}
 
                         </span>
+
+                        {Array.isArray(item.photos) && item.photos.length > 0 && (
+                          <div className="quote-line-photos">
+                            {item.photos.map((photo, photoIndex) => (
+                              <button
+                                type="button"
+                                className="quote-line-photo"
+                                key={photo.id || photo.url || photoIndex}
+                                onClick={() =>
+                                  setPhotoPreview({
+                                    url: photo.url,
+                                    alt: photo.name || `${item.title || "Service item"} photo`,
+                                  })
+                                }
+                              >
+                                <img
+                                  src={photo.url}
+                                  alt={photo.name || `${item.title || "Service item"} reference ${photoIndex + 1}`}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div
@@ -998,7 +1021,7 @@ const stripeTotal =
             </div>
           )}
 
-          {quote.jobType === "exterior" && (
+          {quote.jobType === "exterior" && !quote.lineItems?.length && (
             <div className="quote-exterior-scope">
               <h3>Scope of Work</h3>
               <div className="quote-scope-line-items">
@@ -1400,7 +1423,7 @@ const stripeTotal =
       </div>
       )}
 
-          {paymentModalOpen && !depositPaid && (
+        {paymentModalOpen && !depositPaid && (
           <div className="sig-backdrop" onClick={() => setPaymentModalOpen(false)}>
             <div className="sig-modal payment-modal" onClick={(e) => e.stopPropagation()}>
               <div className="sig-modal-head">
@@ -1469,6 +1492,31 @@ const stripeTotal =
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {photoPreview && (
+          <div
+            className="quote-photo-lightbox"
+            onClick={() => setPhotoPreview(null)}
+          >
+            <div
+              className="quote-photo-lightbox-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Project photo preview"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="quote-photo-lightbox-close"
+                aria-label="Close photo"
+                onClick={() => setPhotoPreview(null)}
+              >
+                ×
+              </button>
+              <img src={photoPreview.url} alt={photoPreview.alt} />
             </div>
           </div>
         )}
