@@ -47,7 +47,16 @@ const ServiceArea = () => {
   return (
     <div className="service-area-page">
     <Helmet>
-      <title>Interior Painter in {cityData.city} | Brushline Services | 5 Stars Rated</title>
+      <title>Interior & Exterior Painters in {cityData.city}, FL | Brushline</title>
+      <meta
+        name="description"
+        content={`Professional interior and exterior painting in ${cityData.city}, FL. Brushline Services provides careful preparation, durable finishes, and free estimates.`}
+      />
+      <link rel="canonical" href={`https://www.brushlineservices.com/service-area/${citySlug}`} />
+      <meta property="og:title" content={`Interior & Exterior Painters in ${cityData.city}, FL | Brushline`} />
+      <meta property="og:description" content={`Professional residential and commercial painting services in ${cityData.city}, Florida.`} />
+      <meta property="og:url" content={`https://www.brushlineservices.com/service-area/${citySlug}`} />
+      <meta property="og:type" content="website" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "PaintingService",
@@ -68,9 +77,10 @@ const ServiceArea = () => {
         ],
         "provider": {
           "@type": "LocalBusiness",
+          "@id": "https://www.brushlineservices.com/#business",
           "name": "Brushline Services",
           "url": "https://www.brushlineservices.com",
-          "telephone": "239-777-3713"
+          "telephone": "+1-239-777-3713"
         }
       })}} />
     </Helmet>
@@ -94,8 +104,6 @@ const ServiceArea = () => {
       transition={{ duration: 0.7 }}
     >
       <span>{cityData.headline}</span>
-      <br />
-      in {cityData.city}
     </motion.h1>
 
       <p>{cityData.description}</p>

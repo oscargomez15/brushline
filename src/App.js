@@ -35,17 +35,39 @@ import FindInvoices from "./Pages/Invoices/FindInvoices";
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
+  const savedDraft = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("estimateDraft") || "null");
+    } catch {
+      return null;
+    }
+  })();
 
   useEffect(() => {
     localStorage.removeItem("estimateCustomer");
     localStorage.removeItem("estimateStep");
     localStorage.removeItem("jobType");
+    localStorage.removeItem("estimateMethod");
   }, []);
 
   return (
     <StartEstimate
       initialCustomer={null}
+      savedDraft={savedDraft}
+      onResumeDraft={(draft) => {
+        if (!draft?.customer) return;
+        localStorage.setItem("estimateCustomer", JSON.stringify(draft.customer));
+        localStorage.setItem("estimateStep", draft.step || "jobType");
+        if (draft.jobType) localStorage.setItem("jobType", draft.jobType);
+        if (draft.estimateMethod) localStorage.setItem("estimateMethod", draft.estimateMethod);
+        navigate("/crm/estimator");
+      }}
+      onDiscardDraft={() => {
+        localStorage.removeItem("estimateDraft");
+        window.location.reload();
+      }}
       onNext={(customerData) => {
+        localStorage.removeItem("estimateDraft");
         localStorage.setItem("estimateCustomer", JSON.stringify(customerData));
         localStorage.setItem("estimateStep", "jobType");
         navigate("/crm/estimator");

@@ -12,6 +12,16 @@ export const Home = () => {
   return (
     <div className='home-page'>
       <Helmet>
+      <title>Interior & Exterior Painters in Southwest Florida | Brushline</title>
+      <meta
+        name="description"
+        content="Professional interior and exterior painting in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Request a free estimate from Brushline Services."
+      />
+      <link rel="canonical" href="https://www.brushlineservices.com/" />
+      <meta property="og:title" content="Interior & Exterior Painters in Southwest Florida | Brushline" />
+      <meta property="og:description" content="Professional residential and commercial painting across Southwest Florida. Get a free estimate from Brushline Services." />
+      <meta property="og:url" content="https://www.brushlineservices.com/" />
+      <meta property="og:type" content="website" />
     <script>
     {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

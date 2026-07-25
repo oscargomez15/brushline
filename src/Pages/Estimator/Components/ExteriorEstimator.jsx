@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
 import ExteriorSummarySticky from "./ExteriorSummarySticky";
@@ -57,7 +57,12 @@ const toNum = (v) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-export default function ExteriorEstimator({ customer, existingQuote=null, mode='create' }) {
+export default function ExteriorEstimator({
+  customer,
+  existingQuote = null,
+  mode = "create",
+  onDraftChange,
+}) {
   
   const navigate = useNavigate();
   const exteriorData = existingQuote?.exterior || {};
@@ -115,6 +120,33 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
   const updateSide = (id, value) => {
     setSides((prev) => prev.map((s) => (s.id === id ? { ...s, length: value } : s)));
   };
+
+  useEffect(() => {
+    if (!onDraftChange || mode === "edit") return;
+    const timeout = setTimeout(() => {
+      onDraftChange({
+        jobType: "exterior",
+        customer,
+        exterior: {
+          materialMarkup,
+          pricePerSqft,
+          paintType,
+          soffitHeight,
+          sides,
+        },
+        exteriorScope: {
+          title: exteriorScopeTitle,
+          additionalDetails: exteriorAdditionalDetails,
+        },
+        scopeItems: [{ extras: addOns }],
+      });
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [
+    addOns, customer, exteriorAdditionalDetails, exteriorScopeTitle,
+    materialMarkup, mode, onDraftChange, paintType, pricePerSqft,
+    sides, soffitHeight,
+  ]);
 
   const heightFt = toNum(soffitHeight);
   const rate = toNum(pricePerSqft);
@@ -293,6 +325,7 @@ export default function ExteriorEstimator({ customer, existingQuote=null, mode='
     return;
   }
 
+  localStorage.removeItem("estimateDraft");
   navigate(data.url);
 };
 

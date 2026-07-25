@@ -324,8 +324,13 @@ const variants = {
     <div className='page'>
 
         <Helmet>
-            <title>Painting Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
-            <meta name="description" content="Brushline Services is a professional painting services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
+            <title>Interior & Exterior House Painters in Southwest Florida | Brushline</title>
+            <meta name="description" content="Interior and exterior house painting in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Clean preparation, durable finishes, and free estimates." />
+            <link rel="canonical" href="https://www.brushlineservices.com/painting" />
+            <meta property="og:title" content="Interior & Exterior House Painters in Southwest Florida | Brushline" />
+            <meta property="og:description" content="Professional residential and commercial painting with careful preparation and durable finishes across Southwest Florida." />
+            <meta property="og:url" content="https://www.brushlineservices.com/painting" />
+            <meta property="og:type" content="website" />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "PaintingService",
@@ -347,9 +352,10 @@ const variants = {
             ],
             "provider": {
                 "@type": "LocalBusiness",
+                "@id": "https://www.brushlineservices.com/#business",
                 "name": "Brushline Services",
                 "url": "https://www.brushlineservices.com",
-                "telephone": "239-777-3713"
+                "telephone": "+1-239-777-3713"
             }
             })}} />
         </Helmet>

@@ -2,7 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import "../../../Styling/StartEstimate.css";
 
-export const StartEstimate = ({ initialCustomer, onNext }) => {
+export const StartEstimate = ({
+  initialCustomer,
+  onNext,
+  savedDraft = null,
+  onResumeDraft,
+  onDiscardDraft,
+}) => {
   const [mode, setMode] = useState(null); // "new" | "existing" | null
 
   const [firstName, setFirstName] = useState(initialCustomer?.firstName || "");
@@ -290,6 +296,7 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
         <h1>Start an Estimate</h1>
 
         {!mode && (
+          <>
           <div className="customer-mode-grid">
             <button
               type="button"
@@ -313,6 +320,46 @@ export const StartEstimate = ({ initialCustomer, onNext }) => {
               </div>
             </button>
           </div>
+
+          {savedDraft?.customer && (
+            <div className="estimate-draft-card">
+              <div className="estimate-draft-copy">
+                <span className="estimate-draft-kicker">Pick up where you left off</span>
+                <strong>
+                  {savedDraft.customer.firstName} {savedDraft.customer.lastName}
+                </strong>
+                <span>
+                  {savedDraft.jobType
+                    ? `${savedDraft.jobType.charAt(0).toUpperCase()}${savedDraft.jobType.slice(1)} estimate`
+                    : "Estimate in progress"}
+                  {savedDraft.updatedAt
+                    ? ` · Updated ${new Date(savedDraft.updatedAt).toLocaleString()}`
+                    : ""}
+                </span>
+              </div>
+              <div className="estimate-draft-actions">
+                <button
+                  type="button"
+                  className="estimate-draft-resume"
+                  onClick={() => onResumeDraft?.(savedDraft)}
+                >
+                  Continue Draft
+                </button>
+                <button
+                  type="button"
+                  className="estimate-draft-discard"
+                  onClick={() => {
+                    if (window.confirm("Discard this saved estimate draft?")) {
+                      onDiscardDraft?.();
+                    }
+                  }}
+                >
+                  Discard
+                </button>
+              </div>
+            </div>
+          )}
+          </>
         )}
 
         {mode === "existing" && (

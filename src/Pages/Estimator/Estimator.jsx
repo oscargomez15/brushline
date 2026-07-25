@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../../Styling/PaintCalculator.css";
 import ExteriorEstimator from "./Components/ExteriorEstimator";
@@ -6,14 +6,24 @@ import { InteriorEstimator } from "./Components/InteriorEstimator";
 import { StartEstimate } from "./Components/StartEstimate";
 import HandymanEstimator from "./Components/HandymanEstimator";
 
+const readEstimateDraft = () => {
+  try {
+    return JSON.parse(localStorage.getItem("estimateDraft") || "null");
+  } catch {
+    return null;
+  }
+};
+
 export const Estimator = () => {
   const location = useLocation();
+  const [draftData, setDraftData] = useState(readEstimateDraft);
   const [jobType, setJobType] = useState(() => localStorage.getItem("jobType") || "");
   const [step, setStep] = useState(() => localStorage.getItem("estimateStep") || "customer");
   const [estimateMethod, setEstimateMethod] = useState(
     () => localStorage.getItem("estimateMethod") || ""
   );
   const [customerModalOpen, setCustomerModalOpen] = useState(false);
+  const [draftSavedMessage, setDraftSavedMessage] = useState("");
 
   const [editingQuoteData, setEditingQuoteData] = useState(
     location.state?.editingQuoteData || null
@@ -77,6 +87,58 @@ export const Estimator = () => {
       return null;
     }
   });
+
+  useEffect(() => {
+    if (!customer || isEditing) return;
+
+    const nextDraft = {
+      ...(draftData || {}),
+      customer,
+      jobType,
+      estimateMethod,
+      step,
+      updatedAt: new Date().toISOString(),
+    };
+    localStorage.setItem("estimateDraft", JSON.stringify(nextDraft));
+    setDraftData(nextDraft);
+    // Component-specific calculator data is merged through handleDraftChange.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer, jobType, estimateMethod, step, isEditing]);
+
+  const handleDraftChange = useCallback((calculatorData) => {
+    if (isEditing) return;
+    setDraftData((previous) => {
+      const next = {
+        ...(previous || {}),
+        customer,
+        jobType,
+        estimateMethod,
+        step,
+        calculatorData,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem("estimateDraft", JSON.stringify(next));
+      return next;
+    });
+  }, [customer, estimateMethod, isEditing, jobType, step]);
+
+  const saveDraftNow = () => {
+    if (!customer || isEditing) return;
+
+    const nextDraft = {
+      ...(draftData || {}),
+      customer,
+      jobType,
+      estimateMethod,
+      step,
+      updatedAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem("estimateDraft", JSON.stringify(nextDraft));
+    setDraftData(nextDraft);
+    setDraftSavedMessage("Draft saved. You can safely come back later.");
+    window.setTimeout(() => setDraftSavedMessage(""), 3500);
+  };
 
   const getInitials = (cust) => {
     const f = (cust?.firstName || "").trim();
@@ -256,25 +318,43 @@ export const Estimator = () => {
   return (
     <section className="paint-calculator-wrapper">
       <div className="content-wrapper">
-        <button
-          type="button"
-          className="collapse-area-btn"
-          onClick={() => {
-            setEditingQuoteData(null);
-            localStorage.removeItem("editingQuoteId");
-            localStorage.removeItem("editingQuoteData");
+        <div className="estimator-draft-toolbar">
+          <button
+            type="button"
+            className="collapse-area-btn"
+            onClick={() => {
+              setEditingQuoteData(null);
+              localStorage.removeItem("editingQuoteId");
+              localStorage.removeItem("editingQuoteData");
 
-            setJobType("");
-            localStorage.removeItem("jobType");
-            setEstimateMethod("");
-            localStorage.removeItem("estimateMethod");
+              setJobType("");
+              localStorage.removeItem("jobType");
+              setEstimateMethod("");
+              localStorage.removeItem("estimateMethod");
 
-            setStep("jobType");
-            localStorage.setItem("estimateStep", "jobType");
-          }}
-        >
-          Change Job Type
-        </button>
+              setStep("jobType");
+              localStorage.setItem("estimateStep", "jobType");
+            }}
+          >
+            Change Job Type
+          </button>
+
+          {!isEditing && (
+            <button
+              type="button"
+              className="save-estimate-draft-btn"
+              onClick={saveDraftNow}
+            >
+              Save Draft
+            </button>
+          )}
+        </div>
+
+        {draftSavedMessage && (
+          <div className="estimate-draft-saved" role="status" aria-live="polite">
+            {draftSavedMessage}
+          </div>
+        )}
 
         {customer && (
           <button
@@ -302,8 +382,15 @@ export const Estimator = () => {
             <HandymanEstimator
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-interior-quick"}
               customer={customer}
-              initialQuote={editingQuoteData?.jobType === "interior" ? editingQuoteData : null}
+              initialQuote={
+                editingQuoteData?.jobType === "interior"
+                  ? editingQuoteData
+                  : draftData?.jobType === "interior"
+                    ? draftData.calculatorData
+                    : null
+              }
               mode={isEditing && editingQuoteData?.jobType === "interior" ? "edit" : "create"}
+              onDraftChange={handleDraftChange}
               quoteJobType="interior"
               heading="Interior Painting Estimate"
               itemExample="Walls, ceilings, trim, or complete rooms"
@@ -315,13 +402,22 @@ export const Estimator = () => {
               initialAreas={interiorInitialAreas}
               initialPricing={interiorInitialPricing}
               initialPaintGrade={interiorInitialPaintGrade}
+              draftData={!isEditing && draftData?.jobType === "interior" ? draftData.calculatorData : null}
+              onDraftChange={handleDraftChange}
             />
           ) : jobType === "exterior" && estimateMethod === "quick" ? (
             <HandymanEstimator
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-exterior-quick"}
               customer={customer}
-              initialQuote={editingQuoteData?.jobType === "exterior" ? editingQuoteData : null}
+              initialQuote={
+                editingQuoteData?.jobType === "exterior"
+                  ? editingQuoteData
+                  : draftData?.jobType === "exterior"
+                    ? draftData.calculatorData
+                    : null
+              }
               mode={isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"}
+              onDraftChange={handleDraftChange}
               quoteJobType="exterior"
               heading="Exterior Painting Estimate"
               itemExample="Siding, trim, doors, or preparation"
@@ -331,18 +427,30 @@ export const Estimator = () => {
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-exterior"}
               customer={customer}
               existingQuote={
-                editingQuoteData?.jobType === "exterior" ? editingQuoteData : null
+                editingQuoteData?.jobType === "exterior"
+                  ? editingQuoteData
+                  : draftData?.jobType === "exterior"
+                    ? draftData.calculatorData
+                    : null
               }
               mode={
                 isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"
               }
+              onDraftChange={handleDraftChange}
             />
           ) : (
             <HandymanEstimator
               key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-handyman"}
               customer={customer}
-              initialQuote={editingQuoteData?.jobType === "handyman" ? editingQuoteData : null}
+              initialQuote={
+                editingQuoteData?.jobType === "handyman"
+                  ? editingQuoteData
+                  : draftData?.jobType === "handyman"
+                    ? draftData.calculatorData
+                    : null
+              }
               mode={isEditing && editingQuoteData?.jobType === "handyman" ? "edit" : "create"}
+              onDraftChange={handleDraftChange}
             />
           )}
         </div>

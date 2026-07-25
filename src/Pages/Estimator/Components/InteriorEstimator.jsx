@@ -44,43 +44,57 @@ const WALL_SHEEN_OPTIONS = [
   { label: "Satin", value: "satin" },
 ];
 
-export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = null, initialPaintGrade=null  }) => {
+export const InteriorEstimator = ({
+  customer,
+  initialAreas = [],
+  initialPricing = null,
+  initialPaintGrade = null,
+  draftData = null,
+  onDraftChange,
+}) => {
     const navigate = useNavigate();
+    const draftEstimator = draftData?.estimatorData || {};
+    const restoredAreas = useMemo(
+      () => (initialAreas.length ? initialAreas : draftEstimator.areas || []),
+      [draftEstimator.areas, initialAreas]
+    );
+    const restoredPricing = initialPricing || draftEstimator.pricing || null;
+    const restoredPaintGrade = initialPaintGrade || draftEstimator.paintGrade || null;
 
     const [wallPricePerSqft, setWallPricePerSqft] = useState(
-      initialPricing?.wallPricePerSqft || "1.00"
+      restoredPricing?.wallPricePerSqft || "1.00"
     );
     const [ceilingPricePerSqft, setCeilingPricePerSqft] = useState(
-      initialPricing?.ceilingPricePerSqft || "1.25"
+      restoredPricing?.ceilingPricePerSqft || "1.25"
     );
     const [doorPrice, setDoorPrice] = useState(
-      initialPricing?.doorPrice || "100"
+      restoredPricing?.doorPrice || "100"
     );
     const [baseboardPricePerLf, setBaseboardPricePerLf] = useState(
-      initialPricing?.baseboardPricePerLf || "1.25"
+      restoredPricing?.baseboardPricePerLf || "1.25"
     );
 
     const [paintGrade, setPaintGrade] = useState(
-      initialPaintGrade || "promar200"
+      restoredPaintGrade || "promar200"
     );
     const [wallSheen, setWallSheen] = useState("satin");
     const [isColorChange, setIsColorChange] = useState(false);
     const [materialsMarkupPct, setMaterialsMarkupPct] = useState("20");
     const [areas, setAreas] = useState(
-      Array.isArray(initialAreas) && initialAreas.length > 0 ? initialAreas : []
+      Array.isArray(restoredAreas) ? restoredAreas : []
     );
 
   useEffect(() => {
-    setAreas(Array.isArray(initialAreas) ? initialAreas : []);
+    setAreas(Array.isArray(restoredAreas) ? restoredAreas : []);
 
-      if (initialPricing) {
-        setWallPricePerSqft(initialPricing.wallPricePerSqft || "1.00");
-        setCeilingPricePerSqft(initialPricing.ceilingPricePerSqft || "1.25");
-        setDoorPrice(initialPricing.doorPrice || "100");
-        setBaseboardPricePerLf(initialPricing.baseboardPricePerLf || "1.25");
-        setIsColorChange(initialPricing.isColorChange || false);
-        setMaterialsMarkupPct(initialPricing.materialsMarkupPct || "20");
-        setWallSheen(initialPricing.wallSheen || "satin");
+      if (restoredPricing) {
+        setWallPricePerSqft(restoredPricing.wallPricePerSqft || "1.00");
+        setCeilingPricePerSqft(restoredPricing.ceilingPricePerSqft || "1.25");
+        setDoorPrice(restoredPricing.doorPrice || "100");
+        setBaseboardPricePerLf(restoredPricing.baseboardPricePerLf || "1.25");
+        setIsColorChange(restoredPricing.isColorChange || false);
+        setMaterialsMarkupPct(restoredPricing.materialsMarkupPct || "20");
+        setWallSheen(restoredPricing.wallSheen || "satin");
       } else {
         setWallPricePerSqft("1.25");
         setCeilingPricePerSqft("1.25");
@@ -90,9 +104,45 @@ export const InteriorEstimator = ({customer, initialAreas =[], initialPricing = 
         setMaterialsMarkupPct("20");
         setWallSheen("eggshell");
       }
-      setIsColorChange(initialPricing?.isColorChange || false);
-    setPaintGrade(initialPaintGrade || "promar200");
-  }, [initialAreas, initialPricing, initialPaintGrade]);
+      setIsColorChange(restoredPricing?.isColorChange || false);
+    setPaintGrade(restoredPaintGrade || "promar200");
+  }, [
+    draftData,
+    initialAreas,
+    initialPaintGrade,
+    initialPricing,
+    restoredAreas,
+    restoredPaintGrade,
+    restoredPricing,
+  ]);
+
+  useEffect(() => {
+    if (!onDraftChange) return;
+    const timeout = setTimeout(() => {
+      onDraftChange({
+        jobType: "interior",
+        customer,
+        estimatorData: {
+          areas,
+          paintGrade,
+          pricing: {
+            wallPricePerSqft,
+            ceilingPricePerSqft,
+            doorPrice,
+            baseboardPricePerLf,
+            isColorChange,
+            materialsMarkupPct,
+            wallSheen,
+          },
+        },
+      });
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [
+    areas, baseboardPricePerLf, ceilingPricePerSqft, customer, doorPrice,
+    isColorChange, materialsMarkupPct, onDraftChange, paintGrade,
+    wallPricePerSqft, wallSheen,
+  ]);
 
       // Summary collapse
       const [showSummary, setShowSummary] = useState(false);
@@ -379,6 +429,7 @@ function detectPackageKey(areas) {
 
   localStorage.removeItem("editingQuoteId");
   localStorage.removeItem("editingQuoteData");
+  localStorage.removeItem("estimateDraft");
 
   navigate(data.url);
 };

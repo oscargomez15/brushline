@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 
 const money = (n) =>
@@ -50,6 +50,7 @@ export default function HandymanEstimator({
   quoteJobType = "handyman",
   heading = "Handyman / Misc Estimate",
   itemExample = "Interior Painting",
+  onDraftChange,
 }) {
   const activeCustomer = customer || initialQuote?.customer || null;
 
@@ -70,6 +71,23 @@ export default function HandymanEstimator({
   const [saving, setSaving] = useState(false);
   const [uploadingPhotoId, setUploadingPhotoId] = useState(null);
   const [pendingDeleteId, setPendingDeleteId] = useState(null);
+
+  useEffect(() => {
+    if (!onDraftChange || mode === "edit") return;
+    const timeout = setTimeout(() => {
+      onDraftChange({
+        jobType: quoteJobType,
+        customer: activeCustomer,
+        lineItems: items.map((item) => ({
+          title: item.title,
+          description: item.desc,
+          price: item.price,
+          photos: item.photos,
+        })),
+      });
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [activeCustomer, items, mode, onDraftChange, quoteJobType]);
 
   const pendingDeleteItem =
     items.find((item) => item.id === pendingDeleteId) || null;
@@ -260,6 +278,7 @@ export default function HandymanEstimator({
         throw new Error(data?.error || "Failed to create quote");
       }
 
+      localStorage.removeItem("estimateDraft");
       window.location.href = data.url;
       localStorage.removeItem("editingQuoteId");
       localStorage.removeItem("editingQuoteData");
