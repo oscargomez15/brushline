@@ -31,42 +31,41 @@ export const Hamburger = () => {
         }
     },[isOpen])
 
+    useEffect(() => {
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') setOpen(false);
+        };
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
+    }, []);
+
   return (
     <div className='hamburger-menu'>
         <img src={logo} alt="brushline-logo" fetchPriority='high' className='logo-hero-mb' />
-        <motion.div
+        <motion.button
+        type="button"
         className='menu-icon'
         whileTap={{scale:0.9}}
         transition={{duration:0.5}}
         onClick={handleClick}
-        role='button'
-        aria-label='menu'
-        tabIndex="0"
-        onKeyDown={(e) => {
-            if(e.key === 'Enter' || e.key === ''){
-                handleClick();
-            }
-        }}>
+        aria-label='Open navigation menu'
+        aria-expanded={isOpen}
+        aria-controls="mobile-navigation">
             <FaBars/>
-        </motion.div>
+        </motion.button>
 
         <div
+        aria-hidden="true"
         className={`exit-overlay ${isOpen ? 'hamburger-slide-in' : 'hamburger-slide-out'}`}
-        onClick={() => setOpen(!isOpen)}></div>
+        onClick={() => setOpen(false)}></div>
 
         <nav
+        id="mobile-navigation"
+        aria-label="Mobile navigation"
+        aria-hidden={!isOpen}
         className={`hamburger-content ${isOpen ? 'hamburger-slide-in' : 'hamburger-slide-out'}`}>
-            <FaTimes
-            tabIndex={isOpen ? '0' : '-1'}
-            role='button'
-            aria-label='close-menu'
-            onKeyDown={(e) => {
-                if(e.key === 'Enter' || e.key ===''){
-                    handleClick();
-                }
-            }}
-            className='exit-icon'
-            onClick={handleClick}/>
+            <button type="button" tabIndex={isOpen ? 0 : -1} aria-label="Close navigation menu"
+                className='exit-icon' onClick={handleClick}><FaTimes /></button>
             <header className="mobile-nav-header">
 
                 <img
@@ -80,13 +79,14 @@ export const Hamburger = () => {
             <ul className='hamburger-links'>
                 <li><a href="/" tabIndex={isOpen ? '0' : '-1'} onClick={() => {setOpen(false)}}> Home</a></li>
                 <li className="dropdown-mb">
-                    <div className="dropdown-label dropdown-toggle"
+                    <button type="button" className="dropdown-label dropdown-toggle"
                         tabIndex={isOpen ? '0' : '-1'}
+                        aria-expanded={openDropdown === 'services'}
                         onClick={() =>
                         setOpenDropdown(openDropdown === 'services' ? null : 'services')}>
                         <p>Services</p>
                         <IoIosArrowDown className={openDropdown === 'services' ? 'rotated' : ''}/>
-                    </div>
+                    </button>
                     <ul className={`dropdown-menu ${openDropdown === 'services' ? 'open' : ''}`}>
                     <li><Link to="/painting" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Painting</Link></li>
                     <li><Link to="/drywall" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Drywall</Link></li>
@@ -95,13 +95,14 @@ export const Hamburger = () => {
                     </ul>
                 </li>
                 <li className="dropdown-mb">
-                    <div className="dropdown-label dropdown-toggle"
+                    <button type="button" className="dropdown-label dropdown-toggle"
                         tabIndex={isOpen ? '0' : '-1'}
+                        aria-expanded={openDropdown === 'serviceArea'}
                         onClick={() => 
                         setOpenDropdown(openDropdown === 'serviceArea' ? null : 'serviceArea')}>
                         <p>Service Area</p>
                         <IoIosArrowDown className={openDropdown === 'serviceArea' ? 'rotated' : ''}/>
-                    </div>
+                    </button>
                     <ul className={`dropdown-menu ${openDropdown === 'serviceArea' ? 'open' : ''}`}>
                     <li><Link to="/service-area/cape-coral-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Cape Coral</Link></li>
                     <li><Link to="/service-area/fort-myers-painter" onClick={() => {setOpen(false); setOpenDropdown(null)}}>Fort Myers</Link></li>
@@ -128,12 +129,12 @@ export const Hamburger = () => {
                 tabIndex={isOpen ? '0':'-1'}
                 className='cta-label'
                 >Your <span>Free Estimate</span> is <br/>a Call Away</p>
-                <button className='button nav-cta'><a href="tel:2397773713" className='cta-text' onClick={() =>{
+                <a href="tel:2397773713" className='button nav-cta cta-text' onClick={() =>{
                             if (window.gtag) {
                             window.gtag('event', 'conversion', {
                                 send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq'
                             });
-                            }}}> Call Now</a></button>
+                            }}}> Call Now</a>
 
             </motion.div>
             <div className='socials-hamburger'>

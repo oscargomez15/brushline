@@ -111,7 +111,7 @@ export const Contact = () => {
                     <h1>Contact us and get your <span>free quote</span></h1>
                     <p>Get your free quote by filling the information below and we'll get back to you within 24 hours.</p>
                 </div>
-                <form onSubmit={handleSecureSubmit}>
+                <form onSubmit={handleSecureSubmit} aria-busy={submitting}>
                     <input type="text" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{position:'absolute', left:'-10000px'}} />
                     <div className="form-row">
                         <div className="form-field">
@@ -157,6 +157,9 @@ export const Contact = () => {
                     </div>
 
                     {submitError && <p role="alert" style={{color:'#b91c1c', fontWeight:700}}>{submitError}</p>}
+                    <span className="sr-only" aria-live="polite">
+                        {submitting ? "Sending your message" : ""}
+                    </span>
                     <button className='button' type="submit" disabled={!isFormValid || submitting}>
                         {submitting ? 'Sending...' : 'Send Message'}
                     </button>
@@ -170,19 +173,23 @@ export const Contact = () => {
         {showModal && (
             <motion.div
             className="modal-overlay"
+            role="presentation"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             >
                 <motion.div
                     className="modal cartoon-box"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="contact-success-title"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.8, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                 >
                     <div className="modal-text">
-                        <h2><TbSquareRoundedCheckFilled/> Message Sent</h2>
+                        <h2 id="contact-success-title"><TbSquareRoundedCheckFilled aria-hidden="true"/> Message Sent</h2>
                         <p>
                             Thanks for reaching out! Our team will contact you within the next
                             24 hours to discuss your project and the next steps.

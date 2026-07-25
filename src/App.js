@@ -16,6 +16,7 @@ import { Painting } from "./Pages/Painting";
 import { Drywall } from "./Pages/Drywall";
 import { Cleaning } from "./Pages/Cleaning";
 import { Privacy } from "./Pages/Privacy";
+import { Accessibility } from "./Pages/Accessibility";
 import ServiceArea from "./Pages/ServiceArea";
 import { Login } from "./Pages/Login";
 import { NotFound } from "./Pages/NotFound";
@@ -79,6 +80,7 @@ function App() {
           <Route path="/drywall" element={<Drywall />} />
           <Route path="/cleaning" element={<Cleaning />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/service-area/:citySlug" element={<ServiceArea />} />
           <Route path="/quote/:id" element={<QuotePage />} />
           <Route path="/invoice/:id" element={<PublicInvoicePage />} />

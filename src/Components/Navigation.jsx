@@ -18,7 +18,7 @@ export const Navigation = () => {
   // }, [location]); 
 
 
-  useEffect(()=> { 
+  useEffect(()=> {
     const handleScroll = () => {
       if(window.scrollY > 250){
         setSticky(true)
@@ -26,10 +26,11 @@ export const Navigation = () => {
         setSticky(false)
       }
     }
-    window.addEventListener('scroll', handleScroll)
-  })
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
   return (
-    <nav className={`modern-nav ${isSticky ? 'sticky-nav' : ''} ${isPaintingPage ? 'coloredBackground' : ''}`}>
+    <nav aria-label="Primary navigation" className={`modern-nav ${isSticky ? 'sticky-nav' : ''} ${isPaintingPage ? 'coloredBackground' : ''}`}>
   <div className="nav-wrapper-mb">
     <div className="navigation-mob">
       <Hamburger />
@@ -38,7 +39,7 @@ export const Navigation = () => {
 
   <div className="modern-nav-wrapper">
     <header>
-      <Link to="/">
+      <Link to="/" aria-label="Brushline Services home">
         <img src={logo} fetchPriority="high" alt="Brushline Services Logo" />
       </Link>
     </header>
@@ -47,9 +48,9 @@ export const Navigation = () => {
       <li><Link to="/">Home</Link></li>
 
       <li className="nav-dropdown-parent">
-        <a href="#services" className="nav-services-container">
+        <button type="button" className="nav-services-container" aria-haspopup="true">
           Services <IoIosArrowDown size="18" />
-        </a>
+        </button>
 
         <ul className="dropdown">
           <li><Link to="/painting">Painting</Link></li>
@@ -59,9 +60,9 @@ export const Navigation = () => {
       </li>
 
       <li className="nav-dropdown-parent">
-        <a href="#services" className="nav-services-container">
+        <button type="button" className="nav-services-container" aria-haspopup="true">
           Service Area <IoIosArrowDown size="18" />
-        </a>
+        </button>
 
         <ul className="dropdown">
           <li><Link to="/service-area/cape-coral-painter">Cape Coral</Link></li>

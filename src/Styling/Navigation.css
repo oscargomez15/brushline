@@ -52,6 +52,14 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .nav-dropdown-parent {
@@ -77,7 +85,8 @@
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
 }
 
-.nav-dropdown-parent:hover .dropdown {
+.nav-dropdown-parent:hover .dropdown,
+.nav-dropdown-parent:focus-within .dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -234,6 +243,7 @@
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
 }
 
 .exit-overlay {
@@ -287,6 +297,9 @@
   font-size: 1.4rem;
   cursor: pointer;
   color: #fff;
+  border: 0;
+  background: transparent;
+  padding: 0.65rem;
 }
 
 .hamburger-content header img {
@@ -313,6 +326,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.dropdown-label {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .dropdown-label p {

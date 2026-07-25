@@ -175,7 +175,7 @@ export default function Sidebar() {
       </aside>
 
           {/* ✅ Mobile Bottom Nav */}
-    <div className="crm-mobile-nav" aria-label="Mobile navigation">
+    <nav className="crm-mobile-nav" aria-label="Mobile CRM navigation">
       <NavLink
         to="/dashboard"
         className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`}
@@ -239,7 +239,7 @@ export default function Sidebar() {
       >
         <span className="crm-mobile-icon"><FiUsers /></span>
       </NavLink>
-    </div>
+    </nav>
 
     {/* Optional: tap-away backdrop to close dropdown */}
     {mobileMenu && <div className="crm-mobile-backdrop" onClick={() => setMobileMenu(null)} />}
@@ -269,6 +269,7 @@ function Dropdown({ label, icon, collapsed, open, onToggle, children }) {
         type="button"
         className="crm-group-btn"
         onClick={onToggle}
+        aria-expanded={open}
         title={collapsed ? label : undefined}
       >
         <span className="crm-icon">{icon}</span>

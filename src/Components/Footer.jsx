@@ -84,7 +84,12 @@ export const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>© Copyright 2025. Brushline LLC. All Rights Reserved.</p>
+        <p>© Copyright {new Date().getFullYear()}. Brushline LLC. All Rights Reserved.</p>
+        <p>
+          <Link to="/privacy">Privacy Policy</Link>
+          {" · "}
+          <Link to="/accessibility">Accessibility</Link>
+        </p>
       </div>
     </footer>
   );

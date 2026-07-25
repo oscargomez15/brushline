@@ -6,10 +6,13 @@ import { Footer } from "../Components/Footer";
 export default function PublicLayout() {
   return (
     <div className="background-wrapper">
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <Navigation />
-      <div className="public-with-nav">
+      <main id="main-content" className="public-with-nav" tabIndex="-1">
         <Outlet />
-      </div>
+      </main>
       <Footer />
     </div>
   );
