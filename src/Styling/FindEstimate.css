@@ -56,6 +56,10 @@
   min-width:820px;
 }
 
+.fe-mobile-list{
+  display:none;
+}
+
 .fe-table thead th{
   text-align:left;
   font-size:12px;
@@ -86,6 +90,18 @@
 .muted{ opacity:.75; }
 .right{ text-align:right; }
 .strong{ font-weight:900; }
+
+.fe-address-link{
+  color:#1d4ed8;
+  font-weight:700;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+
+.fe-address-link:hover{
+  color:#1e40af;
+}
 
 /* ============ Client cell ============ */
 .fe-client{
@@ -398,4 +414,96 @@
 .fe-row-clickable:focus {
   outline: 2px solid rgba(37, 99, 235, 0.35);
   outline-offset: -2px;
+}
+
+@media (max-width:520px){
+  .fe-card{ border:0; background:transparent; overflow:visible; }
+  .fe-table-wrap{ display:none; }
+  .fe-mobile-list{ display:grid; gap:12px; }
+  .fe-mobile-card{
+    position:relative;
+    border:1px solid rgba(15,23,42,.1);
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 8px 24px rgba(15,23,42,.06);
+  }
+  .fe-mobile-card-main{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:16px;
+    border:0;
+    background:transparent;
+    color:#0f172a;
+    text-align:left;
+    font:inherit;
+    cursor:pointer;
+  }
+  .fe-mobile-card-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    width:100%;
+  }
+  .fe-mobile-card-top > span:first-child{ min-width:0; }
+  .fe-mobile-name{
+    display:block;
+    overflow:hidden;
+    font-size:16px;
+    font-weight:900;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .fe-mobile-number{
+    display:block;
+    margin-top:3px;
+    color:#64748b;
+    font-size:12px;
+    font-weight:700;
+  }
+  .fe-mobile-total{
+    flex:0 0 auto;
+    font-size:17px;
+  }
+  .fe-mobile-address{
+    color:#475569;
+    font-size:13px;
+    line-height:1.45;
+  }
+  .fe-mobile-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .fe-mobile-date{
+    color:#64748b;
+    font-size:12px;
+  }
+  .fe-mobile-actions{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    padding:0 12px 12px;
+  }
+  .fe-mobile-open{
+    min-height:44px;
+    border:0;
+    border-radius:12px;
+    background:#2563eb;
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+  }
+  .fe-mobile-actions .kebab-btn{
+    width:44px;
+    height:44px;
+  }
+  .fe-mobile-actions .kebab-menu{
+    min-width:220px;
+    top:auto;
+    bottom:calc(100% + 8px);
+  }
+  .fe-mobile-delete{ color:#b91c1c; }
 }

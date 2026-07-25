@@ -36,6 +36,9 @@ function refDomain(ref = "") {
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(Number(n) || 0);
 
+const mapsUrl = (address) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+
 export default function FindEstimates() {
   const navigate = useNavigate();
 
@@ -259,7 +262,9 @@ const handleRegeneratePdf = async (quoteId) => {
   return (
     <div className="find-estimates">
       <div className="fe-toolbar">
+        <label className="sr-only" htmlFor="estimate-search">Search estimates</label>
         <input
+            id="estimate-search"
             type="text"
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -321,7 +326,20 @@ const handleRegeneratePdf = async (quoteId) => {
                       </div>
                     </td>
 
-                    <td className="muted">{x.projectAddress || "—"}</td>
+                    <td className="muted">
+                      {x.projectAddress ? (
+                        <a
+                          className="fe-address-link"
+                          href={mapsUrl(x.projectAddress)}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                          aria-label={`Open ${x.projectAddress} in Google Maps`}
+                        >
+                          {x.projectAddress}
+                        </a>
+                      ) : "—"}
+                    </td>
 
                     <td>
                       <span className={`fe-pill ${typeClass}`}>{typeLabel}</span>
@@ -447,6 +465,84 @@ const handleRegeneratePdf = async (quoteId) => {
               ) : null}
             </tbody>
           </table>
+        </div>
+
+        <div className="fe-mobile-list">
+          {filtered.map((x) => {
+            const typeLabel = typeMap[x.jobType] || x.jobType;
+            const typeClass = x.jobType === "exterior" ? "exterior" : "interior";
+            const isDeleting = deletingId === x.id;
+
+            return (
+              <article className="fe-mobile-card" key={`mobile-${x.id}`}>
+                <div className="fe-mobile-card-main">
+                  <span className="fe-mobile-card-top">
+                    <span>
+                      <span className="fe-mobile-name">{x.clientName || "Customer"}</span>
+                      <span className="fe-mobile-number">#{getQuoteNumber(x)}</span>
+                    </span>
+                    <strong className="fe-mobile-total">{fmtMoney(x.grandTotal)}</strong>
+                  </span>
+                  {x.projectAddress ? (
+                    <a
+                      className="fe-mobile-address fe-address-link"
+                      href={mapsUrl(x.projectAddress)}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Open ${x.projectAddress} in Google Maps`}
+                    >
+                      {x.projectAddress}
+                    </a>
+                  ) : (
+                    <span className="fe-mobile-address">No project address</span>
+                  )}
+                  <span className="fe-mobile-meta">
+                    <span className={`fe-pill ${typeClass}`}>{typeLabel}</span>
+                    <span className={`fe-pill ${x.status === "approved" ? "approved" : "awaiting"}`}>
+                      {x.status === "approved" ? "Approved" : "Awaiting"}
+                    </span>
+                    <span className={`fe-pill ${x.viewCount > 0 ? "approved" : "awaiting"}`}>
+                      {x.viewCount > 0 ? "Viewed" : "Not viewed"}
+                    </span>
+                  </span>
+                  <span className="fe-mobile-date">
+                    {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "No date"}
+                  </span>
+                </div>
+
+                <div className="fe-mobile-actions">
+                  <button type="button" className="fe-mobile-open" onClick={() => navigate(`/quote/${x.id}`)}>
+                    Open Estimate
+                  </button>
+                  <div className="kebab-wrap">
+                    <button
+                      type="button"
+                      className="kebab-btn"
+                      onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}
+                      aria-label={`More actions for ${x.clientName || "estimate"}`}
+                      aria-expanded={openMenuId === x.id}
+                    >⋯</button>
+                    {openMenuId === x.id && (
+                      <div className="kebab-menu" role="menu">
+                        <button type="button" className="kebab-item" onClick={() => navigate(`/crm/estimates/edit/${x.id}`)}>Edit Quote</button>
+                        <button type="button" className="kebab-item" onClick={() => handleResendQuoteEmail(x.id)} disabled={resendingId === x.id}>
+                          {resendingId === x.id ? "Resending..." : "Resend Quote Email"}
+                        </button>
+                        <button type="button" className="kebab-item" onClick={() => handleCreateInvoice(x.id)} disabled={creatingInvoiceId === x.id}>
+                          {creatingInvoiceId === x.id ? "Creating Invoice..." : x.linkedInvoiceId ? "Open Invoice" : "Create Invoice"}
+                        </button>
+                        <button type="button" className="kebab-item" onClick={() => openViewHistory(x.id)}>View History</button>
+                        <button type="button" className="kebab-item fe-mobile-delete" onClick={() => handleDelete(x.id)} disabled={isDeleting}>
+                          {isDeleting ? "Deleting..." : "Delete Estimate"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+          {filtered.length === 0 && <div className="fe-empty">No estimates found.</div>}
         </div>
       </div>
 

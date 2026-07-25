@@ -316,9 +316,16 @@ try {
       const next = [...normalizeItems(prev)];
       const current = next[index] || { description: "", qty: 1, unitPrice: 0, total: 0 };
       const updated = { ...current, ...patch };
-      const qty = Number(updated.qty) || 0;
-      const unitPrice = Number(updated.unitPrice) || 0;
-      updated.total = qty * unitPrice;
+      if (Object.prototype.hasOwnProperty.call(patch, "total")) {
+        const amount = Number(patch.total) || 0;
+        updated.qty = 1;
+        updated.unitPrice = amount;
+        updated.total = amount;
+      } else {
+        const qty = Number(updated.qty) || 0;
+        const unitPrice = Number(updated.unitPrice) || 0;
+        updated.total = qty * unitPrice;
+      }
       next[index] = updated;
       return { ...prev, lineItems: next };
     });
@@ -634,7 +641,7 @@ const previewUrl = invoice?.id
         .items-head,
         .item-row {
           display: grid;
-          grid-template-columns: minmax(0, 1.6fr) 90px 130px 130px 90px;
+          grid-template-columns: minmax(0, 1fr) 150px 90px;
           gap: 10px;
           align-items: center;
         }
@@ -1118,7 +1125,7 @@ const previewUrl = invoice?.id
               </div>
             </div>
 
-            <div className="bill-grid">
+            <div className="bill-grid" style={{ gridTemplateColumns: "1fr" }}>
               <div className="bill-box">
                 <div className="section-title-invoice">Bill To</div>
                 <div className="bill-name">{invoice.clientName || "Customer name"}</div>
@@ -1126,20 +1133,13 @@ const previewUrl = invoice?.id
                   {invoice.projectAddress || "Project address"}
                 </div>
               </div>
-
-              <div className="bill-box">
-                <div className="section-title-invoice">From</div>
-                <div className="bill-name">{invoice.companyName || "Brushline Services"}</div>
-              </div>
             </div>
 
             <div className="items-wrap">
               <div className="section-title-invoice" style={{ marginBottom: 12 }}>Invoice Items</div>
               <div className="items-head">
                 <div>Description</div>
-                <div>Qty</div>
-                <div>Unit Price</div>
-                <div style={{ textAlign: "right" }}>Line Total</div>
+                <div style={{ textAlign: "right" }}>Amount</div>
                 <div></div>
               </div>
 
@@ -1156,21 +1156,11 @@ const previewUrl = invoice?.id
                     className="input"
                     type="number"
                     min="0"
-                    step="1"
-                    value={item.qty}
-                    onChange={(e) => updateLineItem(index, { qty: e.target.value })}
-                  />
-
-                  <input
-                    className="input"
-                    type="number"
-                    min="0"
                     step="0.01"
-                    value={item.unitPrice}
-                    onChange={(e) => updateLineItem(index, { unitPrice: e.target.value })}
+                    value={item.total}
+                    aria-label={`Amount for item ${index + 1}`}
+                    onChange={(e) => updateLineItem(index, { total: e.target.value })}
                   />
-
-                  <div className="inline-total">{fmtMoney(item.total)}</div>
 
                   <button className="remove-btn" type="button" onClick={() => removeLineItem(index)}>
                     Remove
@@ -1186,7 +1176,6 @@ const previewUrl = invoice?.id
             <details className="terms-editor-card" style={{ marginTop: 12 }}>
             <summary className="terms-editor-summary">
                 <span className="label" style={{ marginBottom: 0 }}>Invoice Terms</span>
-                <span className="terms-editor-toggle">View Terms</span>
             </summary>
 
             <div style={{ marginTop: 10 }}>
@@ -1318,8 +1307,18 @@ const previewUrl = invoice?.id
                 </div>
                 <div className="payment-quick-amounts">
                   <div className="payment-quick-amounts-label">
-                    <span>Down payment remaining</span>
-                    <strong>{fmtMoney(downPaymentRemaining)}</strong>
+                    <span>
+                      {downPaymentRemaining > 0
+                        ? "Down payment remaining"
+                        : "Remaining invoice balance"}
+                    </span>
+                    <strong>
+                      {fmtMoney(
+                        downPaymentRemaining > 0
+                          ? downPaymentRemaining
+                          : balanceDue
+                      )}
+                    </strong>
                   </div>
                   <button
                     type="button"
@@ -1327,12 +1326,18 @@ const previewUrl = invoice?.id
                     onClick={() =>
                       setPaymentForm((prev) => ({
                         ...prev,
-                        amount: downPaymentRemaining.toFixed(2),
+                        amount: (
+                          downPaymentRemaining > 0
+                            ? downPaymentRemaining
+                            : balanceDue
+                        ).toFixed(2),
                       }))
                     }
-                    disabled={downPaymentRemaining <= 0}
+                    disabled={balanceDue <= 0}
                   >
-                    Use Down Payment
+                    {downPaymentRemaining > 0
+                      ? "Use Down Payment"
+                      : "Use Remaining Balance"}
                   </button>
                 </div>
                 <div className="payment-form-grid">
