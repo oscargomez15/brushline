@@ -245,7 +245,6 @@ export default function FindInvoices() {
                 <th>Payment</th>
                 <th className="right">Total</th>
                 <th className="right">Balance</th>
-                <th className="right">Delete</th>
                 <th className="right">Actions</th>
               </tr>
             </thead>
@@ -277,7 +276,6 @@ export default function FindInvoices() {
                     <td>
                       <div className="fe-client-meta">
                         <div className="fe-client-name">{x.invoiceNumber || "—"}</div>
-                        <div className="fe-client-id">#{x.id}</div>
                       </div>
                     </td>
 
@@ -293,7 +291,7 @@ export default function FindInvoices() {
                       </div>
                     </td>
 
-                    <td className="muted">{x.projectAddress || "—"}</td>
+                    <td className="muted fe-table-address">{x.projectAddress || "—"}</td>
 
                     <td>
                       <span
@@ -313,17 +311,6 @@ export default function FindInvoices() {
 
                     <td className="right strong">{fmtMoney(x.grandTotal)}</td>
                     <td className="right strong">{fmtMoney(x.balanceDue)}</td>
-
-                    <td className="right" onClick={(e) => e.stopPropagation()}>
-                      <button
-                        className="fe-danger-btn"
-                        onClick={() => handleDeleteInvoice(x.id)}
-                        disabled={isDeleting}
-                        title="Delete invoice"
-                      >
-                        {isDeleting ? "Deleting…" : "🗑 Delete"}
-                      </button>
-                    </td>
 
                     <td className="right" onClick={(e) => e.stopPropagation()}>
                       <div className="kebab-wrap" onClick={(e) => e.stopPropagation()}>
@@ -375,6 +362,18 @@ export default function FindInvoices() {
                                 >
                                 Record Payment
                             </button>
+
+                            <button
+                              type="button"
+                              className="kebab-item kebab-item-danger"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleDeleteInvoice(x.id);
+                              }}
+                              disabled={isDeleting}
+                            >
+                              {isDeleting ? "Deleting…" : "Delete Invoice"}
+                            </button>
                           </div>
                         )}
                       </div>
@@ -385,7 +384,7 @@ export default function FindInvoices() {
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="fe-empty">
+                  <td colSpan={9} className="fe-empty">
                     No invoices found.
                   </td>
                 </tr>

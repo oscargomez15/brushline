@@ -502,6 +502,21 @@
   .fe-results-count { padding: 0 3px 2px; }
 }
 
+/* Desktop table polish */
+.fe-table { border-collapse: separate; border-spacing: 0; min-width: 940px; }
+.fe-table thead th { background: #f8fafc; color: #64748b; font-weight: 850; opacity: 1; white-space: nowrap; }
+.fe-table tbody td { padding: 15px 14px; }
+.fe-table tbody tr:nth-child(even) { background: #fcfdff; }
+.fe-table tbody tr:nth-child(even):hover, .fe-table tbody tr:hover { background: #f3f7ff; }
+.fe-table tbody tr:last-child td { border-bottom: 0; }
+.fe-table tbody td:first-child { color: #64748b; font-size: 13px; white-space: nowrap; }
+.fe-table tbody td.right { white-space: nowrap; }
+.fe-table-address { width: 23%; max-width: 260px; line-height: 1.45; overflow-wrap: anywhere; }
+.kebab-btn { color: #334155; transition: background .16s ease, border-color .16s ease, transform .16s ease; }
+.kebab-btn:hover { border-color: rgba(37,99,235,.28); background: #eff6ff; transform: translateY(-1px); }
+.kebab-item-danger { color: #b91c1c; }
+.kebab-item-danger:hover { background: #fef2f2; }
+
 @media (max-width:520px){
   .fe-card{ border:0; background:transparent; overflow:visible; }
   .fe-table-wrap{ display:none; }

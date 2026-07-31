@@ -181,3 +181,33 @@ Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
 Response with status 200 in 1241 ms.
 Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
 Response with status 200 in 1145 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1172 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 969 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 317 ms.
+Request from ::ffff:127.0.0.1: DELETE /.netlify/functions/delete-invoice?id=inv_1784773177037-ca79815c6db8e
+Response with status 200 in 1458 ms.
+Request from ::ffff:127.0.0.1: DELETE /.netlify/functions/delete-invoice?id=inv_1784248919005-886bd9a558e1c
+Response with status 200 in 952 ms.
+Request from ::ffff:127.0.0.1: DELETE /.netlify/functions/delete-invoice?id=inv_1784781699840-6a84eb904be1
+Response with status 200 in 926 ms.
+Request from ::ffff:127.0.0.1: DELETE /.netlify/functions/delete-invoice?id=inv_1782704274476-96f4860d6fdfa
+Response with status 200 in 982 ms.
+Request from ::ffff:127.0.0.1: DELETE /.netlify/functions/delete-invoice?id=inv_1778815017939-69c6fe2030684
+Response with status 200 in 1047 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 906 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 398 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 357 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 873 ms.

@@ -281,15 +281,14 @@ export default function CustomersList() {
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Last Updated</th>
-                <th className="right">Edit</th>
-                <th className="right">Action</th>
+                <th className="right">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="customers-empty">
+                  <td colSpan={6} className="customers-empty">
                     No customers found.
                   </td>
                 </tr>
@@ -328,23 +327,10 @@ export default function CustomersList() {
 
                       
                       <td className="right">
-                        <button
-                          type="button"
-                          className="customers-edit-btn"
-                          onClick={() => openEditModal(customer)}
-                        >
-                          Edit
-                        </button>
-                      </td>
-
-                      <td className="right">
-                        <button
-                          type="button"
-                          className="customers-use-btn"
-                          onClick={() => handleUseCustomer(customer)}
-                        >
-                          Use for Quote
-                        </button>
+                        <div className="customers-table-actions">
+                          <button type="button" className="customers-edit-btn" onClick={() => openEditModal(customer)}>Edit</button>
+                          <button type="button" className="customers-use-btn" onClick={() => handleUseCustomer(customer)}>Start Estimate</button>
+                        </div>
                       </td>
                     </tr>
                   );

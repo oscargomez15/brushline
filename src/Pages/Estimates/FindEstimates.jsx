@@ -305,7 +305,6 @@ const handleRegeneratePdf = async (quoteId) => {
                 <th>Status</th>
                 <th className="right">View Status</th>
                 <th className="right">Total</th>
-                <th className="right">Delete</th>
                 <th className="right">Actions</th>
 
               </tr>
@@ -346,7 +345,7 @@ const handleRegeneratePdf = async (quoteId) => {
                       </div>
                     </td>
 
-                    <td className="muted">
+                    <td className="muted fe-table-address">
                       {x.projectAddress ? (
                         <a
                           className="fe-address-link"
@@ -380,17 +379,6 @@ const handleRegeneratePdf = async (quoteId) => {
                     </td>
 
                     <td className="right strong">{fmtMoney(x.grandTotal)}</td>
-
-                    <td className="right" onClick={(e) => e.stopPropagation()}>
-                      <button
-                        className="fe-danger-btn"
-                        onClick={() => handleDelete(x.id)}
-                        disabled={isDeleting}
-                        title="Delete estimate"
-                      >
-                        {isDeleting ? "Deleting…" : "🗑 Delete"}
-                      </button>
-                    </td>
 
                     <td className="right" onClick={(e) => e.stopPropagation()}>
                       <div className="kebab-wrap" onClick={(e) => e.stopPropagation()}>
@@ -468,6 +456,18 @@ const handleRegeneratePdf = async (quoteId) => {
                             >
                               {regeneratingId === x.id ? "Updating PDF..." : "Update PDF Style"}
                             </button>
+
+                            <button
+                              type="button"
+                              className="kebab-item kebab-item-danger"
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleDelete(x.id);
+                              }}
+                              disabled={isDeleting}
+                            >
+                              {isDeleting ? "Deleting…" : "Delete Estimate"}
+                            </button>
                           </div>
                         )}
                       </div>
@@ -478,7 +478,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="fe-empty">
+                  <td colSpan={8} className="fe-empty">
                     No estimates found.
                   </td>
                 </tr>
