@@ -5,6 +5,7 @@ import ExteriorEstimator from "./Components/ExteriorEstimator";
 import { InteriorEstimator } from "./Components/InteriorEstimator";
 import { StartEstimate } from "./Components/StartEstimate";
 import HandymanEstimator from "./Components/HandymanEstimator";
+import { FiArrowRight, FiHome, FiLayers, FiSun, FiTool } from "react-icons/fi";
 
 const readEstimateDraft = () => {
   try {
@@ -216,41 +217,64 @@ export const Estimator = () => {
   if (step === "jobType") {
     return (
       <section className="paint-calculator-wrapper">
-        <div className="content-wrapper-jobs">
-          <h1>Estimate Type</h1>
-          <p>What type of job are we estimating today?</p>
+        <div className="content-wrapper-jobs estimate-type-screen">
+          <div className="estimate-type-heading">
+            <span className="estimate-type-kicker">New estimate</span>
+            <h1>What are we working on?</h1>
+            <p>Choose a service to open the right estimating workspace.</p>
+          </div>
 
           <div className="jobtype-actions">
             <button
               type="button"
-              className="job-type-opt"
+              className="job-type-opt job-type-interior"
               onClick={() => chooseJobType("interior")}
             >
-              Interior Paint
+              <span className="job-type-icon"><FiHome aria-hidden="true" /></span>
+              <span className="job-type-copy">
+                <strong>Interior Painting</strong>
+                <small>Rooms, ceilings, trim, doors, and complete interiors.</small>
+              </span>
+              <FiArrowRight className="job-type-arrow" aria-hidden="true" />
             </button>
 
             <button
               type="button"
-              className="job-type-opt"
+              className="job-type-opt job-type-exterior"
               onClick={() => chooseJobType("exterior")}
             >
-              Exterior Paint
+              <span className="job-type-icon"><FiSun aria-hidden="true" /></span>
+              <span className="job-type-copy">
+                <strong>Exterior Painting</strong>
+                <small>Walls, stucco, soffits, fascia, trim, and doors.</small>
+              </span>
+              <FiArrowRight className="job-type-arrow" aria-hidden="true" />
             </button>
 
             <button
               type="button"
-              className="job-type-opt"
+              className="job-type-opt job-type-drywall"
               onClick={() => chooseJobType("drywall")}
             >
-              Drywall Installation / Repair
+              <span className="job-type-icon"><FiLayers aria-hidden="true" /></span>
+              <span className="job-type-copy">
+                <strong>Drywall Installation / Repair</strong>
+                <small>Installation, patches, finishing, and texture matching.</small>
+              </span>
+              <FiArrowRight className="job-type-arrow" aria-hidden="true" />
             </button>
 
             <button
               type="button"
-              className="job-type-opt"
+              className="job-type-opt job-type-handyman"
               onClick={() => chooseJobType("handyman")}
             >
-              Handyman / Misc
+              <span className="job-type-icon"><FiTool aria-hidden="true" /></span>
+              <span className="job-type-copy">
+                <strong>Handyman / Miscellaneous</strong>
+                <small>Flexible line items for repairs and custom projects.</small>
+              </span>
+              <FiArrowRight className="job-type-arrow" aria-hidden="true" />
             </button>
           </div>
 

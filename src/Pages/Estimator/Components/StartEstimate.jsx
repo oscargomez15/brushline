@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
+import { FiArrowRight, FiUserPlus } from "react-icons/fi";
 import "../../../Styling/StartEstimate.css";
 
 export const StartEstimate = ({
@@ -421,7 +422,7 @@ export const StartEstimate = ({
         )}
 
         {mode === "new" && (
-          <div className="start-estimate-form">
+          <div className="start-estimate-form new-customer-card">
             <div className="start-estimate-topbar">
               <button
                 type="button"
@@ -432,28 +433,41 @@ export const StartEstimate = ({
               </button>
             </div>
 
+            <div className="new-customer-heading">
+              <span className="new-customer-icon"><FiUserPlus aria-hidden="true" /></span>
+              <div>
+                <span className="new-customer-kicker">Customer details</span>
+                <h2>Add a new customer</h2>
+                <p>Enter the project contact and location to begin the estimate.</p>
+              </div>
+            </div>
+
             <label>
-              <span>First Name</span>
+              <span>First name <em>Required</em></span>
               <input
                 className="dim-input"
                 type="text"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                autoComplete="given-name"
+                placeholder="First name"
               />
             </label>
 
             <label>
-              <span>Last Name</span>
+              <span>Last name <em>Required</em></span>
               <input
                 className="dim-input"
                 type="text"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                autoComplete="family-name"
+                placeholder="Last name"
               />
             </label>
 
-            <label style={{ position: "relative" }}>
-              <span>Address</span>
+            <label className="new-customer-address">
+              <span>Project address <em>Required</em></span>
               <input
                 className="dim-input"
                 type="text"
@@ -467,7 +481,7 @@ export const StartEstimate = ({
                   setTimeout(() => setShowPredictions(false), 150);
                 }}
                 placeholder="123 Main St, Cape Coral, FL"
-                autoComplete="new-password"
+                autoComplete="off"
               />
 
               {showPredictions && predictions.length > 0 && (
@@ -487,47 +501,48 @@ export const StartEstimate = ({
               )}
             </label>
 
-            <label>
+            <label className="new-customer-unit">
               <span>Unit / Apt / Suite</span>
               <input
                 className="dim-input"
                 type="text"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                placeholder="Apt 3B"
+                placeholder="Optional"
               />
             </label>
 
             <label>
-              <span>Email</span>
+              <span>Email address</span>
               <input
                 type="email"
                 className="dim-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="customer@email.com"
+                autoComplete="email"
               />
             </label>
 
             <label>
-              <span>Phone</span>
+              <span>Phone number</span>
               <input
-                type="text"
+                type="tel"
                 className="dim-input"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="(239) 555-1234"
+                autoComplete="tel"
               />
             </label>
 
             <button
               type="button"
-              className="add-area-btn add"
+              className="new-customer-continue"
               onClick={handleNext}
               disabled={!canContinue}
-              style={{ opacity: canContinue ? 1 : 0.6 }}
             >
-              Next
+              Continue to Estimate <FiArrowRight aria-hidden="true" />
             </button>
           </div>
         )}
