@@ -238,6 +238,13 @@
 }
 
 @media (max-width: 768px) {
+  .start-estimate-page {
+    align-items: flex-start;
+    height: auto;
+    min-height: 100%;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+
   .customer-mode-grid {
     grid-template-columns: 1fr;
   }
@@ -259,6 +266,7 @@
   .new-customer-continue {
     width: 100%;
     justify-self: stretch;
+    margin-bottom: 8px;
   }
 }
 
