@@ -131,13 +131,11 @@ exports.handler = async (event) => {
       `?deposit=success` +
       `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}` +
       `&session_id={CHECKOUT_SESSION_ID}`;
-    if (publicToken) successUrl.searchParams.set("t", publicToken);
 
     const cancelUrl =
       `${baseUrl}/quote/${encodeURIComponent(quoteId)}` +
       `?deposit=cancel` +
       `${publicToken ? `&t=${encodeURIComponent(publicToken)}` : ""}`;
-    if (publicToken) cancelUrl.searchParams.set("t", publicToken);
 
     console.log("Stripe redirect URLs:", {
       baseUrl,

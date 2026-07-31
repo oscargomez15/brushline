@@ -251,7 +251,13 @@ const signatureUrl =
       });
 
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Failed to start deposit payment");
+      if (!res.ok) {
+        throw new Error(
+          data?.message ||
+          data?.error ||
+          "Failed to start deposit payment"
+        );
+      }
 
       if (!data?.url) throw new Error("Missing Stripe checkout URL");
 
