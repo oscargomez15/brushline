@@ -211,3 +211,24 @@ Response with status 200 in 357 ms.
 ⬥ Rewrote URL to /index.html
 Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
 Response with status 200 in 873 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-invoice?id=inv_1784861795768-79da1ab25c0098
+Response with status 200 in 571 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 908 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 603 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 904 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1045 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 928 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 799 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 816 ms.
+⬥ Rewrote URL to /index.html

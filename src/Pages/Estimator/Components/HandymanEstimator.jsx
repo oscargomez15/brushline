@@ -318,22 +318,29 @@ export default function HandymanEstimator({
           className="handyman-item-row quick-item-card"
         >
           <div className="handyman-item-main">
+            <div className="quick-item-field">
+              <label htmlFor={`item-title-${it.id}`}>Work title</label>
+              <input
+                id={`item-title-${it.id}`}
+                type="text"
+                value={it.title}
+                placeholder={`e.g., ${itemExample}`}
+                onChange={(e) => updateRow(it.id, { title: e.target.value })}
+                className="dim-input handyman-title-input"
+              />
+            </div>
 
-            <input
-              type="text"
-              value={it.title}
-              placeholder={`Title ${idx + 1} (e.g., ${itemExample})`}
-              onChange={(e) => updateRow(it.id, { title: e.target.value })}
-              className="dim-input handyman-title-input"
-            />
-
-            <textarea
-              value={it.desc}
-              placeholder="Description of work"
-              onChange={(e) => updateRow(it.id, { desc: e.target.value })}
-              className="dim-input handyman-description-input"
-              rows={3}
-            />
+            <div className="quick-item-field">
+              <label htmlFor={`item-description-${it.id}`}>Description of work</label>
+              <textarea
+                id={`item-description-${it.id}`}
+                value={it.desc}
+                placeholder="Describe the work, materials, and what is included"
+                onChange={(e) => updateRow(it.id, { desc: e.target.value })}
+                className="dim-input handyman-description-input"
+                rows={3}
+              />
+            </div>
 
             <div className="quick-item-photos">
               {(it.photos || []).map((photo) => (
@@ -369,14 +376,21 @@ export default function HandymanEstimator({
 
           </div>
 
-          <input
-            type="text"
-            value={it.price}
-            placeholder="$0.00"
-            inputMode="decimal"
-            onChange={(e) => updateRow(it.id, { price: e.target.value })}
-            className="dim-input handyman-price-input"
-          />
+          <div className="quick-item-field quick-item-price-field">
+            <label htmlFor={`item-price-${it.id}`}>Price</label>
+            <div className="quick-price-control">
+              <span aria-hidden="true">$</span>
+              <input
+                id={`item-price-${it.id}`}
+                type="text"
+                value={it.price}
+                placeholder="0.00"
+                inputMode="decimal"
+                onChange={(e) => updateRow(it.id, { price: e.target.value })}
+                className="dim-input handyman-price-input"
+              />
+            </div>
+          </div>
 
           <button
             type="button"

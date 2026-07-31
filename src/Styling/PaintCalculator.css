@@ -1497,6 +1497,34 @@
   background: #f8fafc;
 }
 
+.quick-item-field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.quick-item-field > label {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.quick-price-control { position: relative; }
+.quick-price-control > span {
+  position: absolute;
+  top: 50%;
+  left: 13px;
+  z-index: 1;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-weight: 800;
+  pointer-events: none;
+}
+.quick-price-control .handyman-price-input { width: 100%; padding-left: 29px; }
+.quick-item-card .handyman-remove-btn { margin-top: 25px; }
+
 .quick-item-photos {
   display: flex;
   flex-wrap: wrap;
@@ -1823,6 +1851,8 @@
   .handyman-price-input {
     width: 100%;
   }
+
+  .quick-item-card .handyman-remove-btn { margin-top: 0; }
 
   .handyman-delete-actions {
     flex-direction: column-reverse;
