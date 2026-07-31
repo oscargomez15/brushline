@@ -417,6 +417,82 @@
   outline-offset: -2px;
 }
 
+/* Unified find-page header and search panel */
+.find-estimates { padding: 28px 22px 40px; }
+
+.fe-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.fe-page-header h1 {
+  margin: 5px 0 6px;
+  color: #0f172a;
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
+
+.fe-page-header p { margin: 0; color: #64748b; font-size: 14px; }
+.fe-eyebrow { color: #2563eb; font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+
+.fe-primary-btn {
+  min-height: 44px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, .14);
+}
+
+.fe-toolbar {
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid rgba(15, 23, 42, .08);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, .045);
+}
+
+.fe-search-wrap { position: relative; flex: 1; min-width: 260px; max-width: 680px; }
+.fe-search-icon { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); color: #64748b; font-size: 22px; pointer-events: none; }
+.fe-search { width: 100%; max-width: none; padding: 12px 66px 12px 43px; }
+.fe-search::-webkit-search-cancel-button { display: none; }
+
+.fe-clear-search {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 9px;
+  background: #eef2f7;
+  color: #475569;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.fe-results-count { color: #64748b; font-size: 13px; white-space: nowrap; }
+.fe-results-count strong { color: #0f172a; font-size: 16px; }
+
+@media (max-width: 520px) {
+  .find-estimates { padding: 18px 12px 92px; }
+  .fe-page-header { align-items: stretch; flex-direction: column; margin-bottom: 16px; }
+  .fe-page-header p { line-height: 1.45; }
+  .fe-primary-btn { width: 100%; }
+  .fe-toolbar { align-items: stretch; padding: 10px; }
+  .fe-search-wrap { min-width: 0; width: 100%; }
+  .fe-results-count { padding: 0 3px 2px; }
+}
+
 @media (max-width:520px){
   .fe-card{ border:0; background:transparent; overflow:visible; }
   .fe-table-wrap{ display:none; }

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 import "../../Styling/CustomersList.css";
+import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
 function fmtDate(value) {
   if (!value) return "—";
@@ -49,7 +50,6 @@ export default function CustomersList() {
   const [items, setItems] = useState([]);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
-  const [searching, setSearching] = useState(false);
   const [err, setErr] = useState("");
   const [editOpen, setEditOpen] = useState(false);
   const [savingEdit, setSavingEdit] = useState(false);
@@ -65,10 +65,9 @@ export default function CustomersList() {
     phone: "",
   });
 
-  const loadCustomers = async (search = "") => {
+  const loadCustomers = async () => {
     try {
-      if (search) setSearching(true);
-      else setLoading(true);
+      setLoading(true);
 
       setErr("");
 
@@ -80,9 +79,6 @@ export default function CustomersList() {
       }
 
       const url = new URL("/.netlify/functions/list-customers", window.location.origin);
-      if (search.trim()) {
-        url.searchParams.set("q", search.trim());
-      }
       url.searchParams.set("limit", "100");
 
       const res = await fetch(url.toString(), {
@@ -99,27 +95,37 @@ export default function CustomersList() {
       setErr(e.message || "Failed to load customers");
     } finally {
       setLoading(false);
-      setSearching(false);
     }
   };
 
   useEffect(() => {
-    loadCustomers("");
+    loadCustomers();
   }, []);
 
     useEffect(() => {
     document.title = "Customers | Brushline CRM";
   }, []);
 
-  useEffect(() => {
-    const t = setTimeout(() => {
-      loadCustomers(q);
-    }, 250);
+  const rows = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    if (!needle) return items;
+    const phoneNeedle = normalizePhone(needle);
 
-    return () => clearTimeout(t);
-  }, [q]);
+    return items.filter((customer) => {
+      const text = [
+        customer.fullName,
+        customer.firstName,
+        customer.lastName,
+        customer.email,
+        customer.phone,
+        customer.address,
+        customer.unit,
+      ].filter(Boolean).join(" ").toLowerCase();
 
-  const rows = useMemo(() => items, [items]);
+      return text.includes(needle) ||
+        (phoneNeedle && normalizePhone(customer.phone).includes(phoneNeedle));
+    });
+  }, [items, q]);
 
   const handleUseCustomer = (customer) => {
     localStorage.setItem(
@@ -218,7 +224,7 @@ export default function CustomersList() {
   };
 
   if (loading) {
-    return <div className="customers-page">Loading customers…</div>;
+    return <FindPageSkeleton title="Customers" />;
   }
 
   return (
@@ -234,20 +240,29 @@ export default function CustomersList() {
         <button
           type="button"
           className="customers-primary-btn"
-          onClick={() => navigate("crm/estimates/create")}
+          onClick={() => navigate("/crm/estimates/create")}
         >
           New Estimate
         </button>
       </div>
 
       <div className="customers-toolbar">
-        <input
-          type="text"
-          className="customers-search"
-          placeholder="Search by name, email, phone, or address..."
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
+        <div className="customers-search-wrap">
+          <span className="customers-search-icon" aria-hidden="true">⌕</span>
+          <label className="sr-only" htmlFor="customer-search">Search customers</label>
+          <input
+            id="customer-search"
+            type="search"
+            className="customers-search"
+            placeholder="Search name, email, phone, or address"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+          {q ? <button type="button" className="customers-clear-search" onClick={() => setQ("")}>Clear</button> : null}
+        </div>
+        <div className="customers-results-count" aria-live="polite">
+          <strong>{rows.length}</strong> {rows.length === 1 ? "customer" : "customers"}
+        </div>
       </div>
 
       {err ? <div className="customers-error">Error: {err}</div> : null}
@@ -271,7 +286,7 @@ export default function CustomersList() {
               {rows.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="customers-empty">
-                    {searching ? "Searching..." : "No customers found."}
+                    No customers found.
                   </td>
                 </tr>
               ) : (

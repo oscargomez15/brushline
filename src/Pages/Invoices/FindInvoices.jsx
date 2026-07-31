@@ -3,6 +3,7 @@ import netlifyIdentity from "netlify-identity-widget";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../../Styling/FindInvoices.css';
+import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, {
@@ -192,19 +193,36 @@ export default function FindInvoices() {
     });
   }, [items, q]);
 
-  if (loading) return <div>Loading invoices…</div>;
+  if (loading) return <FindPageSkeleton title="Invoices" />;
   if (err) return <div style={{ color: "crimson" }}>Error: {err}</div>;
 
   return (
     <div className="find-estimates">
+      <header className="fe-page-header">
+        <div>
+          <span className="fe-eyebrow">Invoices</span>
+          <h1>Find an invoice</h1>
+          <p>Track invoice status, balances, and customer payments quickly.</p>
+        </div>
+      </header>
+
       <div className="fe-toolbar">
-        <input
-          type="text"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search by client, address, invoice #, or ID..."
-          className="fe-search"
-        />
+        <div className="fe-search-wrap">
+          <span className="fe-search-icon" aria-hidden="true">⌕</span>
+          <label className="sr-only" htmlFor="invoice-search">Search invoices</label>
+          <input
+            id="invoice-search"
+            type="search"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search client, address, invoice number, or status"
+            className="fe-search"
+          />
+          {q ? <button type="button" className="fe-clear-search" onClick={() => setQ("")}>Clear</button> : null}
+        </div>
+        <div className="fe-results-count" aria-live="polite">
+          <strong>{filtered.length}</strong> {filtered.length === 1 ? "invoice" : "invoices"}
+        </div>
       </div>
 
       <div className="fe-card">

@@ -3,6 +3,7 @@ import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
 function prettyUA(ua = "") {
   const s = ua.toLowerCase();
@@ -250,7 +251,7 @@ const handleRegeneratePdf = async (quoteId) => {
     });
   }, [items, q]);
 
-  if (loading) return <div>Loading estimates…</div>;
+  if (loading) return <FindPageSkeleton title="Estimates" />;
   if (err) return <div style={{ color: "crimson" }}>Error: {err}</div>;
   const typeMap = {
     interior: "Interior",
@@ -262,17 +263,35 @@ const handleRegeneratePdf = async (quoteId) => {
 
   return (
     <div className="find-estimates">
-      <div className="fe-toolbar">
-        <label className="sr-only" htmlFor="estimate-search">Search estimates</label>
-        <input
-            id="estimate-search"
-            type="text"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Search by client, address, or ID..."
-            className="fe-search"
-        />
+      <header className="fe-page-header">
+        <div>
+          <span className="fe-eyebrow">Estimates</span>
+          <h1>Find an estimate</h1>
+          <p>Search, review, and manage every customer estimate in one place.</p>
         </div>
+        <button type="button" className="fe-primary-btn" onClick={() => navigate("/crm/estimates/create")}>
+          + New Estimate
+        </button>
+      </header>
+
+      <div className="fe-toolbar">
+        <div className="fe-search-wrap">
+          <span className="fe-search-icon" aria-hidden="true">⌕</span>
+          <label className="sr-only" htmlFor="estimate-search">Search estimates</label>
+          <input
+              id="estimate-search"
+              type="search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search client, address, estimate number, or job type"
+              className="fe-search"
+          />
+          {q ? <button type="button" className="fe-clear-search" onClick={() => setQ("")}>Clear</button> : null}
+        </div>
+        <div className="fe-results-count" aria-live="polite">
+          <strong>{filtered.length}</strong> {filtered.length === 1 ? "estimate" : "estimates"}
+        </div>
+      </div>
 
       <div className="fe-card">
         <div className="fe-table-wrap">

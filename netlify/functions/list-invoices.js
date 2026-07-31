@@ -41,15 +41,19 @@ exports.handler = async (event, context) => {
     const indexStore = getStore("invoices_index", { siteID, token });
     const { blobs } = await indexStore.list({ limit });
 
-    const items = [];
-    for (const blob of blobs) {
-      try {
-        const data = await indexStore.get(blob.key, { type: "json" });
-        if (data) items.push(data);
-      } catch (err) {
-        console.warn("Failed to parse invoice index record:", blob.key, err?.message);
-      }
-    }
+    // These records are independent, so fetch them concurrently instead of
+    // adding one network round trip to the response time for every invoice.
+    const records = await Promise.all(
+      blobs.map(async (blob) => {
+        try {
+          return await indexStore.get(blob.key, { type: "json" });
+        } catch (err) {
+          console.warn("Failed to parse invoice index record:", blob.key, err?.message);
+          return null;
+        }
+      })
+    );
+    const items = records.filter(Boolean);
 
     items.sort((a, b) => {
       const da = new Date(a.updatedAt || a.createdAt || 0).getTime();

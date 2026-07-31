@@ -6,3 +6,143 @@
 > gial-website@0.1.0 build
 > react-scripts build
 
+Creating an optimized production build...
+Compiled successfully.
+
+File sizes after gzip:
+
+  288.12 kB  build\static\js\main.19d23a4d.js
+  27.58 kB   build\static\css\main.b5a24c29.css
+
+The project was built assuming it is hosted at /.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://cra.link/deployment
+
+⬥ Injecting environment variable values for all scopes
+⬥ AI Gateway is disabled for this account
+⬥ Injected project settings env vars: APPROVAL_NOTIFY_FROM, APPROVAL_NOTIFY_TO, NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID, OPENAI_API_KEY, PUBLIC_INVOICE_BASE_URL, PUBLIC_QUOTE_BASE_URL, PUBLIC_SITE_URL, RESEND_API_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
+⬥ Injected .env file env vars: REACT_APP_GOOGLE_MAPS_API_KEY
+⬥ Using simple static server because '--dir' flag was specified
+⬥ Running static server from "brushline\build"
+⬥ Setting up local dev server
+
+⬥ Static server listening to 3999
+⬥ Loaded function _terms in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function _pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function _quote-number in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function _invoice-pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function _customers in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function update-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function update-customer in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function upload-estimate-photo in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function track-quote-view in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function stripe-webhook in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function toggle-quote-line-item in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function send-invoice-email in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function send-contact-email in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function save-customer in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function save-invoice in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function remove-quote-line-item in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function regenerate-quote-pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function resend-quote-email in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function record-invoice-payment in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function quote-signature in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function quote-pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function list-quotes in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function list-invoices in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-quote-views in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function list-customers in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-public-invoice-pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-public-invoice in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-invoice in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-customer in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-invoice-pdf in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function get-estimate-photo in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function delete-invoice in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function delete-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function dashboard-stats in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function create-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function create-deposit-checkout in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function approve-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function confirm-deposit-payment in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function create-invoice-from-quote in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function apply-package in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+⬥ Loaded function apply-paint-grade in Lambda compatibility mode (https://ntl.fyi/lambda-compat)
+
+   ╭─────────────────────── ⬥  ────────────────────────╮
+   │                                                   │
+   │   Local dev server ready: http://localhost:8888   │
+   │                                                   │
+   ╰───────────────────────────────────────────────────╯
+
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 989 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 513 ms.
+⬥ Rewrote URL to /index.html
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1048 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1000 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 509 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 615 ms.
+Response with status 200 in 2856 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 3037 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1106 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 2776 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 1050 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 488 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 983 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 730 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 2528 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 791 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 955 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 631 ms.
+⬥ Reloading function list-invoices...
+⬥ Reloaded function list-invoices
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 933 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 853 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1002 ms.
