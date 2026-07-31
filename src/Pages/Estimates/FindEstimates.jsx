@@ -256,6 +256,7 @@ const handleRegeneratePdf = async (quoteId) => {
     interior: "Interior",
     exterior: "Exterior",
     handyman: "Handyman",
+    drywall: "Drywall",
   };
 
 
@@ -295,7 +296,7 @@ const handleRegeneratePdf = async (quoteId) => {
               {filtered.map((x) => {
                 const clientInitial = (x.clientName || "?").trim()[0]?.toUpperCase() || "?";
                 const typeLabel = typeMap[x.jobType] || x.jobType;
-                const typeClass = x.jobType === "exterior" ? "exterior" : "interior";
+                const typeClass = ["exterior", "drywall"].includes(x.jobType) ? x.jobType : "interior";
                 const isDeleting = deletingId === x.id;
 
                 return (
@@ -470,7 +471,7 @@ const handleRegeneratePdf = async (quoteId) => {
         <div className="fe-mobile-list">
           {filtered.map((x) => {
             const typeLabel = typeMap[x.jobType] || x.jobType;
-            const typeClass = x.jobType === "exterior" ? "exterior" : "interior";
+            const typeClass = ["exterior", "drywall"].includes(x.jobType) ? x.jobType : "interior";
             const isDeleting = deletingId === x.id;
 
             return (
@@ -514,7 +515,10 @@ const handleRegeneratePdf = async (quoteId) => {
                   <button type="button" className="fe-mobile-open" onClick={() => navigate(`/quote/${x.id}`)}>
                     Open Estimate
                   </button>
-                  <div className="kebab-wrap">
+                  <div
+                    className="kebab-wrap"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <button
                       type="button"
                       className="kebab-btn"

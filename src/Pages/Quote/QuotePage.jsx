@@ -513,6 +513,8 @@ const jobLabel =
     ? "Exterior Painting"
     : quote.jobType === "handyman"
       ? "Handyman / Misc"
+      : quote.jobType === "drywall"
+        ? "Drywall Installation / Repair"
       : "Interior Painting";
   const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
 
@@ -1180,7 +1182,7 @@ const stripeTotal =
               </div>
             </section>
           )}
-          {quote.jobType !== "handyman" ? (
+          {!quote.lineItems?.length ? (
           <div className="pkg-section">
             <div className="pkg-head">
               <div className="pkg-title">Select Your Package</div>

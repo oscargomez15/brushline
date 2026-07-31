@@ -78,8 +78,8 @@ exports.handler = async (event, context) => {
       }
     }
 
-    if (quote.jobType !== "handyman") {
-      return json(400, { error: "Only handyman quotes support this action" });
+    if (!["handyman", "drywall", "interior", "exterior"].includes(quote.jobType)) {
+      return json(400, { error: "This quote type does not support optional line items" });
     }
 
     const currentItems = Array.isArray(quote.lineItems) ? [...quote.lineItems] : [];

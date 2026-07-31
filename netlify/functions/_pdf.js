@@ -104,6 +104,8 @@ function buildQuotePdfBuffer(quote) {
           ? "Exterior Painting"
           : quote.jobType === "handyman"
             ? "Handyman / Misc"
+            : quote.jobType === "drywall"
+              ? "Drywall Installation / Repair"
             : "Interior Painting";
 
       doc.fontSize(18).fillColor("#111").text("Proposal", rightX, topY, { align: "right", width: 250 });
@@ -136,7 +138,7 @@ function buildQuotePdfBuffer(quote) {
       doc.fillColor("#000");
 
       // Handyman
-      if (quote.jobType === "handyman" && Array.isArray(quote.lineItems) && quote.lineItems.length) {
+      if (Array.isArray(quote.lineItems) && quote.lineItems.length) {
         doc.fontSize(12).text("Service Details");
         doc.moveDown(0.3);
 
@@ -146,7 +148,8 @@ function buildQuotePdfBuffer(quote) {
         doc.moveDown(0.4);
 
         quote.lineItems.forEach((it) => {
-          doc.fontSize(10).text(it.description || "", 40, doc.y, { width: 440, continued: true });
+          const itemText = [it.title, it.description].filter(Boolean).join("\n");
+          doc.fontSize(10).text(itemText, 40, doc.y, { width: 440, continued: true });
           doc.text(fmtMoney(it.price), 500, doc.y, { align: "right" });
         });
 

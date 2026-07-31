@@ -260,8 +260,8 @@ exports.handler = async (event, context) => {
       });
     }
 
-    if (!jobType || !["interior", "exterior", "handyman"].includes(jobType)) {
-      return json(400, { error: "jobType must be 'interior', 'exterior', or 'handyman'" });
+    if (!jobType || !["interior", "exterior", "handyman", "drywall"].includes(jobType)) {
+      return json(400, { error: "Unsupported estimate job type" });
     }
 
     if (

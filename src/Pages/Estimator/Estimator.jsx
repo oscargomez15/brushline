@@ -165,8 +165,8 @@ export const Estimator = () => {
     setJobType(type);
     localStorage.setItem("jobType", type);
 
-    setEstimateMethod(type === "handyman" ? "quick" : "");
-    if (type === "handyman") {
+    setEstimateMethod(["handyman", "drywall"].includes(type) ? "quick" : "");
+    if (["handyman", "drywall"].includes(type)) {
       localStorage.setItem("estimateMethod", "quick");
       setStep("calculator");
       localStorage.setItem("estimateStep", "calculator");
@@ -235,6 +235,14 @@ export const Estimator = () => {
               onClick={() => chooseJobType("exterior")}
             >
               Exterior Paint
+            </button>
+
+            <button
+              type="button"
+              className="job-type-opt"
+              onClick={() => chooseJobType("drywall")}
+            >
+              Drywall Installation / Repair
             </button>
 
             <button
@@ -437,6 +445,23 @@ export const Estimator = () => {
                 isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"
               }
               onDraftChange={handleDraftChange}
+            />
+          ) : jobType === "drywall" ? (
+            <HandymanEstimator
+              key={editingQuoteData?.id ? `edit-${editingQuoteData.id}` : "new-drywall"}
+              customer={customer}
+              initialQuote={
+                editingQuoteData?.jobType === "drywall"
+                  ? editingQuoteData
+                  : draftData?.jobType === "drywall"
+                    ? draftData.calculatorData
+                    : null
+              }
+              mode={isEditing && editingQuoteData?.jobType === "drywall" ? "edit" : "create"}
+              onDraftChange={handleDraftChange}
+              quoteJobType="drywall"
+              heading="Drywall Installation / Repair Estimate"
+              itemExample="Drywall installation, repairs, finishing, or texture matching"
             />
           ) : (
             <HandymanEstimator
