@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
-import { FiArrowRight, FiUserPlus } from "react-icons/fi";
+import { FiArrowRight, FiSearch, FiUserPlus, FiUsers } from "react-icons/fi";
 import "../../../Styling/StartEstimate.css";
 
 export const StartEstimate = ({
@@ -294,20 +294,22 @@ export const StartEstimate = ({
   return (
     <div className="start-estimate-page">
       <div className="jobtype-card">
-        <h1>Start an Estimate</h1>
-
         {!mode && (
           <>
+          <div className="start-estimate-heading">
+            <span className="start-estimate-kicker">Create a proposal</span>
+            <h1>Start an Estimate</h1>
+            <p>Choose how you would like to add the customer for this project.</p>
+          </div>
           <div className="customer-mode-grid">
             <button
               type="button"
               className="customer-mode-card"
               onClick={handleChooseNew}
             >
-              <div className="customer-mode-title">New Customer</div>
-              <div className="customer-mode-text">
-                Enter customer information manually.
-              </div>
+              <span className="customer-mode-icon new"><FiUserPlus aria-hidden="true" /></span>
+              <span className="customer-mode-copy"><strong>New Customer</strong><small>Create a new customer and project address.</small></span>
+              <FiArrowRight className="customer-mode-arrow" aria-hidden="true" />
             </button>
 
             <button
@@ -315,10 +317,9 @@ export const StartEstimate = ({
               className="customer-mode-card"
               onClick={handleChooseExisting}
             >
-              <div className="customer-mode-title">Existing Customer</div>
-              <div className="customer-mode-text">
-                Search and reuse a saved customer.
-              </div>
+              <span className="customer-mode-icon existing"><FiUsers aria-hidden="true" /></span>
+              <span className="customer-mode-copy"><strong>Existing Customer</strong><small>Search your saved customer records.</small></span>
+              <FiArrowRight className="customer-mode-arrow" aria-hidden="true" />
             </button>
           </div>
 
@@ -364,7 +365,7 @@ export const StartEstimate = ({
         )}
 
         {mode === "existing" && (
-          <div className="start-estimate-form">
+          <div className="start-estimate-form existing-customer-card">
             <div className="start-estimate-topbar">
               <button
                 type="button"
@@ -375,8 +376,13 @@ export const StartEstimate = ({
               </button>
             </div>
 
-            <label style={{ position: "relative" }}>
-              <span>Search Existing Customer</span>
+            <div className="existing-customer-heading">
+              <span className="new-customer-icon"><FiSearch aria-hidden="true" /></span>
+              <div><span className="new-customer-kicker">Customer search</span><h2>Find an existing customer</h2><p>Search by name, email, phone number, or project address.</p></div>
+            </div>
+
+            <label className="existing-customer-search">
+              <span>Customer search</span>
               <input
                 className="dim-input"
                 type="text"
@@ -386,29 +392,26 @@ export const StartEstimate = ({
               />
 
               {searchingCustomers && (
-                <div className="addr-dd">
-                  <div className="addr-dd-item" style={{ cursor: "default" }}>
+                <div className="existing-customer-results">
+                  <div className="existing-customer-status">
                     Searching...
                   </div>
                 </div>
               )}
 
               {!searchingCustomers && customerResults.length > 0 && (
-                <div className="addr-dd">
+                <div className="existing-customer-results">
                   {customerResults.map((customer) => (
                     <button
                       key={customer.id}
                       type="button"
-                      className="addr-dd-item"
+                      className="existing-customer-result"
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => handlePickCustomer(customer)}
                     >
-                      <strong>{customer.fullName || "Unnamed Customer"}</strong>
-                      <br />
-                      <small>
-                        {customer.address || "No address"}
-                        {customer.unit ? `, ${customer.unit}` : ""}
-                      </small>
+                      <span className="existing-result-avatar" aria-hidden="true">{(customer.fullName || "?").trim().charAt(0).toUpperCase()}</span>
+                      <span className="existing-result-copy"><strong>{customer.fullName || "Unnamed Customer"}</strong><small>{customer.address || "No address"}{customer.unit ? `, ${customer.unit}` : ""}</small></span>
+                      <FiArrowRight aria-hidden="true" />
                     </button>
                   ))}
                 </div>
