@@ -277,6 +277,16 @@
   }
 }
 
+.customers-eyebrow {
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.customers-eyebrow + .customers-title { margin-top: 5px; }
+
 /* Match the estimates and invoices find experience */
 .customers-page { padding: 28px 22px 40px; }
 
@@ -314,6 +324,30 @@
 
 .customers-results-count { color: #64748b; font-size: 13px; white-space: nowrap; }
 .customers-results-count strong { color: #0f172a; font-size: 16px; }
+
+.customers-mobile-list { display: none; }
+
+@media (max-width: 700px) {
+  .customers-card { display: none; }
+  .customers-mobile-list { display: grid; gap: 12px; }
+  .customers-mobile-card {
+    padding: 16px;
+    border: 1px solid rgba(15, 23, 42, .09);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .055);
+  }
+  .customers-mobile-head { display: flex; align-items: center; gap: 11px; }
+  .customers-mobile-name-wrap { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .customers-mobile-name-wrap strong { overflow: hidden; color: #0f172a; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+  .customers-mobile-name-wrap span { color: #64748b; font-size: 11px; }
+  .customers-mobile-details { display: grid; gap: 8px; margin: 14px 0; padding: 12px; border-radius: 12px; background: #f8fafc; }
+  .customers-mobile-details a, .customers-mobile-details span { overflow: hidden; color: #475569; font-size: 13px; line-height: 1.4; text-overflow: ellipsis; }
+  .customers-mobile-details a { color: #1d4ed8; font-weight: 650; text-decoration: none; }
+  .customers-mobile-actions { display: grid; grid-template-columns: .7fr 1.3fr; gap: 8px; }
+  .customers-mobile-actions button { min-height: 44px; }
+  .customers-mobile-actions .customers-use-btn { border-color: #2563eb; background: #2563eb; color: #fff; }
+}
 
 @media (max-width: 768px) {
   .customers-page { padding: 20px 14px 92px; }

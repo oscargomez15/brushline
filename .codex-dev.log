@@ -146,3 +146,38 @@ Response with status 200 in 853 ms.
 Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
 has list: function
 Response with status 200 in 1002 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1556 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 782 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 739 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 839 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 659 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-quotes?limit=100
+has list: function
+Response with status 200 in 1133 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-invoices?limit=100
+Response with status 200 in 908 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 1251 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 903 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 618 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 1146 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
+Response with status 200 in 1241 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 1145 ms.

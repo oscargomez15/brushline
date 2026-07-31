@@ -177,7 +177,7 @@ export default function Sidebar() {
           {/* ✅ Mobile Bottom Nav */}
     <nav className="crm-mobile-nav" aria-label="Mobile CRM navigation">
       <NavLink
-        to="/dashboard"
+        to="/crm/dashboard"
         className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`}
         aria-label="Dashboard"
         onClick={() => setMobileMenu(null)}

@@ -104,3 +104,5 @@
     width: 100%;
   }
 }
+
+.invoice-mobile-card .fe-pill { text-transform: capitalize; }

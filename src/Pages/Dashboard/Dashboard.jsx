@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
+import { Link } from "react-router-dom";
 import "../../Styling/Dashboard.css";
 
 const DASHBOARD_CACHE_KEY = "brushlineDashboardStats";
@@ -179,10 +180,15 @@ export default function Dashboard() {
     <div className="dashboard-page">
       <div className="dashboard-head">
         <div>
+          <span className="dashboard-eyebrow">Business overview</span>
           <h1 className="dashboard-title">Dashboard</h1>
           <p className="dashboard-subtitle">
-            Overview of approved quote revenue for {stats?.year}.
+            A quick look at estimates, approvals, and revenue for {stats?.year}.
           </p>
+        </div>
+        <div className="dashboard-actions">
+          <Link className="dashboard-action secondary" to="/crm/estimates/find">View Estimates</Link>
+          <Link className="dashboard-action primary" to="/crm/estimates/create">+ New Estimate</Link>
         </div>
       </div>
 
@@ -211,10 +217,14 @@ export default function Dashboard() {
             </div>
         </div>
 
-        <div className="db-card db-stat-card">
-          <div className="db-card-label">Average Approved Quote</div>
-          <div className="db-card-value">{fmtMoney(stats?.avgApprovedQuote)}</div>
-          <div className="db-card-subtle">Average of approved quotes this year</div>
+        <div className="db-card db-stat-card db-pipeline-card">
+          <div className="db-card-label">Estimate Pipeline</div>
+          <div className="db-card-value">{stats?.pendingQuotesYTD || 0}</div>
+          <div className="db-card-subtle">Estimates currently awaiting approval</div>
+          <div className="db-pipeline-track" aria-hidden="true">
+            <span style={{ width: `${Math.min(100, ((stats?.pendingQuotesYTD || 0) / Math.max(stats?.totalQuotesYTD || 1, 1)) * 100)}%` }} />
+          </div>
+          <Link className="db-inline-link" to="/crm/estimates/find">Review estimates →</Link>
         </div>
 
         <div className="db-card db-stat-card db-close-card">

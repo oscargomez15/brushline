@@ -43,6 +43,7 @@
   border:1px solid rgba(0,0,0,.08);
   border-radius:16px;
   overflow:hidden;
+  box-shadow:0 12px 34px rgba(15,23,42,.055);
 }
 
 .fe-table-wrap{
@@ -98,6 +99,8 @@
   text-decoration-thickness:1px;
   text-underline-offset:3px;
 }
+
+.fe-table tbody tr:last-child td{ border-bottom:0; }
 
 .fe-address-link:hover{
   color:#1e40af;
@@ -417,6 +420,8 @@
   outline-offset: -2px;
 }
 
+.fe-pill.info{ background:rgba(59,130,246,.12); color:#1d4ed8; }
+
 /* Unified find-page header and search panel */
 .find-estimates { padding: 28px 22px 40px; }
 
@@ -482,6 +487,10 @@
 
 .fe-results-count { color: #64748b; font-size: 13px; white-space: nowrap; }
 .fe-results-count strong { color: #0f172a; font-size: 16px; }
+
+.invoice-mobile-balance { display:flex; flex:0 0 auto; flex-direction:column; align-items:flex-end; }
+.invoice-mobile-balance small { margin-top:2px; color:#64748b; font-size:10px; font-weight:800; text-transform:uppercase; }
+.fe-mobile-empty { border:1px dashed rgba(15,23,42,.16); border-radius:16px; background:#fff; }
 
 @media (max-width: 520px) {
   .find-estimates { padding: 18px 12px 92px; }

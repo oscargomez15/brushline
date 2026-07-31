@@ -11,6 +11,13 @@ const fmtMoney = (n) =>
     currency: "USD",
   }).format(Number(n) || 0);
 
+const paymentTone = (status = "") => {
+  const normalized = status.toLowerCase();
+  if (normalized === "paid") return "approved";
+  if (normalized === "partial") return "info";
+  return "awaiting";
+};
+
 export default function FindInvoices() {
   const navigate = useNavigate();
 
@@ -290,13 +297,7 @@ export default function FindInvoices() {
 
                     <td>
                       <span
-                        className={`fe-pill ${
-                          x.status === "Paid"
-                            ? "Approved"
-                            : x.status === "Sent"
-                            ? "Awaiting"
-                            : "Awaiting"
-                        }`}
+                        className={`fe-pill ${x.status?.toLowerCase() === "paid" ? "approved" : "awaiting"}`}
                       >
                         {x.status || "draft"}
                       </span>
@@ -304,13 +305,7 @@ export default function FindInvoices() {
 
                     <td>
                       <span
-                        className={`fe-pill ${
-                          x.paymentStatus === "Paid"
-                            ? "Approved"
-                            : x.paymentStatus === "Partial"
-                            ? "Awaiting"
-                            : "Awaiting"
-                        }`}
+                        className={`fe-pill ${paymentTone(x.paymentStatus)}`}
                       >
                         {x.paymentStatus || "Unpaid"}
                       </span>
@@ -397,6 +392,47 @@ export default function FindInvoices() {
               ) : null}
             </tbody>
           </table>
+        </div>
+        <div className="fe-mobile-list">
+          {filtered.map((x) => {
+            const isDeleting = deletingId === x.id;
+            return (
+              <article className="fe-mobile-card invoice-mobile-card" key={`mobile-${x.id}`}>
+                <button type="button" className="fe-mobile-card-main" onClick={() => navigate(`/crm/invoices/edit/${x.id}`)}>
+                  <span className="fe-mobile-card-top">
+                    <span>
+                      <span className="fe-mobile-name">{x.clientName || "Customer"}</span>
+                      <span className="fe-mobile-number">{x.invoiceNumber || x.id}</span>
+                    </span>
+                    <span className="invoice-mobile-balance">
+                      <strong className="fe-mobile-total">{fmtMoney(x.balanceDue)}</strong>
+                      <small>Balance due</small>
+                    </span>
+                  </span>
+                  <span className="fe-mobile-address">{x.projectAddress || "No project address"}</span>
+                  <span className="fe-mobile-meta">
+                    <span className={`fe-pill ${x.status?.toLowerCase() === "paid" ? "approved" : "awaiting"}`}>{x.status || "Draft"}</span>
+                    <span className={`fe-pill ${paymentTone(x.paymentStatus)}`}>{x.paymentStatus || "Unpaid"}</span>
+                  </span>
+                  <span className="fe-mobile-date">Total {fmtMoney(x.grandTotal)} · {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "No date"}</span>
+                </button>
+                <div className="fe-mobile-actions">
+                  <button type="button" className="fe-mobile-open" onClick={() => navigate(`/crm/invoices/edit/${x.id}`)}>Open Invoice</button>
+                  <div className="kebab-wrap" onClick={(event) => event.stopPropagation()}>
+                    <button type="button" className="kebab-btn" aria-label={`More actions for ${x.clientName || "invoice"}`} aria-expanded={openMenuId === x.id} onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}>⋯</button>
+                    {openMenuId === x.id ? (
+                      <div className="kebab-menu" role="menu">
+                        <button type="button" className="kebab-item" onClick={() => { setOpenMenuId(null); openPaymentModal(x); }}>Record Payment</button>
+                        {x.linkedQuoteId ? <button type="button" className="kebab-item" onClick={() => navigate(`/quote/${x.linkedQuoteId}`)}>Open Linked Quote</button> : null}
+                        <button type="button" className="kebab-item fe-mobile-delete" disabled={isDeleting} onClick={() => { setOpenMenuId(null); handleDeleteInvoice(x.id); }}>{isDeleting ? "Deleting…" : "Delete Invoice"}</button>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+          {filtered.length === 0 ? <div className="fe-empty fe-mobile-empty">No invoices found.</div> : null}
         </div>
       </div>
       {paymentOpen && paymentInvoice && (
