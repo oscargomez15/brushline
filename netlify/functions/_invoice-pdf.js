@@ -82,6 +82,8 @@ async function buildInvoicePdfBase64(invoice) {
     border: rgb(226 / 255, 232 / 255, 240 / 255),
     soft: rgb(248 / 255, 250 / 255, 252 / 255),
     green: rgb(22 / 255, 163 / 255, 74 / 255),
+    blue: rgb(37 / 255, 99 / 255, 235 / 255),
+    blueSoft: rgb(239 / 255, 246 / 255, 255 / 255),
   };
 
   const margin = 42;
@@ -217,13 +219,19 @@ async function buildInvoicePdfBase64(invoice) {
     drawRule(y);
     y -= 24;
 
-  // Bill to / from
-  drawText("Bill To", margin, y, 11, true, colors.muted);
-  drawText("From", 340, y, 11, true, colors.muted);
-
-  y -= 18;
-  drawText(invoice?.clientName || "Customer", margin, y, 14, true);
-  drawText(invoice?.companyName || "Brushline Services", 340, y, 14, true);
+  // Customer block
+  page.drawRectangle({
+    x: margin,
+    y: y - 90,
+    width: width - margin * 2,
+    height: 100,
+    color: colors.soft,
+    borderColor: colors.border,
+    borderWidth: 1,
+  });
+  drawText("BILL TO", margin + 14, y - 10, 9, true, colors.blue);
+  y -= 30;
+  drawText(invoice?.clientName || "Customer", margin + 14, y, 14, true);
 
   const leftLines = [
     invoice?.projectAddress || "—",
@@ -231,24 +239,13 @@ async function buildInvoicePdfBase64(invoice) {
     invoice?.phone || "",
   ].filter(Boolean);
 
-  const rightLines = [
-    "Brushline Services",
-    "Professional Painting & Home Improvement",
-  ];
-
   let localY = y - 18;
   leftLines.forEach((line) => {
-    drawText(line, margin, localY, 11, false, colors.muted);
+    drawText(line, margin + 14, localY, 10, false, colors.muted);
     localY -= 15;
   });
 
-  let rightY = y - 18;
-  rightLines.forEach((line) => {
-    drawText(line, 340, rightY, 11, false, colors.muted);
-    rightY -= 15;
-  });
-
-  y = Math.min(localY, rightY) - 10;
+  y = Math.min(localY, y - 86) - 12;
   drawRule(y);
   y -= 22;
 
@@ -263,10 +260,8 @@ async function buildInvoicePdfBase64(invoice) {
     borderWidth: 1,
   });
 
-  drawText("Description", margin + 8, y - 14, 10, true, colors.muted);
-  drawText("Qty", 360, y - 14, 10, true, colors.muted);
-  drawText("Unit", 430, y - 14, 10, true, colors.muted);
-  drawText("Total", 520, y - 14, 10, true, colors.muted);
+  drawText("WORK DESCRIPTION", margin + 8, y - 14, 9, true, colors.muted);
+  drawText("AMOUNT", 492, y - 14, 9, true, colors.muted);
 
   y -= 32;
 
@@ -277,21 +272,21 @@ async function buildInvoicePdfBase64(invoice) {
     for (const item of lineItems) {
       ensureSpace(40);
 
-      const desc = safeStr(item?.description || item?.name || "Line item");
+      const itemTitle = safeStr(item?.title || item?.name || "Work item");
+      const itemDescription = safeStr(item?.description);
       const qty = Number(item?.qty ?? item?.quantity ?? 1) || 0;
       const unitPrice = Number(item?.unitPrice ?? item?.price ?? 0) || 0;
       const total = Number(item?.total) || qty * unitPrice;
 
-      const descLines = wrapText(desc, 48);
-      const rowHeight = Math.max(20, descLines.length * 14);
+      const descLines = wrapText(itemDescription, 72);
+      const rowHeight = Math.max(30, 17 + descLines.length * 13);
 
+      drawText(itemTitle, margin + 8, y, 11, true);
       descLines.forEach((line, i) => {
-        drawText(line, margin + 8, y - i * 14, 11, i === 0);
+        drawText(line, margin + 8, y - 16 - i * 13, 10, false, colors.muted);
       });
 
-      drawText(String(qty), 360, y, 11);
-      drawText(fmtMoney(unitPrice), 430, y, 11);
-      drawText(fmtMoney(total), 520, y, 11, true);
+      drawText(fmtMoney(total), 492, y, 11, true);
 
       y -= rowHeight;
       drawRule(y + 6);
@@ -344,8 +339,8 @@ async function buildInvoicePdfBase64(invoice) {
     y: boxY,
     width: boxWidth,
     height: boxHeight,
-    color: colors.soft,
-    borderColor: colors.border,
+    color: balanceDue > 0 ? colors.blueSoft : colors.soft,
+    borderColor: balanceDue > 0 ? colors.blue : colors.border,
     borderWidth: 1,
     });
 

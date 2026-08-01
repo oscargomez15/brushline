@@ -71,6 +71,8 @@ function buildQuotePdfBuffer(quote) {
         const rightX = 320;
         const topY = 26;
 
+        doc.roundedRect(leftX, topY, 530, 70, 8).fill("#0B1633");
+
         const logoPath = resolveLogoPath();
         if (logoPath) {
         try {
@@ -89,12 +91,6 @@ function buildQuotePdfBuffer(quote) {
 
         const headerBottomY = topY + 78;
 
-        doc
-        .moveTo(leftX, headerBottomY)
-        .lineTo(570, headerBottomY)
-        .strokeColor("#E5E7EB")
-        .stroke();
-
         doc.x = leftX;
         doc.y = headerBottomY + 15;
 
@@ -108,9 +104,9 @@ function buildQuotePdfBuffer(quote) {
               ? "Drywall Installation / Repair"
             : "Interior Painting";
 
-      doc.fontSize(18).fillColor("#111").text("Proposal", rightX, topY, { align: "right", width: 250 });
-      doc.fontSize(10).fillColor("#555").text(statusText, rightX, topY + 24, { align: "right", width: 250 });
-      doc.fontSize(10).fillColor("#555").text(serviceLabel, rightX, topY + 40, { align: "right", width: 250 });
+      doc.fontSize(19).fillColor("#FFFFFF").text("PROPOSAL", rightX, topY + 11, { align: "right", width: 230 });
+      doc.fontSize(9).fillColor("#BFDBFE").text(statusText, rightX, topY + 36, { align: "right", width: 230 });
+      doc.fontSize(9).fillColor("#E2E8F0").text(serviceLabel, rightX, topY + 50, { align: "right", width: 230 });
       doc.fillColor("#000");
 
       doc.x = leftX;
@@ -127,40 +123,46 @@ function buildQuotePdfBuffer(quote) {
         `${quote.customer?.firstName || ""} ${quote.customer?.lastName || ""}`.trim();
       const projectAddress = quote.projectAddress || quote.customer?.address || "";
 
-      doc.fontSize(11).fillColor("#111").text(quote.companyName || "Brushline Services");
-      doc.moveDown(0.25);
-      doc.fontSize(10).fillColor("#333");
-      doc.text(`Proposal #: ${proposalNum}`);
-      doc.text(`Date: ${created}`);
-      doc.text(`Prepared For: ${customer}`);
-      doc.text(`Project Location: ${projectAddress}`);
-      doc.moveDown(1);
+      const metaY = doc.y;
+      doc.roundedRect(leftX, metaY, 530, 82, 7).fillAndStroke("#F8FAFC", "#E2E8F0");
+      doc.fontSize(9).fillColor("#2563EB").text("PREPARED FOR", leftX + 14, metaY + 13);
+      doc.fontSize(13).fillColor("#0F172A").text(customer || "Customer", leftX + 14, metaY + 27, { width: 300 });
+      doc.fontSize(9).fillColor("#64748B").text(projectAddress || "No project address", leftX + 14, metaY + 46, { width: 300 });
+      doc.fontSize(9).fillColor("#64748B").text(`Proposal #  ${proposalNum}`, rightX, metaY + 17, { align: "right", width: 230 });
+      doc.text(`Issued  ${created}`, rightX, metaY + 36, { align: "right", width: 230 });
+      doc.y = metaY + 98;
       doc.fillColor("#000");
 
       // Handyman
       if (Array.isArray(quote.lineItems) && quote.lineItems.length) {
-        doc.fontSize(12).text("Service Details");
-        doc.moveDown(0.3);
-
-        doc.fontSize(10).fillColor("#444").text("Service", 40, doc.y, { continued: true });
-        doc.text("Price", 500, doc.y, { align: "right" });
-        doc.fillColor("#000");
-        doc.moveDown(0.4);
+        doc.fontSize(10).fillColor("#2563EB").text("SCOPE OF WORK", 40, doc.y, { characterSpacing: 1 });
+        doc.moveDown(0.5);
 
         quote.lineItems.forEach((it) => {
-          const itemText = [it.title, it.description].filter(Boolean).join("\n");
-          doc.fontSize(10).text(itemText, 40, doc.y, { width: 440, continued: true });
-          doc.text(fmtMoney(it.price), 500, doc.y, { align: "right" });
+          const rowY = doc.y;
+          const title = it.title || "Work item";
+          const description = it.description || "";
+          doc.fontSize(11).fillColor("#0F172A").text(title, 52, rowY, { width: 410 });
+          if (description) doc.fontSize(9).fillColor("#64748B").text(description, 52, doc.y + 3, { width: 410, lineGap: 2 });
+          const contentBottom = doc.y;
+          doc.fontSize(11).fillColor("#0F172A").text(fmtMoney(it.price), 470, rowY, { width: 88, align: "right" });
+          doc.moveTo(40, Math.max(contentBottom, rowY + 18) + 8).lineTo(570, Math.max(contentBottom, rowY + 18) + 8).strokeColor("#E2E8F0").stroke();
+          doc.y = Math.max(contentBottom, rowY + 18) + 18;
         });
 
-        doc.moveDown(0.6);
-        doc.fontSize(12).text(`Total: ${fmtMoney(quote.grandTotal)}`, { align: "right" });
+        doc.moveDown(0.3);
+        const summaryY = doc.y;
+        doc.roundedRect(370, summaryY, 200, 42, 7).fill("#EFF6FF");
+        doc.fontSize(10).fillColor("#475569").text("Estimate Total", 384, summaryY + 15, { width: 90 });
+        doc.fontSize(15).fillColor("#0F172A").text(fmtMoney(quote.grandTotal), 466, summaryY + 12, { align: "right", width: 90 });
+        doc.y = summaryY + 54;
+        doc.x = 40;
         doc.moveDown(1);
       }
 
       // Painting scope
       if (Array.isArray(quote.scopeItems) && quote.scopeItems.length) {
-        doc.fontSize(12).text("Scope of Work");
+        doc.fontSize(10).fillColor("#2563EB").text("SCOPE OF WORK", { characterSpacing: 1 });
         doc.moveDown(0.4);
 
         quote.scopeItems.forEach((area) => {

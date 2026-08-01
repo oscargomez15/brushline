@@ -900,7 +900,10 @@ const previewUrl = invoice?.id
           backdrop-filter: blur(3px);
         }
         .payment-dialog {
+          display: grid;
+          grid-template-rows: auto minmax(0, 1fr);
           width: min(620px, 100%);
+          max-height: min(780px, calc(100dvh - 40px));
           overflow: hidden;
           border-radius: 20px;
           background: #fff;
@@ -917,7 +920,7 @@ const previewUrl = invoice?.id
         .payment-dialog-head h2 { margin: 0 0 4px; font-size: 22px; color: #0f172a; }
         .payment-dialog-head p { margin: 0; color: #64748b; font-size: 14px; }
         .payment-close { border: 0; background: #f1f5f9; border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 18px; }
-        .payment-dialog-body { padding: 22px 24px 24px; }
+        .payment-dialog-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 22px 24px 24px; }
         .payment-balance-summary {
           display: flex;
           justify-content: space-between;
@@ -983,7 +986,7 @@ const previewUrl = invoice?.id
           font: inherit;
         }
         .payment-field textarea { min-height: 88px; resize: vertical; }
-        .payment-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+        .payment-dialog-actions { position: sticky; bottom: -24px; display: flex; justify-content: flex-end; gap: 10px; margin: 22px -24px -24px; padding: 14px 24px calc(16px + env(safe-area-inset-bottom)); border-top: 1px solid #e2e8f0; background: rgba(255,255,255,.96); backdrop-filter: blur(8px); }
         .invoice-preview-backdrop {
           position: fixed;
           inset: 0;
@@ -1041,9 +1044,14 @@ const previewUrl = invoice?.id
           cursor: pointer;
         }
         @media (max-width: 560px) {
+          .payment-backdrop { align-items: end; padding: 8px 8px calc(82px + env(safe-area-inset-bottom)); }
+          .payment-dialog { width: 100%; max-height: calc(100dvh - 98px - env(safe-area-inset-bottom)); border-radius: 18px 18px 14px 14px; }
+          .payment-dialog-head { padding: 16px 16px 13px; }
+          .payment-dialog-head h2 { font-size: 19px; }
+          .payment-dialog-body { padding: 16px; }
           .payment-form-grid { grid-template-columns: 1fr; }
           .payment-field.full { grid-column: auto; }
-          .payment-dialog-actions { flex-direction: column-reverse; }
+          .payment-dialog-actions { bottom: -16px; flex-direction: column-reverse; margin: 18px -16px -16px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
           .payment-dialog-actions button { width: 100%; }
           .payment-quick-amounts { align-items: stretch; flex-direction: column; }
           .payment-down-payment-btn { width: 100%; }

@@ -232,3 +232,16 @@ Response with status 200 in 799 ms.
 Request from ::ffff:127.0.0.1: GET /.netlify/functions/list-customers?limit=100
 Response with status 200 in 816 ms.
 ⬥ Rewrote URL to /index.html
+⬥ Reloading function _invoice-pdf...
+⬥ Reloaded function _invoice-pdf
+⬥ Reloading function _pdf...
+⬥ Reloaded function _pdf
+⬥ Reloading function _pdf...
+⬥ Reloaded function _pdf
+⬥ Reloading function _pdf...
+⬥ Reloaded function _pdf
+⬥ Reloading function _invoice-pdf...
+⬥ Reloaded function _invoice-pdf
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-invoice?id=inv_1784861795768-79da1ab25c0098
+Response with status 200 in 659 ms.
