@@ -267,7 +267,9 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <RevenueChart data={stats?.revenueByMonth || []} />
+          <div className="db-chart-scroll" role="region" aria-label="Revenue by month chart" tabIndex="0">
+            <RevenueChart data={stats?.revenueByMonth || []} />
+          </div>
         </div>
 
         <div className="db-card db-recent-card">

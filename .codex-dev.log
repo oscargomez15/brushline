@@ -263,3 +263,9 @@ Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-quote?id=178473229813
 Response with status 200 in 637 ms.
 Request from ::ffff:127.0.0.1: GET /.netlify/functions/quote-pdf?id=1784732298132-155325ca238e&ts=1785556693927
 Response with status 200 in 1118 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 1759 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/dashboard-stats
+Response with status 200 in 1033 ms.
