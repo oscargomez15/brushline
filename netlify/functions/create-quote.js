@@ -35,11 +35,11 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
     <div style="background:#ffffff;border:1px solid rgba(15,23,42,.10);border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(15,23,42,.08);">
 
       <!-- LOGO BAR (full width) -->
-      <div style="background:#0f172a;padding:22px 20px;text-align:center;">
+      <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:20px;text-align:center;">
         <img
           src="https://brushlineservices.com/logo.png"
           alt="Brushline Services"
-          style="height:120px;width:auto;display:block;margin:0 auto;"
+          style="height:104px;width:auto;display:block;margin:0 auto;"
         />
       </div>
 
@@ -89,7 +89,7 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
         <div style="text-align:center;margin:18px 0 6px;">
           <a href="${safe(quoteUrl)}"
              style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 16px;border-radius:12px;">
-            View &amp; Approve Quote
+            View Detailed Quote
           </a>
         </div>
 
