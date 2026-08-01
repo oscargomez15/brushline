@@ -324,7 +324,7 @@ export default function FindInvoices() {
                           aria-label="More actions"
                           aria-expanded={openMenuId === x.id}
                         >
-                          ⋮
+                          ⋯
                         </button>
 
                         {openMenuId === x.id && (
@@ -419,7 +419,7 @@ export default function FindInvoices() {
                 <div className="fe-mobile-actions">
                   <button type="button" className="fe-mobile-open" onClick={() => navigate(`/crm/invoices/edit/${x.id}`)}>Open Invoice</button>
                   <div className="kebab-wrap" onClick={(event) => event.stopPropagation()}>
-                    <button type="button" className="kebab-btn" aria-label={`More actions for ${x.clientName || "invoice"}`} aria-expanded={openMenuId === x.id} onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}>⋮</button>
+                    <button type="button" className="kebab-btn" aria-label={`More actions for ${x.clientName || "invoice"}`} aria-expanded={openMenuId === x.id} onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}>⋯</button>
                     {openMenuId === x.id ? (
                       <div className="kebab-menu" role="menu">
                         <button type="button" className="kebab-item" onClick={() => { setOpenMenuId(null); openPaymentModal(x); }}>Record Payment</button>
