@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
+import { getJobTypeLabel } from "../../utils/jobTypeLabel";
+import PdfPrintPreview from "../../Components/PdfPrintPreview";
+import { downloadPdfBlob, fetchPdf } from "../../utils/pdfBrowser";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat("en-US", {
@@ -42,6 +45,21 @@ export default function PublicInvoicePage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [printPreviewUrl, setPrintPreviewUrl] = useState("");
+  const [preparingPrint, setPreparingPrint] = useState(false);
+
+  const getPdfRequest = async () => {
+    let endpoint = `/.netlify/functions/get-public-invoice-pdf?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`;
+    const options = {};
+    if (!token) {
+      const user = netlifyIdentity.currentUser();
+      const jwt = user ? await user.jwt() : null;
+      if (!jwt) throw new Error("This invoice link is missing its access token.");
+      endpoint = `/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`;
+      options.headers = { Authorization: `Bearer ${jwt}` };
+    }
+    return { endpoint, options };
+  };
 
   const handleDownloadPdf = async () => {
   try {
@@ -52,42 +70,35 @@ export default function PublicInvoicePage() {
     setDownloadingPdf(true);
     setErr("");
 
-    let endpoint = `/.netlify/functions/get-public-invoice-pdf?id=${encodeURIComponent(id)}&t=${encodeURIComponent(token)}`;
-    const options = {};
-
-    if (!token) {
-      const user = netlifyIdentity.currentUser();
-      const jwt = user ? await user.jwt() : null;
-      if (!jwt) throw new Error("This invoice link is missing its access token.");
-
-      endpoint = `/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`;
-      options.headers = { Authorization: `Bearer ${jwt}` };
-    }
-
-    const res = await fetch(endpoint, options);
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(text || "Failed to download PDF");
-    }
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Invoice-${invoice?.invoiceNumber || id}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    window.URL.revokeObjectURL(url);
+    const request = await getPdfRequest();
+    const blob = await fetchPdf(request.endpoint, request.options);
+    downloadPdfBlob(blob, `Invoice-${invoice?.invoiceNumber || id}.pdf`);
   } catch (e) {
     setErr(e.message || "Failed to download PDF");
   } finally {
     setDownloadingPdf(false);
   }
 };
+
+  const handlePrintPreview = async () => {
+    try {
+      setPreparingPrint(true);
+      setErr("");
+      const request = await getPdfRequest();
+      const blob = await fetchPdf(request.endpoint, request.options);
+      if (printPreviewUrl) window.URL.revokeObjectURL(printPreviewUrl);
+      setPrintPreviewUrl(window.URL.createObjectURL(blob));
+    } catch (e) {
+      setErr(e.message || "Failed to prepare print preview");
+    } finally {
+      setPreparingPrint(false);
+    }
+  };
+
+  const closePrintPreview = () => {
+    if (printPreviewUrl) window.URL.revokeObjectURL(printPreviewUrl);
+    setPrintPreviewUrl("");
+  };
 
   useEffect(() => {
     document.title = invoice?.invoiceNumber
@@ -202,11 +213,13 @@ export default function PublicInvoicePage() {
             {downloadingPdf ? "Preparing PDF..." : "Download PDF"}
             </button>
 
-            <button className="print-btn" onClick={() => window.print()}>
-            Print
+            <button className="print-btn" onClick={handlePrintPreview} disabled={preparingPrint}>
+            {preparingPrint ? "Preparing..." : "Print"}
             </button>
         </div>
         </div>
+
+        <PdfPrintPreview open={Boolean(printPreviewUrl)} url={printPreviewUrl} title={`Invoice ${invoice?.invoiceNumber || id}`} onClose={closePrintPreview} />
 
         <div className="public-invoice-card">
           <div className="invoice-head">
@@ -244,7 +257,7 @@ export default function PublicInvoicePage() {
 
             <div className="meta-card">
               <div className="meta-label">Project Type</div>
-              <div className="meta-value">{invoice.jobType || "—"}</div>
+              <div className="meta-value">{getJobTypeLabel(invoice.jobType)}</div>
             </div>
 {/* 
             <div className="meta-card">

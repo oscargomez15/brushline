@@ -256,7 +256,7 @@ const handleRegeneratePdf = async (quoteId) => {
   const typeMap = {
     interior: "Interior",
     exterior: "Exterior",
-    handyman: "Handyman",
+    handyman: "Multiple Services",
     drywall: "Drywall",
   };
 
@@ -389,7 +389,7 @@ const handleRegeneratePdf = async (quoteId) => {
                           aria-label="More actions"
                           aria-expanded={openMenuId === x.id}
                         >
-                          ⋯
+                          ⋮
                         </button>
 
                         {openMenuId === x.id && (
@@ -544,7 +544,7 @@ const handleRegeneratePdf = async (quoteId) => {
                       onClick={() => setOpenMenuId(openMenuId === x.id ? null : x.id)}
                       aria-label={`More actions for ${x.clientName || "estimate"}`}
                       aria-expanded={openMenuId === x.id}
-                    >⋯</button>
+                    >⋮</button>
                     {openMenuId === x.id && (
                       <div className="kebab-menu" role="menu">
                         <button type="button" className="kebab-item" onClick={() => navigate(`/crm/estimates/edit/${x.id}`)}>Edit Quote</button>

@@ -14,7 +14,7 @@ export const Footer = () => {
           <img src={mascotLogo} alt="Brushline Services logo" loading="lazy" />
 
           <p>
-            Premium painting, drywall, handyman, and cleaning services for
+            Premium painting, drywall, multiple services, and cleaning solutions for
             homeowners and businesses across Southwest Florida.
           </p>
 

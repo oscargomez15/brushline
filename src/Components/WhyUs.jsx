@@ -26,7 +26,7 @@ export const WhyUs = () => {
       icon: <FaLayerGroup />,
       title: 'All-in-One Convenience',
       description:
-        'From painting and drywall to handyman services and cleaning, we help simplify your project with one trusted team.',
+        'From painting and drywall to multiple services and cleaning, we help simplify your project with one trusted team.',
     },
     {
       icon: <FaPaintRoller />,

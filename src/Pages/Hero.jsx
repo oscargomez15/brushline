@@ -175,7 +175,7 @@ export const Hero = () => {
               </option>
               <option value="painting">Painting</option>
               <option value="drywall">Drywall</option>
-              <option value="handyman">Handyman</option>
+              <option value="handyman">Multiple Services</option>
               <option value="cleaning">Cleaning</option>
             </select>
 

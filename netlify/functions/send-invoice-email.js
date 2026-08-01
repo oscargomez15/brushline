@@ -1,5 +1,6 @@
 const { getStore } = require("@netlify/blobs");
 const { Resend } = require("resend");
+const { buildInvoicePdfBase64 } = require("./_invoice-pdf");
 function safeStr(v) {
   return (v || "").toString().trim();
 }
@@ -264,6 +265,12 @@ exports.handler = async (event, context) => {
       dueDate: invoice.dueDate || "Upon receipt",
     });
 
+    // Generate the same branded PDF used by the public download endpoint and
+    // attach it directly so every emailed invoice includes an offline copy.
+    const pdfBase64 = await buildInvoicePdfBase64(invoice);
+    const invoiceFileNumber = safeStr(invoice.invoiceNumber || invoice.id)
+      .replace(/[^a-zA-Z0-9_-]+/g, "-");
+
     const resend = new Resend(apiKey);
 
     await resend.emails.send({
@@ -272,6 +279,12 @@ exports.handler = async (event, context) => {
       subject,
       text,
       html,
+      attachments: [
+        {
+          filename: `Invoice-${invoiceFileNumber}.pdf`,
+          content: Buffer.from(pdfBase64, "base64"),
+        },
+      ],
     });
 
     const invoicesIndexStore = getStore("invoices_index", { siteID, token });
@@ -304,7 +317,7 @@ exports.handler = async (event, context) => {
     });
     }
 
-    return json(200, { ok: true, sentTo: to });
+    return json(200, { ok: true, sentTo: to, pdfAttached: true });
   } catch (err) {
     console.error("send-invoice-email crashed:", err);
     return json(500, {

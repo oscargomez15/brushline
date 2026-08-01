@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
+import { getJobTypeLabel } from "../../utils/jobTypeLabel";
+import { downloadPdfBlob, fetchPdf } from "../../utils/pdfBrowser";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(n) || 0);
@@ -58,7 +60,7 @@ function normalizeItems(invoice) {
     return [
       {
         id: "line-1",
-        description: invoice?.jobType ? `${invoice.jobType} service` : "Service",
+        description: invoice?.jobType ? `${getJobTypeLabel(invoice.jobType)} service` : "Service",
         qty: 1,
         unitPrice: Number(invoice.grandTotal) || 0,
         total: Number(invoice.grandTotal) || 0,
@@ -103,28 +105,12 @@ export default function InvoiceEditor() {
     const jwt = user ? await user.jwt() : null;
     if (!jwt) throw new Error("Please log in first.");
 
-    const res = await fetch(`/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`, {
+    const blob = await fetchPdf(`/.netlify/functions/get-invoice-pdf?id=${encodeURIComponent(id)}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
-
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(text || "Failed to download PDF");
-    }
-
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Invoice-${invoice?.invoiceNumber || id}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    window.URL.revokeObjectURL(url);
+    downloadPdfBlob(blob, `Invoice-${invoice?.invoiceNumber || id}.pdf`);
   } catch (e) {
     setErr(e.message || "Failed to download PDF");
   } finally {
@@ -1129,7 +1115,7 @@ const previewUrl = invoice?.id
               </div>
               <div className="meta-box">
                 <div className="meta-label">Project Type</div>
-                <div className="meta-value">{invoice.jobType || "—"}</div>
+                <div className="meta-value">{getJobTypeLabel(invoice.jobType)}</div>
               </div>
             </div>
 

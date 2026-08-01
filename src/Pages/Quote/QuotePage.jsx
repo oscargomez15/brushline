@@ -4,6 +4,8 @@ import "../../Styling/QuotePage.css";
 import SignatureCanvas from "react-signature-canvas";
 import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
+import PdfPrintPreview from "../../Components/PdfPrintPreview";
+import { downloadPdfBlob, fetchPdf } from "../../utils/pdfBrowser";
 
 const fmtMoney = (n) =>
   new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(n || 0);
@@ -127,6 +129,8 @@ export default function QuotePage() {
   const t = query.get("t"); 
 
   const [quote, setQuote] = useState(null);
+  const [printPreviewUrl, setPrintPreviewUrl] = useState("");
+  const [preparingPrint, setPreparingPrint] = useState(false);
   const [err, setErr] = useState("");
   const [prepOpen, setPrepOpen] = useState(false);
   const [sigOpen, setSigOpen] = useState(false);
@@ -361,54 +365,51 @@ const signatureUrl =
     }
   };
 
-  const handleDownloadPdf = async () => {
-    try {
+  const getPdfRequest = async () => {
       const url = new URL("/.netlify/functions/quote-pdf", window.location.origin);
       url.searchParams.set("id", id);
       url.searchParams.set("ts", Date.now().toString());
-
       if (t) url.searchParams.set("t", t);
-
-      const isIOS =
-        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
-      // iPhone / iPad Safari: open PDF directly instead of blob download
-      if (isIOS) {
-        window.open(url.toString(), "_blank");
-        return;
-      }
-
       const headers = {};
       if (!t) {
         const user = netlifyIdentity.currentUser();
         const jwt = user ? await user.jwt() : null;
-        if (!jwt) throw new Error("Please log in to download the PDF.");
+        if (!jwt) throw new Error("Please log in to access the PDF.");
         headers.Authorization = `Bearer ${jwt}`;
       }
+      return { url: url.toString(), options: { headers } };
+  };
 
-      const res = await fetch(url.toString(), { headers });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`Failed to download PDF (${res.status}): ${text}`);
-      }
-
-      const blob = await res.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = `Quote-${getQuoteNumber(quote || { id })}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      window.URL.revokeObjectURL(blobUrl);
+  const handleDownloadPdf = async () => {
+    try {
+      const request = await getPdfRequest();
+      const blob = await fetchPdf(request.url, request.options);
+      downloadPdfBlob(blob, `Quote-${getQuoteNumber(quote || { id })}.pdf`);
     } catch (e) {
       alert(e.message);
     }
   };
+
+  const handlePrintPreview = async () => {
+    try {
+      setPreparingPrint(true);
+      const request = await getPdfRequest();
+      const blob = await fetchPdf(request.url, request.options);
+      if (printPreviewUrl) window.URL.revokeObjectURL(printPreviewUrl);
+      setPrintPreviewUrl(window.URL.createObjectURL(blob));
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setPreparingPrint(false);
+    }
+  };
+
+  const closePrintPreview = useCallback(() => {
+    setPrintPreviewUrl((current) => {
+      if (current) window.URL.revokeObjectURL(current);
+      return "";
+    });
+  }, []);
 
     useEffect(() => {
     document.title = "Your Quote from Brushline Services";
@@ -512,7 +513,7 @@ const jobLabel =
   quote.jobType === "exterior"
     ? "Exterior Painting"
     : quote.jobType === "handyman"
-      ? "Handyman / Misc"
+      ? "Multiple Services"
       : quote.jobType === "drywall"
         ? "Drywall Installation / Repair"
       : "Interior Painting";
@@ -729,10 +730,11 @@ const stripeTotal =
             <button
               type="button"
               className="quote-action-btn"
-              onClick={() => window.print()}
+              onClick={handlePrintPreview}
+              disabled={preparingPrint}
               title="Print"
             >
-              Print
+              {preparingPrint ? "Preparing..." : "Print"}
             </button>
 
             <button type="button" className="quote-action-btn" onClick={handleDownloadPdf}>
@@ -1504,6 +1506,7 @@ const stripeTotal =
           </div>
         )}
 
+        <PdfPrintPreview open={Boolean(printPreviewUrl)} url={printPreviewUrl} title={`Estimate ${getQuoteNumber(quote || { id })}`} onClose={closePrintPreview} />
         {photoPreview && (
           <div
             className="quote-photo-lightbox"

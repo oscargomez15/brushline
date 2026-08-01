@@ -249,3 +249,17 @@ Response with status 200 in 659 ms.
 ⬥ Reloaded function create-quote
 ⬥ Reloading function resend-quote-email...
 ⬥ Reloaded function resend-quote-email
+⬥ Reloading function send-invoice-email...
+⬥ Reloaded function send-invoice-email
+⬥ Reloading function _pdf...
+⬥ Reloaded function _pdf
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-invoice?id=inv_1784861795768-79da1ab25c0098
+Response with status 200 in 727 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-invoice-pdf?id=inv_1784861795768-79da1ab25c0098
+Response with status 200 in 1009 ms.
+⬥ Rewrote URL to /index.html
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/get-quote?id=1784732298132-155325ca238e
+Response with status 200 in 637 ms.
+Request from ::ffff:127.0.0.1: GET /.netlify/functions/quote-pdf?id=1784732298132-155325ca238e&ts=1785556693927
+Response with status 200 in 1118 ms.

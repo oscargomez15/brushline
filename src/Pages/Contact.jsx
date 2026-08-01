@@ -143,7 +143,7 @@ export const Contact = () => {
                         <option value="" disabled>Select a service</option>
                         <option value="Painting">Painting</option>
                         <option value="Drywall">Drywall</option>
-                        <option value="Handyman">Handyman</option>
+                        <option value="Handyman">Multiple Services</option>
                         <option value="Cleaning">Cleaning</option>
                         </select>
                     </div>

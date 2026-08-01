@@ -271,8 +271,8 @@ export const Estimator = () => {
             >
               <span className="job-type-icon"><FiTool aria-hidden="true" /></span>
               <span className="job-type-copy">
-                <strong>Handyman / Miscellaneous</strong>
-                <small>Flexible line items for repairs and custom projects.</small>
+                <strong>Multiple Services</strong>
+                <small>Combine repairs, installations, and custom work in one estimate.</small>
               </span>
               <FiArrowRight className="job-type-arrow" aria-hidden="true" />
             </button>

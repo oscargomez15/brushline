@@ -42,7 +42,7 @@ export const SwiperGallery = () => {
         <span>Our Work</span>
         <h2>See The Quality Behind Every Project</h2>
         <p>
-          Explore recent painting, drywall, handyman, and home improvement work
+          Explore recent painting, drywall, multiple-service, and home improvement work
           completed across Southwest Florida.
         </p>
       </div>

@@ -99,7 +99,7 @@ function buildQuotePdfBuffer(quote) {
         quote.jobType === "exterior"
           ? "Exterior Painting"
           : quote.jobType === "handyman"
-            ? "Handyman / Misc"
+            ? "Multiple Services"
             : quote.jobType === "drywall"
               ? "Drywall Installation / Repair"
             : "Interior Painting";

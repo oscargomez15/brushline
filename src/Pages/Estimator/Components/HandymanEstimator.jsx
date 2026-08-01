@@ -48,7 +48,7 @@ export default function HandymanEstimator({
   mode = "create",
   onSaved,
   quoteJobType = "handyman",
-  heading = "Handyman / Misc Estimate",
+  heading = "Multiple Services Estimate",
   itemExample = "Interior Painting",
   onDraftChange,
 }) {

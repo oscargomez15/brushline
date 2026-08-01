@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { FiArrowRight, FiSearch, FiUserPlus, FiUsers } from "react-icons/fi";
 import "../../../Styling/StartEstimate.css";
+import { getJobTypeLabel } from "../../../utils/jobTypeLabel";
 
 export const StartEstimate = ({
   initialCustomer,
@@ -332,7 +333,7 @@ export const StartEstimate = ({
                 </strong>
                 <span>
                   {savedDraft.jobType
-                    ? `${savedDraft.jobType.charAt(0).toUpperCase()}${savedDraft.jobType.slice(1)} estimate`
+                    ? `${getJobTypeLabel(savedDraft.jobType)} estimate`
                     : "Estimate in progress"}
                   {savedDraft.updatedAt
                     ? ` · Updated ${new Date(savedDraft.updatedAt).toLocaleString()}`
