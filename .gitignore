@@ -24,3 +24,6 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# Local Codex development server output
+.codex-voice-test*.log
