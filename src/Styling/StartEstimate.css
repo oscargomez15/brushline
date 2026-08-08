@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   padding: 24px 16px;
+  min-height: inherit;
   height: 100%;
 }
 
@@ -239,9 +240,9 @@
 
 @media (max-width: 768px) {
   .start-estimate-page {
-    align-items: flex-start;
+    align-items: center;
     height: auto;
-    min-height: 100%;
+    min-height: inherit;
     padding-bottom: calc(112px + env(safe-area-inset-bottom));
   }
 

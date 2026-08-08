@@ -19,6 +19,16 @@ const paymentTone = (status = "") => {
   return "awaiting";
 };
 
+const formatDisplayAddress = (address) => {
+  const value = String(address || "").trim();
+  if (!value) return "";
+
+  return value
+    .replace(/,\s*(?:USA|United States(?: of America)?)(?=\s*,|\s*$)/gi, "")
+    .replace(/\s+,/g, ",")
+    .trim();
+};
+
 export default function FindInvoices() {
   const navigate = useNavigate();
 
@@ -235,14 +245,23 @@ export default function FindInvoices() {
 
       <div className="fe-card">
         <div className="fe-table-wrap">
-          <table className="fe-table">
+          <table className="fe-table invoice-table">
+            <colgroup>
+              <col className="invoice-col-date" />
+              <col className="invoice-col-number" />
+              <col className="invoice-col-client" />
+              <col className="invoice-col-address" />
+              <col className="invoice-col-payment" />
+              <col className="invoice-col-money" />
+              <col className="invoice-col-money" />
+              <col className="invoice-col-actions" />
+            </colgroup>
             <thead>
               <tr>
                 <th>Date</th>
                 <th>Invoice #</th>
                 <th>Client</th>
                 <th>Address</th>
-                <th>Status</th>
                 <th>Payment</th>
                 <th className="right">Total</th>
                 <th className="right">Balance</th>
@@ -292,14 +311,8 @@ export default function FindInvoices() {
                       </div>
                     </td>
 
-                    <td className="muted fe-table-address">{x.projectAddress || "—"}</td>
-
-                    <td>
-                      <span
-                        className={`fe-pill ${x.status?.toLowerCase() === "paid" ? "approved" : "awaiting"}`}
-                      >
-                        {x.status || "draft"}
-                      </span>
+                    <td className="muted fe-table-address" title={formatDisplayAddress(x.projectAddress)}>
+                      {formatDisplayAddress(x.projectAddress) || "—"}
                     </td>
 
                     <td>
@@ -385,7 +398,7 @@ export default function FindInvoices() {
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="fe-empty">
+                  <td colSpan={8} className="fe-empty">
                     No invoices found.
                   </td>
                 </tr>
@@ -409,9 +422,8 @@ export default function FindInvoices() {
                       <small>Balance due</small>
                     </span>
                   </span>
-                  <span className="fe-mobile-address">{x.projectAddress || "No project address"}</span>
+                  <span className="fe-mobile-address">{formatDisplayAddress(x.projectAddress) || "No project address"}</span>
                   <span className="fe-mobile-meta">
-                    <span className={`fe-pill ${x.status?.toLowerCase() === "paid" ? "approved" : "awaiting"}`}>{x.status || "Draft"}</span>
                     <span className={`fe-pill ${paymentTone(x.paymentStatus)}`}>{x.paymentStatus || "Unpaid"}</span>
                   </span>
                   <span className="fe-mobile-date">Total {fmtMoney(x.grandTotal)} · {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "No date"}</span>

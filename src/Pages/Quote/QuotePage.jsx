@@ -520,6 +520,12 @@ const jobLabel =
   const pkgs = Array.isArray(quote.scopePackages) ? quote.scopePackages : [];
 
   const pricing = quote?.estimatorData?.pricing || {};
+  const isDetailedInteriorQuote =
+    quote?.jobType === "interior" && Boolean(quote?.estimatorData);
+  const isDetailedExteriorQuote =
+    quote?.jobType === "exterior" &&
+    Boolean(quote?.exterior) &&
+    !quote?.lineItems?.length;
   const wallSheen = pricing.wallSheen || "eggshell";
 
   const allowedPaintKeys =
@@ -977,7 +983,7 @@ const stripeTotal =
             </div>
           ) : null}
 
-          {quote.jobType === "interior" && paintOptions.length > 0 && (
+          {isDetailedInteriorQuote && paintOptions.length > 0 && (
             <div className="paint-section">
               <div className="pkg-head">
                 <div className="pkg-title">Select Your Paint Line</div>
@@ -1123,7 +1129,7 @@ const stripeTotal =
             </div>
           )}
 
-          {quote.jobType === "exterior" && (
+          {isDetailedExteriorQuote && (
             <section className={`paint-section ${isApproved ? "is-locked" : ""}`}>              <div className="pkg-head">
                 <div className="pkg-title">Select Your Exterior Paint Line</div>
                 <div className="pkg-subtitle">

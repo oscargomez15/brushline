@@ -106,3 +106,49 @@
 }
 
 .invoice-mobile-card .fe-pill { text-transform: capitalize; }
+
+/* Invoice-specific desktop sizing: fit the full table without page scrolling. */
+.invoice-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.invoice-table .invoice-col-date { width: 9%; }
+.invoice-table .invoice-col-number { width: 13%; }
+.invoice-table .invoice-col-client { width: 17%; }
+.invoice-table .invoice-col-address { width: 25%; }
+.invoice-table .invoice-col-payment { width: 10%; }
+.invoice-table .invoice-col-money { width: 9%; }
+.invoice-table .invoice-col-actions { width: 54px; }
+
+.invoice-table thead th,
+.invoice-table tbody td {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.invoice-table .fe-table-address {
+  width: auto;
+  max-width: none;
+  display: table-cell;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invoice-table .fe-client-meta {
+  min-width: 0;
+}
+
+.invoice-table .fe-client-name,
+.invoice-table .fe-client-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) and (min-width: 521px) {
+  .invoice-table {
+    min-width: 760px;
+  }
+}

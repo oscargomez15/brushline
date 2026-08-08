@@ -185,6 +185,15 @@ export const Estimator = () => {
     localStorage.setItem("estimateStep", "calculator");
   };
 
+  const goBackFromCalculator = () => {
+    const previousStep = ["interior", "exterior"].includes(jobType)
+      ? "estimateMethod"
+      : "jobType";
+
+    setStep(previousStep);
+    localStorage.setItem("estimateStep", previousStep);
+  };
+
   const handleCustomerNext = (cust) => {
     setCustomer(cust);
     localStorage.setItem("estimateCustomer", JSON.stringify(cust));
@@ -348,30 +357,17 @@ export const Estimator = () => {
   }
 
   return (
-    <section className="paint-calculator-wrapper">
+    <section className="paint-calculator-wrapper estimator-workspace-screen">
       <div className="content-wrapper">
-        <div className="estimator-draft-toolbar">
-          <button
-            type="button"
-            className="collapse-area-btn"
-            onClick={() => {
-              setEditingQuoteData(null);
-              localStorage.removeItem("editingQuoteId");
-              localStorage.removeItem("editingQuoteData");
-
-              setJobType("");
-              localStorage.removeItem("jobType");
-              setEstimateMethod("");
-              localStorage.removeItem("estimateMethod");
-
-              setStep("jobType");
-              localStorage.setItem("estimateStep", "jobType");
-            }}
-          >
-            Change Job Type
-          </button>
-
-          {!isEditing && (
+        {!isEditing && (
+          <div className="estimator-draft-toolbar">
+            <button
+              type="button"
+              className="collapse-area-btn estimator-back-btn"
+              onClick={goBackFromCalculator}
+            >
+              ← Back
+            </button>
             <button
               type="button"
               className="save-estimate-draft-btn"
@@ -379,8 +375,8 @@ export const Estimator = () => {
             >
               Save Draft
             </button>
-          )}
-        </div>
+          </div>
+        )}
 
         {draftSavedMessage && (
           <div className="estimate-draft-saved" role="status" aria-live="polite">

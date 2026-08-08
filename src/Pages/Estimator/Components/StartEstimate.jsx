@@ -293,7 +293,7 @@ export const StartEstimate = ({
   };
 
   return (
-    <div className="start-estimate-page">
+    <div className={`start-estimate-page start-estimate-${mode || "choice"}`}>
       <div className="jobtype-card">
         {!mode && (
           <>
