@@ -104,7 +104,7 @@ export const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1 }}
           >
-            <a href='#contact' className='primary-btn'>
+            <a href='#hero-estimate' className='primary-btn'>
               Get Free Estimate
               <FaArrowRight />
             </a>
@@ -157,7 +157,7 @@ export const Hero = () => {
           transition={{ duration: 1 }}
         >
 
-        <div className="service-card hero-contact-card">
+        <div className="service-card hero-contact-card" id="hero-estimate">
           <h3>Request Your Free Estimate</h3>
           <p>Tell us about your project and we’ll contact you within 24 hours to discuss the next steps.</p>
 

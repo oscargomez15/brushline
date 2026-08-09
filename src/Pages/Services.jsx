@@ -1,12 +1,9 @@
 import React from 'react';
 import '../Styling/Services.css';
 import { motion } from 'framer-motion';
-import roller from '../Assets/icons/roller.webp';
-import cleaning from '../Assets/icons/cleaning.webp';
-import drywall from '../Assets/icons/drywall.webp';
-import pwgun from '../Assets/icons/pressure-wash.webp';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
+import { Droplets, PaintRoller, PanelsTopLeft, Sparkles } from 'lucide-react';
 
 export const Services = () => {
   const servicesInfo = [
@@ -14,28 +11,32 @@ export const Services = () => {
       title: 'Interior & Exterior Painting',
       description:
         'Premium interior and exterior painting designed to refresh your space and protect your property.',
-      icon: roller,
+      Icon: PaintRoller,
+      accent: 'painting',
       route: '/painting',
     },
     {
       title: 'Drywall Install & Repair',
       description:
         'Clean drywall repairs, patching, texture matching, and panel installation for a seamless finish.',
-      icon: drywall,
+      Icon: PanelsTopLeft,
+      accent: 'drywall',
       route: '/drywall',
     },
     {
       title: 'House Cleaning',
       description:
         'Detailed cleaning services for homes, rentals, and businesses that need a fresh, polished look.',
-      icon: cleaning,
+      Icon: Sparkles,
+      accent: 'cleaning',
       route: '/cleaning',
     },
     {
       title: 'Pressure Washing',
       description:
         'Restore driveways, walls, patios, and exterior surfaces by removing dirt, grime, and stains.',
-      icon: pwgun,
+      Icon: Droplets,
+      accent: 'washing',
       route: '/pressure-washing',
     },
   ];
@@ -63,9 +64,10 @@ export const Services = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: id * 0.12 }}
             >
-              <Link to={service.route} className="service-card-modern">
-                <div className="service-icon-wrap">
-                  <img src={service.icon} alt={`${service.title} icon`} />
+              <Link to={service.route} className={`service-card-modern service-${service.accent}`}>
+                <div className="service-icon-wrap" aria-hidden="true">
+                  <span className="service-icon-glow" />
+                  <service.Icon strokeWidth={1.8} />
                 </div>
 
                 <div className="service-card-content">

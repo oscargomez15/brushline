@@ -386,7 +386,7 @@ const variants = {
         <section className='landing-hero-wrapper'>
             <div className="landing-hero">
                 <div className="contact-mini-container">
-                    <h1 className='section-title'> <span>Pro Painters</span> servicing Naples to Fort Myers</h1>
+                    <h1 className='section-title'> <span>Pro Painters</span> serving Naples to Fort Myers</h1>
                         <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
                 </div>
 
@@ -465,7 +465,7 @@ const variants = {
         <section className='landing-hero-mb'>
             <div className="column">
                 <div className="contact-mini-container">
-                    <h1 className='section-title'><span>Pro Painters</span> servicing Naples to Fort Myers</h1>
+                    <h1 className='section-title'><span>Pro Painters</span> serving Naples to Fort Myers</h1>
                         <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
                         
                         <div className="button-group">
