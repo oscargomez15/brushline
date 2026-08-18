@@ -7,6 +7,7 @@ import { Contact } from './Contact'
 import { SignatureDivider } from '../Components/SignatureDivider'
 import { ServiceAreaSection } from './ServiceAreaSection'
 import { Helmet } from 'react-helmet'
+import { SocialVideos } from '../Components/SocialVideos'
 
 export const Home = () => {
   return (
@@ -48,6 +49,7 @@ export const Home = () => {
       <SignatureDivider />
 
       <OurWork />
+      <SocialVideos />
       <Contact />
     </div>
     </div>

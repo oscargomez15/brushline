@@ -131,8 +131,8 @@ async function buildInvoicePdfBase64(invoice) {
   };
 
   // Header
-    const headerHeight = 60;
-    const headerY = y - 56;
+    const headerHeight = 76;
+    const headerY = y - 72;
     const headerCenterY = headerY + headerHeight / 2;
 
     // Header background
@@ -144,9 +144,9 @@ async function buildInvoicePdfBase64(invoice) {
     color: colors.navy,
     });
 
-    // Logo
+    // Brand lockup
     if (logoImage) {
-    const maxHeight = 28; // slightly smaller for better balance
+    const maxHeight = 48;
     const scale = maxHeight / logoImage.height;
     const logoWidth = logoImage.width * scale;
     const logoHeight = logoImage.height * scale;
@@ -159,6 +159,34 @@ async function buildInvoicePdfBase64(invoice) {
         y: logoY,
         width: logoWidth,
         height: logoHeight,
+    });
+
+    const companyName = safeStr(invoice?.companyName) || "Brushline Services";
+    const companyNameX = Math.min(logoX + logoWidth + 14, width - margin - 260);
+    const companyNameMaxWidth = width - margin - 126 - companyNameX;
+    let companyNameSize = 14;
+
+    while (
+        companyNameSize > 9 &&
+        fontBold.widthOfTextAtSize(companyName, companyNameSize) > companyNameMaxWidth
+    ) {
+        companyNameSize -= 1;
+    }
+
+    page.drawText(companyName, {
+        x: companyNameX,
+        y: headerCenterY - companyNameSize / 3,
+        size: companyNameSize,
+        font: fontBold,
+        color: rgb(1, 1, 1),
+    });
+    } else {
+    page.drawText(safeStr(invoice?.companyName) || "Brushline Services", {
+        x: margin + 14,
+        y: headerCenterY - 5,
+        size: 14,
+        font: fontBold,
+        color: rgb(1, 1, 1),
     });
     }
 
