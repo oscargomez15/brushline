@@ -51,6 +51,7 @@ export const InteriorEstimator = ({
   initialPaintGrade = null,
   draftData = null,
   onDraftChange,
+  internalNotes = "",
 }) => {
     const navigate = useNavigate();
     const draftEstimator = draftData?.estimatorData || {};
@@ -366,6 +367,7 @@ function detectPackageKey(areas) {
     },
 
     note: "Thanks for having us out — excited about this project!",
+    internalNotes,
     scopeItems,
 
     selectedPackageKey,

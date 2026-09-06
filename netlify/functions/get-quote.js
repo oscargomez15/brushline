@@ -9,7 +9,7 @@ function json(statusCode, body) {
   };
 }
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   try {
     const id = event.queryStringParameters?.id;
     if (!id) return json(400, { error: "Missing id" });
@@ -33,7 +33,14 @@ exports.handler = async (event) => {
 
     if (!quote) return json(404, { error: "Quote not found" });
 
-    return json(200, { ...quote, quoteNumber: getQuoteNumber(quote) });
+    const responseQuote = { ...quote, quoteNumber: getQuoteNumber(quote) };
+
+    // Internal estimating rationale is available to authenticated CRM users only.
+    if (!context?.clientContext?.user) {
+      delete responseQuote.internalNotes;
+    }
+
+    return json(200, responseQuote);
   } catch (err) {
     console.error("get-quote crashed:", err);
     return json(500, { error: "get-quote failed", message: err?.message || String(err) });

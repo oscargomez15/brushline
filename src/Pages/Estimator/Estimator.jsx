@@ -25,6 +25,9 @@ export const Estimator = () => {
   );
   const [customerModalOpen, setCustomerModalOpen] = useState(false);
   const [draftSavedMessage, setDraftSavedMessage] = useState("");
+  const [internalNotes, setInternalNotes] = useState(
+    () => readEstimateDraft()?.internalNotes || ""
+  );
 
   const [editingQuoteData, setEditingQuoteData] = useState(
     location.state?.editingQuoteData || null
@@ -64,6 +67,12 @@ export const Estimator = () => {
     localStorage.setItem("estimateStep", "calculator");
   }, [editingQuoteData]);
 
+  useEffect(() => {
+    if (editingQuoteData?.id) {
+      setInternalNotes(editingQuoteData.internalNotes || "");
+    }
+  }, [editingQuoteData]);
+
   const interiorInitialAreas =
     editingQuoteData?.jobType === "interior"
       ? editingQuoteData?.estimatorData?.areas || []
@@ -98,13 +107,35 @@ export const Estimator = () => {
       jobType,
       estimateMethod,
       step,
+      internalNotes,
       updatedAt: new Date().toISOString(),
     };
     localStorage.setItem("estimateDraft", JSON.stringify(nextDraft));
     setDraftData(nextDraft);
     // Component-specific calculator data is merged through handleDraftChange.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer, jobType, estimateMethod, step, isEditing]);
+  }, [customer, jobType, estimateMethod, step, internalNotes, isEditing]);
+
+  const handleInternalNotesChange = (event) => {
+    const value = event.target.value;
+    setInternalNotes(value);
+
+    if (!isEditing) {
+      setDraftData((previous) => {
+        const next = {
+          ...(previous || {}),
+          customer,
+          jobType,
+          estimateMethod,
+          step,
+          internalNotes: value,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem("estimateDraft", JSON.stringify(next));
+        return next;
+      });
+    }
+  };
 
   const handleDraftChange = useCallback((calculatorData) => {
     if (isEditing) return;
@@ -132,6 +163,7 @@ export const Estimator = () => {
       jobType,
       estimateMethod,
       step,
+      internalNotes,
       updatedAt: new Date().toISOString(),
     };
 
@@ -405,6 +437,7 @@ export const Estimator = () => {
           </button>
         )}
 
+        <div className="estimator-main-grid">
         <div className="sub-heading">
           {jobType === "interior" && estimateMethod === "quick" ? (
             <HandymanEstimator
@@ -419,6 +452,7 @@ export const Estimator = () => {
               }
               mode={isEditing && editingQuoteData?.jobType === "interior" ? "edit" : "create"}
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
               quoteJobType="interior"
               heading="Interior Painting Estimate"
               itemExample="Walls, ceilings, trim, or complete rooms"
@@ -432,6 +466,7 @@ export const Estimator = () => {
               initialPaintGrade={interiorInitialPaintGrade}
               draftData={!isEditing && draftData?.jobType === "interior" ? draftData.calculatorData : null}
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
             />
           ) : jobType === "exterior" && estimateMethod === "quick" ? (
             <HandymanEstimator
@@ -446,6 +481,7 @@ export const Estimator = () => {
               }
               mode={isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"}
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
               quoteJobType="exterior"
               heading="Exterior Painting Estimate"
               itemExample="Siding, trim, doors, or preparation"
@@ -465,6 +501,7 @@ export const Estimator = () => {
                 isEditing && editingQuoteData?.jobType === "exterior" ? "edit" : "create"
               }
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
             />
           ) : jobType === "drywall" ? (
             <HandymanEstimator
@@ -479,6 +516,7 @@ export const Estimator = () => {
               }
               mode={isEditing && editingQuoteData?.jobType === "drywall" ? "edit" : "create"}
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
               quoteJobType="drywall"
               heading="Drywall Installation / Repair Estimate"
               itemExample="Drywall installation, repairs, finishing, or texture matching"
@@ -496,8 +534,37 @@ export const Estimator = () => {
               }
               mode={isEditing && editingQuoteData?.jobType === "handyman" ? "edit" : "create"}
               onDraftChange={handleDraftChange}
+              internalNotes={internalNotes}
             />
           )}
+        </div>
+
+        <aside className="estimate-notes-sidebar" aria-labelledby="estimate-notes-title">
+          <div className="estimate-notes-sticky">
+            <div className="estimate-notes-heading">
+              <span className="estimate-notes-icon" aria-hidden="true">✎</span>
+              <div>
+                <h2 id="estimate-notes-title">Internal Notes</h2>
+                <p>For your team only</p>
+              </div>
+            </div>
+            <textarea
+              className="estimate-notes-textarea"
+              value={internalNotes}
+              onChange={handleInternalNotesChange}
+              placeholder="Document pricing logic, material choices, labor assumptions, customer requests, measurements, or follow-up items..."
+              rows="14"
+              maxLength="10000"
+            />
+            <div className="estimate-notes-footer">
+              <span>{internalNotes.length.toLocaleString()} / 10,000</span>
+              <span>{isEditing ? "Saved when estimate is updated" : "Included in your draft"}</span>
+            </div>
+            <div className="estimate-notes-private">
+              These notes are not shown on the customer quote or PDF.
+            </div>
+          </div>
+        </aside>
         </div>
 
         {customerModalOpen && (

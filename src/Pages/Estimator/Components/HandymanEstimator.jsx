@@ -51,6 +51,7 @@ export default function HandymanEstimator({
   heading = "Multiple Services Estimate",
   itemExample = "Interior Painting",
   onDraftChange,
+  internalNotes = "",
 }) {
   const activeCustomer = customer || initialQuote?.customer || null;
 
@@ -219,6 +220,7 @@ export default function HandymanEstimator({
       note:
         initialQuote?.note ||
         "Thanks for the opportunity — looking forward to helping with this project!",
+      internalNotes,
     };
 
     const user = netlifyIdentity.currentUser();

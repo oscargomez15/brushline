@@ -61,7 +61,132 @@
 }
 
 .estimator-workspace-screen > .content-wrapper {
+  max-width: 1440px;
   margin-block: auto;
+}
+
+.estimator-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 24px;
+}
+
+.estimate-notes-sidebar {
+  min-width: 0;
+}
+
+.estimate-notes-sticky {
+  position: sticky;
+  top: 112px;
+  overflow: hidden;
+  border: 1px solid #dce3ec;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, .1);
+}
+
+.estimate-notes-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid #e7ebf0;
+}
+
+.estimate-notes-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: #fff7e8;
+  color: #a86915;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.estimate-notes-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.estimate-notes-heading p {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.estimate-notes-textarea {
+  display: block;
+  width: calc(100% - 28px);
+  min-height: 310px;
+  margin: 14px;
+  padding: 13px 14px;
+  resize: vertical;
+  border: 1px solid #d8e0e9;
+  border-radius: 12px;
+  background: #fbfcfe;
+  color: #1e293b;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.estimate-notes-textarea:focus {
+  border-color: #c58525;
+  outline: 3px solid rgba(197, 133, 37, .16);
+}
+
+.estimate-notes-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.estimate-notes-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 16px 13px;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.estimate-notes-footer span:last-child {
+  max-width: 155px;
+  text-align: right;
+}
+
+.estimate-notes-private {
+  padding: 11px 15px;
+  border-top: 1px solid #e7ebf0;
+  background: #f8fafc;
+  color: #526071;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1080px) {
+  .estimator-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .estimate-notes-sidebar {
+    grid-row: 1;
+  }
+
+  .estimate-notes-sticky {
+    position: static;
+  }
+
+  .estimate-notes-textarea {
+    min-height: 150px;
+  }
 }
 
 .content-wrapper-jobs {

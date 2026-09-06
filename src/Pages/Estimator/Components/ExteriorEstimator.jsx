@@ -62,6 +62,7 @@ export default function ExteriorEstimator({
   existingQuote = null,
   mode = "create",
   onDraftChange,
+  internalNotes = "",
 }) {
   
   const navigate = useNavigate();
@@ -271,6 +272,7 @@ export default function ExteriorEstimator({
     },
 
     note: "Thanks for having us out — excited about this project!",
+    internalNotes,
     scopeItems: buildScopeItems(),
 
     exterior: {
