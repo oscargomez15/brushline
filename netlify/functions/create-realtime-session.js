@@ -68,7 +68,18 @@ exports.handler = async (event, context) => {
           model: MODEL,
           instructions: assistantInstructions,
           audio: {
-            input: { transcription: { model: "gpt-4o-mini-transcribe" } },
+            input: {
+              transcription: { model: "gpt-4o-mini-transcribe" },
+              noise_reduction: { type: "far_field" },
+              turn_detection: {
+                type: "server_vad",
+                threshold: 0.75,
+                prefix_padding_ms: 350,
+                silence_duration_ms: 650,
+                create_response: true,
+                interrupt_response: true,
+              },
+            },
             output: { voice: "marin" },
           },
           tools: [captureLeadTool],

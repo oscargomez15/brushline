@@ -70,10 +70,6 @@ function getPriceChanges(before, after) {
   const oldTotal = Number(before?.grandTotal) || 0;
   const newTotal = Number(after?.grandTotal) || 0;
 
-  if (cents(oldTotal) !== cents(newTotal)) {
-    changes.push({ label: "Quote total", before: oldTotal, after: newTotal });
-  }
-
   const oldEntries = collectPriceEntries(before);
   const newEntries = collectPriceEntries(after);
   const keys = new Set([...oldEntries.keys(), ...newEntries.keys()]);
@@ -85,12 +81,27 @@ function getPriceChanges(before, after) {
     const newValue = newEntry?.value || 0;
     if (cents(oldValue) === cents(newValue)) return;
 
+    const baseLabel = newEntry?.label || oldEntry?.label || "Price item";
+    const changeType = !oldEntry ? "added" : !newEntry ? "removed" : "changed";
+
     changes.push({
-      label: newEntry?.label || oldEntry?.label || "Price item",
+      label: changeType === "changed" ? baseLabel : `${baseLabel} (${changeType})`,
       before: oldValue,
       after: newValue,
+      changeType,
     });
   });
+
+  // Use the overall total only when the changed component cannot be identified.
+  // This avoids showing the same single price change twice under different labels.
+  if (!changes.length && cents(oldTotal) !== cents(newTotal)) {
+    changes.push({
+      label: "Quote total",
+      before: oldTotal,
+      after: newTotal,
+      changeType: "changed",
+    });
+  }
 
   return changes;
 }
@@ -107,7 +118,10 @@ function buildPriceUpdateEmail({ quote, changes, quoteUrl }) {
   const safe = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[character]));
-  const customerName = safeStr(quote?.clientName) || "there";
+  const customerName =
+    safeStr(quote?.customer?.firstName) ||
+    safeStr(quote?.clientName).split(/\s+/)[0] ||
+    "there";
   const visibleChanges = changes.slice(0, 8);
   const remainingCount = Math.max(0, changes.length - visibleChanges.length);
   const changeRows = visibleChanges.map((change) => `

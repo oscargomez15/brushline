@@ -135,8 +135,9 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
   }
 
   const customerName =
-    safeStr(quote?.clientName) ||
-    safeStr(quote?.customer?.fullName) ||
+    safeStr(quote?.customer?.firstName) ||
+    safeStr(quote?.clientName).split(/\s+/)[0] ||
+    safeStr(quote?.customer?.fullName).split(/\s+/)[0] ||
     "there";
 
   const total = Number(quote?.grandTotal || 0);
