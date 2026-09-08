@@ -57,7 +57,7 @@ function buildQuoteEmailHtml({ companyName, customerName, address, total, deposi
         </h1>
 
         <p style="margin:0 0 14px;color:rgba(15,23,42,.75);font-size:14px;line-height:1.6;">
-          Thanks for the opportunity — you can view your proposal and approve it online using the button below.
+          Thanks for the opportunity — you can review the details of your proposal using the button below.
         </p>
 
         <div style="background:rgba(15,23,42,.03);border:1px solid rgba(15,23,42,.08);border-radius:14px;padding:14px;margin:16px 0;">

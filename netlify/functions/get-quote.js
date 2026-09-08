@@ -38,6 +38,8 @@ exports.handler = async (event, context) => {
     // Internal estimating rationale is available to authenticated CRM users only.
     if (!context?.clientContext?.user) {
       delete responseQuote.internalNotes;
+      delete responseQuote.priceNotificationHistory;
+      delete responseQuote.lastPriceNotificationAt;
     }
 
     return json(200, responseQuote);
