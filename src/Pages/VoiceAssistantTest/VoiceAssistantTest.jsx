@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
+import brushlineLogo from "../../Assets/logo/brushline-logo-white-letters.webp";
 import {
   Bot,
   CalendarClock,
@@ -60,15 +61,36 @@ function VoiceAssistantTest() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [appointmentDate, setAppointmentDate] = useState("");
   const [appointmentTime, setAppointmentTime] = useState("9:00 AM");
+  const [showInactivity, setShowInactivity] = useState(false);
+  const [inactivityCountdown, setInactivityCountdown] = useState(10);
   const peerRef = useRef(null);
   const channelRef = useRef(null);
   const streamRef = useRef(null);
   const audioRef = useRef(null);
   const transcriptRef = useRef([]);
   const appointmentCallRef = useRef(null);
+  const lastCallerActivityRef = useRef(Date.now());
+  const inactivityShownRef = useRef(false);
 
   const connected = status === "connected";
   const busy = status === "connecting";
+
+  const disconnect = useCallback(() => {
+    channelRef.current?.close();
+    peerRef.current?.close();
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    if (audioRef.current) audioRef.current.srcObject = null;
+    channelRef.current = null;
+    peerRef.current = null;
+    streamRef.current = null;
+  }, []);
+
+  const endCall = useCallback(() => {
+    disconnect();
+    setStatus("ended");
+    setMuted(false);
+    setShowInactivity(false);
+  }, [disconnect]);
 
   useEffect(() => {
     if (!connected) return undefined;
@@ -76,7 +98,31 @@ function VoiceAssistantTest() {
     return () => window.clearInterval(timer);
   }, [connected]);
 
-  useEffect(() => () => disconnect(), []);
+  useEffect(() => {
+    if (!connected || showHuman || showCalendar) return undefined;
+    const check = window.setInterval(() => {
+      if (!inactivityShownRef.current && Date.now() - lastCallerActivityRef.current >= 30000) {
+        inactivityShownRef.current = true;
+        setInactivityCountdown(10);
+        setShowInactivity(true);
+        sendEvent({ type: "response.create", response: { instructions: "Briefly ask whether the caller would like to continue. Do not ask another intake question yet." } });
+      }
+    }, 1000);
+    return () => window.clearInterval(check);
+  }, [connected, showHuman, showCalendar]);
+
+  useEffect(() => {
+    if (!showInactivity || !connected) return undefined;
+    if (inactivityCountdown <= 0) {
+      setShowInactivity(false);
+      endCall();
+      return undefined;
+    }
+    const timer = window.setTimeout(() => setInactivityCountdown((value) => value - 1), 1000);
+    return () => window.clearTimeout(timer);
+  }, [showInactivity, inactivityCountdown, connected, endCall]);
+
+  useEffect(() => () => disconnect(), [disconnect]);
 
   function addTranscript(role, text) {
     const cleanText = String(text || "").trim();
@@ -86,22 +132,6 @@ function VoiceAssistantTest() {
       transcriptRef.current = next;
       return next;
     });
-  }
-
-  function disconnect() {
-    channelRef.current?.close();
-    peerRef.current?.close();
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    if (audioRef.current) audioRef.current.srcObject = null;
-    channelRef.current = null;
-    peerRef.current = null;
-    streamRef.current = null;
-  }
-
-  function endCall() {
-    disconnect();
-    setStatus("ended");
-    setMuted(false);
   }
 
   function sendEvent(event) {
@@ -120,9 +150,13 @@ function VoiceAssistantTest() {
 
     if (["response.output_audio_transcript.done", "response.audio_transcript.done"].includes(event.type)) {
       addTranscript("assistant", event.transcript);
+      if (!inactivityShownRef.current) lastCallerActivityRef.current = Date.now();
     }
     if (event.type === "conversation.item.input_audio_transcription.completed") {
       addTranscript("caller", event.transcript);
+      lastCallerActivityRef.current = Date.now();
+      inactivityShownRef.current = false;
+      setShowInactivity(false);
     }
     if (event.type === "response.function_call_arguments.done" && event.name === "request_live_human") {
       setShowHuman(true);
@@ -169,6 +203,9 @@ function VoiceAssistantTest() {
     setTranscript([]);
     transcriptRef.current = [];
     setLead(emptyLead);
+    lastCallerActivityRef.current = Date.now();
+    inactivityShownRef.current = false;
+    setShowInactivity(false);
 
     try {
       const user = netlifyIdentity.currentUser();
@@ -208,6 +245,7 @@ function VoiceAssistantTest() {
       channel.onmessage = handleRealtimeEvent;
       channel.onopen = () => {
         setStatus("connected");
+        lastCallerActivityRef.current = Date.now();
         sendEvent({
           type: "response.create",
           response: { instructions: "Greet the caller now, disclose that you are an AI assistant, and begin the test intake." },
@@ -251,12 +289,24 @@ function VoiceAssistantTest() {
     setError("");
     setShowHuman(false);
     setShowCalendar(false);
+    setShowInactivity(false);
+    inactivityShownRef.current = false;
+  }
+
+  function continueAfterInactivity() {
+    lastCallerActivityRef.current = Date.now();
+    inactivityShownRef.current = false;
+    setShowInactivity(false);
+    sendEvent({ type: "conversation.item.create", item: { type: "message", role: "user", content: [{ type: "input_text", text: "I want to continue the call." }] } });
+    sendEvent({ type: "response.create", response: { instructions: "Acknowledge briefly, then resume with only the single next unanswered intake question." } });
   }
 
   function submitAppointment() {
     if (!appointmentDate || !appointmentCallRef.current) return;
     const selectedAppointment = `${appointmentDate} at ${appointmentTime} (demo request)`;
     setLead((current) => ({ ...current, preferredAppointment: selectedAppointment }));
+    lastCallerActivityRef.current = Date.now();
+    inactivityShownRef.current = false;
     sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: appointmentCallRef.current, output: JSON.stringify({ selectedAppointment, appointmentBooked: false }) } });
     sendEvent({ type: "response.create" });
     appointmentCallRef.current = null;
@@ -286,15 +336,16 @@ function VoiceAssistantTest() {
           </div>
 
           <div className={`voice-widget ${connected ? "is-live" : ""}`}>
-            <div className="voice-widget-brand"><span className="voice-avatar"><Bot size={28} /></span><div><strong>Brushline Assistant</strong><span>{connected ? "Listening now" : busy ? "Connecting…" : "Ready when you are"}</span></div></div>
+            <div className="voice-widget-brand"><span className="voice-brand-logo"><img src={brushlineLogo} alt="Brushline Services" /></span><div><strong>Brushline Project Assistant</strong><span>{connected ? "Live · Listening for your response" : busy ? "Connecting…" : "Free estimate concierge"}</span></div></div>
             {connected || status === "ended" ? (
               <>
                 <div className="voice-call-visual" aria-label={connected ? "Voice call connected" : "Voice call ended"}>
-                  <div className="voice-pulse"><Bot size={32} /></div>
-                  <strong>{connected ? "How can we help with your project?" : "Test call ended"}</strong>
+                  <div className="voice-pulse"><span className="voice-brush-mark">B</span></div>
+                  <strong>{connected ? "Let’s plan your project" : "Conversation complete"}</strong>
                   <span>{connected ? time : "Review the captured details below"}</span>
                   {connected && <div className="voice-wave" aria-hidden="true">{[1,2,3,4,5,6,7].map((bar) => <i key={bar} />)}</div>}
                 </div>
+                {connected && <div className="voice-journey" aria-label="Conversation stages"><span className="active">Project</span><i/><span>Contact</span><i/><span>Schedule</span></div>}
                 <div className="voice-controls">
                   {connected && <button type="button" className="voice-control" onClick={toggleMute}>{muted ? <MicOff /> : <Mic />}<span>{muted ? "Unmute" : "Mute"}</span></button>}
                   {connected ? <button type="button" className="voice-control danger" onClick={endCall}><PhoneOff /><span>End call</span></button> : <button type="button" className="voice-restart" onClick={resetTest}><RotateCcw size={18} /> Start over</button>}
@@ -331,6 +382,7 @@ function VoiceAssistantTest() {
       {showConsent && <div className="voice-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConsent(false)}><section className="voice-consent-modal" role="dialog" aria-modal="true" aria-labelledby="voice-consent-title"><button type="button" className="voice-modal-close" onClick={() => setShowConsent(false)} aria-label="Close"><X /></button><span className="voice-modal-icon"><Mic /></span><h2 id="voice-consent-title">Before we begin</h2><p>You’ll speak with an AI assistant. Your microphone will be active during the conversation so it can understand and respond to you.</p><ul><li>This is an internal test.</li><li>No appointment will actually be booked.</li><li>Do not share sensitive financial or medical information.</li></ul><button type="button" className="voice-consent-button" onClick={startCall}>Allow microphone &amp; start</button><button type="button" className="voice-cancel-button" onClick={() => setShowConsent(false)}>Not now</button></section></div>}
       {showHuman && <div className="voice-modal-backdrop"><section className="voice-consent-modal" role="dialog" aria-modal="true"><button className="voice-modal-close" onClick={() => setShowHuman(false)} aria-label="Close"><X/></button><span className="voice-modal-icon"><PhoneCall/></span><h2>Talk with Brushline</h2><p>Tap below to call a live team member now.</p><a className="voice-consent-button voice-call-link" href="tel:+12397773713"><PhoneCall size={19}/> Call (239) 777-3713</a><button className="voice-cancel-button" onClick={() => setShowHuman(false)}>Continue with assistant</button></section></div>}
       {showCalendar && <div className="voice-modal-backdrop"><section className="voice-consent-modal voice-calendar-modal" role="dialog" aria-modal="true"><span className="voice-modal-icon"><CalendarClock/></span><h2>Request an estimate time</h2><p>These are demo choices. Brushline will confirm the actual appointment.</p><label>Date<input type="date" min={new Date().toISOString().slice(0,10)} value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)}/></label><label>Time<select value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)}><option>9:00 AM</option><option>11:30 AM</option><option>2:00 PM</option><option>4:00 PM</option></select></label><button className="voice-consent-button" disabled={!appointmentDate} onClick={submitAppointment}>Use this requested time</button></section></div>}
+      {showInactivity && <div className="voice-modal-backdrop voice-inactivity-backdrop"><section className="voice-consent-modal voice-inactivity-modal" role="alertdialog" aria-modal="true" aria-labelledby="inactivity-title"><span className="voice-inactivity-ring" style={{ "--progress": inactivityCountdown / 10 }}><strong>{inactivityCountdown}</strong></span><h2 id="inactivity-title">Still with us?</h2><p>We haven’t heard a response. Would you like to continue your conversation?</p><button type="button" className="voice-consent-button" onClick={continueAfterInactivity}>Yes, continue</button><button type="button" className="voice-cancel-button" onClick={endCall}>End conversation</button></section></div>}
     </main>
   );
 }

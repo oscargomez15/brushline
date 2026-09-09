@@ -10,3 +10,24 @@
 @media(max-width:900px){.voice-test-header{align-items:flex-start;flex-direction:column}.voice-test-grid{grid-template-columns:1fr}.voice-test-notes>div{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.voice-test-page{padding:18px 14px 92px}.voice-test-header h1{font-size:2.15rem}.voice-test-mode{width:100%}.voice-demo-card,.voice-results-card,.voice-test-notes{padding:15px;border-radius:17px}.voice-widget{border-radius:19px;padding:15px}.voice-widget-intro{padding:31px 7px 17px}.voice-start-button{width:100%}.voice-test-notes>div{grid-template-columns:1fr}.voice-consent-modal{padding:27px 20px 22px;max-height:calc(100dvh - 28px);overflow:auto}.voice-empty-state{min-height:250px}}
 @media(prefers-reduced-motion:reduce){.voice-wave i{animation:none}}
+
+/* Brushline-branded assistant experience */
+.voice-widget{max-width:570px;background:linear-gradient(155deg,#122338 0%,#0b1726 72%);border-radius:28px;padding:20px;border:1px solid rgba(228,183,104,.25);box-shadow:0 26px 60px rgba(10,24,40,.3)}
+.voice-widget:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 45%,rgba(212,155,69,.06));pointer-events:none}
+.voice-widget-brand{gap:13px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.1)}
+.voice-brand-logo{width:112px;height:52px;display:flex;align-items:center;justify-content:center;padding:5px 9px;border-radius:13px;background:rgba(255,255,255,.07)}
+.voice-brand-logo img{display:block;width:100%;max-height:43px;object-fit:contain}
+.voice-widget-brand>div{display:flex;flex-direction:column}.voice-widget-brand span{color:#c6d0dc}
+.voice-widget-intro{position:relative;z-index:1;padding-top:42px}.voice-widget-intro h3,.voice-call-visual strong{font-family:Georgia,serif}
+.voice-call-visual{min-height:240px;position:relative;z-index:1}.voice-call-visual strong{font-size:1.26rem}
+.voice-pulse{width:82px;height:82px;border-radius:24px;background:linear-gradient(145deg,#e5b76c,#b97925);transform:rotate(45deg);animation:voiceBreathe 2.2s ease-in-out infinite;margin-bottom:29px}
+.voice-brush-mark{font:800 35px Georgia,serif;color:#142033;transform:rotate(-45deg)}
+.voice-journey{display:flex;align-items:center;justify-content:center;gap:8px;margin:-5px 0 17px;position:relative;z-index:1}
+.voice-journey span{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:#7f8fa1}.voice-journey span.active{color:#e4b467}.voice-journey i{display:block;width:28px;height:1px;background:rgba(255,255,255,.16)}
+.voice-controls{position:relative;z-index:1}
+
+/* Modal entrance and inactivity countdown */
+.voice-modal-backdrop{animation:voiceBackdropIn .28s ease both}.voice-consent-modal{animation:voiceModalIn .48s cubic-bezier(.2,.9,.25,1.18) both}
+.voice-inactivity-modal{border-top:5px solid #d49b45}.voice-inactivity-ring{width:66px;height:66px;margin:auto;display:grid;place-items:center;border-radius:50%;color:#8a5817;background:conic-gradient(#d49b45 calc(var(--progress,1)*100%),#f1e6d5 0);position:relative;animation:voiceCountdownPulse 1s ease-in-out infinite}.voice-inactivity-ring:before{content:"";position:absolute;inset:6px;border-radius:50%;background:#fff}.voice-inactivity-ring strong{position:relative;font-size:1.35rem}
+@keyframes voiceBackdropIn{from{opacity:0}to{opacity:1}}@keyframes voiceModalIn{from{opacity:0;transform:translateY(24px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes voiceBreathe{50%{box-shadow:0 0 0 17px rgba(208,154,72,.07),0 0 0 31px rgba(208,154,72,.025)}}@keyframes voiceCountdownPulse{50%{transform:scale(1.045)}}
+@media(prefers-reduced-motion:reduce){.voice-modal-backdrop,.voice-consent-modal,.voice-pulse,.voice-inactivity-ring{animation:none}}
