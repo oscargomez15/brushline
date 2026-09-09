@@ -157,6 +157,13 @@ export default function Sidebar() {
           </Dropdown>
 
           <NavItem
+            to="/crm/leads"
+            label="Leads"
+            icon={<FiUsers />}
+            collapsed={collapsed}
+          />
+
+          <NavItem
             to="/crm/customers"
             label="Customers"
             icon={<FiUsers />}
@@ -230,6 +237,15 @@ export default function Sidebar() {
           </div>
         )}
       </div>
+
+      <NavLink
+        to="/crm/leads"
+        className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`}
+        aria-label="Leads"
+        onClick={() => setMobileMenu(null)}
+      >
+        <span className="crm-mobile-icon"><FiUsers /></span>
+      </NavLink>
 
       <NavLink
         to="/crm/customers"

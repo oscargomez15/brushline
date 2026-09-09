@@ -33,6 +33,7 @@ import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
 import PublicInvoicePage from "./Pages/Invoices/PublicInvoicePage";
 import FindInvoices from "./Pages/Invoices/FindInvoices";
 import VoiceAssistantTest from "./Pages/VoiceAssistantTest/VoiceAssistantTest";
+import LeadsList from "./Pages/Leads/LeadsList";
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
@@ -125,6 +126,7 @@ function App() {
             <Route path="invoices/:id" element={<PublicInvoicePage />} />
 
             <Route path="customers" element={<CustomersList />} />
+            <Route path="leads" element={<LeadsList />} />
             <Route path="voice-assistant-test" element={<VoiceAssistantTest />} />
           </Route>
         </Route>

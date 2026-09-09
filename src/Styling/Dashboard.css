@@ -614,6 +614,7 @@
   font-size: 15px;
   color: #0f172a;
 }
+.db-leads-card{border-top:4px solid #d49b45}.db-lead-list-card{grid-column:span 4}.db-lead-badge{padding:5px 8px;border-radius:999px;background:#e8f7ee;color:#28714c;font-size:10px;font-weight:800;text-transform:uppercase}.db-lead-badge.outside{background:#fff0e5;color:#98501e}
 
 .db-chart-scroll {
   width: 100%;

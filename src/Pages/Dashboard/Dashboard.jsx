@@ -227,6 +227,13 @@ export default function Dashboard() {
           <Link className="db-inline-link" to="/crm/estimates/find">Review estimates →</Link>
         </div>
 
+        <div className="db-card db-stat-card db-leads-card">
+          <div className="db-card-label">Leads</div>
+          <div className="db-card-value">{stats?.newLeads || 0}</div>
+          <div className="db-card-subtle">New website conversations waiting for follow-up</div>
+          <Link className="db-inline-link" to="/crm/leads">View leads →</Link>
+        </div>
+
         <div className="db-card db-stat-card db-close-card">
         <div className="db-card-label">Closing Rate</div>
 
@@ -280,6 +287,12 @@ export default function Dashboard() {
                 Last 5 approved quotes
             </div>
             </div>
+        </div>
+        <div className="db-card db-recent-card db-lead-list-card">
+          <div className="db-card-head"><div><div className="db-card-title">Recent Leads</div><div className="db-card-subtle">Latest website assistant inquiries</div></div><Link className="db-inline-link" to="/crm/leads">All leads →</Link></div>
+          <div className="db-recent-list">
+            {(stats?.recentLeads || []).length === 0 ? <div className="db-empty-state">No website leads yet.</div> : stats.recentLeads.map((lead) => <div key={lead.id} className="db-recent-item"><div className="db-recent-main"><div className="db-recent-name">{lead.fullName}</div><div className="db-recent-date">{lead.service} · {fmtDate(lead.createdAt)}</div></div><span className={`db-lead-badge ${lead.serviceAreaStatus === "out_of_area" ? "outside" : ""}`}>{lead.serviceAreaStatus === "out_of_area" ? "Outside area" : "New"}</span></div>)}
+          </div>
         </div>
 
         <div className="db-recent-list">

@@ -89,15 +89,19 @@
   width: 100%;
 }
 
-.privacy-notice {
+.contact-form .privacy-notice {
   margin: 0.25rem 0 0;
-  color: #5f6472;
+  color: #475569;
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.privacy-notice a {
-  color: #d99124;
+.contact-form .privacy-notice a {
+  color: #87540c;
   font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 .contact-form button {

@@ -1,12 +1,14 @@
 const MODEL = "gpt-realtime-2.1-mini";
 
-const assistantInstructions = `You are the AI voice assistant for Brushline Services, a painting and home-improvement company. This is an internal test, not a real booking system.
+const assistantInstructions = `You are Brushline Services' friendly AI voice assistant. This is currently a demo appointment-request experience.
 
-Begin by clearly saying you are an AI assistant and that this is a test. Be warm, concise, and professional. Ask one question at a time. Collect: full name, phone number, email, project address, service needed, a short project description, and preferred appointment date/time. Repeat important details for confirmation.
+Follow this order and ask one short question at a time. Greet the caller and ask what service or services they need. If more than one is named, retain every service and classify the main service as "Multiple Services". Ask for a short project description and whether the property is residential or commercial. Explain that Brushline offers a free in-home estimate and needs contact information to arrange it and follow up. Collect full name, complete project address including city and ZIP, email, phone, and preferred contact method. Confirm spelling and numbers.
 
-Never claim an appointment is booked. Say it is an appointment request that the Brushline team must confirm. Do not provide binding prices or legal guarantees. If there is an emergency, instruct the caller to contact emergency services.
+Check the city immediately. Brushline does NOT serve Labelle, Lehigh Acres, Immokalee, Ave Maria, Matlacha, Everglades City, or Miami. If the address is in one of these places, promptly explain that Brushline does not serve the area and cannot schedule the estimate, but may try to refer them to a trusted provider if one is available. Ask permission to save their information for a possible referral. Never guarantee a referral.
 
-After the caller confirms all details, call capture_lead exactly once. Then thank them and explain that, in the future, the Brushline team will follow up to confirm the appointment.`;
+For an eligible address, explain that displayed times are demo availability and the team must confirm the request. Ask whether they want to choose on screen; if yes call show_appointment_picker. Otherwise ask for a general preferred day/time. Summarize every detail and obtain confirmation, then call capture_lead exactly once. Say the request was sent but is not a confirmed booking.
+
+If the caller asks for or demands a live person at any point, immediately call request_live_human and tell them a call button is being shown. Do not continue unless they ask. Never provide binding prices or legal guarantees. For emergencies, direct them to emergency services. Do not collect financial, medical, or government identification information.`;
 
 const captureLeadTool = {
   type: "function",
@@ -19,14 +21,23 @@ const captureLeadTool = {
       phone: { type: "string", description: "Customer's phone number" },
       email: { type: "string", description: "Customer's email address" },
       address: { type: "string", description: "Project street address, city, state, and ZIP" },
-      service: { type: "string", description: "Requested service" },
+      service: { type: "string", description: "Requested service, or exactly Multiple Services if more than one was mentioned" },
+      servicesMentioned: { type: "array", items: { type: "string" }, description: "Every service mentioned" },
       projectDetails: { type: "string", description: "Concise description of the work" },
+      propertyType: { type: "string", description: "Residential, commercial, or unknown" },
+      preferredContact: { type: "string", description: "Phone, email, text, or no preference" },
       preferredAppointment: { type: "string", description: "Preferred appointment date and time, including timezone when known" },
+      serviceAreaStatus: { type: "string", enum: ["eligible", "out_of_area", "unknown"] },
+      excludedArea: { type: "string", description: "Matched excluded city, otherwise empty" },
+      requestedHuman: { type: "boolean" },
     },
-    required: ["fullName", "phone", "email", "address", "service", "projectDetails", "preferredAppointment"],
+    required: ["fullName", "phone", "email", "address", "service", "servicesMentioned", "projectDetails", "propertyType", "preferredContact", "preferredAppointment", "serviceAreaStatus", "excludedArea", "requestedHuman"],
     additionalProperties: false,
   },
 };
+
+const appointmentPickerTool = { type: "function", name: "show_appointment_picker", description: "Show the demo appointment calendar after contact details and an eligible address are collected.", parameters: { type: "object", properties: {}, additionalProperties: false } };
+const liveHumanTool = { type: "function", name: "request_live_human", description: "Immediately show a call button when the caller wants a live person.", parameters: { type: "object", properties: { reason: { type: "string" } }, additionalProperties: false } };
 
 function json(statusCode, body) {
   return {
@@ -82,7 +93,7 @@ exports.handler = async (event, context) => {
             },
             output: { voice: "marin" },
           },
-          tools: [captureLeadTool],
+          tools: [captureLeadTool, appointmentPickerTool, liveHumanTool],
           tool_choice: "auto",
         },
       }),

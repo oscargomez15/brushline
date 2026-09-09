@@ -30,14 +30,25 @@
 }
 
 .privacy-notice {
-  color: rgba(255, 255, 255, 0.72);
+  color: #475569;
   font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .privacy-notice a {
-  color: var(--gold);
+  color: #87540c;
   font-weight: 900;
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.contact-mini.glass-form .privacy-notice {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.contact-mini.glass-form .privacy-notice a {
+  color: #ffd481;
 }
 
 button:disabled {

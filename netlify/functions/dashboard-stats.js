@@ -48,12 +48,16 @@ exports.handler = async (event, context) => {
     }
 
     const indexStore = getStore("quotes_index", { siteID, token });
-    const { blobs } = await indexStore.list();
-    const items = (
-      await Promise.all(
+    const leadsStore = getStore("website_leads", { siteID, token });
+    const [{ blobs }, { blobs: leadBlobs }] = await Promise.all([indexStore.list(), leadsStore.list()]);
+    const [items, leads] = await Promise.all([
+      Promise.all(
         blobs.map((blob) => indexStore.get(blob.key, { type: "json" }))
-      )
-    ).filter(Boolean);
+      ),
+      Promise.all(leadBlobs.map((blob) => leadsStore.get(blob.key, { type: "json" }))),
+    ]);
+    const validItems = items.filter(Boolean);
+    const validLeads = leads.filter(Boolean).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -72,7 +76,7 @@ exports.handler = async (event, context) => {
 
     const recentApprovedQuotes = [];
 
-    for (const item of items) {
+    for (const item of validItems) {
       const status = normalizeStatus(item.status);
 
       if (item.createdAt) {
@@ -157,6 +161,14 @@ exports.handler = async (event, context) => {
       draftQuotesYTD,
       closingRateYTD,
       recentApprovedQuotes: recentApprovedQuotes.slice(0, 5),
+      newLeads: validLeads.filter((lead) => lead.status === "new").length,
+      recentLeads: validLeads.slice(0, 5).map((lead) => ({
+        id: lead.id,
+        fullName: lead.fullName,
+        service: lead.service,
+        createdAt: lead.createdAt,
+        serviceAreaStatus: lead.serviceAreaStatus,
+      })),
     };
 
     dashboardCache = dashboard;

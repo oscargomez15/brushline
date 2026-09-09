@@ -8,6 +8,7 @@ import {
   Mic,
   MicOff,
   PhoneOff,
+  PhoneCall,
   RotateCcw,
   ShieldCheck,
   Sparkles,
@@ -21,8 +22,14 @@ const emptyLead = {
   email: "",
   address: "",
   service: "",
+  servicesMentioned: [],
   projectDetails: "",
+  propertyType: "",
+  preferredContact: "",
   preferredAppointment: "",
+  serviceAreaStatus: "",
+  excludedArea: "",
+  requestedHuman: false,
 };
 
 const fieldLabels = {
@@ -31,8 +38,14 @@ const fieldLabels = {
   email: "Email",
   address: "Project address",
   service: "Service",
+  servicesMentioned: "Services mentioned",
   projectDetails: "Project details",
+  propertyType: "Property type",
+  preferredContact: "Preferred contact",
   preferredAppointment: "Preferred appointment",
+  serviceAreaStatus: "Service area",
+  excludedArea: "Excluded area",
+  requestedHuman: "Live human requested",
 };
 
 function VoiceAssistantTest() {
@@ -43,10 +56,16 @@ function VoiceAssistantTest() {
   const [seconds, setSeconds] = useState(0);
   const [transcript, setTranscript] = useState([]);
   const [lead, setLead] = useState(emptyLead);
+  const [showHuman, setShowHuman] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [appointmentDate, setAppointmentDate] = useState("");
+  const [appointmentTime, setAppointmentTime] = useState("9:00 AM");
   const peerRef = useRef(null);
   const channelRef = useRef(null);
   const streamRef = useRef(null);
   const audioRef = useRef(null);
+  const transcriptRef = useRef([]);
+  const appointmentCallRef = useRef(null);
 
   const connected = status === "connected";
   const busy = status === "connecting";
@@ -62,7 +81,11 @@ function VoiceAssistantTest() {
   function addTranscript(role, text) {
     const cleanText = String(text || "").trim();
     if (!cleanText) return;
-    setTranscript((current) => [...current, { role, text: cleanText }].slice(-12));
+    setTranscript((current) => {
+      const next = [...current, { role, text: cleanText }].slice(-80);
+      transcriptRef.current = next;
+      return next;
+    });
   }
 
   function disconnect() {
@@ -87,7 +110,7 @@ function VoiceAssistantTest() {
     }
   }
 
-  function handleRealtimeEvent(message) {
+  async function handleRealtimeEvent(message) {
     let event;
     try {
       event = JSON.parse(message.data);
@@ -101,21 +124,36 @@ function VoiceAssistantTest() {
     if (event.type === "conversation.item.input_audio_transcription.completed") {
       addTranscript("caller", event.transcript);
     }
+    if (event.type === "response.function_call_arguments.done" && event.name === "request_live_human") {
+      setShowHuman(true);
+      sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ shown: true, phone: "+1 239-777-3713" }) } });
+      sendEvent({ type: "response.create" });
+    }
+    if (event.type === "response.function_call_arguments.done" && event.name === "show_appointment_picker") {
+      appointmentCallRef.current = event.call_id;
+      setShowCalendar(true);
+    }
     if (event.type === "response.function_call_arguments.done" && event.name === "capture_lead") {
       try {
         const details = JSON.parse(event.arguments);
-        setLead({ ...emptyLead, ...details });
+        const completedLead = { ...emptyLead, ...details };
+        setLead(completedLead);
+        const response = await fetch("/.netlify/functions/save-website-lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...completedLead, transcript: transcriptRef.current }) });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || "The lead could not be saved.");
         sendEvent({
           type: "conversation.item.create",
           item: {
             type: "function_call_output",
             call_id: event.call_id,
-            output: JSON.stringify({ saved: true, mode: "internal_test", appointmentBooked: false }),
+            output: JSON.stringify({ saved: true, leadId: result.id, ownerEmailSent: result.emailSent, appointmentBooked: false }),
           },
         });
         sendEvent({ type: "response.create" });
-      } catch {
-        setError("The assistant could not format the lead summary. You can restart and try again.");
+      } catch (saveError) {
+        setError(saveError.message || "The assistant could not save the lead.");
+        sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: false }) } });
+        sendEvent({ type: "response.create", response: { instructions: "Apologize that the lead could not be saved and ask the caller to phone Brushline at 239-777-3713." } });
       }
     }
     if (event.type === "error") {
@@ -129,6 +167,7 @@ function VoiceAssistantTest() {
     setStatus("connecting");
     setSeconds(0);
     setTranscript([]);
+    transcriptRef.current = [];
     setLead(emptyLead);
 
     try {
@@ -210,6 +249,18 @@ function VoiceAssistantTest() {
     setTranscript([]);
     setLead(emptyLead);
     setError("");
+    setShowHuman(false);
+    setShowCalendar(false);
+  }
+
+  function submitAppointment() {
+    if (!appointmentDate || !appointmentCallRef.current) return;
+    const selectedAppointment = `${appointmentDate} at ${appointmentTime} (demo request)`;
+    setLead((current) => ({ ...current, preferredAppointment: selectedAppointment }));
+    sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: appointmentCallRef.current, output: JSON.stringify({ selectedAppointment, appointmentBooked: false }) } });
+    sendEvent({ type: "response.create" });
+    appointmentCallRef.current = null;
+    setShowCalendar(false);
   }
 
   const time = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -265,7 +316,7 @@ function VoiceAssistantTest() {
           <div className="voice-results-heading"><CalendarClock size={21} /><div><h2>Captured request</h2><p>Populated after the assistant confirms the details.</p></div></div>
           {hasLead ? (
             <div className="voice-lead-list">
-              {Object.entries(lead).map(([key, value]) => <div key={key}><span>{fieldLabels[key]}</span><strong>{value || "Not provided"}</strong></div>)}
+              {Object.entries(lead).map(([key, value]) => <div key={key}><span>{fieldLabels[key]}</span><strong>{Array.isArray(value) ? value.join(", ") || "Not provided" : typeof value === "boolean" ? (value ? "Yes" : "No") : value || "Not provided"}</strong></div>)}
               <div className="voice-test-notice"><Check size={17} /><span><strong>Test captured successfully</strong>Appointment request only—not booked.</span></div>
             </div>
           ) : (
@@ -275,9 +326,11 @@ function VoiceAssistantTest() {
         </aside>
       </section>
 
-      <section className="voice-test-notes"><h2>What this prototype tests</h2><div><span><Check />Natural voice conversation</span><span><Check />Customer and project intake</span><span><Check />Preferred appointment capture</span><span><Check />Structured lead summary</span></div><p>CRM saving, calendar availability, SMS consent, and real appointment booking will be connected only after this experience is approved.</p></section>
+      <section className="voice-test-notes"><h2>What this prototype tests</h2><div><span><Check />Natural voice conversation</span><span><Check />CRM lead and owner email</span><span><Check />Demo appointment request</span><span><Check />Service-area screening</span></div><p>The displayed appointment choices are a demo and do not book a visit. Live Google Calendar availability can replace them later.</p></section>
 
       {showConsent && <div className="voice-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConsent(false)}><section className="voice-consent-modal" role="dialog" aria-modal="true" aria-labelledby="voice-consent-title"><button type="button" className="voice-modal-close" onClick={() => setShowConsent(false)} aria-label="Close"><X /></button><span className="voice-modal-icon"><Mic /></span><h2 id="voice-consent-title">Before we begin</h2><p>You’ll speak with an AI assistant. Your microphone will be active during the conversation so it can understand and respond to you.</p><ul><li>This is an internal test.</li><li>No appointment will actually be booked.</li><li>Do not share sensitive financial or medical information.</li></ul><button type="button" className="voice-consent-button" onClick={startCall}>Allow microphone &amp; start</button><button type="button" className="voice-cancel-button" onClick={() => setShowConsent(false)}>Not now</button></section></div>}
+      {showHuman && <div className="voice-modal-backdrop"><section className="voice-consent-modal" role="dialog" aria-modal="true"><button className="voice-modal-close" onClick={() => setShowHuman(false)} aria-label="Close"><X/></button><span className="voice-modal-icon"><PhoneCall/></span><h2>Talk with Brushline</h2><p>Tap below to call a live team member now.</p><a className="voice-consent-button voice-call-link" href="tel:+12397773713"><PhoneCall size={19}/> Call (239) 777-3713</a><button className="voice-cancel-button" onClick={() => setShowHuman(false)}>Continue with assistant</button></section></div>}
+      {showCalendar && <div className="voice-modal-backdrop"><section className="voice-consent-modal voice-calendar-modal" role="dialog" aria-modal="true"><span className="voice-modal-icon"><CalendarClock/></span><h2>Request an estimate time</h2><p>These are demo choices. Brushline will confirm the actual appointment.</p><label>Date<input type="date" min={new Date().toISOString().slice(0,10)} value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)}/></label><label>Time<select value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)}><option>9:00 AM</option><option>11:30 AM</option><option>2:00 PM</option><option>4:00 PM</option></select></label><button className="voice-consent-button" disabled={!appointmentDate} onClick={submitAppointment}>Use this requested time</button></section></div>}
     </main>
   );
 }
