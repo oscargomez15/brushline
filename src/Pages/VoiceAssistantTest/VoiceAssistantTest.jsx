@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import brushlineLogo from "../../Assets/logo/brushline-logo-white-letters.webp";
 import {
@@ -74,6 +74,18 @@ function VoiceAssistantTest() {
 
   const connected = status === "connected";
   const busy = status === "connecting";
+  const appointmentDates = useMemo(() => Array.from({ length: 8 }, (_, index) => {
+    const date = new Date();
+    date.setHours(12, 0, 0, 0);
+    date.setDate(date.getDate() + index + 1);
+    return {
+      value: date.toLocaleDateString("en-CA", { timeZone: "America/New_York" }),
+      weekday: date.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/New_York" }),
+      month: date.toLocaleDateString("en-US", { month: "short", timeZone: "America/New_York" }),
+      day: date.toLocaleDateString("en-US", { day: "numeric", timeZone: "America/New_York" }),
+      full: date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" }),
+    };
+  }), []);
 
   const disconnect = useCallback(() => {
     channelRef.current?.close();
@@ -105,7 +117,6 @@ function VoiceAssistantTest() {
         inactivityShownRef.current = true;
         setInactivityCountdown(10);
         setShowInactivity(true);
-        sendEvent({ type: "response.create", response: { instructions: "Briefly ask whether the caller would like to continue. Do not ask another intake question yet." } });
       }
     }, 1000);
     return () => window.clearInterval(check);
@@ -248,7 +259,7 @@ function VoiceAssistantTest() {
         lastCallerActivityRef.current = Date.now();
         sendEvent({
           type: "response.create",
-          response: { instructions: "Greet the caller now, disclose that you are an AI assistant, and begin the test intake." },
+          response: { instructions: "Say only a brief greeting, disclose that you are Brushline's AI assistant, and ask which service or services they need. Do not ask for or preview any contact information." },
         });
       };
 
@@ -303,7 +314,8 @@ function VoiceAssistantTest() {
 
   function submitAppointment() {
     if (!appointmentDate || !appointmentCallRef.current) return;
-    const selectedAppointment = `${appointmentDate} at ${appointmentTime} (demo request)`;
+    const selectedDate = appointmentDates.find((date) => date.value === appointmentDate);
+    const selectedAppointment = `${selectedDate?.full || appointmentDate} at ${appointmentTime} EST (demo request)`;
     setLead((current) => ({ ...current, preferredAppointment: selectedAppointment }));
     lastCallerActivityRef.current = Date.now();
     inactivityShownRef.current = false;
@@ -381,7 +393,7 @@ function VoiceAssistantTest() {
 
       {showConsent && <div className="voice-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConsent(false)}><section className="voice-consent-modal" role="dialog" aria-modal="true" aria-labelledby="voice-consent-title"><button type="button" className="voice-modal-close" onClick={() => setShowConsent(false)} aria-label="Close"><X /></button><span className="voice-modal-icon"><Mic /></span><h2 id="voice-consent-title">Before we begin</h2><p>You’ll speak with an AI assistant. Your microphone will be active during the conversation so it can understand and respond to you.</p><ul><li>This is an internal test.</li><li>No appointment will actually be booked.</li><li>Do not share sensitive financial or medical information.</li></ul><button type="button" className="voice-consent-button" onClick={startCall}>Allow microphone &amp; start</button><button type="button" className="voice-cancel-button" onClick={() => setShowConsent(false)}>Not now</button></section></div>}
       {showHuman && <div className="voice-modal-backdrop"><section className="voice-consent-modal" role="dialog" aria-modal="true"><button className="voice-modal-close" onClick={() => setShowHuman(false)} aria-label="Close"><X/></button><span className="voice-modal-icon"><PhoneCall/></span><h2>Talk with Brushline</h2><p>Tap below to call a live team member now.</p><a className="voice-consent-button voice-call-link" href="tel:+12397773713"><PhoneCall size={19}/> Call (239) 777-3713</a><button className="voice-cancel-button" onClick={() => setShowHuman(false)}>Continue with assistant</button></section></div>}
-      {showCalendar && <div className="voice-modal-backdrop"><section className="voice-consent-modal voice-calendar-modal" role="dialog" aria-modal="true"><span className="voice-modal-icon"><CalendarClock/></span><h2>Request an estimate time</h2><p>These are demo choices. Brushline will confirm the actual appointment.</p><label>Date<input type="date" min={new Date().toISOString().slice(0,10)} value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)}/></label><label>Time<select value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)}><option>9:00 AM</option><option>11:30 AM</option><option>2:00 PM</option><option>4:00 PM</option></select></label><button className="voice-consent-button" disabled={!appointmentDate} onClick={submitAppointment}>Use this requested time</button></section></div>}
+      {showCalendar && <div className="voice-modal-backdrop"><section className="voice-consent-modal voice-calendar-modal" role="dialog" aria-modal="true"><span className="voice-modal-icon"><CalendarClock/></span><h2>Request an estimate time</h2><p>Choose a date to reveal the available demo times. All times are EST and must be confirmed by Brushline.</p><div className="voice-date-cards" role="list" aria-label="Available appointment dates">{appointmentDates.map((date) => <button type="button" role="listitem" key={date.value} className={`voice-date-card ${appointmentDate === date.value ? "selected" : ""}`} onClick={() => { setAppointmentDate(date.value); setAppointmentTime(""); }}><span>{date.weekday}</span><strong>{date.day}</strong><small>{date.month}</small></button>)}</div>{appointmentDate && <div className="voice-time-section"><span className="voice-time-heading">Available times <strong>EST</strong></span><div className="voice-time-slots">{["9:00 AM","11:30 AM","2:00 PM","4:00 PM"].map((slot) => <button type="button" key={slot} className={appointmentTime === slot ? "selected" : ""} onClick={() => setAppointmentTime(slot)}>{slot}</button>)}</div></div>}<button className="voice-consent-button" disabled={!appointmentDate || !appointmentTime} onClick={submitAppointment}>Request this time</button></section></div>}
       {showInactivity && <div className="voice-modal-backdrop voice-inactivity-backdrop"><section className="voice-consent-modal voice-inactivity-modal" role="alertdialog" aria-modal="true" aria-labelledby="inactivity-title"><span className="voice-inactivity-ring" style={{ "--progress": inactivityCountdown / 10 }}><strong>{inactivityCountdown}</strong></span><h2 id="inactivity-title">Still with us?</h2><p>We haven’t heard a response. Would you like to continue your conversation?</p><button type="button" className="voice-consent-button" onClick={continueAfterInactivity}>Yes, continue</button><button type="button" className="voice-cancel-button" onClick={endCall}>End conversation</button></section></div>}
     </main>
   );
