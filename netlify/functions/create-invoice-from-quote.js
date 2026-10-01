@@ -75,6 +75,8 @@ exports.handler = async (event, context) => {
       return json(404, { error: "Quote not found" });
     }
 
+    if (quote.documentType === "change_order" && quote.status !== "approved") return json(409, { error: "The customer must approve this change order before invoicing" });
+
     // Prevent duplicates only if linked invoice still exists
     const linkedInvoiceId = safeStr(quote.linkedInvoiceId);
 
@@ -152,7 +154,8 @@ exports.handler = async (event, context) => {
         email: user.email,
       },
 
-      source: "quote",
+      source: quote.documentType === "change_order" ? "change_order" : "quote",
+      parentQuoteId: quote.parentQuoteId || null,
       sourceQuoteId: quote.id,
       linkedQuoteId: quote.id,
       quoteNumber: getQuoteNumber(quote),

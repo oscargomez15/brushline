@@ -3,6 +3,7 @@ import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import EstimateActionModal from "./EstimateActionModal";
 import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
 function prettyUA(ua = "") {
@@ -43,6 +44,13 @@ const mapsUrl = (address) =>
 export default function FindEstimates() {
   const navigate = useNavigate();
 
+  const [action, setAction] = useState(null);
+  const [notice, setNotice] = useState("");
+  const openAction = (quote, type) => { setOpenMenuId(null); setAction({ quote, type }); };
+  const extraActions = (quote) => <>
+    <button type="button" className="kebab-item" role="menuitem" onClick={() => openAction(quote, "forward")}>Forward Estimate</button>
+    {quote.status === "approved" && quote.documentType !== "change_order" && <button type="button" className="kebab-item" role="menuitem" onClick={() => openAction(quote, "change")}>Create Change Order</button>}
+  </>;
   const [items, setItems] = useState([]);
   const [err, setErr] = useState("");
   const [q, setQ] = useState("");
@@ -274,6 +282,7 @@ const handleRegeneratePdf = async (quoteId) => {
         </button>
       </header>
 
+      {notice && <p role="status">{notice}</p>}
       <div className="fe-toolbar">
         <div className="fe-search-wrap">
           <span className="fe-search-icon" aria-hidden="true">⌕</span>
@@ -340,7 +349,7 @@ const handleRegeneratePdf = async (quoteId) => {
                         <div className="fe-avatar" aria-hidden="true">{clientInitial}</div>
                         <div className="fe-client-meta">
                           <div className="fe-client-name">{x.clientName || "—"}</div>
-                          <div className="fe-client-id">#{getQuoteNumber(x)}</div>
+                          <div className="fe-client-id">#{getQuoteNumber(x)}{x.parentQuoteId && <div>Change order for #{x.parentQuoteNumber}</div>}</div>
                         </div>
                       </div>
                     </td>
@@ -394,15 +403,16 @@ const handleRegeneratePdf = async (quoteId) => {
 
                         {openMenuId === x.id && (
                           <div className="kebab-menu" role="menu">
+                          {extraActions(x)}
                             <button
                               type="button"
                               className="kebab-item"
                               onClick={() => {
                                 setOpenMenuId(null);
-                                navigate(`/crm/estimates/edit/${x.id}`);
+                                if (x.status !== "approved") navigate(`/crm/estimates/edit/${x.id}`);
                               }}
                             >
-                              Edit Quote
+                              {x.status === "approved" ? "Approved Quote (locked)" : "Edit Quote"}
                             </button>
 
                             <button
@@ -499,7 +509,7 @@ const handleRegeneratePdf = async (quoteId) => {
                   <span className="fe-mobile-card-top">
                     <span>
                       <span className="fe-mobile-name">{x.clientName || "Customer"}</span>
-                      <span className="fe-mobile-number">#{getQuoteNumber(x)}</span>
+                      <span className="fe-mobile-number">#{getQuoteNumber(x)}{x.parentQuoteId && <span> · Change order for #{x.parentQuoteNumber}</span>}</span>
                     </span>
                     <strong className="fe-mobile-total">{fmtMoney(x.grandTotal)}</strong>
                   </span>
@@ -547,7 +557,8 @@ const handleRegeneratePdf = async (quoteId) => {
                     >⋯</button>
                     {openMenuId === x.id && (
                       <div className="kebab-menu" role="menu">
-                        <button type="button" className="kebab-item" onClick={() => navigate(`/crm/estimates/edit/${x.id}`)}>Edit Quote</button>
+                          {extraActions(x)}
+                        <button type="button" className="kebab-item" disabled={x.status === "approved"} onClick={() => navigate(`/crm/estimates/edit/${x.id}`)}>{x.status === "approved" ? "Approved Quote (locked)" : "Edit Quote"}</button>
                         <button type="button" className="kebab-item" onClick={() => handleResendQuoteEmail(x.id)} disabled={resendingId === x.id}>
                           {resendingId === x.id ? "Resending..." : "Resend Quote Email"}
                         </button>
@@ -569,6 +580,11 @@ const handleRegeneratePdf = async (quoteId) => {
         </div>
       </div>
 
+      {action && <EstimateActionModal action={action} onClose={() => setAction(null)} onComplete={(data) => {
+        if (data.quote) setItems((prev) => [data.quote, ...prev]);
+        setNotice(data.sentTo ? `Estimate forwarded to ${data.sentTo}.` : data.emailSent ? "Change order created and sent for customer approval." : "Change order saved, but email failed. Use Resend Quote Email to retry.");
+        setAction(null);
+      }} />}
       {historyOpen && (
       <div className="modal-backdrop" onClick={() => setHistoryOpen(false)}>
         <div className="modal-card" onClick={(e) => e.stopPropagation()}>

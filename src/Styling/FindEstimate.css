@@ -619,3 +619,12 @@
   }
   .fe-mobile-delete{ color:#b91c1c; }
 }
+
+.fe-action-modal { max-height: 90vh; overflow-y: auto; width: min(600px, calc(100vw - 32px)); }
+.fe-action-modal h2 { margin: 0; font-size: 20px; }
+.fe-action-modal label { display: block; margin: 16px 0 6px; font-weight: 700; }
+.fe-action-modal input, .fe-action-modal textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+.fe-action-modal p { line-height: 1.5; }
+.fe-action-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.fe-action-buttons button { padding: 12px; cursor: pointer; }
+.fe-action-modal button:disabled { opacity: .6; cursor: wait; }

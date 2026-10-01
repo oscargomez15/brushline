@@ -138,12 +138,12 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
   const total = Number(quote?.grandTotal || 0);
   const deposit = Math.round(total * 0.4 * 100) / 100;
 
-  const subject = `Your quote is ready – ${safeStr(quote?.companyName) || "Brushline Services"}`;
+  const subject = `${quote.documentType === "change_order" ? "Your change order" : "Your quote"} is ready – ${safeStr(quote?.companyName) || "Brushline Services"}`;
 
   const text = [
     `Hi ${customerName},`,
     ``,
-    `Thanks for the opportunity — your quote is ready.`,
+    quote.documentType === "change_order" ? quote.note : `Thanks for the opportunity — your quote is ready.`,
     ``,
     `Total: $${total.toFixed(2)}`,
     `Deposit (40%): $${deposit.toFixed(2)}`,
@@ -153,7 +153,7 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
     `If you have any questions, just reply to this email.`,
   ].filter(Boolean).join("\n");
 
-  const html = buildQuoteEmailHtml({
+  let html = buildQuoteEmailHtml({
     companyName: quote?.companyName || "Brushline Services",
     customerName,
     address,
@@ -162,9 +162,10 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
     quoteUrl: publicUrl,
   });
 
+if (quote.documentType === "change_order") html = html.replaceAll("your quote", "your change order").replaceAll("Quote Ready", "Change Order Ready").replaceAll("View Detailed Quote", "Review Change Order");
 const resend = new Resend(apiKey);
 
-await resend.emails.send({
+const result = await resend.emails.send({
   from,
   to,
   subject,
@@ -179,6 +180,7 @@ await resend.emails.send({
       ]
     : [],
 });
+if (result?.error) throw new Error(result.error.message || "Email delivery failed");
 }
 
 exports.handler = async (event, context) => {
@@ -220,9 +222,11 @@ exports.handler = async (event, context) => {
       return json(404, { error: "Quote not found" });
     }
 
-    const recipient = safeStr(quote?.email || quote?.customer?.email);
+    const recipient = body.forwardTo !== undefined
+      ? safeStr(body.forwardTo)
+      : safeStr(quote?.email || quote?.customer?.email);
     if (!recipient || !isValidEmail(recipient)) {
-      return json(400, { error: "Quote does not have a valid customer email" });
+      return json(400, { error: "A valid recipient email is required" });
     }
 
     const publicBase = process.env.PUBLIC_QUOTE_BASE_URL;

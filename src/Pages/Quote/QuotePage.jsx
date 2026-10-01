@@ -752,7 +752,8 @@ const stripeTotal =
             </div>
           </div>
 
-          <div className="quote-title">Proposal</div>
+          <div className="quote-title">{quote.documentType === "change_order" ? "Change Order" : "Proposal"}</div>
+          {quote.parentQuoteId && <p>Additional work for approved quote #{quote.parentQuoteNumber}. Original approved total: {fmtMoney(quote.originalApprovedTotal)}. This addition: {fmtMoney(quote.grandTotal)}. Billed separately after approval.</p>}
 
           {quote.status === "approved" && quote.approvedAt ? (
             <div className="quote-approved-date">
@@ -884,7 +885,7 @@ const stripeTotal =
                           type="button"
                           className={`quote-toggle-line-btn ${isExcluded ? "restore" : ""}`}
                           onClick={() => handleToggleLineItem(i)}
-                          disabled={togglingLineIndex === i}
+                          disabled={isApproved || togglingLineIndex === i}
                         >
                           {togglingLineIndex === i
                             ? "Updating..."

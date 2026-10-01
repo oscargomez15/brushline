@@ -67,6 +67,8 @@ exports.handler = async (event, context) => {
       return json(404, { error: "Quote not found" });
     }
 
+    if (quote.status === "approved") return json(409, { error: "Approved quotes are locked. Create a change order for additional work." });
+
     if (t) {
       if (!tokenMatches(quote, t)) {
         return json(403, { error: "Invalid token" });

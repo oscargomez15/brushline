@@ -43,6 +43,7 @@ exports.handler = async (event) => {
     const store = getStore("quotes", { siteID, token });
     const quote = await store.get(id, { type: "json" });
     if (!quote) return json(404, { error: "Quote not found" });
+    if (quote.status === "approved") return json(409, { error: "Approved quotes are locked. Create a change order for additional work." });
 
     // public token validation if using public quote links
     if (quote.viewToken && t && quote.viewToken !== t) {

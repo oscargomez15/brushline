@@ -227,6 +227,8 @@ exports.handler = async (event, context) => {
     const existing = await quotesStore.get(id, { type: "json" });
     if (!existing) return json(404, { error: "Quote not found" });
 
+    if (existing.status === "approved") return json(409, { error: "Approved quotes are locked. Create a change order for additional work." });
+
     const baseCustomer = payload.customer || existing.customer || {};
 
     const normalizedCustomer = {
@@ -245,6 +247,11 @@ exports.handler = async (event, context) => {
       id: existing.id,
       createdAt: existing.createdAt,
       createdBy: existing.createdBy,
+      documentType: existing.documentType,
+      parentQuoteId: existing.parentQuoteId,
+      parentQuoteNumber: existing.parentQuoteNumber,
+      originalApprovedTotal: existing.originalApprovedTotal,
+      quoteNumber: existing.quoteNumber,
       updatedAt: new Date().toISOString(),
       updatedBy: { id: user.sub, email: user.email },
 
@@ -294,7 +301,13 @@ exports.handler = async (event, context) => {
 
     await quotesStore.setJSON(id, updatedQuote);
 
+    const existingIndex = await indexStore.get(id, { type: "json" });
     await indexStore.setJSON(id, {
+      ...existingIndex,
+      quoteNumber: updatedQuote.quoteNumber,
+      documentType: updatedQuote.documentType,
+      parentQuoteId: updatedQuote.parentQuoteId,
+      parentQuoteNumber: updatedQuote.parentQuoteNumber,
       id,
       customerId: updatedQuote.customerId,
       createdAt: updatedQuote.createdAt,

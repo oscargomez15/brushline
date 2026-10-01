@@ -104,7 +104,7 @@ function buildQuotePdfBuffer(quote) {
               ? "Drywall Installation / Repair"
             : "Interior Painting";
 
-      doc.fontSize(19).fillColor("#FFFFFF").text("PROPOSAL", rightX, topY + 11, { align: "right", width: 230 });
+      doc.fontSize(19).fillColor("#FFFFFF").text(quote.documentType === "change_order" ? "CHANGE ORDER" : "PROPOSAL", rightX, topY + 11, { align: "right", width: 230 });
       doc.fontSize(9).fillColor("#BFDBFE").text(statusText, rightX, topY + 36, { align: "right", width: 230 });
       doc.fontSize(9).fillColor("#E2E8F0").text(serviceLabel, rightX, topY + 50, { align: "right", width: 230 });
       doc.fillColor("#000");
@@ -133,6 +133,10 @@ function buildQuotePdfBuffer(quote) {
       doc.y = metaY + 98;
       doc.fillColor("#000");
 
+      if (quote.documentType === "change_order") {
+        doc.fontSize(10).fillColor("#0F172A").text(`Additional work for approved quote #${quote.parentQuoteNumber}. Original approved total: ${fmtMoney(quote.originalApprovedTotal)}. Billed separately after approval.`, leftX, doc.y, { width: 530 });
+        doc.moveDown();
+      }
       // Handyman
       if (Array.isArray(quote.lineItems) && quote.lineItems.length) {
         doc.fontSize(10).fillColor("#2563EB").text("SCOPE OF WORK", 40, doc.y, { characterSpacing: 1 });
