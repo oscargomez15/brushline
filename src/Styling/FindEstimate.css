@@ -648,7 +648,11 @@
 .fe-estimates-page .fe-client-name { max-width: 340px; }
 .fe-estimates-page .fe-table .fe-view-status { width: 1%; text-align: center; white-space: nowrap; }
 .fe-estimates-page .fe-pill { white-space: nowrap; }
-.fe-estimates-page .fe-table .fe-selection-cell { width: 36px; padding-right: 0; }
+.fe-estimates-page .fe-table .fe-selection-cell { width: 1%; padding: 17px 10px 17px 16px; white-space: nowrap; }
+.fe-estimates-page .fe-selection-cell input { display: block; margin: 0; }
+.fe-estimates-page .fe-table th:nth-child(3) { width: 28%; }
+.fe-estimates-page .fe-table th:nth-child(4) { width: 28%; }
+.fe-estimates-page .fe-selection-cell + th, .fe-estimates-page .fe-selection-cell + td { padding-left: 8px; }
 .fe-secondary-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 11px; background: #fff; color: #334155; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s, border-color .15s, box-shadow .15s; }
 .fe-secondary-btn:hover { background: #f8fafc; border-color: #94a3b8; box-shadow: 0 2px 6px rgba(15,23,42,.05); }
 .fe-secondary-btn:focus-visible, .fe-primary-btn:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
