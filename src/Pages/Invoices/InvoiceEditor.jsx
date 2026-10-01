@@ -1,3 +1,4 @@
+import SendConfirmationModal from "../../Components/SendConfirmationModal";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
@@ -80,6 +81,7 @@ export default function InvoiceEditor() {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+  const [confirmation, setConfirmation] = useState(null);
   const [sending, setSending] = useState(false);
   const payments = Array.isArray(invoice?.payments) ? invoice.payments : [];
   const [downloadingPdf, setDownloadingPdf] = useState(false);
@@ -143,7 +145,8 @@ try {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data?.error || "Failed to send invoice");
 
-    alert(`Invoice sent to ${data.sentTo}`);
+    setConfirmation({ title: "Invoice sent", message: `Your invoice and PDF were sent to ${data.sentTo}.` });
+    setInvoice((prev) => ({ ...prev, status: prev.status === "draft" ? "sent" : prev.status, sentAt: new Date().toISOString() }));
 } catch (e) {
     setErr(e.message || "Failed to send invoice");
 } finally {
@@ -1046,6 +1049,7 @@ const previewUrl = invoice?.id
         }
       `}</style>
 
+      {confirmation && <SendConfirmationModal {...confirmation} onClose={() => setConfirmation(null)} />}
       <div className="invoice-shell">
         <div className="invoice-toolbar">
           <div className="invoice-toolbar-left">

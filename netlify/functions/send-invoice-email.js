@@ -273,7 +273,7 @@ exports.handler = async (event, context) => {
 
     const resend = new Resend(apiKey);
 
-    await resend.emails.send({
+    const emailResult = await resend.emails.send({
       to,
       from,
       subject,
@@ -286,6 +286,8 @@ exports.handler = async (event, context) => {
         },
       ],
     });
+
+    if (emailResult?.error) throw new Error(emailResult.error.message || "Email delivery failed");
 
     const invoicesIndexStore = getStore("invoices_index", { siteID, token });
 

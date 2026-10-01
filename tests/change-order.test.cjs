@@ -14,15 +14,17 @@ function fixture(filename, parent = {}) {
     return { get: async (id) => rows.get(id), setJSON: async (id, value) => rows.set(id, value), set: async (id, value) => rows.set(id, value) };
   }
   getStore("quotes").setJSON(base.id, base);
+  getStore("invoices").setJSON(base.id, base);
   const mocks = {
     "@netlify/blobs": { getStore },
     "./_pdf": { buildQuotePdfBase64: async () => "cGRm" },
+    "./_invoice-pdf": { buildInvoicePdfBase64: async () => "cGRm" },
     "./_quote-number": { getQuoteNumber: (quote) => quote.quoteNumber },
     "./_terms": {},
     "./resend-quote-email": { handler: async () => ({ statusCode: 200 }) },
     resend: { Resend: class { constructor() { this.emails = { send: async (payload) => { sent.push(payload); return parent.emailFailure ? { error: { message: "Rejected" } } : { data: { id: "sent" } }; } }; } } },
   };
-  const sandbox = { exports: {}, Buffer, console: { log() {}, warn() {}, error() {} }, process: { env: { NETLIFY_SITE_ID: "site", NETLIFY_AUTH_TOKEN: "token", RESEND_API_KEY: "key", QUOTE_NOTIFY_FROM: "sender@example.com", PUBLIC_QUOTE_BASE_URL: "https://example.com/quote" } }, require: (id) => mocks[id] || require(id) };
+  const sandbox = { exports: {}, Buffer, console: { log() {}, warn() {}, error() {} }, process: { env: { NETLIFY_SITE_ID: "site", NETLIFY_AUTH_TOKEN: "token", RESEND_API_KEY: "key", QUOTE_NOTIFY_FROM: "sender@example.com", PUBLIC_QUOTE_BASE_URL: "https://example.com/quote", PUBLIC_INVOICE_BASE_URL: "https://example.com/invoice" } }, require: (id) => mocks[id] || require(id) };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../netlify/functions", filename), "utf8"), sandbox);
   return { handler: sandbox.exports.handler, stores, sent, base };
 }
@@ -87,4 +89,17 @@ test("signed change order can be approved and invoiced separately", async () => 
   assert.equal(invoice.grandTotal, 250);
   assert.equal(invoice.parentQuoteId, "base");
   assert.equal(invoice.source, "change_order");
+});
+
+test("invoice provider rejection cannot return a success confirmation", async () => {
+  const f = fixture("send-invoice-email.js", { emailFailure: true });
+  const result = await f.handler(post({ invoiceId: "original" }), auth);
+  assert.equal(result.statusCode, 500);
+  assert.equal(f.stores.get("invoices").get("original").sentAt, undefined);
+});
+test("successful invoice email returns its recipient", async () => {
+  const f = fixture("send-invoice-email.js");
+  const result = await f.handler(post({ invoiceId: "original" }), auth);
+  assert.equal(result.statusCode, 200);
+  assert.equal(JSON.parse(result.body).sentTo, "customer@example.com");
 });

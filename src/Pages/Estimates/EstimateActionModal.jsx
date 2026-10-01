@@ -110,7 +110,7 @@ export default function EstimateActionModal({ action, onClose, onComplete }) {
         {progress && <p role="status">{progress}</p>}
         {forwardedIds.length > 0 && error && <p>Already sent estimates will not be resent when you retry.</p>}
         <div className="fe-action-buttons">
-          <button type="button" disabled={busy} onClick={close}>{forwardedIds.length ? "Close" : "Cancel"}</button>
+          <button type="button" className="fe-secondary-btn" disabled={busy} onClick={close}>{forwardedIds.length ? "Close" : "Cancel"}</button>
           <button type="submit" className="fe-primary-btn" disabled={busy}>{busy ? "Sending…" : forwarding ? failedIds.length ? "Retry failed estimates" : "Forward estimates" : "Create and send for approval"}</button>
         </div>
       </div>
