@@ -4,6 +4,7 @@ import { getQuoteNumber } from "../../utils/quoteNumber";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SendConfirmationModal from "../../Components/SendConfirmationModal";
+import DeleteEstimatesModal from "./DeleteEstimatesModal";
 import EstimateActionModal from "./EstimateActionModal";
 import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
@@ -45,7 +46,7 @@ const mapsUrl = (address) =>
 export default function FindEstimates() {
   const navigate = useNavigate();
 
-  const [selectionMode, setSelectionMode] = useState(false);
+  const [deleteQuotes, setDeleteQuotes] = useState(null);
   const [confirmation, setConfirmation] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
   const toggleSelected = (id) => setSelectedIds((prev) => prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id]);
@@ -303,19 +304,19 @@ const handleRegeneratePdf = async (quoteId) => {
           />
           {q ? <button type="button" className="fe-clear-search" onClick={() => setQ("")}>Clear</button> : null}
         </div>
-        <button type="button" className="fe-secondary-btn" aria-pressed={selectionMode} onClick={() => { setSelectionMode(!selectionMode); setSelectedIds([]); }}>{selectionMode ? "Done selecting" : "Select estimates"}</button>
         <div className="fe-results-count" aria-live="polite">
           <strong>{filtered.length}</strong> {filtered.length === 1 ? "estimate" : "estimates"}
         </div>
       </div>
 
-      {selectionMode && <div className="fe-bulk-toolbar">
+      {selectedIds.length > 0 && <div className="fe-bulk-toolbar" role="region" aria-label="Selected estimate actions">
         <label><input type="checkbox" aria-label="Select all visible estimates"
           checked={filtered.length > 0 && filtered.every((item) => selectedIds.includes(item.id))}
           ref={(element) => { if (element) element.indeterminate = filtered.some((item) => selectedIds.includes(item.id)) && !filtered.every((item) => selectedIds.includes(item.id)); }}
           onChange={(event) => setSelectedIds((prev) => event.target.checked ? [...new Set([...prev, ...filtered.map((item) => item.id)])] : prev.filter((id) => !filtered.some((item) => item.id === id)))} /> Select all shown</label>
         <span aria-live="polite">{selectedIds.length} selected</span>
-        <button type="button" className="fe-primary-btn" disabled={!selectedIds.length} onClick={() => { setOpenMenuId(null); setAction({ type: "forward", quotes: items.filter((item) => selectedIds.includes(item.id)) }); }}>Forward selected</button>
+        <button type="button" className="fe-primary-btn" disabled={!selectedIds.length} onClick={() => { setOpenMenuId(null); setAction({ type: "forward", quotes: items.filter((item) => selectedIds.includes(item.id)) }); }}>Forward</button>
+        <button type="button" className="fe-danger-btn" onClick={() => setDeleteQuotes(items.filter((item) => selectedIds.includes(item.id)))}>Delete</button>
         {selectedIds.length > 0 && <button type="button" className="fe-secondary-btn" onClick={() => setSelectedIds([])}>Clear selection</button>}
       </div>}
       <div className="fe-card">
@@ -323,7 +324,7 @@ const handleRegeneratePdf = async (quoteId) => {
           <table className="fe-table">
             <thead>
               <tr>
-                {selectionMode && <th className="fe-selection-cell"><span className="sr-only">Select estimate</span></th>}
+                <th className="fe-selection-cell"><input type="checkbox" aria-label="Select all estimates shown" ref={(element) => { if (element) element.indeterminate = filtered.some((item) => selectedIds.includes(item.id)) && !filtered.every((item) => selectedIds.includes(item.id)); }} checked={filtered.length > 0 && filtered.every((item) => selectedIds.includes(item.id))} onChange={(event) => setSelectedIds((prev) => event.target.checked ? [...new Set([...prev, ...filtered.map((item) => item.id)])] : prev.filter((id) => !filtered.some((item) => item.id === id)))} /></th>
                 <th>Date</th>
                 <th>Client</th>
                 <th>Address</th>
@@ -358,7 +359,7 @@ const handleRegeneratePdf = async (quoteId) => {
                       }
                     }}
                   >
-                    {selectionMode && <td className="fe-selection-cell" onClick={(event) => event.stopPropagation()}><input type="checkbox" aria-label={`Select estimate ${getQuoteNumber(x)} for ${x.clientName || "customer"}`} checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /></td>}
+                    <td className="fe-selection-cell" onClick={(event) => event.stopPropagation()}><input type="checkbox" aria-label={`Select estimate ${getQuoteNumber(x)} for ${x.clientName || "customer"}`} checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /></td>
                     <td className="muted">
                       {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "—"}
                     </td>
@@ -507,7 +508,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={selectionMode ? 9 : 8} className="fe-empty">
+                  <td colSpan={9} className="fe-empty">
                     No estimates found.
                   </td>
                 </tr>
@@ -524,7 +525,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
             return (
               <article className="fe-mobile-card" key={`mobile-${x.id}`}>
-                {selectionMode && <label className="fe-mobile-select"><input type="checkbox" checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /> Select estimate #{getQuoteNumber(x)}</label>}
+                <label className="fe-mobile-select"><input type="checkbox" checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /> Select estimate #{getQuoteNumber(x)}</label>
                 <div className="fe-mobile-card-main">
                   <span className="fe-mobile-card-top">
                     <span>
@@ -608,6 +609,7 @@ const handleRegeneratePdf = async (quoteId) => {
         else if (data.emailSent) setConfirmation({ title: "Change order sent", message: "The customer has been emailed the change order to review and sign." });
         setAction(null);
       }} />}
+      {deleteQuotes && <DeleteEstimatesModal quotes={deleteQuotes} onClose={() => setDeleteQuotes(null)} onDeleted={(ids) => { setItems((prev) => prev.filter((item) => !ids.includes(item.id))); setSelectedIds((prev) => prev.filter((id) => !ids.includes(id))); if (ids.length) setNotice(`${ids.length} estimate(s) deleted.`); }} />}
       {confirmation && <SendConfirmationModal {...confirmation} onClose={() => setConfirmation(null)} />}
       {historyOpen && (
       <div className="modal-backdrop" onClick={() => setHistoryOpen(false)}>

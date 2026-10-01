@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { Mail, MapPin, Phone, Search, Users } from "lucide-react";
 import "./LeadsList.css";
+import FindPageSkeleton from "../../Components/FindPageSkeleton";
 
 const fmtDate = (value) => value ? new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "—";
 
@@ -32,6 +33,7 @@ export default function LeadsList() {
     return leads.filter((lead) => [lead.fullName, lead.phone, lead.email, lead.address, lead.service, lead.projectDetails].join(" ").toLowerCase().includes(q));
   }, [leads, query]);
 
+  if (loading) return <FindPageSkeleton title="Leads" />;
   return <main className="leads-page">
     <header className="leads-header"><div><span>Website inquiries</span><h1>Leads</h1><p>AI assistant conversations and the information collected from prospective clients.</p></div><div className="leads-count"><Users size={20}/><strong>{leads.filter((lead) => lead.status === "new").length}</strong><span>New</span></div></header>
     <label className="leads-search"><Search size={18}/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, phone, service, or address" /></label>

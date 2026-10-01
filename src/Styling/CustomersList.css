@@ -1,7 +1,9 @@
 .customers-page {
-  max-width: 1200px;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
-  padding: 16px;
+  padding: 28px 22px 40px;
 }
 
 .customers-header {
@@ -372,3 +374,4 @@
   .customers-toolbar { align-items: stretch; flex-direction: column; }
   .customers-search-wrap { max-width: none; width: 100%; }
 }
+@media(max-width:520px){.customers-page{padding:18px 12px 92px}}

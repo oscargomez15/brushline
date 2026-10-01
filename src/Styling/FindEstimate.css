@@ -2,7 +2,9 @@
 
 /* ============ Layout ============ */
 .find-estimates{
-  max-width:1200px;
+  max-width:none;
+  width:100%;
+  box-sizing:border-box;
   margin:0 auto;
   padding:16px;
 }
@@ -656,3 +658,10 @@
 .fe-action-modal .fe-primary-btn { border-radius: 11px; }
 @media (max-width: 520px) { .fe-action-buttons { flex-wrap: wrap; } .fe-action-buttons button { flex: 1; } .fe-bulk-toolbar { padding: 12px; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; } }
 @media (prefers-reduced-motion: reduce) { .fe-secondary-btn { transition: none; } }
+
+.crm-main { min-width: 0; }
+.fe-bulk-toolbar { position: sticky; top: 12px; z-index: 5; padding: 12px 16px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 14px; box-shadow: 0 5px 18px rgba(15,23,42,.06); }
+.fe-danger-btn { min-height: 42px; padding: 10px 16px; border: 1px solid #fecaca; border-radius: 11px; background: #fef2f2; color: #b91c1c; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.fe-danger-btn:hover { background: #fee2e2; border-color: #f87171; }
+.fe-danger-btn:disabled { opacity: .5; cursor: wait; }
+.fe-danger-btn:focus-visible { outline: 3px solid #fca5a5; outline-offset: 3px; }

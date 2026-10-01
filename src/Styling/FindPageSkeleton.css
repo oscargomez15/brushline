@@ -1,4 +1,4 @@
-.find-skeleton { max-width: 1200px; margin: 0 auto; padding: 28px 22px 40px; }
+.find-skeleton { max-width: none; width: 100%; box-sizing: border-box; margin: 0 auto; padding: 28px 22px 40px; }
 .find-skeleton-heading, .skeleton-search-panel, .skeleton-table-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .find-skeleton-heading { margin-bottom: 22px; }
 .skeleton-line, .skeleton-block, .skeleton-circle, .skeleton-table-head {
