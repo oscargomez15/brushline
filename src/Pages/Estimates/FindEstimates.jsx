@@ -44,6 +44,8 @@ const mapsUrl = (address) =>
 export default function FindEstimates() {
   const navigate = useNavigate();
 
+  const [selectedIds, setSelectedIds] = useState([]);
+  const toggleSelected = (id) => setSelectedIds((prev) => prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id]);
   const [action, setAction] = useState(null);
   const [notice, setNotice] = useState("");
   const openAction = (quote, type) => { setOpenMenuId(null); setAction({ quote, type }); };
@@ -174,6 +176,7 @@ export default function FindEstimates() {
 
       // Remove from UI
       setItems((prev) => prev.filter((x) => x.id !== id));
+      setSelectedIds((prev) => prev.filter((value) => value !== id));
     } catch (e) {
       alert(e.message);
     } finally {
@@ -302,11 +305,21 @@ const handleRegeneratePdf = async (quoteId) => {
         </div>
       </div>
 
+      <div className="fe-bulk-toolbar">
+        <label><input type="checkbox" aria-label="Select all visible estimates"
+          checked={filtered.length > 0 && filtered.every((item) => selectedIds.includes(item.id))}
+          ref={(element) => { if (element) element.indeterminate = filtered.some((item) => selectedIds.includes(item.id)) && !filtered.every((item) => selectedIds.includes(item.id)); }}
+          onChange={(event) => setSelectedIds((prev) => event.target.checked ? [...new Set([...prev, ...filtered.map((item) => item.id)])] : prev.filter((id) => !filtered.some((item) => item.id === id)))} /> Select all shown</label>
+        <span aria-live="polite">{selectedIds.length} selected</span>
+        <button type="button" className="fe-primary-btn" disabled={!selectedIds.length} onClick={() => { setOpenMenuId(null); setAction({ type: "forward", quotes: items.filter((item) => selectedIds.includes(item.id)) }); }}>Forward selected</button>
+        {selectedIds.length > 0 && <button type="button" onClick={() => setSelectedIds([])}>Clear selection</button>}
+      </div>
       <div className="fe-card">
         <div className="fe-table-wrap">
           <table className="fe-table">
             <thead>
               <tr>
+                <th><span className="sr-only">Select estimate</span></th>
                 <th>Date</th>
                 <th>Client</th>
                 <th>Address</th>
@@ -334,12 +347,14 @@ const handleRegeneratePdf = async (quoteId) => {
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
+                      if (e.target !== e.currentTarget) return;
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
                         navigate(`/quote/${x.id}`);
                       }
                     }}
                   >
+                    <td onClick={(event) => event.stopPropagation()}><input type="checkbox" aria-label={`Select estimate ${getQuoteNumber(x)} for ${x.clientName || "customer"}`} checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /></td>
                     <td className="muted">
                       {x.createdAt ? new Date(x.createdAt).toLocaleDateString() : "—"}
                     </td>
@@ -488,7 +503,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="fe-empty">
+                  <td colSpan={9} className="fe-empty">
                     No estimates found.
                   </td>
                 </tr>
@@ -505,6 +520,7 @@ const handleRegeneratePdf = async (quoteId) => {
 
             return (
               <article className="fe-mobile-card" key={`mobile-${x.id}`}>
+                <label className="fe-mobile-select"><input type="checkbox" checked={selectedIds.includes(x.id)} onChange={() => toggleSelected(x.id)} /> Select estimate #{getQuoteNumber(x)}</label>
                 <div className="fe-mobile-card-main">
                   <span className="fe-mobile-card-top">
                     <span>
@@ -582,7 +598,8 @@ const handleRegeneratePdf = async (quoteId) => {
 
       {action && <EstimateActionModal action={action} onClose={() => setAction(null)} onComplete={(data) => {
         if (data.quote) setItems((prev) => [data.quote, ...prev]);
-        setNotice(data.sentTo ? `Estimate forwarded to ${data.sentTo}.` : data.emailSent ? "Change order created and sent for customer approval." : "Change order saved, but email failed. Use Resend Quote Email to retry.");
+        if (data.forwardedIds) setSelectedIds((prev) => prev.filter((id) => !data.forwardedIds.includes(id)));
+        setNotice(data.sentTo ? `${data.forwardedIds?.length || 1} estimate(s) forwarded to ${data.sentTo}.` : data.emailSent ? "Change order created and sent for customer approval." : "Change order saved, but email failed. Use Resend Quote Email to retry.");
         setAction(null);
       }} />}
       {historyOpen && (
