@@ -8,7 +8,7 @@ export const Privacy = () => {
 
   <h1 className='section-subtitle'>Privacy Policy</h1>
   <p><strong>Effective Date:</strong> 06/01/2025<br />
-     <strong>Last Updated:</strong>  06/01/2025</p>
+     <strong>Last Updated:</strong>  10/03/2026</p>
 
   <p>At <strong>Brushline LLC </strong> ("we", "our", or "us"), your privacy is important to us. This Privacy Policy explains how we collect, use, and protect the personal information you provide on our website <strong>www.brushlineservices.com</strong>.</p>
   
@@ -57,7 +57,7 @@ export const Privacy = () => {
 
     <div className="privacy-section">
         <h2>6. Cookies and Tracking</h2>
-        <p>We may use cookies to enhance your browsing experience. You can choose to disable cookies in your browser settings.</p>
+        <p>We use browser storage to assign a random visitor identifier and measure visits to public website pages, device categories, referring domains, scroll engagement, and clicks on phone, email, and project-assistant links. These metrics help us improve the website. We do not store IP addresses, page query strings, or contact-link contents in these analytics. We respect Do Not Track and Global Privacy Control signals. Blocking browser storage or enabling these signals disables this visitor tracking.</p>
     </div>
 
     <div className="privacy-section">

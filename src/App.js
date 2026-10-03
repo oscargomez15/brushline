@@ -33,6 +33,8 @@ import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
 import PublicInvoicePage from "./Pages/Invoices/PublicInvoicePage";
 import FindInvoices from "./Pages/Invoices/FindInvoices";
 import VoiceAssistantTest from "./Pages/VoiceAssistantTest/VoiceAssistantTest";
+import WebsiteAnalytics from "./Components/WebsiteAnalytics";
+import Metrics from "./Pages/Metrics/Metrics";
 import LeadsList from "./Pages/Leads/LeadsList";
 
 function StartEstimateRoute() {
@@ -95,6 +97,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
+      <WebsiteAnalytics />
 
       <Routes>
         <Route element={<PublicLayout />}>
@@ -112,6 +115,7 @@ function App() {
 
         <Route path="/crm" element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
+            <Route path="metrics" element={<Metrics />} />
             <Route path="dashboard" element={<Dashboard />} />
 
             <Route path="estimates/find" element={<FindEstimates />} />

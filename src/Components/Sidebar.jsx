@@ -6,6 +6,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 
 import {
+  FiBarChart2,
   FiHome,
   FiFileText,
   FiSearch,
@@ -117,6 +118,8 @@ export default function Sidebar() {
               collapsed={collapsed}
           />
 
+          <NavItem to="/crm/metrics" label="Metrics" icon={<FiBarChart2 />} collapsed={collapsed} />
+
           <Dropdown
           label="Estimates"
           icon={<FiFileText />}
@@ -191,6 +194,8 @@ export default function Sidebar() {
       >
         <span className="crm-mobile-icon"><FiHome /></span>
       </NavLink>
+
+      <NavLink to="/crm/metrics" className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`} aria-label="Metrics" onClick={() => setMobileMenu(null)}><span className="crm-mobile-icon"><FiBarChart2 /></span></NavLink>
 
       {/* Estimates menu */}
       <div className="crm-mobile-menu">
