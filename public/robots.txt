@@ -1,11 +1,21 @@
 User-agent: *
-Disallow: /wp-admin/
-Disallow: /cgi-bin/
-Disallow: /temp/
-Disallow: /junk/
-Disallow: /private/
-Disallow: /drafts/
-
 Allow: /
+Disallow: /crm
+Disallow: /quote/
+Disallow: /invoice/
+Disallow: /login
+Disallow: /assistant
+Disallow: /.netlify/
+Disallow: /spa.html
 
-Sitemap: https://www.brushlineservices.com/sitemap.xml
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /crm
+Disallow: /quote/
+Disallow: /invoice/
+Disallow: /login
+Disallow: /assistant
+Disallow: /.netlify/
+Disallow: /spa.html
+
+Sitemap: https://brushlineservices.com/sitemap.xml

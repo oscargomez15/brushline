@@ -1,5 +1,6 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
+import FindPageSkeleton from "./Components/FindPageSkeleton";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 
@@ -8,7 +9,6 @@ import RequireAuth from "./Components/RequireAuth";
 
 // Layouts
 import PublicLayout from "./Layouts/PublicLayout";
-import CRMLayout from "./Layouts/CRMLayout";
 
 // Pages
 import { Home } from "./Pages/Home";
@@ -21,21 +21,24 @@ import ServiceArea from "./Pages/ServiceArea";
 import { Login } from "./Pages/Login";
 import { NotFound } from "./Pages/NotFound";
 
-import { Estimator } from "./Pages/Estimator/Estimator";
-import QuotePage from "./Pages/Quote/QuotePage";
-import FindEstimates from "./Pages/Estimates/FindEstimates";
-import { StartEstimate } from "./Pages/Estimator/Components/StartEstimate";
-import CustomersList from "./Pages/Customers/CustomersList";
-import EditEstimateRoute from "./Pages/Estimates/EditEstimateRoute";
-import Dashboard from "./Pages/Dashboard/Dashboard";
 
-import InvoiceEditor from "./Pages/Invoices/InvoiceEditor";
-import PublicInvoicePage from "./Pages/Invoices/PublicInvoicePage";
-import FindInvoices from "./Pages/Invoices/FindInvoices";
-import VoiceAssistantTest from "./Pages/VoiceAssistantTest/VoiceAssistantTest";
+import PublicSEO from "./Components/PublicSEO";
 import WebsiteAnalytics from "./Components/WebsiteAnalytics";
-import Metrics from "./Pages/Metrics/Metrics";
-import LeadsList from "./Pages/Leads/LeadsList";
+
+const CRMLayout = lazy(() => import("./Layouts/CRMLayout"));
+const Estimator = lazy(() => import("./Pages/Estimator/Estimator"));
+const QuotePage = lazy(() => import("./Pages/Quote/QuotePage"));
+const FindEstimates = lazy(() => import("./Pages/Estimates/FindEstimates"));
+const StartEstimate = lazy(() => import("./Pages/Estimator/Components/StartEstimate").then((module) => ({ default: module.StartEstimate })));
+const CustomersList = lazy(() => import("./Pages/Customers/CustomersList"));
+const EditEstimateRoute = lazy(() => import("./Pages/Estimates/EditEstimateRoute"));
+const Dashboard = lazy(() => import("./Pages/Dashboard/Dashboard"));
+const InvoiceEditor = lazy(() => import("./Pages/Invoices/InvoiceEditor"));
+const PublicInvoicePage = lazy(() => import("./Pages/Invoices/PublicInvoicePage"));
+const FindInvoices = lazy(() => import("./Pages/Invoices/FindInvoices"));
+const VoiceAssistantTest = lazy(() => import("./Pages/VoiceAssistantTest/VoiceAssistantTest"));
+const Metrics = lazy(() => import("./Pages/Metrics/Metrics"));
+const LeadsList = lazy(() => import("./Pages/Leads/LeadsList"));
 
 function StartEstimateRoute() {
   const navigate = useNavigate();
@@ -99,6 +102,7 @@ function App() {
       <ScrollToTop />
       <WebsiteAnalytics />
 
+      <Suspense fallback={<FindPageSkeleton title="Page" />}>
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/login" element={<Login />} />
@@ -137,6 +141,8 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
+      <PublicSEO />
     </>
   );
 }

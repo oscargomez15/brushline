@@ -41,7 +41,6 @@ import annInteriorAfter from '../Assets/naples-interior-painting-after.jpeg'
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
-import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 import { Reviews } from './Reviews.jsx';
 import { SignatureDivider } from '../Components/SignatureDivider.jsx';
@@ -323,42 +322,7 @@ const variants = {
   return (
     <div className='page'>
 
-        <Helmet>
-            <title>Interior & Exterior House Painters in Southwest Florida | Brushline</title>
-            <meta name="description" content="Interior and exterior house painting in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Clean preparation, durable finishes, and free estimates." />
-            <link rel="canonical" href="https://www.brushlineservices.com/painting" />
-            <meta property="og:title" content="Interior & Exterior House Painters in Southwest Florida | Brushline" />
-            <meta property="og:description" content="Professional residential and commercial painting with careful preparation and durable finishes across Southwest Florida." />
-            <meta property="og:url" content="https://www.brushlineservices.com/painting" />
-            <meta property="og:type" content="website" />
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "PaintingService",
-            "name": "Brushline Services",
-            "url": "https://www.brushlineservices.com/painting",
-            "image": "https://www.brushlineservices.com/images/interior-painting-fort-myers.jpg",
-            "description": "Professional interior and exterior painting services across Cape Coral, Fort Myers, Naples, Estero, and Bonita Springs. Residential and commercial projects with lasting quality.",
-            "areaServed": [
-                { "@type": "Place", "name": "Cape Coral, FL" },
-                { "@type": "Place", "name": "Fort Myers, FL" },
-                { "@type": "Place", "name": "Naples, FL" },
-                { "@type": "Place", "name": "Estero, FL" },
-                { "@type": "Place", "name": "Bonita Springs, FL" }
-            ],
-            "serviceType": [
-                "Interior Painting",
-                "Exterior Painting",
-                "Deck & Fence Painting"
-            ],
-            "provider": {
-                "@type": "LocalBusiness",
-                "@id": "https://www.brushlineservices.com/#business",
-                "name": "Brushline Services",
-                "url": "https://www.brushlineservices.com",
-                "telephone": "+1-239-777-3713"
-            }
-            })}} />
-        </Helmet>
+
         <AnimatePresence>
                 {showModal && (
                     <motion.div
@@ -433,7 +397,7 @@ const variants = {
                     <p class="privacy-notice">
                         By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                     </p>
-                    
+
                     <div className="button-group">
                         <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
                         <div className="benefits-glass">
@@ -457,7 +421,7 @@ const variants = {
 
 
             <video muted autoPlay loop playsInline className='video-desktop' preload='auto'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />  
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />
             </video>
             </div>
         </section>
@@ -467,7 +431,7 @@ const variants = {
                 <div className="contact-mini-container">
                     <h1 className='section-title'><span>Pro Painters</span> serving Naples to Fort Myers</h1>
                         <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
-                        
+
                         <div className="button-group">
                             <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
                             <div className="benefits-hero">
@@ -490,11 +454,11 @@ const variants = {
 
             <div className="column video-column">
                 <video muted autoPlay loop playsInline className=' column video-desktop' preload='auto'>
-                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4"  />  
+                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4"  />
                 </video>
             </div>
         </section>
-        
+
         <div className="painting-services-section">
         <motion.section
             className="painting-services-container"
@@ -745,7 +709,7 @@ const variants = {
                 <div className="questions-container">
                     <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                         <h2>Preparation and Process </h2>
-                        <MdKeyboardArrowDown size="30"/> 
+                        <MdKeyboardArrowDown size="30"/>
                     </div>
                     <ol className='questions-list panel'>
                         {preparationAndProcessQuestions.map((item, id) => {
@@ -793,7 +757,7 @@ const variants = {
                     </ol>
                 </div>
 
-                
+
 
                 <div className="questions-container">
                     <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>

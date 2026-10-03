@@ -23,7 +23,7 @@ export const PaintingCard = ({ src, title, items, description }) => {
           ref={videoRef}
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           className="painting-video"
         >
           <source src={src} />

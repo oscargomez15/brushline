@@ -8,7 +8,6 @@ import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 
 import { PaintingCard } from '../Components/PaintingCard';
-import { Helmet } from 'react-helmet';
 import { FaCheck } from 'react-icons/fa';
 import { SignatureDivider } from '../Components/SignatureDivider';
 import { Reviews } from './Reviews';
@@ -206,37 +205,7 @@ export const Drywall = () => {
   return (
     <div className='page'>
 
-        <Helmet>
-            <title>Drywall Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
-            <meta name="description" content="Brushline Services is a professional drywall services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "HomeAndConstructionBusiness",
-            "name": "Brushline Services",
-            "url": "https://www.brushlineservices.com/drywall",
-            "image": "https://www.brushlineservices.com/images/drywall-repair-fort-myers.jpg",
-            "description": "Drywall installation and repair services for residential and commercial properties in Southwest Florida. Smooth finishes, patching, and full-service remodeling prep.",
-            "areaServed": [
-            { "@type": "Place", "name": "Cape Coral, FL" },
-            { "@type": "Place", "name": "Fort Myers, FL" },
-            { "@type": "Place", "name": "Naples, FL" },
-            { "@type": "Place", "name": "Estero, FL" },
-            { "@type": "Place", "name": "Bonita Springs, FL" }
-            ],
-            "serviceType": [
-            "Drywall Installation",
-            "Drywall Repair",
-            "Popcorn Ceiling Removal",
-            "Patching and Finishing"
-            ],
-            "provider": {
-            "@type": "LocalBusiness",
-            "name": "Brushline Services",
-            "url": "https://www.brushlineservices.com",
-            "telephone": "239-777-3713"
-            }
-        })}} />
-        </Helmet>
+
         <AnimatePresence>
                 {showModal && (
                     <motion.div
@@ -311,7 +280,7 @@ export const Drywall = () => {
                     <p class="privacy-notice">
                         By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                     </p>
-                    
+
                     <div className="button-group">
                         <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
                         <div className="benefits-glass">
@@ -333,7 +302,7 @@ export const Drywall = () => {
 
 
             <video muted autoPlay loop playsInline className='video-desktop'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />  
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />
             </video>
             </div>
         </section>
@@ -342,7 +311,7 @@ export const Drywall = () => {
             <div className="column">
                 <div className="contact-mini-container">
                     <h1 className='section-title'><span>Drywall Repair and Installation Services</span> from Naples to Fort Myers</h1>
-<p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Our experienced team delivers high-quality results—on time and on budget. Contact us today!</p>                        
+<p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Our experienced team delivers high-quality results—on time and on budget. Contact us today!</p>
                         <div className="button-group">
                             <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
                             <div className="benefits-hero">
@@ -365,11 +334,11 @@ export const Drywall = () => {
 
             <div className="column video-column">
                 <video muted autoPlay loop playsInline className=' column video-desktop'>
-                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />  
+                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />
                 </video>
             </div>
         </section>
-        
+
         <section className="painting-services-section">
         <motion.div
             className="painting-services-container"
@@ -496,7 +465,7 @@ export const Drywall = () => {
                 <div className="questions-container">
                     <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                         <h2>Preparation and Process </h2>
-                        <MdKeyboardArrowDown size="30"/> 
+                        <MdKeyboardArrowDown size="30"/>
                     </div>
                     <ol className='questions-list panel'>
                         {preparationAndProcessQuestions.map((item, id) => {

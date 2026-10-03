@@ -32,7 +32,7 @@ export const ServiceAreaSection = () => {
         <div className="city-grid">
           {cities.map((city, index) => (
             <Link to={city.link} key={index} className="city-card">
-              <img src={city.image} alt={`${city.title} painting service area`} />
+              <img loading="lazy" decoding="async" width="600" height="400" src={city.image} alt={`${city.title} painting service area`} />
 
               <div className="city-overlay"></div>
 

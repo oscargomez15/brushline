@@ -1,3 +1,4 @@
+import ServiceQuestions from '../Components/ServiceQuestions';
 import { useParams } from 'react-router-dom';
 import { serviceAreaData } from '../data/serviceAreas';import { motion } from 'framer-motion';
 import { FaCheck, FaPhone } from 'react-icons/fa';
@@ -5,7 +6,6 @@ import { Contact } from './Contact';
 import { Reviews } from './Reviews';
 import { PaintingCard } from '../Components/PaintingCard';
 import { WhyUs } from '../Components/WhyUs';
-import { Helmet } from 'react-helmet';
 import { SignatureDivider } from '../Components/SignatureDivider';
 import '../Styling/ServiceArea.css';
 
@@ -46,49 +46,14 @@ const ServiceArea = () => {
 
   return (
     <div className="service-area-page">
-    <Helmet>
-      <title>Interior & Exterior Painters in {cityData.city}, FL | Brushline</title>
-      <meta
-        name="description"
-        content={`Professional interior and exterior painting in ${cityData.city}, FL. Brushline Services provides careful preparation, durable finishes, and free estimates.`}
-      />
-      <link rel="canonical" href={`https://www.brushlineservices.com/service-area/${citySlug}`} />
-      <meta property="og:title" content={`Interior & Exterior Painters in ${cityData.city}, FL | Brushline`} />
-      <meta property="og:description" content={`Professional residential and commercial painting services in ${cityData.city}, Florida.`} />
-      <meta property="og:url" content={`https://www.brushlineservices.com/service-area/${citySlug}`} />
-      <meta property="og:type" content="website" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "PaintingService",
-        "name": "Brushline Services",
-        "url": `https://www.brushlineservices.com/service-area/${citySlug}`,
-        "image": `https://www.brushlineservices.com/images/${cityData.gallery[0]}-painting.webp`,
-        "description": `Professional painting services in ${cityData.city}, FL including interior painting, exterior painting, and drywall repair.`,
-        "areaServed": {
-          "@type": "Place",
-          "name": `${cityData.city}, FL`
-        },
-        "serviceType": [
-          "Interior Painting",
-          "Exterior Painting",
-          "Drywall Repair",
-          "House Painting",
-          "Commercial Painting"
-        ],
-        "provider": {
-          "@type": "LocalBusiness",
-          "@id": "https://www.brushlineservices.com/#business",
-          "name": "Brushline Services",
-          "url": "https://www.brushlineservices.com",
-          "telephone": "+1-239-777-3713"
-        }
-      })}} />
-    </Helmet>
+
 <section className="service-area-hero">
   <img
-    src={cityData.gallery}
+    src={cityData.gallery[0]}
     alt={`${cityData.city} painting services`}
     className="service-area-hero-bg"
+    fetchPriority="high"
+    decoding="async"
   />
 
   <div className="service-area-hero-overlay"></div>
@@ -140,7 +105,7 @@ const ServiceArea = () => {
         ))}
       </div> */}
 
-    
+
     <section className="painting-services-section">
       <motion.div
         className="painting-services-container"
@@ -166,7 +131,7 @@ const ServiceArea = () => {
         </div>
       </motion.div>
     </section>
-        
+
         <SignatureDivider/>
 
     <div className="cta-wrapper">
@@ -210,7 +175,8 @@ const ServiceArea = () => {
     <WhyUs/>
           <SignatureDivider/>
 
-    <Contact/>
+    <ServiceQuestions city={cityData.city} />
+      <Contact />
     </div>
   );
 };

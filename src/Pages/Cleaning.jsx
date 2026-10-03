@@ -7,7 +7,6 @@ import { PaintingCard } from '../Components/PaintingCard'
 import { FaCheck } from 'react-icons/fa';
 import emailjs from 'emailjs-com'
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
-import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { SignatureDivider } from '../Components/SignatureDivider';
 
@@ -48,7 +47,7 @@ export const Cleaning = () => {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/fan-cleaning.mp4",
           title: 'Deep Cleaning',
           description:'We tackle built-up dirt, grime, and hidden allergens in hard-to-reach areas. Perfect for seasonal cleanups, post-renovation, or when you just want a fresh start!',
-          items:[ 
+          items:[
                     "Baseboards scrubbed, not just dusted",
                     "Hand-washing of cabinet fronts and door frames",
                     "Deep cleaning of tile grout and behind appliances (as accessible)",
@@ -136,32 +135,32 @@ export const Cleaning = () => {
             phone:'',
             message:''
         }
-    
+
         const [form, setForm] = useState(defaultFormValues)
         const [showModal, setShowModal] = useState(false);
-    
+
         const handleChange = (event) => {
             setForm( (prev) => ({
                 ...prev,
                 [event.target.name]: event.target.value
             }))
         }
-    
+
         const resetForm = () => {
             setForm( () => (defaultFormValues))
         }
-    
+
         const handleSubmit = (event) => {
             event.preventDefault();
             resetForm();
-    
+
             const templateParams = {
                 name:form.name,
                 address:form.address,
                 phone:form.phone,
                 message:form.message
             }
-    
+
             emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
                 .then(() => {
             setShowModal(true); // ✅ Show modal
@@ -171,7 +170,7 @@ export const Cleaning = () => {
             console.error('Failed to send message:', error);
             });
         }
-    
+
         const isFormValid = Object.values(form).every((value) => value.trim() !== '');
 
     const toggleAccordion = (e) => {
@@ -187,37 +186,7 @@ export const Cleaning = () => {
 
   return (
     <section className='page'>
-        <Helmet>
-            <title>Cleaning Services from Naples to Fort Myers | Professional, Affordable and 5 Star Rated </title>
-            <meta name="description" content="Brushline Services is a professional cleaning services who provides residential and commercial services in Cape Coral, Fort Myers, Bonita Springs, Estero, and Naples. Get a free quote today!" />
-              <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "CleaningService",
-                "name": "Brushline Services",
-                "url": "https://www.brushlineservices.com/cleaning",
-                "image": "https://www.brushlineservices.com/images/house-cleaning-fort-myers.jpg",
-                "description": "Reliable and thorough residential and commercial cleaning services in Southwest Florida. Post-construction cleaning, move-in/move-out services, and house cleaning.",
-                "areaServed": [
-                { "@type": "Place", "name": "Cape Coral, FL" },
-                { "@type": "Place", "name": "Fort Myers, FL" },
-                { "@type": "Place", "name": "Naples, FL" },
-                { "@type": "Place", "name": "Estero, FL" },
-                { "@type": "Place", "name": "Bonita Springs, FL" }
-                ],
-                "serviceType": [
-                "Residential Cleaning",
-                "Commercial Cleaning",
-                "Move-In/Move-Out Cleaning",
-                "Post-Construction Cleaning"
-                ],
-                "provider": {
-                "@type": "LocalBusiness",
-                "name": "Brushline Services",
-                "url": "https://www.brushlineservices.com",
-                "telephone": "239-777-3713"
-                }
-            })}} />
-        </Helmet>
+
         <AnimatePresence>
                 {showModal && (
                     <motion.div
@@ -314,7 +283,7 @@ export const Cleaning = () => {
             </div>
 
             <video muted autoPlay loop playsInline className=' video-desktop'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4"/>  
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4"/>
             </video>
         </section>
 
@@ -324,7 +293,7 @@ export const Cleaning = () => {
                             <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
                                 <p>Let us handle the mess — you focus on what matters.
                             Reach out using the contact form below.</p>
-                                
+
                                 <div className="button-group">
                                     <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
                                     <div className="benefits-hero">
@@ -344,14 +313,14 @@ export const Cleaning = () => {
                                 </div>
                         </div>
                     </div>
-        
+
                     <div className="column video-column">
                         <video muted autoPlay loop playsInline className=' column video-desktop'>
-                            <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4" />  
+                            <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4" />
                         </video>
                     </div>
                 </section>
-        
+
         <section className="painting-services-section">
         <motion.div
             className="painting-services-container"
@@ -378,7 +347,7 @@ export const Cleaning = () => {
         </section>
 
         <SignatureDivider/>
-        
+
 
         <div className="cta-wrapper">
         <motion.section
@@ -444,7 +413,7 @@ export const Cleaning = () => {
                     <div className="questions-container">
                         <div className="questions-title accordion cartoon-box" onClick={toggleAccordion}>
                             <h2>Service-Specific</h2>
-                            <MdKeyboardArrowDown size="30"/> 
+                            <MdKeyboardArrowDown size="30"/>
                         </div>
                         <ol className='questions-list panel'>
                             {serviceSpecificQuestions.map((item, id) => {
