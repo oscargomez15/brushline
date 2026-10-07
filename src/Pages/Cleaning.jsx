@@ -12,8 +12,6 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { Contact } from './Contact'
 import { motion, AnimatePresence} from 'framer-motion'
 import { PaintingCard } from '../Components/PaintingCard'
-import { FaCheck } from 'react-icons/fa';
-import emailjs from 'emailjs-com'
 import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
 import { useState } from 'react';
 import { SignatureDivider } from '../Components/SignatureDivider';
@@ -136,50 +134,7 @@ export const Cleaning = () => {
         }
     ];
 
-            const defaultFormValues = {
-            name:'',
-            address:'',
-            email:'',
-            phone:'',
-            message:''
-        }
-
-        const [form, setForm] = useState(defaultFormValues)
-        const [showModal, setShowModal] = useState(false);
-
-        const handleChange = (event) => {
-            setForm( (prev) => ({
-                ...prev,
-                [event.target.name]: event.target.value
-            }))
-        }
-
-        const resetForm = () => {
-            setForm( () => (defaultFormValues))
-        }
-
-        const handleSubmit = (event) => {
-            event.preventDefault();
-            resetForm();
-
-            const templateParams = {
-                name:form.name,
-                address:form.address,
-                phone:form.phone,
-                message:form.message
-            }
-
-            emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
-                .then(() => {
-            setShowModal(true); // ✅ Show modal
-            resetForm();
-            })
-            .catch((error) => {
-            console.error('Failed to send message:', error);
-            });
-        }
-
-        const isFormValid = Object.values(form).every((value) => value.trim() !== '');
+            const [showModal, setShowModal] = useState(false);
 
     const toggleAccordion = animateFaq;
 
