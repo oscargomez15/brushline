@@ -1,6 +1,13 @@
 import React, { useRef, useState } from 'react';
 const empty = { name: '', phone: '', zip: '', projectType: '', email: '', message: '', company: '' };
-export default function PaintingEstimateForm() {
+const configurations = {
+ painting: { label: 'What needs painting?', button: 'Get My Free Painting Estimate', options: [['interior','Interior'],['exterior','Exterior'],['both','Interior and exterior'],['other','Other / not sure']] },
+ drywall: { label: 'What needs drywall work?', button: 'Get My Free Drywall Estimate', options: [['repair','Repair / patching'],['installation','Installation'],['texture','Texture / finishing'],['other','Other / not sure']] },
+ cleaning: { label: 'What needs cleaning?', button: 'Get My Free Cleaning Estimate', options: [['residential','House cleaning'],['deep','Deep cleaning'],['move','Move-in / move-out'],['windows','Windows'],['other','Other / not sure']] },
+ home_services: { label: 'What can we help with?', button: 'Get My Free Estimate', options: [['repairs','Home repairs'],['assembly','Furniture assembly'],['improvements','Home improvements'],['multiple','Several projects'],['other','Other / not sure']] },
+};
+export default function PaintingEstimateForm({ service = 'painting' }) {
+ const config = configurations[service];
  const [values, setValues] = useState(empty), [busy,setBusy] = useState(false), [status,setStatus] = useState(null);
  const pending = useRef(false);
  const change = e => setValues(v => ({...v,[e.target.name]:e.target.value}));
@@ -8,11 +15,11 @@ export default function PaintingEstimateForm() {
   e.preventDefault(); if(pending.current) return;
   pending.current=true;setBusy(true);setStatus(null);
   try {
-   const response=await fetch('/.netlify/functions/send-contact-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...values,source:'painting_landing',service:'painting'})});
+   const response=await fetch('/.netlify/functions/send-contact-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...values,source:service==='painting'?'painting_landing':'service_landing',service})});
    const data=await response.json().catch(()=>({}));
    if(!response.ok || !data.ok)throw Error(data.error || 'We could not send your request. Please try again or call (239) 777-3713.');
    setValues(empty);setStatus({type:'success',text:'Your estimate request was sent. We’ll contact you within 24 hours to discuss your project and arrange the next step.'});
-   try { window.gtag?.('event','generate_lead',{form_name:'painting_estimate',service:'painting'}); } catch { /* Tracking must not affect a successful request. */ }
+   try { window.gtag?.('event','generate_lead',{form_name:service+'_estimate',service}); } catch { /* Tracking must not affect a successful request. */ }
   } catch(error){setStatus({type:'error',text:error.message});}
   finally { pending.current=false;setBusy(false); }
  }
@@ -24,11 +31,11 @@ export default function PaintingEstimateForm() {
     <label htmlFor="painting-name">Name<input id="painting-name" name="name" autoComplete="name" required maxLength={120} value={values.name} onChange={change}/></label>
     <label htmlFor="painting-phone">Phone<input id="painting-phone" name="phone" type="tel" autoComplete="tel" required pattern="[+()0-9 .-]{7,25}" title="Enter a phone number" value={values.phone} onChange={change}/></label>
     <label htmlFor="painting-zip">Project ZIP code<input id="painting-zip" name="zip" autoComplete="postal-code" inputMode="numeric" required pattern="[0-9]{5}" maxLength={5} value={values.zip} onChange={change}/></label>
-    <label htmlFor="painting-type">What needs painting?<select id="painting-type" name="projectType" required value={values.projectType} onChange={change}><option value="">Choose one</option><option value="interior">Interior</option><option value="exterior">Exterior</option><option value="both">Interior and exterior</option><option value="other">Other / not sure</option></select></label>
+    <label htmlFor="painting-type">{config.label}<select id="painting-type" name="projectType" required value={values.projectType} onChange={change}><option value="">Choose one</option>{config.options.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>
    </div>
    <details className="painting-extra"><summary>Add email or project details (optional)</summary><label htmlFor="painting-email">Email (optional)<input id="painting-email" type="email" name="email" autoComplete="email" maxLength={254} value={values.email} onChange={change}/></label><label htmlFor="painting-message">Project details (optional)<textarea id="painting-message" name="message" rows={3} maxLength={3000} value={values.message} onChange={change}/></label></details>
    <div hidden aria-hidden="true"><label>Company<input name="company" tabIndex={-1} autoComplete="off" value={values.company} onChange={change}/></label></div>
-   <button type="submit">{busy?'Sending…':'Get My Free Painting Estimate'}</button>
+   <button type="submit">{busy?'Sending…':config.button}</button>
   </fieldset>
   {status && <p className={'painting-form-status '+status.type} role={status.type==='error'?'alert':'status'}>{status.text}</p>}
   <p className="painting-form-privacy">By submitting, you agree to our <a href="/privacy">Privacy Policy</a>. Prefer to talk? <a href="tel:+12397773713">(239) 777-3713</a></p>

@@ -23,6 +23,7 @@
 .painting-hero-copy>p,.other-service-page .contact-mini-container>p{color:#e0e5ed;font-size:16px;line-height:1.75;max-width:640px}
 .painting-conversion-hero .painting-eyebrow,.other-service-page .painting-eyebrow{display:inline-block;color:#ffd18e;border:1px solid #ffb84d55;background:#ffb84d14;padding:8px 12px;border-radius:999px;font-size:11px}
 .painting-conversion-hero .painting-call-note{color:#e0e5ed}
+.other-service-page .painting-call-note{color:#e0e5ed}
 .painting-estimate-options,.other-service-page .service-estimate-options{position:relative;min-width:0;z-index:2}
 .painting-estimate-form,.other-service-page .contact-mini.glass-form{box-sizing:border-box;width:100%;max-width:none;padding:28px;border:1px solid #ffffff26;border-radius:28px;background:#071533b8;backdrop-filter:blur(18px);box-shadow:0 25px 70px #0004;color:#fff}
 .painting-estimate-form h2,.other-service-page .form-header h3{color:#fff}

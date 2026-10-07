@@ -25,6 +25,7 @@ import { NotFound } from "./Pages/NotFound";
 import PublicSEO from "./Components/PublicSEO";
 import WebsiteAnalytics from "./Components/WebsiteAnalytics";
 
+const HomeServices = lazy(() => import("./Pages/HomeServices"));
 const CRMLayout = lazy(() => import("./Layouts/CRMLayout"));
 const Estimator = lazy(() => import("./Pages/Estimator/Estimator"));
 const QuotePage = lazy(() => import("./Pages/Quote/QuotePage"));
@@ -101,6 +102,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
+
       <WebsiteAnalytics />
 
       <Suspense fallback={<FindPageSkeleton title="Page" />}>
@@ -111,6 +113,7 @@ function App() {
           <Route path="/painting" element={<Painting />} />
           <Route path="/drywall" element={<Drywall />} />
           <Route path="/cleaning" element={<Cleaning />} />
+          <Route path="/home-services" element={<HomeServices />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/accessibility" element={<Accessibility />} />
           <Route path="/service-area/:citySlug" element={<ServiceArea />} />
@@ -151,3 +154,4 @@ function App() {
 }
 
 export default App;
+

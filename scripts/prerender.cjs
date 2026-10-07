@@ -25,7 +25,7 @@ const {Helmet}=require('react-helmet');
 const {BASE,pages}=require('../src/data/publicSeo');
 const PublicSEO=require('../src/Components/PublicSEO').default;
 const {Navigation}=require('../src/Components/Navigation');const {Footer}=require('../src/Components/Footer');
-const routes=[['/',require('../src/Pages/Home').Home],['/painting',require('../src/Pages/Painting').Painting],['/drywall',require('../src/Pages/Drywall').Drywall],['/cleaning',require('../src/Pages/Cleaning').Cleaning],['/privacy',require('../src/Pages/Privacy').Privacy],['/accessibility',require('../src/Pages/Accessibility').Accessibility],['/service-area/:citySlug',require('../src/Pages/ServiceArea').default],['*',require('../src/Pages/NotFound').NotFound]];
+const routes=[['/home-services',require('../src/Pages/HomeServices').default],['/',require('../src/Pages/Home').Home],['/painting',require('../src/Pages/Painting').Painting],['/drywall',require('../src/Pages/Drywall').Drywall],['/cleaning',require('../src/Pages/Cleaning').Cleaning],['/privacy',require('../src/Pages/Privacy').Privacy],['/accessibility',require('../src/Pages/Accessibility').Accessibility],['/service-area/:citySlug',require('../src/Pages/ServiceArea').default],['*',require('../src/Pages/NotFound').NotFound]];
 const existing=fs.readFileSync('build/index.html','utf8');
 const shell=existing.includes('<div id="root"></div>')?existing:fs.readFileSync('build/spa.html','utf8').replace('<meta name="robots" content="noindex, nofollow"><title>Brushline Services</title>','');
 fs.writeFileSync('build/spa.html',shell.replace('</head>','<meta name="robots" content="noindex, nofollow"><title>Brushline Services</title></head>'));

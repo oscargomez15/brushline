@@ -1,6 +1,7 @@
 const BASE = 'https://brushlineservices.com';
 const cities = { 'cape-coral-painter': 'Cape Coral', 'fort-myers-painter': 'Fort Myers', 'estero-painter': 'Estero', 'bonita-springs-painter': 'Bonita Springs', 'naples-painter': 'Naples' };
 const pages = {
+  '/home-services': {title:'Home Repairs & Furniture Assembly in Southwest Florida | Brushline', description:'Home repairs, furniture assembly, and improvements in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Request a free estimate from Brushline.', service:'Home repairs and furniture assembly'},
   '/': {title:'Interior & Exterior Painters in Southwest Florida | Brushline', description:'Professional interior and exterior painting in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Request a free estimate from Brushline Services.'},
   '/painting': {title:'Interior & Exterior House Painting in Southwest Florida | Brushline', description:'Residential and commercial painting in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Interior, exterior, and cabinet painting with free estimates.', service:'Interior and exterior painting'},
   '/drywall': {title:'Drywall Repair & Installation in Southwest Florida | Brushline', description:'Drywall repair, installation, finishing, and texture services in Cape Coral, Fort Myers, Estero, Bonita Springs, and Naples. Request a free estimate.', service:'Drywall repair and installation'},

@@ -37,8 +37,8 @@ export const Services = () => {
         'Professional home repairs, furniture assembly, and improvements, with careful workmanship and attention to detail.',
       Icon: House,
       accent: 'washing',
-      route: '/#contact',
-      cta: 'Request an Estimate',
+      route: '/home-services',
+      cta: 'Explore Service',
     },
   ];
 

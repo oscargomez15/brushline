@@ -56,6 +56,7 @@ export const Navigation = () => {
           <li><Link to="/painting">Painting</Link></li>
           <li><Link to="/drywall">Drywall</Link></li>
           <li><Link to="/cleaning">Cleaning</Link></li>
+          <li><Link to="/home-services">Home Services</Link></li>
         </ul>
       </li>
 

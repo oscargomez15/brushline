@@ -1,3 +1,4 @@
+import PaintingEstimateForm from '../Components/PaintingEstimateForm';
 import animateFaq from '../utils/animateFaq';
 import PaintingReviewCard from '../Components/PaintingReviewCard';
 import '../Styling/PaintingFunnel.css';
@@ -234,75 +235,11 @@ export const Drywall = () => {
                 <div className="contact-mini-container"><span className="painting-eyebrow">Fort Myers · Estero · Bonita Springs · Naples</span>
                     <h1 className='section-title'> <span>Drywall Services</span> from Naples to Fort Myers</h1>
                         <p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Serving Naples, Bonita Springs, Fort Myers and Cape Coral. Our experienced team delivers high-quality results—on time and on budget. Contact us today for a free estimate!</p>
-                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a></div>
+                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a><span className="painting-call-note">Let’s talk about your project. No obligation.</span></div>
 <PaintingReviewCard /></div>
 
-                <div className="service-estimate-options"><div className="contact-mini glass-form">
-                    <div className="form-header">
-                        <span className="form-badge">
-                            FREE ESTIMATE
-                        </span>
-
-                        <h3>Request Your Quote</h3>
-
-                        <p>
-                            Fill out the form below and we'll reach out within 24 hours.
-                        </p>
-                    </div>
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="name">Name*</label>
-                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Email*</label>
-                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
-                        </div>
-                    </div>
-
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="">Phone*</label>
-                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Address*</label>
-                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
-                        </div>
-                    </div>
-                    <div className="field-group">
-                        <label htmlFor="">Message (Optional)</label>
-                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
-                    </div>
-
-                    <p className="privacy-notice">
-                        By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-                    </p>
-
-                    <div className="button-group">
-                        <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-glass">
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p> No-cost estimates.</p>
-                            </div>
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p>10+ years of experience</p>
-                            </div>
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p>5-star rated</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            
-            <div className="painting-or-divider"><span>OR</span></div>
+                <div className="service-estimate-options"><PaintingEstimateForm service="drywall" />
+<div className="painting-or-divider"><span>OR</span></div>
 <div className="painting-assistant-option">
  <h2>Plan your free estimate with our AI assistant</h2>
  <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>

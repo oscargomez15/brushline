@@ -6,8 +6,9 @@ import {
   FaStar,
 } from 'react-icons/fa';
 
-import GoogleLogo from '../Assets/google-logo.webp';
 import '../Styling/Hero.css';
+import '../Styling/PaintingFunnel.css';
+import '../Styling/ServiceHero.css';
 
 export const Hero = () => {
   const [contactStatus, setContactStatus] = useState({ type: '', message: '' });
@@ -52,12 +53,12 @@ export const Hero = () => {
 
       <picture>
         <source
-          srcSet='/images/brushline-owner-truck.webp'
-          type='image/webp'
+          srcSet='/images/brushline-owner-portrait.jpg'
+          type='image/jpeg'
         />
 
         <img
-          src='/images/brushline-owner-truck.webp'
+          src='/images/brushline-owner-portrait.jpg'
           alt='Brushline Services owner standing in front of the business truck'
           className='hero-bg-image'
           fetchPriority='high'
@@ -74,8 +75,7 @@ export const Hero = () => {
             transition={{ duration: 0.7 }}
             className='hero-badge'
           >
-            <FaStar />
-            Trusted Painting Company in Southwest Florida
+            <FaStar aria-hidden="true" /> Highly rated by homeowners across SWFL
           </motion.div>
 
           <motion.h1
@@ -133,20 +133,16 @@ export const Hero = () => {
             transition={{ delay: 0.8, duration: 1 }}
           >
             <div className='stat-card'>
-              <h3>10+</h3>
-              <p>Years Experience</p>
-            </div>
-
-            <div className='stat-card'>
               <h3>5★</h3>
               <p>Rated Service</p>
             </div>
 
             <div className='stat-card'>
-              <h3>50+</h3>
+              <h3>70+</h3>
               <p>Homes Transformed</p>
             </div>
           </motion.div>
+
         </div>
 
         {/* Right Side Cards */}
@@ -203,22 +199,14 @@ export const Hero = () => {
             </button>
           </form>
         </div>
+        <div className="painting-or-divider"><span>OR</span></div>
+        <div className="painting-assistant-option">
+          <h2>Plan your free estimate with our AI assistant</h2>
+          <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>
+          <small>Choose an available time and confirm your details.</small>
+        </div>
 
-          <div className='service-card review-card'>
-            <img src={GoogleLogo} alt='Google logo' />
-
-            <div>
-              <div className='stars'>
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-              </div>
-
-              <p>Highly rated by homeowners across SWFL</p>
-            </div>
-          </div>
+          
         </motion.div>
       </div>
     </section>

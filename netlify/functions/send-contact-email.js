@@ -33,10 +33,11 @@ exports.handler = async (event) => {
     const address = safeStr(body.address, 300);
     const service = safeStr(body.service, 100);
     const message = safeStr(body.message, 3000);
-    const painting = body.source === "painting_landing" && service === "painting";
+    const types = { painting: ["interior", "exterior", "both", "other"], drywall: ["repair", "installation", "texture", "other"], cleaning: ["residential", "deep", "move", "windows", "other"], home_services: ["repairs", "assembly", "improvements", "multiple", "other"] };
+    const painting = (body.source === "painting_landing" && service === "painting") || (body.source === "service_landing" && Object.hasOwn(types, service));
     const zip = safeStr(body.zip, 10);
     const projectType = safeStr(body.projectType, 30);
-    if (painting && (!/^[0-9]{5}$/.test(zip) || !["interior", "exterior", "both", "other"].includes(projectType) || !/^[+()0-9 .-]{7,25}$/.test(phone) || phone.replace(/\D/g, "").length < 7)) return json(400, { error: "Please enter a valid phone number, ZIP code, and painting type." });
+    if (painting && (!/^[0-9]{5}$/.test(zip) || !types[service].includes(projectType) || !/^[+()0-9 .-]{7,25}$/.test(phone) || phone.replace(/\D/g, "").length < 7)) return json(400, { error: "Please enter a valid phone number, ZIP code, and project type." });
 
     if (!name || (!painting && !email) || !phone || !service) {
       return json(400, { error: "Please complete all required fields." });
@@ -74,7 +75,7 @@ exports.handler = async (event) => {
       `Email: ${email}`,
       `Phone: ${phone}`,
       `Service: ${service}`,
-      painting ? `Project ZIP: ${zip} | Painting type: ${projectType}` : null,
+      painting ? `Project ZIP: ${zip} | Project type: ${projectType}` : null,
       address ? `Address: ${address}` : null,
       "",
       "Project details:",

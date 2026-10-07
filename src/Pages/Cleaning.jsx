@@ -1,3 +1,4 @@
+import PaintingEstimateForm from '../Components/PaintingEstimateForm';
 import { Reviews } from './Reviews';
 import animateFaq from '../utils/animateFaq';
 import PaintingReviewCard from '../Components/PaintingReviewCard';
@@ -216,72 +217,11 @@ export const Cleaning = () => {
                 <div className="contact-mini-container"><span className="painting-eyebrow">Fort Myers · Estero · Bonita Springs · Naples</span>
                     <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
                     <p>Let us handle the mess — you focus on what matters. Reach out using the contact form.</p>
-                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a></div>
+                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a><span className="painting-call-note">Let’s talk about your project. No obligation.</span></div>
 <PaintingReviewCard /></div>
 
-                <div className="service-estimate-options"><div className="contact-mini glass-form">
-                    <div className="form-header">
-                        <span className="form-badge">
-                            FREE ESTIMATE
-                        </span>
-
-                        <h3>Request Your Quote</h3>
-
-                        <p>
-                            Fill out the form below and we'll reach out within 24 hours.
-                        </p>
-                    </div>
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="name">Name*</label>
-                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Email*</label>
-                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
-                        </div>
-                    </div>
-
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="">Phone*</label>
-                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Address*</label>
-                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
-                        </div>
-                    </div>
-                    <div className="field-group">
-                        <label htmlFor="">Message (Optional)</label>
-                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
-                    </div>
-
-                    <p className="privacy-notice">
-                        By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
-                    </p>
-
-                    <div className="button-group">
-                        <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-glass">
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p> No-cost estimates.</p>
-                            </div>
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p>10+ years of experience</p>
-                            </div>
-                            <div className="benefit-pill">
-                                <FaCheck/>
-                                <p>5-star rated</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <div className="painting-or-divider"><span>OR</span></div>
+                <div className="service-estimate-options"><PaintingEstimateForm service="cleaning" />
+<div className="painting-or-divider"><span>OR</span></div>
 <div className="painting-assistant-option">
  <h2>Plan your free estimate with our AI assistant</h2>
  <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>
