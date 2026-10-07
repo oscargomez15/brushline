@@ -335,7 +335,7 @@ function VoiceAssistantTest({ publicMode = false }) {
   }
 
   const time = `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
-  const hasLead = Object.values(lead).some(Boolean);
+  const hasLead = Boolean(appointmentResult);
 
   return (
     <main className="voice-test-page">
@@ -392,7 +392,7 @@ function VoiceAssistantTest({ publicMode = false }) {
               <div className="voice-test-notice"><Check size={17} /><span><strong>{appointmentResult?.appointmentBooked ? "Your estimate is booked" : "Request sent successfully"}</strong>{appointmentResult?.appointmentBooked ? "45-minute visit confirmed. Google Calendar sends your invitation." : "A team member will confirm your requested time."}</span></div>
             </div>
           ) : (
-            <div className="voice-empty-state"><Bot size={34} /><strong>No test conversation yet</strong><p>The confirmed customer and project details will appear here.</p></div>
+            <div className="voice-empty-state"><Bot size={34} /><strong>{publicMode ? "No request sent yet" : "No test conversation yet"}</strong><p>The confirmed customer and project details will appear here.</p></div>
           )}
           {transcript.length > 0 && <details className="voice-transcript"><summary>View conversation transcript</summary>{transcript.map((line, index) => <p key={`${line.role}-${index}`}><strong>{line.role === "caller" ? "Caller" : "Assistant"}:</strong> {line.text}</p>)}</details>}
         </aside>
