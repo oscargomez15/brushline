@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@font-face {
+  font-family: 'Sunborn';
+  src: url('./Assets/fonts/sunborn-sans-one.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  height: 100%;
+  color: #1f2933;
+  line-height: 1.5;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100000;
+  transform: translateY(-160%);
+  padding: 0.75rem 1rem;
+  border-radius: 0.4rem;
+  background: #ffffff;
+  color: #111827;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #0b6bcb !important;
+  outline-offset: 3px;
+}
+
+:where(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.cool-divider-container {
+  width: 100%;
+}
+.signature-divider {
+  background-color: #fff7eb;
+}
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+.divider-container svg{
+  font-size: 2rem;
+  color: #cfcfcf;
+}
+
+.left-line,.right-line {
+  background-color: #cfcfcf;
+  height: 2px;
+  width: 45%;
+}
+.no-pointer{
+  cursor: none;
+}
+
+.button {
+  appearance: button;
+  background-color: #c58525;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Montserrat",sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: .5rem 0.75rem;
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: filter .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button:after {
+  background-clip: padding-box;
+  background-color: #e09f3e;
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  bottom: -4px;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.button,
+.button:focus {
+  user-select: auto;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+.button:disabled {
+  cursor: auto;
+}
+
+.button:active {
+  border-width: 4px 0 0;
+  background: none;
+}
+
+.page{
+  position: relative;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-heading h1{
+  font-family: 'Sunborn', sans-serif;
+}
+
+.page::after{
+  content: '';
+  height: 2px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  position: absolute;
+  background-color: rgb(241, 241, 241);
+}
+
+.page:last-of-type::after{
+  content: none
+};
+
+
+/* Navbar Styling */
+
+
+@media screen and (max-width:1380px)  {
+
+  .page .sub-heading h1{
+    font-size: 2rem;
+  }
+
+  .page .sub-heading p{
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width:1070px) {
+  .footer-content{
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .sub-heading h1 {
+    line-height: 2rem;
+  }
+  
+}

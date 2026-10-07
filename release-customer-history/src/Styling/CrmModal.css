@@ -1,0 +1,31 @@
+/* Shared CRM dialog system. */
+.crm-modal-backdrop.crm-modal-backdrop { position:fixed; inset:0; z-index:10000; display:grid; place-items:center; padding:24px; box-sizing:border-box; background:rgba(15,23,42,.5); backdrop-filter:blur(5px); animation:crmFadeIn .18s ease-out; overflow-y:auto; }
+.crm-modal-backdrop.crm-dialog-host { z-index:11000; }
+.crm-modal-backdrop > :first-child { box-sizing:border-box; max-width:calc(100vw - 48px); max-height:calc(100dvh - 48px); overflow:auto; background:#fff; color:#0f172a; border:1px solid #e2e8f0; border-radius:20px; box-shadow:0 28px 90px rgba(15,23,42,.22); animation:crmSlideIn .24s cubic-bezier(.2,.8,.2,1); }
+.crm-modal-backdrop :is(.modal-head,.customers-modal-head,.estimate-customer-modal-head,.sig-modal-head,.payment-dialog-header) { padding:24px; border-bottom:1px solid #e8edf4; background:#f8fafc; }
+.crm-modal-backdrop :is(h2,h3,.modal-title,.customers-modal-title) { font-family:"Montserrat", "Segoe UI", sans-serif; color:#0f172a; font-size:22px; font-weight:600; line-height:1.3; letter-spacing:-.02em; text-transform:none; margin:0 0 8px; }
+.crm-modal-backdrop :is(.modal-sub,.customers-modal-subtitle,.sig-modal-subtitle) { color:#64748b; font-size:14px; line-height:1.6; }
+.crm-modal-backdrop .modal-body { padding:24px; }
+.crm-modal-backdrop :is(input:not([type=checkbox]):not([type=radio]),select,textarea) { box-sizing:border-box; max-width:100%; border:1px solid #cbd5e1; border-radius:10px; background:#fff; color:#0f172a; padding:11px 12px; font:inherit; }
+.crm-modal-backdrop button { font:inherit; font-weight:650; border-radius:10px; cursor:pointer; transition:background .15s,box-shadow .15s,transform .15s; }
+.crm-modal-backdrop button:active:not(:disabled) { transform:translateY(1px); }
+.crm-modal-backdrop button:disabled { opacity:.55; cursor:wait; }
+.crm-modal-backdrop :is(button,a,input,select,textarea):focus-visible { outline:3px solid #93c5fd; outline-offset:3px; }
+.crm-modal-backdrop :is(.fe-action-buttons,.customers-modal-actions,.crm-dialog-actions) { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+.crm-modal-backdrop :is(.fe-primary-btn,.customers-primary-btn,.crm-dialog-primary) { background:#2563eb; color:#fff; border:1px solid #2563eb; padding:11px 18px; }
+.crm-modal-backdrop :is(.fe-secondary-btn,.customers-secondary-btn,.crm-dialog-secondary) { background:#fff; color:#334155; border:1px solid #cbd5e1; padding:11px 18px; }
+.crm-modal-backdrop :is(.fe-danger-btn,.crm-dialog-danger) { background:#b91c1c; color:#fff; border:1px solid #b91c1c; padding:11px 18px; }
+.crm-modal-backdrop :is(.modal-close,.customers-modal-close,.payment-close) { width:36px; height:36px; border:1px solid #e2e8f0; background:#fff; color:#64748b; border-radius:10px; flex-shrink:0; }
+.crm-dialog-card { width:460px; padding:28px; }
+.crm-dialog-card p { color:#64748b; line-height:1.65; white-space:pre-line; overflow-wrap:anywhere; margin:12px 0 0; }
+.crm-dialog-icon { width:48px; height:48px; display:grid; place-items:center; border-radius:14px; margin-bottom:20px; background:#eff6ff; color:#2563eb; font-size:25px; font-weight:700; }
+.crm-dialog-icon--danger,.crm-dialog-icon--error { background:#fef2f2; color:#b91c1c; }
+.crm-dialog-icon--success { background:#ecfdf5; color:#047857; }
+.crm-modal-leaving.crm-modal-backdrop { animation:crmFadeOut .14s ease-in forwards; }
+.crm-modal-leaving > :first-child { animation:crmSlideOut .14s ease-in forwards; }
+@keyframes crmFadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes crmSlideIn { from { opacity:0; transform:translateY(12px) scale(.98); } to { opacity:1; transform:none; } }
+@keyframes crmFadeOut { to { opacity:0; } }
+@keyframes crmSlideOut { to { opacity:0; transform:translateY(6px) scale(.99); } }
+@media(max-width:600px) { .crm-modal-backdrop.crm-modal-backdrop { padding:12px; } .crm-modal-backdrop > :first-child { max-width:calc(100vw - 24px); max-height:calc(100dvh - 24px); border-radius:16px; } .crm-dialog-card { padding:24px; } .crm-modal-backdrop :is(.modal-head,.modal-body) { padding:20px; } .crm-dialog-actions button { flex:1; } }
+@media(prefers-reduced-motion:reduce) { .crm-modal-backdrop.crm-modal-backdrop,.crm-modal-backdrop > :first-child { animation:none; } .crm-modal-backdrop button { transition:none; } }

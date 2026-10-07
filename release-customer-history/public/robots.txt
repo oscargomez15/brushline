@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /crm
+Disallow: /quote/
+Disallow: /invoice/
+Disallow: /login
+Disallow: /assistant
+Disallow: /.netlify/
+Disallow: /spa.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /crm
+Disallow: /quote/
+Disallow: /invoice/
+Disallow: /login
+Disallow: /assistant
+Disallow: /.netlify/
+Disallow: /spa.html
+
+Sitemap: https://brushlineservices.com/sitemap.xml

@@ -1,0 +1,34 @@
+/* Shared presentation for drywall and cleaning; scoped away from the homepage. */
+.other-service-page .landing-hero { width:min(1200px,100%);box-sizing:border-box;min-height:0;padding:64px 24px;gap:48px;grid-template-columns:1.05fr 1fr; }
+.other-service-page .landing-hero::before {display:none}
+.other-service-page .contact-mini-container {color:#0f172a;max-width:none}
+.other-service-page .section-title {font:700 clamp(30px,3.5vw,48px)/1.12 Montserrat,sans-serif;letter-spacing:-.04em;text-transform:none;color:#0f172a;margin:18px 0}
+.other-service-page .section-title span {color:#2563eb}
+.other-service-page .contact-mini-container>p {color:#475569;font-size:16px;line-height:1.75}
+.other-service-page .contact-mini-container .video-desktop {position:static;display:block;width:100%;height:290px;transform:none;object-fit:cover;border-radius:18px;margin-top:24px}
+.other-service-page .contact-mini.glass-form {box-sizing:border-box;max-width:none;padding:30px;border-radius:22px;border:1px solid #dbe4ef;background:#f8fafc;box-shadow:0 16px 45px #0f172a0d;backdrop-filter:none}
+.other-service-page .form-badge {background:none;border:0;padding:0;color:#8b5a14;font:700 12px/1.5 Montserrat,sans-serif;letter-spacing:.09em}
+.other-service-page .form-header h3 {color:#0f172a;font:700 26px/1.25 Montserrat,sans-serif;letter-spacing:-.03em}
+.other-service-page :is(.form-header p,.privacy-notice,.benefit-pill p) {color:#475569;font-size:12px;line-height:1.65}
+.other-service-page .field-group label {color:#334155;font-size:13px;font-weight:600}
+.other-service-page .field-group :is(input,textarea) {box-sizing:border-box;background:#fff;color:#0f172a;border:1px solid #cbd5e1;border-radius:9px;padding:12px;font:inherit;min-height:46px}
+.other-service-page .privacy-notice a {color:#1d4ed8;font-weight:600}
+.other-service-page .benefits-glass {gap:8px;margin:0}
+.other-service-page .benefit-pill {padding:0;border:0;background:none;font-size:11px;white-space:normal}
+.other-service-page .benefit-pill::after {display:none}
+.other-service-page .benefit-pill svg {color:#2563eb}
+.other-service-page .button {background:#2563eb;color:#fff;border:0;border-radius:10px;box-shadow:none;padding:14px 18px;font:600 14px/1.4 Montserrat,sans-serif;min-height:44px;text-transform:none}
+.other-service-page .contact-mini .button-group,.other-service-page .contact-mini .button {width:100%}
+.other-service-page .cta-card {box-sizing:border-box;border:1px solid #dbe4ef;border-radius:18px;background:#f8fafc;box-shadow:none;padding:44px;width:min(1152px,100%)}
+.other-service-page .cta-card h2 {font:700 clamp(26px,3vw,36px)/1.2 Montserrat,sans-serif;letter-spacing:-.035em;color:#0f172a}
+.other-service-page .cta-tag {color:#8b5a14;background:none;font-size:12px;padding:0}
+.other-service-page .cta-card p,.other-service-page .cta-benefits {font-size:14px;line-height:1.7;color:#475569}
+.other-service-page .contact-page {background:#f8fafc;padding:64px 24px}
+.other-service-page .contact-page .card {border:1px solid #dbe4ef;border-radius:18px;background:#fff;box-shadow:0 8px 28px #0f172a08}
+.other-service-page .contact-page h1 {font:700 clamp(26px,3vw,36px)/1.2 Montserrat,sans-serif;letter-spacing:-.035em;color:#0f172a}
+.other-service-page .contact-page h1 span {color:#2563eb}
+.other-service-page .contact-page :is(input,select,textarea) {background:#fff;color:#0f172a;border:1px solid #cbd5e1;border-radius:9px}
+@media(max-width:850px){.other-service-page .landing-hero{grid-template-columns:1fr;padding:32px 20px;gap:28px}.other-service-page .contact-mini.glass-form{padding:24px 20px}.other-service-page .cta-card{padding:28px 20px}.other-service-page .contact-page{padding:44px 20px}}
+@media(max-width:440px){.other-service-page .field-group-container{grid-template-columns:1fr}.other-service-page .contact-mini-container .video-desktop{height:220px}}
+.other-service-page .contact-mini.glass-form .privacy-notice{color:#475569}.other-service-page .contact-mini.glass-form .privacy-notice a{color:#1d4ed8}.other-service-page .contact-mini .button::before,.other-service-page .contact-mini .button::after{display:none}.other-service-page .contact-mini button.button{background:#2563eb;color:#fff}
+.other-service-page .service-estimate-options{min-width:0;align-self:center}.other-service-page .contact-mini-container .painting-review-card{margin-top:16px}.other-service-page .contact-mini-container .painting-review-avatar img{width:40px;height:40px;object-fit:cover;border-radius:50%}

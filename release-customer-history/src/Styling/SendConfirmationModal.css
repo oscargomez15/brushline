@@ -1,0 +1,21 @@
+.send-confirmation-backdrop { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; padding: 20px; background: rgba(15,23,42,.46); backdrop-filter: blur(5px); animation: sendFadeIn .2s ease-out; }
+.send-confirmation-card { width: min(420px, 100%); box-sizing: border-box; padding: 34px 30px 28px; border-radius: 24px; background: #fff; text-align: center; box-shadow: 0 28px 90px rgba(15,23,42,.25); animation: sendCardIn .4s cubic-bezier(.16,1,.3,1); }
+.send-confirmation-art { position: relative; width: 110px; height: 110px; margin: 0 auto 18px; display: grid; place-items: center; }
+.send-confirmation-ring { position: absolute; inset: 0; border-radius: 50%; background: #ecfdf5; animation: sendRingIn .6s ease-out; }
+.send-confirmation-check { position: relative; width: 80px; height: 80px; overflow: visible; }
+.send-confirmation-check circle { fill: #10b981; }
+.send-confirmation-check path { fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; animation: sendCheckDraw .45s .2s ease-out forwards; }
+.send-confirmation-spark { position: absolute; width: 7px; height: 7px; background: #34d399; border-radius: 2px; animation: sendSparkIn .7s ease-out both; }
+.spark-one { top: 8px; right: 2px; transform: rotate(30deg); }.spark-two { left: 0; top: 30px; background: #60a5fa; animation-delay: .1s; }.spark-three { right: 8px; bottom: 7px; background: #fbbf24; animation-delay: .15s; }
+.send-confirmation-eyebrow { color: #047857; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; }
+.send-confirmation-card h2 { margin: 10px 0; font-size: 25px; color: #0f172a; letter-spacing: -.03em; }
+.send-confirmation-card p { margin: 0 0 26px; line-height: 1.6; color: #64748b; overflow-wrap: anywhere; }
+.send-confirmation-card button { width: 100%; border: 0; border-radius: 12px; background: #2563eb; color: white; padding: 13px 20px; font: inherit; font-weight: 700; cursor: pointer; transition: background .15s, transform .15s; }
+.send-confirmation-card button:hover { background: #1d4ed8; transform: translateY(-1px); }
+.send-confirmation-card button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+@keyframes sendFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sendCardIn { from { opacity: 0; transform: translateY(20px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes sendRingIn { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes sendCheckDraw { to { stroke-dashoffset: 0; } }
+@keyframes sendSparkIn { from { opacity: 0; scale: .2; } to { opacity: 1; scale: 1; } }
+@media (prefers-reduced-motion: reduce) { .send-confirmation-backdrop, .send-confirmation-card, .send-confirmation-ring, .send-confirmation-check path, .send-confirmation-spark { animation: none; } .send-confirmation-check path { stroke-dashoffset: 0; } .send-confirmation-card button { transition: none; } }

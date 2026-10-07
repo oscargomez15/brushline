@@ -1,0 +1,9 @@
+⬥ Injecting environment variable values for all scopes
+⬥ AI Gateway is disabled for this account
+⬥ Injected project settings env vars: APPROVAL_NOTIFY_FROM, APPROVAL_NOTIFY_TO, NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID, OPENAI_API_KEY, PUBLIC_INVOICE_BASE_URL, PUBLIC_QUOTE_BASE_URL, PUBLIC_SITE_URL, RESEND_API_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
+⬥ Injected .env file env vars: REACT_APP_GOOGLE_MAPS_API_KEY
+⬥ Using simple static server because '--dir' flag was specified
+⬥ Running static server from "brushline\build"
+⬥ Could not acquire required 'port': '8888'
+
+C:\Users\oscar\brushline>

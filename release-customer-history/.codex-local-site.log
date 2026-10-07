@@ -1,0 +1,58 @@
+⬥ Injecting environment variable values for all scopes
+ »   Warning: Could not find account for project 'undefined' with account slug 'undefined'
+⬥ Injected .env file env vars: REACT_APP_GOOGLE_MAPS_API_KEY
+⬥ Using simple static server because '--dir' flag was specified
+⬥ Running static server from "brushline\build"
+⬥ Setting up local dev server
+
+⬥ Static server listening to 3999
+⬥ Loaded function _quote-number
+⬥ Loaded function _pdf
+⬥ Loaded function _invoice-pdf
+⬥ Loaded function _terms
+⬥ Loaded function _customers
+⬥ Loaded function upload-estimate-photo
+⬥ Loaded function update-quote
+⬥ Loaded function update-customer
+⬥ Loaded function track-quote-view
+⬥ Loaded function toggle-quote-line-item
+⬥ Loaded function stripe-webhook
+⬥ Loaded function send-invoice-email
+⬥ Loaded function send-contact-email
+⬥ Loaded function save-invoice
+⬥ Loaded function resend-quote-email
+⬥ Loaded function remove-quote-line-item
+⬥ Loaded function regenerate-quote-pdf
+⬥ Loaded function save-customer
+⬥ Loaded function quote-signature
+⬥ Loaded function record-invoice-payment
+⬥ Loaded function quote-pdf
+⬥ Loaded function list-invoices
+⬥ Loaded function list-quotes
+⬥ Loaded function list-customers
+⬥ Loaded function get-public-invoice
+⬥ Loaded function get-quote
+⬥ Loaded function get-invoice
+⬥ Loaded function get-quote-views
+⬥ Loaded function get-invoice-pdf
+⬥ Loaded function get-estimate-photo
+⬥ Loaded function get-public-invoice-pdf
+⬥ Loaded function get-customer
+⬥ Loaded function delete-quote
+⬥ Loaded function delete-invoice
+⬥ Loaded function dashboard-stats
+⬥ Loaded function create-realtime-session
+⬥ Loaded function create-quote
+⬥ Loaded function create-invoice-from-quote
+⬥ Loaded function create-deposit-checkout
+⬥ Loaded function confirm-deposit-payment
+⬥ Loaded function approve-quote
+⬥ Loaded function apply-paint-grade
+⬥ Loaded function apply-package
+
+   ╭─────────────────────── ⬥  ────────────────────────╮
+   │                                                   │
+   │   Local dev server ready: http://localhost:8888   │
+   │                                                   │
+   ╰───────────────────────────────────────────────────╯
+

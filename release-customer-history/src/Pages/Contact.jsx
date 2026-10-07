@@ -1,0 +1,205 @@
+import React, { useState, useEffect } from 'react'
+import '../Styling/Contact.css'
+import fullBodyMascot from '../Assets/Transparent-03.webp'
+import {AnimatePresence, motion } from 'framer-motion'
+import {TbSquareRoundedCheckFilled} from 'react-icons/tb'
+import { Link } from 'react-router-dom'
+export const Contact = () => {
+    const defaultFormValues = {
+        name:'',
+        address:'',
+        email:'',
+        phone:'',
+        service:'',
+        message:''
+    }
+
+    const [form, setForm] = useState(defaultFormValues)
+    const [showModal, setShowModal] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState('');
+
+
+    const handleChange = (event) => {
+        setForm( (prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value
+        }))
+    }
+
+    const resetForm = () => {
+        setForm( () => (defaultFormValues))
+    }
+
+    /* Legacy EmailJS submission retained temporarily for reference.
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        resetForm();
+
+        const templateParams = {
+            name:form.name,
+            address:form.address,
+            phone:form.phone,
+            service:form.service,
+            message:form.message,
+            email:form.email
+        }
+
+        Promise.resolve()
+            .then(() => {
+        setShowModal(true); // ✅ Show modal
+        resetForm();
+        })
+        .catch((error) => {
+        console.error('Failed to send message:', error);
+        });
+    }
+
+    */
+    const handleSecureSubmit = async (event) => {
+        event.preventDefault();
+        setSubmitting(true);
+        setSubmitError('');
+
+        try {
+            const response = await fetch('/.netlify/functions/send-contact-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form)
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || 'Failed to send message.');
+
+            setShowModal(true);
+            resetForm();
+        } catch (error) {
+            setSubmitError(error.message || 'Failed to send message. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    }
+
+    const isFormValid =
+    form.name.trim() &&
+    form.address.trim() &&
+    form.email.trim() &&
+    form.phone.trim() &&
+    form.service.trim();    
+    
+    useEffect(() => {
+    if (showModal) {
+        document.body.classList.add('no-scroll');
+    } else {
+        document.body.classList.remove('no-scroll');
+    }
+
+    // Clean up just in case
+    return () => {
+        document.body.classList.remove('no-scroll');
+    };
+    }, [showModal]);
+
+  return (
+    <section className='contact-page light-orange' id='contact'>
+        <motion.div className="contact-card-modern"
+        initial={{ x: -100, opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true, amount: 0.2 }}>
+            <div className="contact-form">
+                <div className="sub-heading">
+                    <h1>Contact us and get your <span>free quote</span></h1>
+                    <p>Get your free quote by filling the information below and we'll get back to you within 24 hours.</p>
+                </div>
+                <form onSubmit={handleSecureSubmit} aria-busy={submitting}>
+                    <input type="text" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{position:'absolute', left:'-10000px'}} />
+                    <div className="form-row">
+                        <div className="form-field">
+                            <label htmlFor="name">Name*</label>
+                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="phone">Phone*</label>
+                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-field">
+                            <label htmlFor="email">Email*</label>
+                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
+                        </div>
+
+                        <div className="form-field">
+                            <label htmlFor="address">Address*</label>
+                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
+                        </div>
+                    </div>
+
+                    <div className="form-field full-width">
+                        <label htmlFor="service">Type of Service*</label>
+                        <select name="service" id="service" value={form.service} onChange={handleChange} required>
+                        <option value="" disabled>Select a service</option>
+                        <option value="Painting">Painting</option>
+                        <option value="Drywall">Drywall</option>
+                        <option value="Handyman">Multiple Services</option>
+                        <option value="Cleaning">Cleaning</option>
+                        </select>
+                    </div>
+
+                    <div className="form-field full-width">
+                        <label htmlFor="message">Message (Optional)</label>
+                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
+                        <p className="privacy-notice"> 
+                            By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
+                        </p>
+                    </div>
+
+                    {submitError && <p role="alert" style={{color:'#b91c1c', fontWeight:700}}>{submitError}</p>}
+                    <span className="sr-only" aria-live="polite">
+                        {submitting ? "Sending your message" : ""}
+                    </span>
+                    <button className='button' type="submit" disabled={!isFormValid || submitting}>
+                        {submitting ? 'Sending...' : 'Send Message'}
+                    </button>
+
+                </form>
+            </div>
+            <img src={fullBodyMascot} alt="brushline-full-body-mascot" className='mascot-contact'/>
+        </motion.div>
+
+        <AnimatePresence>
+        {showModal && (
+            <motion.div
+            className="modal-overlay"
+            role="presentation"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            >
+                <motion.div
+                    className="modal cartoon-box"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="contact-success-title"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <div className="modal-text">
+                        <h2 id="contact-success-title"><TbSquareRoundedCheckFilled aria-hidden="true"/> Message Sent</h2>
+                        <p>
+                            Thanks for reaching out! Our team will contact you within the next
+                            24 hours to discuss your project and the next steps.
+                        </p>
+                    </div>
+                    <button onClick={() => setShowModal(false)} className='button'>Close</button>
+                </motion.div>
+            </motion.div>
+        )}
+        </AnimatePresence>
+    </section>
+  )
+}

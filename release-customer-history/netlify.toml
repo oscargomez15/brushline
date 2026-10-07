@@ -1,0 +1,207 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[[redirects]]
+  from = "/painting"
+  to = "/painting.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/painting/"
+  to = "/painting"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/drywall"
+  to = "/drywall.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/drywall/"
+  to = "/drywall"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cleaning"
+  to = "/cleaning.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/cleaning/"
+  to = "/cleaning"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/privacy/"
+  to = "/privacy"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/accessibility"
+  to = "/accessibility.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/accessibility/"
+  to = "/accessibility"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-area/cape-coral-painter"
+  to = "/service-area/cape-coral-painter.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/service-area/cape-coral-painter/"
+  to = "/service-area/cape-coral-painter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-area/fort-myers-painter"
+  to = "/service-area/fort-myers-painter.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/service-area/fort-myers-painter/"
+  to = "/service-area/fort-myers-painter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-area/estero-painter"
+  to = "/service-area/estero-painter.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/service-area/estero-painter/"
+  to = "/service-area/estero-painter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-area/bonita-springs-painter"
+  to = "/service-area/bonita-springs-painter.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/service-area/bonita-springs-painter/"
+  to = "/service-area/bonita-springs-painter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/service-area/naples-painter"
+  to = "/service-area/naples-painter.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/service-area/naples-painter/"
+  to = "/service-area/naples-painter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/crm/*"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/crm"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/quote/*"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/invoice/*"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/login"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/assistant"
+  to = "/spa.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+[functions]
+  included_files = ["netlify/functions/assets/*"]
+
+[[headers]]
+  for = "/crm/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/crm"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/quote/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/invoice/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/login"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/assistant"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/spa.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

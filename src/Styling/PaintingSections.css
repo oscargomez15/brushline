@@ -1,0 +1,70 @@
+/* Painting landing page: shared visual language for the supporting sections. */
+.painting-funnel-page { background: #fff; color: #0f172a; }
+.painting-funnel-page > .premium-divider { display: none; }
+.painting-funnel-page :is(.painting-services-section,.paint-showcase-section,.reviews-section,.service-area-modern,.faq-wrapper,.cta-wrapper) { background: #fff; padding: 64px 24px; }
+.painting-funnel-page :is(.painting-services-section,.reviews-section,.faq-wrapper) { background: #f8fafc; }
+.painting-funnel-page :is(.painting-services-container,.paint-showcase-container,.reviews-container,.service-area-container,.faq) { width: min(1152px,100%); margin-inline: auto; }
+.painting-funnel-page :is(.painting-services-header,.reviews-header,.service-area-header) { max-width: 720px; margin-bottom: 32px; }
+.painting-funnel-page :is(.painting-services-header,.paint-showcase-copy,.reviews-header,.service-area-header) > span,
+.painting-funnel-page .cta-content > span { color: #8b5a14; font: 700 12px/1.5 Montserrat,sans-serif; letter-spacing: .09em; text-transform: uppercase; margin-bottom: 12px; padding: 0; background: none; backdrop-filter: none; }
+.painting-funnel-page :is(.painting-services-header,.paint-showcase-copy,.reviews-header,.service-area-header,.cta-content) h2,
+.painting-funnel-page .faq .section-subtitle { font: 700 clamp(26px,3vw,36px)/1.2 Montserrat,sans-serif; letter-spacing: -.035em; color: #0f172a; text-transform: none; margin: 0 0 16px; }
+.painting-funnel-page :is(.painting-services-header,.paint-showcase-copy,.reviews-header,.service-area-header,.cta-content) p { font-size: 15px; line-height: 1.75; color: #475569; }
+.painting-funnel-page :is(.painting-card-modern,.reviews-summary-card,.reviews-widget-card,.cta-card-modern) { border: 1px solid #dbe4ef; border-radius: 18px; background: #fff; box-shadow: 0 8px 28px #0f172a08; }
+.painting-funnel-page .painting-card-modern:hover { transform: translateY(-3px); box-shadow: 0 12px 30px #0f172a0d; }
+.painting-funnel-page .painting-video { height: 250px; }
+.painting-funnel-page .painting-card-content { padding: 28px; }
+.painting-funnel-page .painting-card-top { margin-bottom: 24px; }
+.painting-funnel-page .painting-card-top h2 { font: 700 24px/1.25 Montserrat,sans-serif; letter-spacing: -.03em; color: #0f172a; }
+.painting-funnel-page .painting-card-top p { font-size: 14px; color: #475569; }
+.painting-funnel-page .painting-services-list { gap: 12px; }
+.painting-funnel-page .painting-services-list span { font-size: 13px; font-weight: 500; color: #334155; }
+.painting-funnel-page .painting-check { background: #eff6ff; }
+.painting-funnel-page .painting-check svg { color: #2563eb; }
+.painting-funnel-page .paint-showcase-container { gap: 40px; }
+.painting-funnel-page .compare-image-container { height: 430px; border-radius: 18px; box-shadow: 0 8px 28px #0f172a0d; }
+.painting-funnel-page .slider-text p { border-radius: 8px; font-size: 12px; font-weight: 600; box-shadow: none; }
+.painting-funnel-page :is(.paint-showcase-btn,.reviews-cta,.cta-secondary-btn,.painting-color-help>a,.painting-final-action>a) { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; box-sizing: border-box; padding: 12px 18px; border: 1px solid #2563eb; border-radius: 10px; background: #2563eb; color: #fff; font: 600 14px/1.4 Montserrat,sans-serif; text-decoration: none; box-shadow: none; }
+.painting-funnel-page :is(.paint-showcase-btn,.reviews-cta,.cta-secondary-btn,.painting-color-help>a,.painting-final-action>a):hover { background: #1d4ed8; }
+.painting-funnel-page :is(a,button):focus-visible { outline: 3px solid #93c5fd; outline-offset: 4px; }
+.painting-funnel-page .painting-color-help { margin: 40px auto; max-width: 1152px; box-sizing: border-box; border: 1px solid #dbe4ef; border-radius: 18px; background: #f8fafc; padding: 32px 24px; }
+.painting-funnel-page :is(.painting-color-help,.painting-final-action) h2 { font: 700 26px/1.25 Montserrat,sans-serif; letter-spacing: -.03em; margin-bottom: 12px; }
+.painting-funnel-page :is(.painting-color-help,.painting-final-action) p { font-size: 14px; color: #475569; line-height: 1.7; }
+.painting-funnel-page .reviews-layout { grid-template-columns: 280px minmax(0,1fr); gap: 24px; }
+.painting-funnel-page .reviews-summary-card { padding: 24px; }
+.painting-funnel-page .reviews-summary-card h3 { font: 700 48px/1 Montserrat,sans-serif; }
+.painting-funnel-page .google-badge { background: #eff6ff; font-size: 13px; font-weight: 600; border-radius: 8px; }
+.painting-funnel-page .reviews-stars { color: #b77908; }
+.painting-funnel-page .reviews-summary-card p { font-size: 14px; color: #475569; }
+.painting-funnel-page .reviews-widget-card { padding: 20px; }
+.painting-funnel-page .cta-card-modern { width: min(1152px,100%); box-sizing: border-box; padding: 44px; background: #f8fafc; }
+.painting-funnel-page .cta-glow { display: none; }
+.painting-funnel-page .cta-content { margin: auto; text-align: center; }
+.painting-funnel-page .cta-content p { margin: 0 auto 24px; }
+.painting-funnel-page .cta-primary-btn { border-radius: 10px; background: #f4c928; color: #17233b; box-shadow: none; font: 600 14px/1.4 Montserrat,sans-serif; padding: 12px 18px; }
+.painting-funnel-page .city-grid { gap: 16px; }
+.painting-funnel-page .city-card { min-height: 240px; border-radius: 16px; box-shadow: none; }
+.painting-funnel-page .city-card:hover { transform: translateY(-3px); }
+.painting-funnel-page .city-content { padding: 18px; }
+.painting-funnel-page .city-content h3 { font: 600 18px/1.3 Montserrat,sans-serif; letter-spacing: -.02em; }
+.painting-funnel-page .city-link { font-size: 12px; font-weight: 600; }
+.painting-funnel-page .faq { background: none; padding: 0; border: 0; box-shadow: none; }
+.painting-funnel-page .faq .sub-heading { margin-bottom: 28px; }
+.painting-funnel-page .questions-wrapper { gap: 16px; align-items: start; }
+.painting-funnel-page .questions-title { border: 1px solid #dbe4ef; border-radius: 12px; background: #fff; box-shadow: none; padding: 18px 20px; transform: none; }
+.painting-funnel-page .questions-title h2 { font: 600 16px/1.4 Montserrat,sans-serif; color: #0f172a; margin: 0; }
+.painting-funnel-page .questions-title svg { color: #2563eb; width: 20px; }
+.painting-funnel-page .questions-list { padding: 0 20px 16px 36px; }
+.painting-funnel-page .question { font-size: 14px; font-weight: 600; line-height: 1.6; }
+.painting-funnel-page .answer { font-size: 14px; line-height: 1.7; color: #475569; }
+@media(max-width:850px) {
+ .painting-funnel-page :is(.painting-services-section,.paint-showcase-section,.reviews-section,.service-area-modern,.faq-wrapper,.cta-wrapper) { padding: 44px 20px; }
+ .painting-funnel-page .reviews-layout { grid-template-columns: 1fr; }
+ .painting-funnel-page .painting-color-help { margin: 24px 20px; }
+ .painting-funnel-page .city-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .painting-funnel-page .cta-card-modern { padding: 28px 20px; }
+ .painting-funnel-page .painting-card-content { padding: 22px; }
+ .painting-funnel-page .compare-image-container { height: 340px; }
+}
+@media(max-width:440px) { .painting-funnel-page .city-grid { grid-template-columns: 1fr; } }
+@media(prefers-reduced-motion:reduce) { .painting-funnel-page :is(.painting-card-modern,.city-card,.city-card img,.painting-video,.cta-primary-btn,.cta-secondary-btn) { transition: none; transform: none; } }
