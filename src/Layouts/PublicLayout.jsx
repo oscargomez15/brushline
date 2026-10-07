@@ -5,6 +5,7 @@ import { Footer } from "../Components/Footer";
 import AssistantLauncher from "../Components/AssistantLauncher";
 import AssistantModal from "../Components/AssistantModal";
 import "../Styling/PublicPalette.css";
+import "../Styling/PublicMobile.css";
 
 export default function PublicLayout() {
   return (
