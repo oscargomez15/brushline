@@ -9,6 +9,9 @@
 .brushline-review header{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brushline-review header div{display:flex;flex-direction:column;gap:4px}.brushline-review header div>span{font-size:12px;color:#64748b}
 .brushline-review-avatar{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border-radius:50%;background:#e8eff9;color:#12355f;font-weight:700}
 .brushline-review blockquote{margin:18px 0 24px;font-size:14px;line-height:1.8;color:#52617a}
+.brushline-review blockquote.review-collapsed{display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.brushline-review .review-expand{padding:0;margin:-10px 0 24px;background:none;border:0;color:#1d4ed8;font-family:inherit;font-size:12px;font-weight:600;line-height:1.5;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.public-site .reviews-layout{align-items:start}
 .brushline-review>a{margin-top:auto;font-size:12px;color:#1d4ed8;text-underline-offset:3px}
 .brushline-review-navigation{display:flex;align-items:center;justify-content:space-between;gap:14px}.brushline-review-navigation>a{font-size:13px;color:#1d4ed8}.brushline-review-navigation>div{display:flex;align-items:center;gap:14px}.brushline-review-navigation span{font-size:12px;color:#52617a}.brushline-review-navigation button{width:42px;height:42px;border:1px solid #cbd8e9;border-radius:50%;background:#fff;color:#071533;font-size:20px;cursor:pointer}.brushline-review-navigation button:hover{background:#e8eff9}
 @media(max-width:650px){.brushline-review-grid{grid-template-columns:1fr}.brushline-review{padding:24px}.brushline-review-navigation{flex-wrap:wrap}}

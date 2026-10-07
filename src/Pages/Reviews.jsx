@@ -5,6 +5,7 @@ import { FaGoogle, FaStar } from 'react-icons/fa';
 
 export const Reviews = () => {
   const [page, setPage] = useState(0);
+  const [expanded, setExpanded] = useState({});
   const totalPages = Math.ceil(reviews.length / 2);
   return (
     <section className="reviews-section" id="reviews">
@@ -46,7 +47,8 @@ export const Reviews = () => {
             <div className="brushline-review-grid">{reviews.slice(page * 2, page * 2 + 2).map(review => <article className="brushline-review" key={review.url}>
               <header><span className="brushline-review-avatar" aria-hidden="true">{review.name.charAt(0)}</span><div><strong>{review.name}</strong><span>Google review</span></div></header>
               <div className="reviews-stars" aria-label={`${review.rating} out of 5 stars`}>{Array.from({length:review.rating},(_,i)=><FaStar key={i} aria-hidden="true"/>)}</div>
-              <blockquote>{review.text}</blockquote>
+              <blockquote className={!expanded[review.url] ? 'review-collapsed' : ''}>{review.text}</blockquote>
+              {review.text.length > 220 && <button className="review-expand" type="button" aria-expanded={Boolean(expanded[review.url])} onClick={()=>setExpanded(current=>({...current,[review.url]:!current[review.url]}))}>{expanded[review.url]?'Show less':'Read more'}</button>}
               <a href={review.url} target="_blank" rel="noopener noreferrer">Read on Google ↗</a>
             </article>)}</div>
             <div className="brushline-review-navigation"><a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" target="_blank" rel="noopener noreferrer">See more on Google ↗</a><div><button type="button" aria-label="Previous reviews" onClick={()=>setPage((page+totalPages-1)%totalPages)}>←</button><span role="status">{page+1} / {totalPages}</span><button type="button" aria-label="Next reviews" onClick={()=>setPage((page+1)%totalPages)}>→</button></div></div>
