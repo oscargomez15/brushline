@@ -1,3 +1,4 @@
+const calendar = require("./_google-calendar");
 const MODEL = "gpt-realtime-2.1-mini";
 
 const easternToday = new Intl.DateTimeFormat("en-US", {
@@ -8,20 +9,20 @@ const easternToday = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 }).format(new Date());
 
-const assistantInstructions = `You are Brushline Services' friendly AI voice assistant. This is currently a demo appointment-request experience. Today in Brushline's Eastern timezone is ${easternToday}.
+const assistantInstructions = `You are Brushline Services' friendly AI voice assistant. You help clients book free 45-minute in-home estimates using live Google Calendar availability. Today in Brushline's Eastern timezone is ${easternToday}.
 
 Your first turn must contain only a brief greeting, disclosure that you are Brushline's AI assistant, and one question asking which service or services they need. Do not preview, list, request, or mention the contact details you will collect later. Follow the intake gradually. Ask exactly ONE question per turn, then stop speaking and wait for the answer. Never list several requested details in the same question and never ask the caller to provide all contact information at once. After the service answer, ask only for a short project description. Then ask only whether the property is residential or commercial. Only after those answers, explain that Brushline offers a free in-home estimate and ask permission to collect contact information. Once they agree, collect each field in its own separate turn in this order: full name, complete project address including city and ZIP, email, phone, then preferred contact method. Confirm spelling or numbers only when unclear. If more than one service is named, retain every service and classify the main service as "Multiple Services".
 
 Check the city immediately. Brushline does NOT serve Labelle, Lehigh Acres, Immokalee, Ave Maria, Matlacha, Everglades City, or Miami. If the address is in one of these places, promptly explain that Brushline does not serve the area and cannot schedule the estimate, but may try to refer them to a trusted provider if one is available. Ask permission to save their information for a possible referral. Never guarantee a referral.
 
-For an eligible address, explain that displayed times are demo availability in EST and the team must confirm the request. Ask whether they want to choose on screen; if yes call show_appointment_picker. If they use a relative date such as "this coming Tuesday," resolve it from today's Eastern date and explicitly confirm the full weekday, month, and day with them before proceeding. Never silently assume which calendar date they mean. Otherwise ask for a general preferred day/time. Summarize every detail and obtain confirmation, then call capture_lead exactly once. Say the request was sent but is not a confirmed booking.
+For an eligible address, offer to show real available estimate times on screen and call show_appointment_picker if they agree. Visits are 45 minutes, Monday–Friday 9 AM–5 PM Eastern, with at least 24 hours notice. Never invent available times. Selecting a time does not book it yet. If they use a relative date such as "this coming Tuesday," resolve it from today's Eastern date and explicitly confirm the full weekday, month, and day with them before proceeding. Never silently assume which calendar date they mean. If they prefer a spoken date, confirm the full date and ask them to select an opening on screen. If live availability is unavailable or they do not choose a slot, collect a general preferred day/time as a request only. Summarize the contact details, address and selected date/time, ask for explicit confirmation to book, then call capture_lead exactly once. Only say the appointment is booked when the tool returns appointmentBooked:true. If the tool reports a conflict, offer to reopen the picker. If it reports uncertain confirmation, retry the same booking before offering another time. If appointmentBooked:false, say the team will confirm the request.
 
 If the caller asks for or demands a live person at any point, immediately call request_live_human and tell them a call button is being shown. Do not continue unless they ask. Never provide binding prices or legal guarantees. For emergencies, direct them to emergency services. Do not collect financial, medical, or government identification information.`;
 
 const captureLeadTool = {
   type: "function",
   name: "capture_lead",
-  description: "Capture the confirmed lead details and appointment request in this internal test page.",
+  description: "Save the lead and book a selected live appointment only after the client explicitly confirms all details.",
   parameters: {
     type: "object",
     properties: {
@@ -44,7 +45,7 @@ const captureLeadTool = {
   },
 };
 
-const appointmentPickerTool = { type: "function", name: "show_appointment_picker", description: "Show the demo appointment calendar after contact details and an eligible address are collected.", parameters: { type: "object", properties: {}, additionalProperties: false } };
+const appointmentPickerTool = { type: "function", name: "show_appointment_picker", description: "Show live Google Calendar openings after contact details and an eligible address are collected.", parameters: { type: "object", properties: {}, additionalProperties: false } };
 const liveHumanTool = { type: "function", name: "request_live_human", description: "Immediately show a call button when the caller wants a live person.", parameters: { type: "object", properties: { reason: { type: "string" } }, additionalProperties: false } };
 
 function json(statusCode, body) {
@@ -66,7 +67,12 @@ exports.handler = async (event, context) => {
     process.env.CONTEXT === "dev" ||
     process.env.NETLIFY_DEV === "true" ||
     ["localhost", "127.0.0.1", "::1"].includes(requestHost);
-  if (!context?.clientContext?.user && !isLocalDev) {
+  const originHost = (() => {
+    try { return new URL(event.headers?.origin || "").hostname.toLowerCase(); }
+    catch { return ""; }
+  })();
+  const isSameSiteBrowserRequest = Boolean(originHost && originHost === requestHost);
+  if (!context?.clientContext?.user && !isLocalDev && !isSameSiteBrowserRequest) {
     return json(401, { error: "Unauthorized" });
   }
 
@@ -119,7 +125,10 @@ exports.handler = async (event, context) => {
       return json(502, { error: "The voice service returned an unexpected response." });
     }
 
-    return json(200, { clientSecret, model: MODEL });
+    let connected = false;
+    try { connected = calendar.configured() && Boolean(await calendar.store().get("connection", { type: "json" })); }
+    catch { /* Keep voice intake available when calendar storage is unavailable. */ }
+    return json(200, { clientSecret, model: MODEL, bookingToken: connected ? calendar.issueBookingToken() : null });
   } catch (error) {
     console.error("Unable to create realtime session", error);
     return json(500, { error: "Unable to connect to the voice service." });

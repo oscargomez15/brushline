@@ -4,7 +4,7 @@ const { safeStr, getLeadsStore } = require("./_leads");
 const json = (statusCode, body) => ({ statusCode, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(body) });
 const escapeHtml = (value) => safeStr(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed" });
   try {
     const input = JSON.parse(event.body || "{}");
@@ -15,7 +15,11 @@ exports.handler = async (event) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(safeStr(input.email, 254))) return json(400, { error: "The lead email is invalid." });
 
     const now = new Date().toISOString();
-    const id = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    // Only the server booking handler supplies this context. Public request bodies cannot set it.
+    const booking = context?.appointmentBooking;
+    const id = booking ? `lead_booking_${booking.id}` : `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const store = getLeadsStore();
+    if (booking && await store.get(id, { type: "json", consistency: "strong" })) return json(200, { ok: true, id, emailSent: false });
     const lead = {
       id,
       createdAt: now,
@@ -32,13 +36,13 @@ exports.handler = async (event) => {
       propertyType: safeStr(input.propertyType, 100),
       preferredContact: safeStr(input.preferredContact, 100),
       preferredAppointment: safeStr(input.preferredAppointment, 200),
+      ...(booking ? { appointment: booking.appointment } : {}),
       serviceAreaStatus: ["eligible", "out_of_area", "unknown"].includes(input.serviceAreaStatus) ? input.serviceAreaStatus : "unknown",
       excludedArea: safeStr(input.excludedArea, 120),
       requestedHuman: Boolean(input.requestedHuman),
       transcript: Array.isArray(input.transcript) ? input.transcript.slice(-80).map((line) => ({ role: line?.role === "assistant" ? "assistant" : "caller", text: safeStr(line?.text, 1000) })).filter((line) => line.text) : [],
     };
 
-    const store = getLeadsStore();
     await store.setJSON(id, lead);
 
     let emailSent = false;

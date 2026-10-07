@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import brushlineLogo from "../../Assets/logo/brushline-logo-white-letters.webp";
 import {
@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import "./VoiceAssistantTest.css";
+import LiveAppointmentPicker from "./LiveAppointmentPicker";
 
 const emptyLead = {
   fullName: "",
@@ -49,7 +50,7 @@ const fieldLabels = {
   requestedHuman: "Live human requested",
 };
 
-function VoiceAssistantTest() {
+function VoiceAssistantTest({ publicMode = false }) {
   const [showConsent, setShowConsent] = useState(false);
   const [status, setStatus] = useState("idle");
   const [muted, setMuted] = useState(false);
@@ -59,8 +60,7 @@ function VoiceAssistantTest() {
   const [lead, setLead] = useState(emptyLead);
   const [showHuman, setShowHuman] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [appointmentDate, setAppointmentDate] = useState("");
-  const [appointmentTime, setAppointmentTime] = useState("9:00 AM");
+  const [appointmentResult, setAppointmentResult] = useState(null);
   const [showInactivity, setShowInactivity] = useState(false);
   const [inactivityCountdown, setInactivityCountdown] = useState(10);
   const peerRef = useRef(null);
@@ -69,24 +69,15 @@ function VoiceAssistantTest() {
   const audioRef = useRef(null);
   const transcriptRef = useRef([]);
   const appointmentCallRef = useRef(null);
+  const selectedSlotRef = useRef(null);
+  const bookingTokenRef = useRef(null);
+  const captureInFlightRef = useRef(false);
+  const captureResultRef = useRef(null);
   const lastCallerActivityRef = useRef(Date.now());
   const inactivityShownRef = useRef(false);
 
   const connected = status === "connected";
   const busy = status === "connecting";
-  const appointmentDates = useMemo(() => Array.from({ length: 8 }, (_, index) => {
-    const date = new Date();
-    date.setHours(12, 0, 0, 0);
-    date.setDate(date.getDate() + index + 1);
-    return {
-      value: date.toLocaleDateString("en-CA", { timeZone: "America/New_York" }),
-      weekday: date.toLocaleDateString("en-US", { weekday: "short", timeZone: "America/New_York" }),
-      month: date.toLocaleDateString("en-US", { month: "short", timeZone: "America/New_York" }),
-      day: date.toLocaleDateString("en-US", { day: "numeric", timeZone: "America/New_York" }),
-      full: date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "America/New_York" }),
-    };
-  }), []);
-
   const disconnect = useCallback(() => {
     channelRef.current?.close();
     peerRef.current?.close();
@@ -179,27 +170,35 @@ function VoiceAssistantTest() {
       setShowCalendar(true);
     }
     if (event.type === "response.function_call_arguments.done" && event.name === "capture_lead") {
+      if (captureInFlightRef.current) return;
+      captureInFlightRef.current = true;
       try {
-        const details = JSON.parse(event.arguments);
-        const completedLead = { ...emptyLead, ...details };
-        setLead(completedLead);
-        const response = await fetch("/.netlify/functions/save-website-lead", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...completedLead, transcript: transcriptRef.current }) });
-        const result = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(result.error || "The lead could not be saved.");
-        sendEvent({
-          type: "conversation.item.create",
-          item: {
-            type: "function_call_output",
-            call_id: event.call_id,
-            output: JSON.stringify({ saved: true, leadId: result.id, ownerEmailSent: result.emailSent, appointmentBooked: false }),
-          },
-        });
+        const completedLead = { ...emptyLead, ...JSON.parse(event.arguments) };
+        const slot = selectedSlotRef.current;
+        const booking = Boolean(slot && bookingTokenRef.current && completedLead.serviceAreaStatus === "eligible");
+        let result = captureResultRef.current;
+        if (!result) {
+          const response = await fetch(booking ? "/.netlify/functions/book-estimate-appointment" : "/.netlify/functions/save-website-lead", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(booking ? { bookingToken: bookingTokenRef.current, start: slot.start, confirmed: true, lead: completedLead, transcript: transcriptRef.current } : { ...completedLead, transcript: transcriptRef.current }),
+          });
+          result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            if (result.refreshAvailability) selectedSlotRef.current = null;
+            throw new Error(result.error || "The request could not be confirmed.");
+          }
+          if (result.leadSaved !== false) captureResultRef.current = result;
+        }
+        setLead({ ...completedLead, preferredAppointment: result.preferredAppointment || completedLead.preferredAppointment });
+        setAppointmentResult(result);
+        setError("");
+        sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: result.leadSaved !== false, leadId: result.leadId || result.id, ownerEmailSent: result.ownerEmailSent || result.emailSent, appointmentBooked: Boolean(result.appointmentBooked), selectedAppointment: result.preferredAppointment }) } });
         sendEvent({ type: "response.create" });
       } catch (saveError) {
-        setError(saveError.message || "The assistant could not save the lead.");
-        sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: false }) } });
-        sendEvent({ type: "response.create", response: { instructions: "Apologize that the lead could not be saved and ask the caller to phone Brushline at 239-777-3713." } });
-      }
+        setError(saveError.message || "The request could not be confirmed.");
+        sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: false, appointmentBooked: false, error: saveError.message }) } });
+        sendEvent({ type: "response.create" });
+      } finally { captureInFlightRef.current = false; }
     }
     if (event.type === "error") {
       setError(event.error?.message || "The voice assistant encountered an error.");
@@ -214,6 +213,11 @@ function VoiceAssistantTest() {
     setTranscript([]);
     transcriptRef.current = [];
     setLead(emptyLead);
+    setAppointmentResult(null);
+    selectedSlotRef.current = null;
+    captureResultRef.current = null;
+    bookingTokenRef.current = null;
+    appointmentCallRef.current = null;
     lastCallerActivityRef.current = Date.now();
     inactivityShownRef.current = false;
     setShowInactivity(false);
@@ -227,6 +231,7 @@ function VoiceAssistantTest() {
       });
       const session = await sessionResponse.json();
       if (!sessionResponse.ok) throw new Error(session.error || "Could not start the assistant.");
+      bookingTokenRef.current = session.bookingToken;
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -297,6 +302,11 @@ function VoiceAssistantTest() {
     setSeconds(0);
     setTranscript([]);
     setLead(emptyLead);
+    setAppointmentResult(null);
+    selectedSlotRef.current = null;
+    captureResultRef.current = null;
+    bookingTokenRef.current = null;
+    appointmentCallRef.current = null;
     setError("");
     setShowHuman(false);
     setShowCalendar(false);
@@ -312,14 +322,13 @@ function VoiceAssistantTest() {
     sendEvent({ type: "response.create", response: { instructions: "Acknowledge briefly, then resume with only the single next unanswered intake question." } });
   }
 
-  function submitAppointment() {
-    if (!appointmentDate || !appointmentCallRef.current) return;
-    const selectedDate = appointmentDates.find((date) => date.value === appointmentDate);
-    const selectedAppointment = `${selectedDate?.full || appointmentDate} at ${appointmentTime} EST (demo request)`;
-    setLead((current) => ({ ...current, preferredAppointment: selectedAppointment }));
+  function submitAppointment(slot) {
+    if (!appointmentCallRef.current) return;
+    selectedSlotRef.current = slot || null;
+    const selectedAppointment = slot ? new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", dateStyle: "full", timeStyle: "short" }).format(new Date(slot.start)) + " Eastern" : "No live appointment selected";
     lastCallerActivityRef.current = Date.now();
     inactivityShownRef.current = false;
-    sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: appointmentCallRef.current, output: JSON.stringify({ selectedAppointment, appointmentBooked: false }) } });
+    sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: appointmentCallRef.current, output: JSON.stringify({ selectedAppointment, appointmentBooked: false, liveSlotSelected: Boolean(slot), bookingAvailable: Boolean(bookingTokenRef.current) }) } });
     sendEvent({ type: "response.create" });
     appointmentCallRef.current = null;
     setShowCalendar(false);
@@ -333,18 +342,18 @@ function VoiceAssistantTest() {
       <audio ref={audioRef} autoPlay aria-hidden="true" />
       <header className="voice-test-header">
         <div>
-          <span className="voice-test-eyebrow"><LockKeyhole size={14} /> Internal test page</span>
-          <h1>AI voice assistant</h1>
-          <p>Test a conversational intake experience before placing it on the public website.</p>
+          <span className="voice-test-eyebrow"><LockKeyhole size={14} /> {publicMode ? "Private conversation" : "Internal test page"}</span>
+          <h1>{publicMode ? "Let’s talk about your project" : "AI voice assistant"}</h1>
+          <p>{publicMode ? "Request a free in-home estimate through a simple guided conversation." : "Test a conversational intake experience before placing it on the public website."}</p>
         </div>
-        <div className="voice-test-mode"><ShieldCheck size={19} /><span><strong>Safe test mode</strong>No appointment is actually booked</span></div>
+        <div className="voice-test-mode"><ShieldCheck size={19} /><span><strong>{publicMode ? "No-pressure request" : "Safe test mode"}</strong>{publicMode ? "Choose an opening and confirm your details" : "Confirming a time creates a real booking"}</span></div>
       </header>
 
       <section className="voice-test-grid">
         <div className="voice-demo-card">
           <div className="voice-demo-heading">
             <span className="voice-icon"><Sparkles size={21} /></span>
-            <div><h2>Website widget preview</h2><p>This is how the starting experience can feel to a visitor.</p></div>
+            <div><h2>{publicMode ? "Brushline project assistant" : "Website widget preview"}</h2><p>{publicMode ? "Answer at your own pace—one question at a time." : "This is how the starting experience can feel to a visitor."}</p></div>
           </div>
 
           <div className={`voice-widget ${connected ? "is-live" : ""}`}>
@@ -380,7 +389,7 @@ function VoiceAssistantTest() {
           {hasLead ? (
             <div className="voice-lead-list">
               {Object.entries(lead).map(([key, value]) => <div key={key}><span>{fieldLabels[key]}</span><strong>{Array.isArray(value) ? value.join(", ") || "Not provided" : typeof value === "boolean" ? (value ? "Yes" : "No") : value || "Not provided"}</strong></div>)}
-              <div className="voice-test-notice"><Check size={17} /><span><strong>Test captured successfully</strong>Appointment request only—not booked.</span></div>
+              <div className="voice-test-notice"><Check size={17} /><span><strong>{appointmentResult?.appointmentBooked ? "Your estimate is booked" : "Request sent successfully"}</strong>{appointmentResult?.appointmentBooked ? "45-minute visit confirmed. Google Calendar sends your invitation." : "A team member will confirm your requested time."}</span></div>
             </div>
           ) : (
             <div className="voice-empty-state"><Bot size={34} /><strong>No test conversation yet</strong><p>The confirmed customer and project details will appear here.</p></div>
@@ -389,11 +398,11 @@ function VoiceAssistantTest() {
         </aside>
       </section>
 
-      <section className="voice-test-notes"><h2>What this prototype tests</h2><div><span><Check />Natural voice conversation</span><span><Check />CRM lead and owner email</span><span><Check />Demo appointment request</span><span><Check />Service-area screening</span></div><p>The displayed appointment choices are a demo and do not book a visit. Live Google Calendar availability can replace them later.</p></section>
+      {!publicMode && <section className="voice-test-notes"><h2>What this prototype tests</h2><div><span><Check />Natural voice conversation</span><span><Check />CRM lead and owner email</span><span><Check />Live calendar availability</span><span><Check />Service-area screening</span></div><p>This page uses live availability. Confirming a selected time creates a real appointment when Google Calendar is connected.</p></section>}
 
-      {showConsent && <div className="voice-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConsent(false)}><section className="voice-consent-modal" role="dialog" aria-modal="true" aria-labelledby="voice-consent-title"><button type="button" className="voice-modal-close" onClick={() => setShowConsent(false)} aria-label="Close"><X /></button><span className="voice-modal-icon"><Mic /></span><h2 id="voice-consent-title">Before we begin</h2><p>You’ll speak with an AI assistant. Your microphone will be active during the conversation so it can understand and respond to you.</p><ul><li>This is an internal test.</li><li>No appointment will actually be booked.</li><li>Do not share sensitive financial or medical information.</li></ul><button type="button" className="voice-consent-button" onClick={startCall}>Allow microphone &amp; start</button><button type="button" className="voice-cancel-button" onClick={() => setShowConsent(false)}>Not now</button></section></div>}
+      {showConsent && <div className="voice-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowConsent(false)}><section className="voice-consent-modal" role="dialog" aria-modal="true" aria-labelledby="voice-consent-title"><button type="button" className="voice-modal-close" onClick={() => setShowConsent(false)} aria-label="Close"><X /></button><span className="voice-modal-icon"><Mic /></span><h2 id="voice-consent-title">Before we begin</h2><p>You’ll speak with an AI assistant. Your microphone will be active during the conversation so it can understand and respond to you.</p><ul>{!publicMode && <li>This is an internal test.</li>}<li>An available time is booked only after you confirm your details.</li><li>Do not share sensitive financial or medical information.</li></ul><button type="button" className="voice-consent-button" onClick={startCall}>Allow microphone &amp; start</button><button type="button" className="voice-cancel-button" onClick={() => setShowConsent(false)}>Not now</button></section></div>}
       {showHuman && <div className="voice-modal-backdrop"><section className="voice-consent-modal" role="dialog" aria-modal="true"><button className="voice-modal-close" onClick={() => setShowHuman(false)} aria-label="Close"><X/></button><span className="voice-modal-icon"><PhoneCall/></span><h2>Talk with Brushline</h2><p>Tap below to call a live team member now.</p><a className="voice-consent-button voice-call-link" href="tel:+12397773713"><PhoneCall size={19}/> Call (239) 777-3713</a><button className="voice-cancel-button" onClick={() => setShowHuman(false)}>Continue with assistant</button></section></div>}
-      {showCalendar && <div className="voice-modal-backdrop"><section className="voice-consent-modal voice-calendar-modal" role="dialog" aria-modal="true"><span className="voice-modal-icon"><CalendarClock/></span><h2>Request an estimate time</h2><p>Choose a date to reveal the available demo times. All times are EST and must be confirmed by Brushline.</p><div className="voice-date-cards" role="list" aria-label="Available appointment dates">{appointmentDates.map((date) => <button type="button" role="listitem" key={date.value} className={`voice-date-card ${appointmentDate === date.value ? "selected" : ""}`} onClick={() => { setAppointmentDate(date.value); setAppointmentTime(""); }}><span>{date.weekday}</span><strong>{date.day}</strong><small>{date.month}</small></button>)}</div>{appointmentDate && <div className="voice-time-section"><span className="voice-time-heading">Available times <strong>EST</strong></span><div className="voice-time-slots">{["9:00 AM","11:30 AM","2:00 PM","4:00 PM"].map((slot) => <button type="button" key={slot} className={appointmentTime === slot ? "selected" : ""} onClick={() => setAppointmentTime(slot)}>{slot}</button>)}</div></div>}<button className="voice-consent-button" disabled={!appointmentDate || !appointmentTime} onClick={submitAppointment}>Request this time</button></section></div>}
+      {showCalendar && <LiveAppointmentPicker bookingToken={bookingTokenRef.current} onSelect={submitAppointment} onCancel={() => submitAppointment(null)} />}
       {showInactivity && <div className="voice-modal-backdrop voice-inactivity-backdrop"><section className="voice-consent-modal voice-inactivity-modal" role="alertdialog" aria-modal="true" aria-labelledby="inactivity-title"><span className="voice-inactivity-ring" style={{ "--progress": inactivityCountdown / 10 }}><strong>{inactivityCountdown}</strong></span><h2 id="inactivity-title">Still with us?</h2><p>We haven’t heard a response. Would you like to continue your conversation?</p><button type="button" className="voice-consent-button" onClick={continueAfterInactivity}>Yes, continue</button><button type="button" className="voice-cancel-button" onClick={endCall}>End conversation</button></section></div>}
     </main>
   );

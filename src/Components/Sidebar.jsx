@@ -6,6 +6,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 
 import {
+  FiCalendar,
   FiBarChart2,
   FiHome,
   FiFileText,
@@ -118,6 +119,8 @@ export default function Sidebar() {
               collapsed={collapsed}
           />
 
+          <NavItem to="/crm/calendar" label="Calendar" icon={<FiCalendar />} collapsed={collapsed} />
+
           <NavItem to="/crm/metrics" label="Metrics" icon={<FiBarChart2 />} collapsed={collapsed} />
 
           <Dropdown
@@ -196,6 +199,8 @@ export default function Sidebar() {
       </NavLink>
 
       <NavLink to="/crm/metrics" className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`} aria-label="Metrics" onClick={() => setMobileMenu(null)}><span className="crm-mobile-icon"><FiBarChart2 /></span></NavLink>
+
+      <NavLink to="/crm/calendar" className={({ isActive }) => `crm-mobile-link ${isActive ? "active" : ""}`} aria-label="Calendar" onClick={() => setMobileMenu(null)}><span className="crm-mobile-icon"><FiCalendar /></span></NavLink>
 
       {/* Estimates menu */}
       <div className="crm-mobile-menu">

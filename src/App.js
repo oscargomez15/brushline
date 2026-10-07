@@ -37,6 +37,7 @@ const InvoiceEditor = lazy(() => import("./Pages/Invoices/InvoiceEditor"));
 const PublicInvoicePage = lazy(() => import("./Pages/Invoices/PublicInvoicePage"));
 const FindInvoices = lazy(() => import("./Pages/Invoices/FindInvoices"));
 const VoiceAssistantTest = lazy(() => import("./Pages/VoiceAssistantTest/VoiceAssistantTest"));
+const Calendar = lazy(() => import("./Pages/Calendar/Calendar"));
 const Metrics = lazy(() => import("./Pages/Metrics/Metrics"));
 const LeadsList = lazy(() => import("./Pages/Leads/LeadsList"));
 
@@ -115,10 +116,12 @@ function App() {
           <Route path="/service-area/:citySlug" element={<ServiceArea />} />
           <Route path="/quote/:id" element={<QuotePage />} />
           <Route path="/invoice/:id" element={<PublicInvoicePage />} />
+          <Route path="/assistant" element={<VoiceAssistantTest publicMode />} />
         </Route>
 
         <Route path="/crm" element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
+            <Route path="calendar" element={<Calendar />} />
             <Route path="metrics" element={<Metrics />} />
             <Route path="dashboard" element={<Dashboard />} />
 
