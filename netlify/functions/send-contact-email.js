@@ -1,4 +1,5 @@
 const { Resend } = require("resend");
+const { recordContactLead } = require("./_crm-notifications");
 
 const safeStr = (value, max = 2000) =>
   (value || "").toString().trim().slice(0, max);
@@ -116,6 +117,7 @@ exports.handler = async (event) => {
       return json(502, { error: "We could not deliver your request. Please try again." });
     }
 
+    if (data?.id) await recordContactLead({ name, email, phone, address, service, message }, data.id);
     return json(200, { ok: true, id: data?.id || null });
   } catch (error) {
     console.error("send-contact-email failed:", error);

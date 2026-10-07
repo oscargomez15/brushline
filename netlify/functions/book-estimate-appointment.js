@@ -2,6 +2,19 @@ const crypto = require("node:crypto");
 const calendar = require("./_google-calendar");
 const { POLICY, eligibleAddress, localDate, candidates } = require("./_appointment-policy");
 const saveLead = require("./save-website-lead");
+const { sendAppointmentMessages } = require("./_appointment-messages");
+const { recordNotification, updateDeliveryNotification } = require("./_crm-notifications");
+
+async function completeMessages(store, key, record) {
+  try { await sendAppointmentMessages(store, key, record); }
+  catch { console.error("Booking confirmed; appointment messages need recovery", record.eventId); }
+  await updateDeliveryNotification(record);
+  await recordNotification("booking:" + record.eventId, {
+    type: "booking", title: "New estimate booked",
+    detail: `${record.lead.fullName} · ${record.result.preferredAppointment}`,
+    createdAt: record.createdAt || new Date().toISOString(), href: "/crm/leads",
+  });
+}
 
 async function claim(store, key, value) {
   const previous = await store.getWithMetadata(key, { type: "json" });
@@ -39,6 +52,7 @@ exports.handler = async (event) => {
           }
         } catch { /* Calendar confirmation remains valid; CRM data is retained for recovery. */ }
       }
+      await completeMessages(store, bookingKey, existing);
       return calendar.json(200, existing.result);
     }
     if (existing && existing.start !== input.start) return calendar.json(409, { error: "This appointment is being confirmed. Please retry the same time." });
@@ -85,7 +99,7 @@ exports.handler = async (event) => {
     const result = { appointmentBooked: true, start: selected.start, end: selected.end, timeZone: POLICY.timeZone, preferredAppointment: label, calendarEventId: eventId, leadSaved: false };
     const bookingContext = { id: session.id, appointment: { status: "booked", start: selected.start, end: selected.end, timeZone: POLICY.timeZone, calendarEventId: eventId } };
     const lead = { ...details, serviceAreaStatus: "eligible", preferredAppointment: label, transcript: existing?.transcript || input.transcript };
-    const record = { status: "booked", start: selected.start, slot: selected, eventId, result, lead, bookingContext };
+    const record = { status: "booked", start: selected.start, slot: selected, eventId, result, lead, bookingContext, createdAt: new Date().toISOString() };
     // Persist confirmation before email/CRM work: retries must never create a second appointment.
     await store.setJSON(bookingKey, record);
     try {
@@ -96,6 +110,7 @@ exports.handler = async (event) => {
         await store.setJSON(bookingKey, record);
       }
     } catch { console.error("Calendar appointment confirmed; CRM lead needs recovery", eventId); }
+    await completeMessages(store, bookingKey, record);
     return calendar.json(200, result);
   } catch { return calendar.json(503, { error: "We could not confirm the booking response. Retry the same time to check its status; do not choose a second appointment yet." }); }
   finally {

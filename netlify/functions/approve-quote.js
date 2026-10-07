@@ -1,4 +1,5 @@
 const { getStore } = require("@netlify/blobs");
+const { recordNotification } = require("./_crm-notifications");
 const { getQuoteNumber } = require("./_quote-number");
 
 const { Resend } = require("resend");
@@ -337,6 +338,7 @@ exports.handler = async (event) => {
     };
 
     await quotes.setJSON(id, updatedQuote);
+    await recordNotification("quote-approved:" + id, { type: "approval", title: "Quote approved", detail: `${updatedQuote.clientName || updatedQuote.customer?.fullName || "Customer"} · ${updatedQuote.quoteNumber || id}`, createdAt: now, href: "/crm/estimates/find" });
 
     // 🔔 Email notify (don't block approval if email fails)
     sendApprovalEmail(updatedQuote, id).catch((e) => {

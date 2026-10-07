@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "build"
 
+[functions."retry-appointment-messages"]
+  schedule = "*/5 * * * *"
+
 [[redirects]]
   from = "/painting"
   to = "/painting.html"

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import "./VoiceAssistantTest.css";
 import LiveAppointmentPicker from "./LiveAppointmentPicker";
+import { createCallCompletion } from "./callCompletion";
 
 const emptyLead = {
   fullName: "",
@@ -61,6 +62,7 @@ function VoiceAssistantTest({ publicMode = false }) {
   const [showHuman, setShowHuman] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [appointmentResult, setAppointmentResult] = useState(null);
+  const [finishing, setFinishing] = useState(false);
   const [showInactivity, setShowInactivity] = useState(false);
   const [inactivityCountdown, setInactivityCountdown] = useState(10);
   const peerRef = useRef(null);
@@ -73,12 +75,14 @@ function VoiceAssistantTest({ publicMode = false }) {
   const bookingTokenRef = useRef(null);
   const captureInFlightRef = useRef(false);
   const captureResultRef = useRef(null);
+  const completionRef = useRef(null);
   const lastCallerActivityRef = useRef(Date.now());
   const inactivityShownRef = useRef(false);
 
   const connected = status === "connected";
   const busy = status === "connecting";
   const disconnect = useCallback(() => {
+    completionRef.current?.dispose();
     channelRef.current?.close();
     peerRef.current?.close();
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -93,7 +97,13 @@ function VoiceAssistantTest({ publicMode = false }) {
     setStatus("ended");
     setMuted(false);
     setShowInactivity(false);
+    setFinishing(false);
   }, [disconnect]);
+
+  if (!completionRef.current) completionRef.current = createCallCompletion({ sendEvent, endCall, onClosing: () => {
+    setFinishing(true); setShowInactivity(false);
+    streamRef.current?.getAudioTracks().forEach(track => { track.enabled = false; });
+  } });
 
   useEffect(() => {
     if (!connected) return undefined;
@@ -102,8 +112,9 @@ function VoiceAssistantTest({ publicMode = false }) {
   }, [connected]);
 
   useEffect(() => {
-    if (!connected || showHuman || showCalendar) return undefined;
+    if (!connected || showHuman || showCalendar || finishing) return undefined;
     const check = window.setInterval(() => {
+      if (captureInFlightRef.current) return;
       if (!inactivityShownRef.current && Date.now() - lastCallerActivityRef.current >= 30000) {
         inactivityShownRef.current = true;
         setInactivityCountdown(10);
@@ -111,7 +122,7 @@ function VoiceAssistantTest({ publicMode = false }) {
       }
     }, 1000);
     return () => window.clearInterval(check);
-  }, [connected, showHuman, showCalendar]);
+  }, [connected, showHuman, showCalendar, finishing]);
 
   useEffect(() => {
     if (!showInactivity || !connected) return undefined;
@@ -149,6 +160,7 @@ function VoiceAssistantTest({ publicMode = false }) {
     } catch {
       return;
     }
+    completionRef.current?.handle(event);
 
     if (["response.output_audio_transcript.done", "response.audio_transcript.done"].includes(event.type)) {
       addTranscript("assistant", event.transcript);
@@ -193,7 +205,7 @@ function VoiceAssistantTest({ publicMode = false }) {
         setAppointmentResult(result);
         setError("");
         sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: result.leadSaved !== false, leadId: result.leadId || result.id, ownerEmailSent: result.ownerEmailSent || result.emailSent, appointmentBooked: Boolean(result.appointmentBooked), selectedAppointment: result.preferredAppointment }) } });
-        sendEvent({ type: "response.create" });
+        completionRef.current.begin(result);
       } catch (saveError) {
         setError(saveError.message || "The request could not be confirmed.");
         sendEvent({ type: "conversation.item.create", item: { type: "function_call_output", call_id: event.call_id, output: JSON.stringify({ saved: false, appointmentBooked: false, error: saveError.message }) } });
@@ -214,6 +226,7 @@ function VoiceAssistantTest({ publicMode = false }) {
     transcriptRef.current = [];
     setLead(emptyLead);
     setAppointmentResult(null);
+    setFinishing(false);
     selectedSlotRef.current = null;
     captureResultRef.current = null;
     bookingTokenRef.current = null;
@@ -381,6 +394,7 @@ function VoiceAssistantTest({ publicMode = false }) {
               </div>
             )}
           </div>
+          {finishing && <div className="voice-test-notice" role="status"><Check size={17} /><span><strong>Your details have been recorded.</strong>The assistant is saying goodbye. This call will end automatically.</span></div>}
           {error && <div className="voice-error" role="alert">{error}</div>}
         </div>
 

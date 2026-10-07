@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Components/Sidebar";
+import CRMNotifications from "../Components/CRMNotifications";
 import "../Styling/Sidebar.css";
 
 export default function CRMLayout() {
@@ -11,6 +12,7 @@ export default function CRMLayout() {
       </a>
       <Sidebar />
       <main id="main-content" className="crm-main" tabIndex="-1">
+        <CRMNotifications />
         <Outlet />
       </main>
     </div>

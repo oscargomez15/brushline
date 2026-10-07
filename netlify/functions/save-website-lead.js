@@ -49,7 +49,8 @@ exports.handler = async (event, context) => {
     const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.CONTACT_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM || process.env.QUOTE_NOTIFY_FROM;
     const to = process.env.CONTACT_NOTIFY_TO || process.env.APPROVAL_NOTIFY_TO;
-    if (apiKey && from && to) {
+    // Confirmed bookings have dedicated client and owner emails in the booking handler.
+    if (!booking && apiKey && from && to) {
       const rows = [
         ["Customer", lead.fullName], ["Phone", lead.phone], ["Email", lead.email], ["Address", lead.address],
         ["Service", lead.service], ["Appointment request", lead.preferredAppointment || "Not selected"],
@@ -65,7 +66,7 @@ exports.handler = async (event, context) => {
       });
       emailSent = !error;
       if (error) console.error("Lead saved, but notification email failed:", error);
-    } else {
+    } else if (!booking) {
       console.error("Lead saved, but lead email environment variables are missing.");
     }
 
