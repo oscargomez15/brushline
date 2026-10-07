@@ -1,0 +1,15 @@
+.brushline-voice-orb{position:relative;width:150px;height:150px;margin:12px auto 20px;display:grid;place-items:center}
+.voice-orb-halo{position:absolute;inset:4px;border-radius:50%;background:radial-gradient(circle,#b5d9ff80,transparent 70%);filter:blur(12px);transition:transform .5s,opacity .5s}
+.voice-orb-core{position:relative;width:112px;height:112px;overflow:hidden;border-radius:46% 54% 55% 45% / 48% 44% 56% 52%;background:radial-gradient(circle at 30% 22%,#eefaff,#81c7ff 35%,#3c76ea 72%,#173d93);box-shadow:inset 0 0 22px #ffffff80,0 12px 35px #3979de35;transition:transform .5s}
+.voice-orb-core i{position:absolute;width:125%;height:85%;left:-15%;top:35%;border-radius:45%;background:linear-gradient(140deg,#ecfaffb0,#c9eaff30);transform:rotate(-18deg)}
+.voice-orb-core i:nth-child(2){top:50%;left:-30%;background:linear-gradient(140deg,#163987a0,#64c4ff90);transform:rotate(25deg)}
+.voice-orb-core i:nth-child(3){top:-40%;left:30%;background:#ffffff60;filter:blur(12px)}
+.is-listening .voice-orb-core{animation:orbBreathe 4s ease-in-out infinite}
+.is-speaking .voice-orb-core{animation:orbSpeak 1.2s ease-in-out infinite alternate}
+.is-speaking .voice-orb-core i{animation:orbFlow 2.6s linear infinite}
+.is-speaking .voice-orb-core i:nth-child(2){animation-direction:reverse;animation-duration:3.3s}
+.is-speaking .voice-orb-halo{animation:orbBreathe 1.2s ease-in-out infinite}
+@keyframes orbSpeak{0%{transform:scale(.96);border-radius:46% 54% 55% 45% / 48% 44% 56% 52%}50%{transform:scale(1.08);border-radius:58% 42% 43% 57% / 41% 58% 42% 59%}100%{transform:scale(1.02);border-radius:42% 58% 60% 40% / 56% 41% 59% 44%}}
+@keyframes orbFlow{to{transform:rotate(342deg)}}
+@keyframes orbBreathe{50%{transform:scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.brushline-voice-orb *{animation:none!important;transition:none!important}}

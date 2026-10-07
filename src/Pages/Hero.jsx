@@ -52,13 +52,13 @@ export const Hero = () => {
 
       <picture>
         <source
-          srcSet='/images/exterior-painting-fort-myers-brushlie.webp'
+          srcSet='/images/brushline-owner-truck.webp'
           type='image/webp'
         />
 
         <img
-          src='/images/exterior-painting-fort-myers-brushlie-resized.webp'
-          alt='Exterior painting in Southwest Florida'
+          src='/images/brushline-owner-truck.webp'
+          alt='Brushline Services owner standing in front of the business truck'
           className='hero-bg-image'
           fetchPriority='high'
           loading='eager'

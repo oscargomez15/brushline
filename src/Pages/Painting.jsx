@@ -1,12 +1,17 @@
-import emailjs from 'emailjs-com'
+import animateFaq from '../utils/animateFaq';
+import PaintingEstimateForm from '../Components/PaintingEstimateForm';
+import PaintingReviewCard from '../Components/PaintingReviewCard';
+import { Phone } from 'lucide-react';
+import '../Styling/PaintingFunnel.css';
+import '../Styling/ServiceHero.css';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { Contact } from './Contact'
+
 import ReactCompareImage from 'react-compare-image';
-import { TbSquareRoundedCheckFilled } from 'react-icons/tb';
-import { Link } from 'react-router-dom';
+
+
 
 import beforeAccent from '../Assets/before-accent-wall-painting-fort-myers.jpg'
 import afterAccent from '../Assets/after-accent-wall-painting-fort-myers.jpg'
@@ -41,58 +46,15 @@ import annInteriorAfter from '../Assets/naples-interior-painting-after.jpeg'
 import { PaintingCard } from '../Components/PaintingCard';
 import { IoLocation } from 'react-icons/io5';
 import { MdNavigateNext, MdNavigateBefore } from 'react-icons/md';
-import { FaCheck } from 'react-icons/fa';
+
 import { Reviews } from './Reviews.jsx';
 import { SignatureDivider } from '../Components/SignatureDivider.jsx';
 import { ServiceAreaSection } from './ServiceAreaSection.jsx';
 
 
+
 export const Painting = () => {
 
-        const defaultFormValues = {
-        name:'',
-        address:'',
-        email:'',
-        phone:'',
-        message:''
-    }
-
-    const [form, setForm] = useState(defaultFormValues)
-    const [showModal, setShowModal] = useState(false);
-
-    const handleChange = (event) => {
-        setForm( (prev) => ({
-            ...prev,
-            [event.target.name]: event.target.value
-        }))
-    }
-
-    const resetForm = () => {
-        setForm( () => (defaultFormValues))
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        resetForm();
-
-        const templateParams = {
-            name:form.name,
-            address:form.address,
-            phone:form.phone,
-            message:form.message
-        }
-
-        emailjs.send('service_yu3xbte','template_0gbxxst',templateParams,'kq-ZfpeLDvV8TYH26')
-            .then(() => {
-        setShowModal(true); // ✅ Show modal
-        resetForm();
-        })
-        .catch((error) => {
-        console.error('Failed to send message:', error);
-        });
-    }
-
-    const isFormValid = Object.values(form).every((value) => value.trim() !== '');
     const services = [
         {
           src: "https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/paint-interior.mp4",
@@ -306,159 +268,33 @@ const variants = {
 };
 
 
-    const toggleAccordion = (e) => {
-        e.currentTarget.classList.toggle("active");
-
-        const panel = e.currentTarget.nextElementSibling;
-        if(panel.style.display === "block"){
-            panel.style.display = "none";
-        }else{
-            panel.style.display = "block";
-        }
-    }
+    const toggleAccordion = animateFaq;
 
 
 
   return (
-    <div className='page'>
+    <div className='page painting-funnel-page'>
 
 
-        <AnimatePresence>
-                {showModal && (
-                    <motion.div
-                    className="modal-overlay"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    >
-                        <motion.div
-                            className="modal cartoon-box"
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <div className="modal-text">
-                                <h2><TbSquareRoundedCheckFilled/> Message Sent</h2>
-                                <p>Thanks for reaching out! We'll get back to you within 24 hours.</p>
-                            </div>
-                            <button onClick={() => setShowModal(false)} className='button'>Close</button>
-                        </motion.div>
-                    </motion.div>
-                )}
-                </AnimatePresence>
-        <section className='landing-hero-wrapper'>
-            <div className="landing-hero">
-                <div className="contact-mini-container">
-                    <h1 className='section-title'> <span>Pro Painters</span> serving Naples to Fort Myers</h1>
-                        <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
-                </div>
-
-                <div className="contact-mini glass-form">
-                    <div className="form-header">
-                        <span className="form-badge">
-                            FREE ESTIMATE
-                        </span>
-
-                        <h3>Request Your Quote</h3>
-
-                        <p>
-                            Fill out the form below and we'll reach out within 24 hours.
-                        </p>
-                    </div>
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="name">Name*</label>
-                            <input type="text" name='name' id='name' value={form.name} onChange={handleChange} placeholder='Type Name' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Email*</label>
-                            <input type="email" name='email' id='email' value={form.email} onChange={handleChange} placeholder='Type your Email' required/>
-                        </div>
-                    </div>
-
-                    <div className="field-group-container">
-                        <div className="field-group">
-                            <label htmlFor="">Phone*</label>
-                            <input type="text" name='phone' id='phone' value={form.phone} onChange={handleChange} placeholder='Type your phone number' required/>
-                        </div>
-
-                        <div className="field-group">
-                            <label htmlFor="">Address*</label>
-                            <input type="text" name='address' id='address' value={form.address} onChange={handleChange} placeholder='Type Address' required/>
-                        </div>
-                    </div>
-                    <div className="field-group">
-                        <label htmlFor="">Message (Optional)</label>
-                        <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
-                    </div>
-
-                    <p class="privacy-notice">
-                        By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-                    </p>
-
-                    <div className="button-group">
-                        <button className='button' type="submit" onClick={handleSubmit} disabled={!isFormValid}> GET FREE QUOTE </button>
-                        <div className="benefits-glass">
-                            <div className="benefit-pill">
-                            <FaCheck />
-                            <span>No-cost estimates</span>
-                            </div>
-
-                            <div className="benefit-pill">
-                            <FaCheck />
-                            <span>10+ Years Experience</span>
-                            </div>
-
-                            <div className="benefit-pill">
-                            <FaCheck />
-                            <span>5-Star Rated</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            <video muted autoPlay loop playsInline className='video-desktop' preload='auto'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4" />
-            </video>
+        <section className="painting-conversion-hero" id="contact">
+          <div className="painting-hero-copy"><span className="painting-eyebrow">Fort Myers · Estero · Bonita Springs · Naples</span>
+            <h1>Interior &amp; exterior painting.<br/><span>A fresh finish for your home.</span></h1>
+            <p>Careful preparation, clean work, and dependable communication—from your first estimate to the final walkthrough.</p>
+            <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><Phone size={22} aria-hidden="true"/><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a><span className="painting-call-note">Let’s talk about your project. No obligation.</span></div>
+            <figure><img src={afterCape} alt="Completed Brushline exterior painting project in Cape Coral" fetchPriority="high"/><figcaption>A real Brushline exterior painting project · Cape Coral</figcaption></figure>
+            <PaintingReviewCard />
+          </div>
+          <div className="painting-estimate-options">
+            <PaintingEstimateForm />
+            <div className="painting-or-divider"><span>OR</span></div>
+<div className="painting-assistant-option">
+              <h2>Plan your free estimate with our AI assistant</h2>
+              <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>
+              <small>Our team will confirm your appointment.</small>
             </div>
+          </div>
         </section>
-
-        <section className='landing-hero-mb'>
-            <div className="column">
-                <div className="contact-mini-container">
-                    <h1 className='section-title'><span>Pro Painters</span> serving Naples to Fort Myers</h1>
-                        <p>Our expert painters use premium paints, and meticulous surface preparation to transform homes and businesses across Southwest Florida with vibrant, long-lasting finishes. <br/> Contact us today for free estimates, flexible scheduling, and a 100% satisfaction guarantee.</p>
-
-                        <div className="button-group">
-                            <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
-                            <div className="benefits-hero">
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p> No-cost estimates.</p>
-                                </div>
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p>10+ years of experience</p>
-                                </div>
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p>5-star rated</p>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-
-            <div className="column video-column">
-                <video muted autoPlay loop playsInline className=' column video-desktop' preload='auto'>
-                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/painting-hero2.mp4"  />
-                </video>
-            </div>
-        </section>
-
+        <Reviews />
         <div className="painting-services-section">
         <motion.section
             className="painting-services-container"
@@ -484,74 +320,60 @@ const variants = {
             </div>
         </motion.section>
         </div>
-                <SignatureDivider/>
+        <section className="painting-color-help"><h2>Not sure which colors to choose?</h2><p>Ask about colors and finishes when we discuss your project.</p><a href="#contact">Get My Free Painting Estimate</a></section>
 
-         <section className="color-suite-section">
-  <motion.div
-    className="color-suite-container"
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: 'easeOut' }}
-    viewport={{ once: true, amount: 0.4 }}
-  >
-    <form className="color-suite-form">
-      <div className="color-form-copy">
-        <span>Free Consultation</span>
-        <h3>Need Help Choosing The Right Colors?</h3>
-        <p>
-          Tell us about your project and we’ll help you choose colors and
-          finishes that match your home, lighting, and style.
-        </p>
-      </div>
+        <ServiceAreaSection />
 
-      <div className="color-form-fields">
-        <div className="field-group-container">
-          <div className="field-group">
-            <label>Name*</label>
-            <input type="text" placeholder="Your name" />
-          </div>
+        <SignatureDivider/>
 
-          <div className="field-group">
-            <label>Email*</label>
-            <input type="email" placeholder="Your email" />
-          </div>
+
+        <div className="cta-wrapper">
+        <motion.section
+            className="cta-card-modern"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.4 }}
+        >
+            <div className="cta-glow"></div>
+
+            <div className="cta-content">
+            <span>Free Estimates • Fast Scheduling</span>
+
+            <h2>
+                Ready To Start Your
+                <br />
+                Painting Project?
+            </h2>
+
+            <p>
+                From interior repainting to exterior transformations,
+                Brushline Services delivers clean finishes, reliable
+                communication, and professional results across Southwest Florida.
+            </p>
+
+            <div className="cta-button-group">
+                <a
+                href="tel:2397773713"
+                className="cta-primary-btn"
+                onClick={() => {
+                    if (window.gtag) {
+                    window.gtag('event', 'conversion', {
+                        send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
+                    });
+                    }
+                }}
+                >
+                Call Now
+                </a>
+
+                <a href="#contact" className="cta-secondary-btn">
+                Contact Us
+                </a>
+            </div>
+            </div>
+        </motion.section>
         </div>
-
-        <div className="field-group-container">
-          <div className="field-group">
-            <label>Phone*</label>
-            <input type="text" placeholder="Phone number" />
-          </div>
-
-          <div className="field-group">
-            <label>Address*</label>
-            <input type="text" placeholder="Project address" />
-          </div>
-        </div>
-
-        <div className="field-group">
-          <label>Message (Optional)</label>
-          <textarea
-            rows="4"
-            placeholder="Tell us about your project or colors you’re considering"
-          ></textarea>
-        </div>
-
-        <p className="privacy-notice">
-          By submitting this form, you agree to our{' '}
-          <Link to="/privacy" target="_blank">Privacy Policy</Link>.
-        </p>
-
-        <div className="color-consult-actions">
-          <button type="submit">Get Consultation</button>
-          <p>
-            <FaCheck /> No-cost consultation, no obligation.
-          </p>
-        </div>
-      </div>
-    </form>
-  </motion.div>
-</section>
 
         <SignatureDivider/>
 
@@ -618,66 +440,7 @@ const variants = {
         </section>
 
         <SignatureDivider/>
-        <div className="reviews-paint">
-            <Reviews/>
-        </div>
-        <SignatureDivider/>
-
-
-        <div className="cta-wrapper">
-        <motion.section
-            className="cta-card-modern"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, amount: 0.4 }}
-        >
-            <div className="cta-glow"></div>
-
-            <div className="cta-content">
-            <span>Free Estimates • Fast Scheduling</span>
-
-            <h2>
-                Ready To Start Your
-                <br />
-                Painting Project?
-            </h2>
-
-            <p>
-                From interior repainting to exterior transformations,
-                Brushline Services delivers clean finishes, reliable
-                communication, and professional results across Southwest Florida.
-            </p>
-
-            <div className="cta-button-group">
-                <a
-                href="tel:2397773713"
-                className="cta-primary-btn"
-                onClick={() => {
-                    if (window.gtag) {
-                    window.gtag('event', 'conversion', {
-                        send_to: 'AW-11511949240/WVoxCLH_9fYaELjPqfEq',
-                    });
-                    }
-                }}
-                >
-                Call Now
-                </a>
-
-                <a href="#contact" className="cta-secondary-btn">
-                Contact Us
-                </a>
-            </div>
-            </div>
-        </motion.section>
-        </div>
-
-        <SignatureDivider/>
-
-        <ServiceAreaSection/>
-
-        <SignatureDivider/>
-        <Contact/>
+        <div className="painting-final-action"><h2>Ready for a fresh start?</h2><a href="#contact">Get My Free Painting Estimate</a><p>No obligation. Let’s discuss your project.</p></div>
 
         <div className="faq-wrapper light-orange">
         <motion.section className="card faq"
@@ -686,7 +449,7 @@ const variants = {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             viewport={{ once: true, amount: 0.5 }}>
             <div className="sub-heading">
-                <h1 className='section-subtitle'>Frequently Asked Question</h1>
+                <h2 className='section-subtitle'>Frequently asked questions</h2>
             </div>
             <div className="questions-wrapper">
                 <div className="questions-container">
@@ -778,9 +541,6 @@ const variants = {
             </div>
         </motion.section>
         </div>
-        <SignatureDivider/>
-
-
     </div>
   )
 }

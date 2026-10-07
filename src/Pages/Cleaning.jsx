@@ -1,3 +1,10 @@
+import { Reviews } from './Reviews';
+import animateFaq from '../utils/animateFaq';
+import PaintingReviewCard from '../Components/PaintingReviewCard';
+import '../Styling/PaintingFunnel.css';
+import '../Styling/ServiceHero.css';
+
+
 import React from 'react'
 import '../Styling/Painting.css'
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -173,19 +180,10 @@ export const Cleaning = () => {
 
         const isFormValid = Object.values(form).every((value) => value.trim() !== '');
 
-    const toggleAccordion = (e) => {
-        e.currentTarget.classList.toggle("active");
-
-        const panel = e.currentTarget.nextElementSibling;
-        if(panel.style.display === "block"){
-            panel.style.display = "none";
-        }else{
-            panel.style.display = "block";
-        }
-    }
+    const toggleAccordion = animateFaq;
 
   return (
-    <section className='page'>
+    <section className='page painting-funnel-page other-service-page'>
 
         <AnimatePresence>
                 {showModal && (
@@ -212,13 +210,16 @@ export const Cleaning = () => {
                 )}
             </AnimatePresence>
         <section className='landing-hero-wrapper'>
-            <div className="landing-hero">
-                <div className="contact-mini-container">
+            <div className="landing-hero"><video muted autoPlay loop playsInline className=' video-desktop'>
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4"/>
+            </video>
+                <div className="contact-mini-container"><span className="painting-eyebrow">Fort Myers · Estero · Bonita Springs · Naples</span>
                     <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
                     <p>Let us handle the mess — you focus on what matters. Reach out using the contact form.</p>
-                </div>
+                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a></div>
+<PaintingReviewCard /></div>
 
-                <div className="contact-mini glass-form">
+                <div className="service-estimate-options"><div className="contact-mini glass-form">
                     <div className="form-header">
                         <span className="form-badge">
                             FREE ESTIMATE
@@ -258,8 +259,8 @@ export const Cleaning = () => {
                         <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
                     </div>
 
-                    <p class="privacy-notice">
-                        By submitting this form, you agree to our <a href="/privacy-policy" target="_blank">Privacy Policy</a>.
+                    <p className="privacy-notice">
+                        By submitting this form, you agree to our <a href="/privacy" target="_blank">Privacy Policy</a>.
                     </p>
 
                     <div className="button-group">
@@ -280,47 +281,18 @@ export const Cleaning = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            <div className="painting-or-divider"><span>OR</span></div>
+<div className="painting-assistant-option">
+ <h2>Plan your free estimate with our AI assistant</h2>
+ <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>
+ <small>Our team will confirm your appointment.</small>
+ </div></div>
+</div>
 
-            <video muted autoPlay loop playsInline className=' video-desktop'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4"/>
-            </video>
+            
         </section>
 
-                <section className='landing-hero-mb'>
-                    <div className="column">
-                        <div className="contact-mini-container">
-                            <h1 className='section-title'><span> Cleaning Service</span> for Homes and Businesses in SWFL</h1>
-                                <p>Let us handle the mess — you focus on what matters.
-                            Reach out using the contact form below.</p>
-
-                                <div className="button-group">
-                                    <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
-                                    <div className="benefits-hero">
-                                        <div className="benefit-item">
-                                            <FaCheck/>
-                                            <p> No-cost estimates.</p>
-                                        </div>
-                                        <div className="benefit-item">
-                                            <FaCheck/>
-                                            <p>10+ years of experience</p>
-                                        </div>
-                                        <div className="benefit-item">
-                                            <FaCheck/>
-                                            <p>5-star rated</p>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-
-                    <div className="column video-column">
-                        <video muted autoPlay loop playsInline className=' column video-desktop'>
-                            <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/cleaning.MP4" />
-                        </video>
-                    </div>
-                </section>
-
+                <Reviews />
         <section className="painting-services-section">
         <motion.div
             className="painting-services-container"
@@ -389,7 +361,7 @@ export const Cleaning = () => {
         <div className="faq-wrapper light-orange">
             <div className="card faq ">
                 <div className="sub-heading">
-                    <h1>Frequently Asked Question</h1>
+                    <h2 className="section-subtitle">Frequently asked questions</h2>
                     <p> Quick answers to questions you may have</p>
                 </div>
                 <div className="questions-wrapper">

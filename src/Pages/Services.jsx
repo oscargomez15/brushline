@@ -3,7 +3,7 @@ import '../Styling/Services.css';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
-import { Droplets, PaintRoller, PanelsTopLeft, Sparkles } from 'lucide-react';
+import { House, PaintRoller, PanelsTopLeft, Sparkles } from 'lucide-react';
 
 export const Services = () => {
   const servicesInfo = [
@@ -32,12 +32,13 @@ export const Services = () => {
       route: '/cleaning',
     },
     {
-      title: 'Pressure Washing',
+      title: 'Home Services',
       description:
-        'Restore driveways, walls, patios, and exterior surfaces by removing dirt, grime, and stains.',
-      Icon: Droplets,
+        'Professional home repairs, furniture assembly, and improvements, with careful workmanship and attention to detail.',
+      Icon: House,
       accent: 'washing',
-      route: '/pressure-washing',
+      route: '/#contact',
+      cta: 'Request an Estimate',
     },
   ];
 
@@ -64,7 +65,7 @@ export const Services = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: id * 0.12 }}
             >
-              <Link to={service.route} className={`service-card-modern service-${service.accent}`}>
+              <Link to={service.route} reloadDocument={Boolean(service.cta)} className={`service-card-modern service-${service.accent}`}>
                 <div className="service-icon-wrap" aria-hidden="true">
                   <span className="service-icon-glow" />
                   <service.Icon strokeWidth={1.8} />
@@ -76,7 +77,7 @@ export const Services = () => {
                 </div>
 
                 <div className="service-card-footer">
-                  <span>Explore Service</span>
+                  <span>{service.cta || 'Explore Service'}</span>
                   <div className="service-arrow">
                     <FaArrowRight />
                   </div>

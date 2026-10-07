@@ -1,3 +1,9 @@
+import animateFaq from '../utils/animateFaq';
+import PaintingReviewCard from '../Components/PaintingReviewCard';
+import '../Styling/PaintingFunnel.css';
+import '../Styling/ServiceHero.css';
+
+
 import emailjs from 'emailjs-com'
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
@@ -189,21 +195,12 @@ export const Drywall = () => {
         }
     ];
 
-    const toggleAccordion = (e) => {
-        e.currentTarget.classList.toggle("active");
-
-        const panel = e.currentTarget.nextElementSibling;
-        if(panel.style.display === "block"){
-            panel.style.display = "none";
-        }else{
-            panel.style.display = "block";
-        }
-    }
+    const toggleAccordion = animateFaq;
 
 
 
   return (
-    <div className='page'>
+    <div className='page painting-funnel-page other-service-page'>
 
 
         <AnimatePresence>
@@ -231,13 +228,16 @@ export const Drywall = () => {
                 )}
                 </AnimatePresence>
         <section className='landing-hero-wrapper'>
-            <div className="landing-hero">
-                <div className="contact-mini-container">
+            <div className="landing-hero"><video muted autoPlay loop playsInline className='video-desktop'>
+                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />
+            </video>
+                <div className="contact-mini-container"><span className="painting-eyebrow">Fort Myers · Estero · Bonita Springs · Naples</span>
                     <h1 className='section-title'> <span>Drywall Services</span> from Naples to Fort Myers</h1>
                         <p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Serving Naples, Bonita Springs, Fort Myers and Cape Coral. Our experienced team delivers high-quality results—on time and on budget. Contact us today for a free estimate!</p>
-                </div>
+                <div className="painting-hero-actions"><a className="painting-call-button" href="tel:+12397773713"><span><strong>Call for a Free Estimate</strong><small>(239) 777-3713</small></span></a></div>
+<PaintingReviewCard /></div>
 
-                <div className="contact-mini glass-form">
+                <div className="service-estimate-options"><div className="contact-mini glass-form">
                     <div className="form-header">
                         <span className="form-badge">
                             FREE ESTIMATE
@@ -277,7 +277,7 @@ export const Drywall = () => {
                         <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder='Briefly describe your project' ></textarea>
                     </div>
 
-                    <p class="privacy-notice">
+                    <p className="privacy-notice">
                         By submitting this form, you agree to our <Link to="/privacy" target="_blank">Privacy Policy</Link>.
                     </p>
 
@@ -301,44 +301,17 @@ export const Drywall = () => {
                 </div>
 
 
-            <video muted autoPlay loop playsInline className='video-desktop'>
-                <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />
-            </video>
-            </div>
+            
+            <div className="painting-or-divider"><span>OR</span></div>
+<div className="painting-assistant-option">
+ <h2>Plan your free estimate with our AI assistant</h2>
+ <a href="/assistant">Talk to Our AI Assistant <span aria-hidden="true">→</span></a>
+ <small>Our team will confirm your appointment.</small>
+ </div></div>
+</div>
         </section>
 
-        <section className='landing-hero-mb'>
-            <div className="column">
-                <div className="contact-mini-container">
-                    <h1 className='section-title'><span>Drywall Repair and Installation Services</span> from Naples to Fort Myers</h1>
-<p>We specialize in seamless drywall finishes, patchwork, texturing, and full-service drywall solutions for residential and commercial properties. Our experienced team delivers high-quality results—on time and on budget. Contact us today!</p>
-                        <div className="button-group">
-                            <button className='button' type="submit"> <a href="#contact" style={{color:'white', textDecoration:'none'}}>GET FREE QUOTE</a></button>
-                            <div className="benefits-hero">
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p> No-cost estimates.</p>
-                                </div>
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p>10+ years of experience</p>
-                                </div>
-                                <div className="benefit-item">
-                                    <FaCheck/>
-                                    <p>5-star rated</p>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            </div>
-
-            <div className="column video-column">
-                <video muted autoPlay loop playsInline className=' column video-desktop'>
-                    <source src="https://oscargomez-webportfolio.s3.us-east-1.amazonaws.com/drywall-hero.mp4" />
-                </video>
-            </div>
-        </section>
-
+        <Reviews />
         <section className="painting-services-section">
         <motion.div
             className="painting-services-container"
@@ -367,10 +340,6 @@ export const Drywall = () => {
         <SignatureDivider/>
 
         <ServiceAreaSection/>
-
-        <SignatureDivider/>
-
-        <Reviews/>
 
         <SignatureDivider/>
 

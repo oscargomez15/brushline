@@ -2,10 +2,13 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Navigation } from "../Components/Navigation";
 import { Footer } from "../Components/Footer";
+import AssistantLauncher from "../Components/AssistantLauncher";
+import AssistantModal from "../Components/AssistantModal";
+import "../Styling/PublicPalette.css";
 
 export default function PublicLayout() {
   return (
-    <div className="background-wrapper">
+    <div className="background-wrapper public-site">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
@@ -14,6 +17,8 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      <AssistantLauncher />
+      <AssistantModal />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
+import VoiceOrb from "../../Components/VoiceOrb";
 import brushlineLogo from "../../Assets/logo/brushline-logo-white-letters.webp";
 import {
   Bot,
@@ -55,6 +56,7 @@ function VoiceAssistantTest({ publicMode = false }) {
   const [showConsent, setShowConsent] = useState(false);
   const [status, setStatus] = useState("idle");
   const [muted, setMuted] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const [error, setError] = useState("");
   const [seconds, setSeconds] = useState(0);
   const [transcript, setTranscript] = useState([]);
@@ -66,6 +68,7 @@ function VoiceAssistantTest({ publicMode = false }) {
   const [showInactivity, setShowInactivity] = useState(false);
   const [inactivityCountdown, setInactivityCountdown] = useState(10);
   const peerRef = useRef(null);
+  const connectionGeneration = useRef(0);
   const channelRef = useRef(null);
   const streamRef = useRef(null);
   const audioRef = useRef(null);
@@ -82,6 +85,7 @@ function VoiceAssistantTest({ publicMode = false }) {
   const connected = status === "connected";
   const busy = status === "connecting";
   const disconnect = useCallback(() => {
+    connectionGeneration.current += 1;
     completionRef.current?.dispose();
     channelRef.current?.close();
     peerRef.current?.close();
@@ -96,6 +100,7 @@ function VoiceAssistantTest({ publicMode = false }) {
     disconnect();
     setStatus("ended");
     setMuted(false);
+    setSpeaking(false);
     setShowInactivity(false);
     setFinishing(false);
   }, [disconnect]);
@@ -161,6 +166,8 @@ function VoiceAssistantTest({ publicMode = false }) {
       return;
     }
     completionRef.current?.handle(event);
+    if (event.type === "output_audio_buffer.started") setSpeaking(true);
+    if (["output_audio_buffer.stopped", "output_audio_buffer.cleared"].includes(event.type)) setSpeaking(false);
 
     if (["response.output_audio_transcript.done", "response.audio_transcript.done"].includes(event.type)) {
       addTranscript("assistant", event.transcript);
@@ -235,6 +242,7 @@ function VoiceAssistantTest({ publicMode = false }) {
     inactivityShownRef.current = false;
     setShowInactivity(false);
 
+    const generation = connectionGeneration.current;
     try {
       const user = netlifyIdentity.currentUser();
       const token = user ? await user.jwt() : null;
@@ -243,6 +251,7 @@ function VoiceAssistantTest({ publicMode = false }) {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       const session = await sessionResponse.json();
+      if (generation !== connectionGeneration.current) return;
       if (!sessionResponse.ok) throw new Error(session.error || "Could not start the assistant.");
       bookingTokenRef.current = session.bookingToken;
 
@@ -254,6 +263,7 @@ function VoiceAssistantTest({ publicMode = false }) {
           channelCount: 1,
         },
       });
+      if (generation !== connectionGeneration.current) { stream.getTracks().forEach(track => track.stop()); return; }
       streamRef.current = stream;
 
       const peer = new RTCPeerConnection();
@@ -282,7 +292,9 @@ function VoiceAssistantTest({ publicMode = false }) {
       };
 
       const offer = await peer.createOffer();
+      if (generation !== connectionGeneration.current) return;
       await peer.setLocalDescription(offer);
+      if (generation !== connectionGeneration.current) return;
       const answerResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
         method: "POST",
         headers: {
@@ -292,8 +304,11 @@ function VoiceAssistantTest({ publicMode = false }) {
         body: offer.sdp,
       });
       if (!answerResponse.ok) throw new Error("The realtime voice connection could not be completed.");
-      await peer.setRemoteDescription({ type: "answer", sdp: await answerResponse.text() });
+      const answer = await answerResponse.text();
+      if (generation !== connectionGeneration.current) return;
+      await peer.setRemoteDescription({ type: "answer", sdp: answer });
     } catch (callError) {
+      if (generation !== connectionGeneration.current) return;
       disconnect();
       setStatus("idle");
       setError(callError?.name === "NotAllowedError"
@@ -370,14 +385,13 @@ function VoiceAssistantTest({ publicMode = false }) {
           </div>
 
           <div className={`voice-widget ${connected ? "is-live" : ""}`}>
-            <div className="voice-widget-brand"><span className="voice-brand-logo"><img src={brushlineLogo} alt="Brushline Services" /></span><div><strong>Brushline Project Assistant</strong><span>{connected ? "Live · Listening for your response" : busy ? "Connecting…" : "Free estimate concierge"}</span></div></div>
+            <div className="voice-widget-brand"><span className="voice-brand-logo"><img src={brushlineLogo} alt="Brushline Services" /></span><div><strong>Brushline Project Assistant</strong><span>{connected ? speaking ? "Live · Assistant speaking" : muted ? "Live · Microphone muted" : "Live · Listening for your response" : busy ? "Connecting…" : "Free estimate concierge"}</span></div></div>
             {connected || status === "ended" ? (
               <>
                 <div className="voice-call-visual" aria-label={connected ? "Voice call connected" : "Voice call ended"}>
-                  <div className="voice-pulse"><span className="voice-brush-mark">B</span></div>
-                  <strong>{connected ? "Let’s plan your project" : "Conversation complete"}</strong>
+                  <VoiceOrb speaking={connected && speaking} connected={connected} />
+                  <strong>{connected ? speaking ? "Brushline is speaking" : muted ? "Microphone muted" : "Listening to you" : "Conversation complete"}</strong>
                   <span>{connected ? time : "Review the captured details below"}</span>
-                  {connected && <div className="voice-wave" aria-hidden="true">{[1,2,3,4,5,6,7].map((bar) => <i key={bar} />)}</div>}
                 </div>
                 {connected && <div className="voice-journey" aria-label="Conversation stages"><span className="active">Project</span><i/><span>Contact</span><i/><span>Schedule</span></div>}
                 <div className="voice-controls">
@@ -387,6 +401,7 @@ function VoiceAssistantTest({ publicMode = false }) {
               </>
             ) : (
               <div className="voice-widget-intro">
+                <VoiceOrb />
                 <h3>Tell us about your project</h3>
                 <p>Speak with our AI assistant to share project details and request an appointment.</p>
                 <button type="button" className="voice-start-button" onClick={() => setShowConsent(true)} disabled={busy}><Mic size={20} />{busy ? "Connecting…" : "Start voice conversation"}</button>

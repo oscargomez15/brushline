@@ -9,6 +9,7 @@ import { Contact } from './Contact'
 import { SignatureDivider } from '../Components/SignatureDivider'
 import { ServiceAreaSection } from './ServiceAreaSection'
 import { SocialVideos } from '../Components/SocialVideos'
+import HomeAssistantCTA from '../Components/HomeAssistantCTA'
 
 export const Home = () => {
   return (
@@ -27,6 +28,7 @@ export const Home = () => {
         <Hero/>
     <div className="home-wrapper page">
       <Services />
+      <HomeAssistantCTA />
       <ServiceAreaSection />
 
       <SignatureDivider />

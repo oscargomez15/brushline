@@ -1,0 +1,48 @@
+/* Service Area inspired heroes; retain the new intake and booking controls. */
+.painting-funnel-page{--cream:#eef2f7;background:#eef2f7}
+.public-site .page.painting-funnel-page{padding-top:0}
+.public-site .painting-conversion-hero#contact{scroll-margin-top:0}
+.public-site .painting-conversion-hero,.public-site .other-service-page .landing-hero{padding-top:160px;min-height:100dvh}
+@media(max-width:980px){.public-site .painting-conversion-hero,.public-site .other-service-page .landing-hero{padding-top:140px;min-height:100dvh}}
+.painting-funnel-page .painting-services-section{background:linear-gradient(180deg,#e7edf5,#eef2f7)}
+.painting-funnel-page .painting-color-help{box-sizing:border-box;width:calc(100% - 48px);max-width:1232px;margin:0 auto;padding:32px 36px;border:1px solid #cbd8e9;border-left:4px solid #ffb84d;border-radius:22px;background:#fff;box-shadow:0 8px 28px #07153308;text-align:left;display:grid;grid-template-columns:1fr auto;gap:8px 32px;align-items:center}
+.painting-funnel-page .painting-color-help h2{margin:0;color:#071533;font-size:24px;line-height:1.3}
+.painting-funnel-page .painting-color-help p{margin:0;color:#52617a;line-height:1.65}
+.painting-funnel-page .painting-color-help>a{grid-column:2;grid-row:1 / 3;background:#071533;color:#fff;white-space:nowrap}
+.painting-funnel-page .painting-color-help>a:hover{background:#18386a}
+@media(max-width:750px){.painting-funnel-page .painting-color-help{padding:26px 22px;grid-template-columns:1fr;gap:12px}.painting-funnel-page .painting-color-help>a{grid-column:1;grid-row:auto;justify-self:start;white-space:normal}}
+.painting-conversion-hero,.other-service-page .landing-hero{position:relative;isolation:isolate;box-sizing:border-box;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,72px);align-items:center;width:100%;max-width:none;min-height:calc(100dvh - 80px);padding:64px max(24px,calc((100vw - 1280px)/2));background:#071533;color:#fff;overflow:hidden}
+.painting-conversion-hero::before,.other-service-page .landing-hero::before{content:'';position:absolute;inset:0;width:100%;left:0;transform:none;z-index:-1;background:linear-gradient(90deg,#071323e8,#071323a6 55%,#071323b8)}
+.painting-hero-copy figure{position:absolute;inset:0;z-index:-2;margin:0}
+.painting-hero-copy figure img{width:100%;height:100%;aspect-ratio:auto;border-radius:0;object-fit:cover}
+.painting-hero-copy figcaption{display:none}
+.other-service-page .landing-hero>.video-desktop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:none;z-index:-2;display:block}
+.other-service-page .contact-mini-container{position:relative;z-index:auto;max-width:none;color:#fff}
+.painting-hero-copy h1,.other-service-page .section-title{font:800 clamp(38px,4.7vw,68px)/1.02 Montserrat,sans-serif;letter-spacing:-.045em;text-transform:uppercase;color:#fff;margin:20px 0 24px}
+.painting-hero-copy h1 span,.other-service-page .section-title span{color:#ffb84d}
+.painting-hero-copy>p,.other-service-page .contact-mini-container>p{color:#e0e5ed;font-size:16px;line-height:1.75;max-width:640px}
+.painting-conversion-hero .painting-eyebrow,.other-service-page .painting-eyebrow{display:inline-block;color:#ffd18e;border:1px solid #ffb84d55;background:#ffb84d14;padding:8px 12px;border-radius:999px;font-size:11px}
+.painting-conversion-hero .painting-call-note{color:#e0e5ed}
+.painting-estimate-options,.other-service-page .service-estimate-options{position:relative;min-width:0;z-index:2}
+.painting-estimate-form,.other-service-page .contact-mini.glass-form{box-sizing:border-box;width:100%;max-width:none;padding:28px;border:1px solid #ffffff26;border-radius:28px;background:#071533b8;backdrop-filter:blur(18px);box-shadow:0 25px 70px #0004;color:#fff}
+.painting-estimate-form h2,.other-service-page .form-header h3{color:#fff}
+.painting-estimate-form :is(p,label),.other-service-page .glass-form :is(p,label){color:#e0e5ed}
+.painting-estimate-form :is(input,select,textarea){background:#fff;color:#172338}
+.painting-estimate-form .painting-eyebrow,.other-service-page .form-badge{color:#ffb84d}
+.painting-estimate-form :is(a,summary),.other-service-page .glass-form .privacy-notice a{color:#ffd18e}
+.painting-estimate-form button[type=submit],.other-service-page .glass-form button.button{background:#ffb84d;color:#071533;box-shadow:none;border:0;min-height:48px;width:100%}
+.painting-assistant-option{margin-top:22px;padding:22px 24px 20px;border:1px solid #8cbcff80;border-radius:22px;background:linear-gradient(135deg,#173a68f5,#0c203bf5);box-shadow:0 12px 35px #0003,inset 0 1px 0 #ffffff18;text-align:center}
+.painting-assistant-option h2{color:#fff;font-size:20px;line-height:1.35;margin:0 0 18px}
+.painting-assistant-option small{color:#d5e4f7;margin-top:13px;font-size:12px}
+.painting-or-divider{color:#c3d7ef;margin:20px 12px;letter-spacing:.15em}.painting-or-divider::before,.painting-or-divider::after{background:#9fc3f04d}
+.painting-or-divider+.painting-assistant-option{margin-top:0}
+.painting-assistant-option>a{box-sizing:border-box;width:100%;min-height:52px;padding:14px 20px;background:#f7fbff;border:1px solid #fff;color:#12355f;font-size:15px;font-weight:700;border-radius:12px;box-shadow:0 5px 18px #0002;transition:background .2s,transform .2s}
+.painting-assistant-option>a:hover{background:#dcecff;transform:translateY(-2px)}
+.painting-assistant-option>a:focus-visible{outline:3px solid #ffb84d;outline-offset:4px}
+@media(max-width:480px){.painting-assistant-option{padding:20px 18px}.painting-assistant-option h2{font-size:18px}}
+@media(prefers-reduced-motion:reduce){.painting-assistant-option>a{transition:none}.painting-assistant-option>a:hover{transform:none}}
+.painting-hero-copy .painting-review-card,.other-service-page .contact-mini-container .painting-review-card{margin-top:24px;background:#ffffffed;border-radius:14px;padding:16px;color:#172338;max-width:540px}
+.painting-hero-copy .painting-review-avatar img{aspect-ratio:1;width:40px;height:40px;border-radius:50%}
+.other-service-page .landing-hero-mb{display:none}
+@media(max-width:980px){.painting-conversion-hero,.other-service-page .landing-hero{grid-template-columns:1fr;padding:44px 24px;gap:32px;min-height:0}.painting-hero-copy h1,.other-service-page .section-title{font-size:clamp(36px,7vw,56px)}.painting-estimate-options,.other-service-page .service-estimate-options{width:100%;max-width:620px}.painting-estimate-form,.other-service-page .contact-mini.glass-form{padding:24px}}
+@media(max-width:480px){.painting-conversion-hero,.other-service-page .landing-hero{padding:32px 18px}.painting-estimate-form,.other-service-page .contact-mini.glass-form{padding:22px 18px}.other-service-page .field-group-container{grid-template-columns:1fr}}

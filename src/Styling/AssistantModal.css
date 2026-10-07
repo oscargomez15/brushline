@@ -1,0 +1,13 @@
+.assistant-dialog{padding:0;border:1px solid #dbe3ec;border-radius:22px;width:min(1100px,calc(100vw - 48px));max-width:none;max-height:calc(100dvh - 48px);color:#172338;background:#f5f7fb;box-shadow:0 24px 90px #0a172650;overflow:auto}
+.assistant-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box}
+.assistant-dialog::backdrop{background:#0a1726b8;backdrop-filter:blur(4px)}
+.assistant-dialog[open]{animation:assistantDialogIn .2s ease-out}
+.assistant-dialog-toolbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#fff;border-bottom:1px solid #dbe3ec}
+.assistant-dialog-toolbar button{display:grid;place-items:center;width:42px;height:42px;background:#eef2f7;border:0;border-radius:50%;color:#172338;cursor:pointer}
+.assistant-dialog-toolbar button:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+.assistant-dialog .voice-test-page{width:auto;max-width:none;margin:0;padding:24px;min-height:0}
+.assistant-dialog .voice-modal-backdrop{position:fixed;z-index:10}
+.assistant-dialog-loading{padding:32px;text-align:center}
+@keyframes assistantDialogIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(max-width:640px){.assistant-dialog{width:100vw;height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0}.assistant-dialog .voice-test-page{padding:18px 12px}.assistant-dialog-toolbar{padding:8px 14px}}
+@media(prefers-reduced-motion:reduce){.assistant-dialog[open]{animation:none}}

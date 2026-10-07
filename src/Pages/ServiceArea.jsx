@@ -106,7 +106,8 @@ const ServiceArea = () => {
       </div> */}
 
 
-    <section className="painting-services-section">
+    <Reviews />
+        <section className="painting-services-section">
       <motion.div
         className="painting-services-container"
         initial={{ opacity: 0, y: 50 }}
@@ -168,7 +169,6 @@ const ServiceArea = () => {
     {/* <Services/> */}
 
     <div className="reviews-paint">
-      <Reviews/>
     </div>
           <SignatureDivider/>
 
