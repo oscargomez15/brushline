@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { Link } from "react-router-dom";
 import "../../Styling/Dashboard.css";
+import UpcomingAppointments from "./UpcomingAppointments";
 
 const DASHBOARD_CACHE_KEY = "brushlineDashboardStats";
 
@@ -278,6 +279,7 @@ export default function Dashboard() {
             <RevenueChart data={stats?.revenueByMonth || []} />
           </div>
         </div>
+        <UpcomingAppointments />
 
         <div className="db-card db-recent-card">
         <div className="db-card-head">
@@ -288,13 +290,6 @@ export default function Dashboard() {
             </div>
             </div>
         </div>
-        <div className="db-card db-recent-card db-lead-list-card">
-          <div className="db-card-head"><div><div className="db-card-title">Recent Leads</div><div className="db-card-subtle">Latest website assistant inquiries</div></div><Link className="db-inline-link" to="/crm/leads">All leads →</Link></div>
-          <div className="db-recent-list">
-            {(stats?.recentLeads || []).length === 0 ? <div className="db-empty-state">No website leads yet.</div> : stats.recentLeads.map((lead) => <div key={lead.id} className="db-recent-item"><div className="db-recent-main"><div className="db-recent-name">{lead.fullName}</div><div className="db-recent-date">{lead.service} · {fmtDate(lead.createdAt)}</div></div><span className={`db-lead-badge ${lead.serviceAreaStatus === "out_of_area" ? "outside" : ""}`}>{lead.serviceAreaStatus === "out_of_area" ? "Outside area" : "New"}</span></div>)}
-          </div>
-        </div>
-
         <div className="db-recent-list">
             {(stats?.recentApprovedQuotes || []).length === 0 ? (
             <div className="db-empty-state">No approved quotes yet.</div>
@@ -322,6 +317,13 @@ export default function Dashboard() {
             )}
         </div>
         </div>
+        <div className="db-card db-recent-card db-lead-list-card">
+          <div className="db-card-head"><div><div className="db-card-title">Recent Leads</div><div className="db-card-subtle">Latest website assistant inquiries</div></div><Link className="db-inline-link" to="/crm/leads">All leads →</Link></div>
+          <div className="db-recent-list">
+            {(stats?.recentLeads || []).length === 0 ? <div className="db-empty-state">No website leads yet.</div> : stats.recentLeads.map((lead) => <div key={lead.id} className="db-recent-item"><div className="db-recent-main"><div className="db-recent-name">{lead.fullName}</div><div className="db-recent-date">{lead.service} · {fmtDate(lead.createdAt)}</div></div><span className={`db-lead-badge ${lead.serviceAreaStatus === "out_of_area" ? "outside" : ""}`}>{lead.serviceAreaStatus === "out_of_area" ? "Outside area" : "New"}</span></div>)}
+          </div>
+        </div>
+
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { showNotice } from "../../../Components/CrmDialog";
 import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { useNavigate } from "react-router-dom";
@@ -241,7 +242,7 @@ export default function ExteriorEstimator({
   const token = user ? await user.jwt() : null;
 
   if (!token) {
-    alert("You must be logged in to generate a quote.");
+    showNotice("You must be logged in to generate a quote.");
     return;
   }
 
@@ -323,7 +324,7 @@ export default function ExteriorEstimator({
   const data = await res.json();
 
   if (!res.ok) {
-    alert(data?.error || "Failed to create quote");
+    showNotice(data?.error || "Failed to create quote");
     return;
   }
 

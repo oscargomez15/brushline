@@ -1,3 +1,6 @@
+import CrmModal from "../../Components/CrmModal";
+import { showNotice, confirmAction } from "../../Components/CrmDialog";
+import FollowUpSettings from "./FollowUpSettings";
 import "../../Styling/FindEstimate.css";
 import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
@@ -51,9 +54,11 @@ export default function FindEstimates() {
   const [selectedIds, setSelectedIds] = useState([]);
   const toggleSelected = (id) => setSelectedIds((prev) => prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id]);
   const [action, setAction] = useState(null);
+  const [followUpQuote, setFollowUpQuote] = useState(null);
   const [notice, setNotice] = useState("");
   const openAction = (quote, type) => { setOpenMenuId(null); setAction({ quote, type }); };
   const extraActions = (quote) => <>
+    <button type="button" className="kebab-item" role="menuitem" onClick={() => { setOpenMenuId(null); setFollowUpQuote(quote); }}>Follow-up status / verbal approval</button>
     <button type="button" className="kebab-item" role="menuitem" onClick={() => openAction(quote, "forward")}>Forward Estimate</button>
     {quote.status === "approved" && quote.documentType !== "change_order" && <button type="button" className="kebab-item" role="menuitem" onClick={() => openAction(quote, "change")}>Create Change Order</button>}
   </>;
@@ -156,14 +161,14 @@ export default function FindEstimates() {
 
       setConfirmation({ title: "Estimate sent", message: `Your estimate PDF and review link were sent to ${data.sentTo}.` });
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setResendingId(null);
     }
   };
 
   const handleDelete = async (id) => {
-    const ok = window.confirm("Delete this estimate? This can’t be undone.");
+    const ok = await confirmAction("This estimate will be permanently removed. This cannot be undone.", { title: "Delete estimate?", confirmLabel: "Delete estimate" });
     if (!ok) return;
 
     try {
@@ -182,7 +187,7 @@ export default function FindEstimates() {
       setItems((prev) => prev.filter((x) => x.id !== id));
       setSelectedIds((prev) => prev.filter((value) => value !== id));
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setDeletingId(null);
     }
@@ -216,7 +221,7 @@ export default function FindEstimates() {
 
       navigate(`/crm/invoices/edit/${data.id}`);
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setCreatingInvoiceId(null);
     }
@@ -248,9 +253,9 @@ const handleRegeneratePdf = async (quoteId) => {
       throw new Error(data?.error || "Failed to regenerate PDF");
     }
 
-    alert("PDF regenerated successfully.");
+    showNotice("Your updated PDF is ready.", { title: "PDF regenerated", tone: "success" });
   } catch (e) {
-    alert(e.message);
+    showNotice(e.message);
   } finally {
     setRegeneratingId(null);
   }
@@ -601,6 +606,7 @@ const handleRegeneratePdf = async (quoteId) => {
         </div>
       </div>
 
+      {followUpQuote && <FollowUpSettings quote={followUpQuote} onClose={() => setFollowUpQuote(null)} onSaved={(settings) => { setFollowUpQuote(null); setNotice(settings.activityRecorded === false ? "Follow-up status saved, but the customer activity log could not be updated." : "Follow-up status saved. Email follow-ups remain inactive."); }} />}
       {action && <EstimateActionModal action={action} onClose={() => setAction(null)} onComplete={(data) => {
         if (data.quote) setItems((prev) => [data.quote, ...prev]);
         if (data.forwardedIds) setSelectedIds((prev) => prev.filter((id) => !data.forwardedIds.includes(id)));
@@ -612,7 +618,7 @@ const handleRegeneratePdf = async (quoteId) => {
       {deleteQuotes && <DeleteEstimatesModal quotes={deleteQuotes} onClose={() => setDeleteQuotes(null)} onDeleted={(ids) => { setItems((prev) => prev.filter((item) => !ids.includes(item.id))); setSelectedIds((prev) => prev.filter((id) => !ids.includes(id))); if (ids.length) setNotice(`${ids.length} estimate(s) deleted.`); }} />}
       {confirmation && <SendConfirmationModal {...confirmation} onClose={() => setConfirmation(null)} />}
       {historyOpen && (
-      <div className="modal-backdrop" onClick={() => setHistoryOpen(false)}>
+      <CrmModal label="Quote view history" className="modal-backdrop" onClick={() => setHistoryOpen(false)}>
         <div className="modal-card" onClick={(e) => e.stopPropagation()}>
           <div className="modal-head">
             <div>
@@ -665,7 +671,7 @@ const handleRegeneratePdf = async (quoteId) => {
             </div>
           )}
         </div>
-      </div>
+      </CrmModal>
 )}
     </div>
   );

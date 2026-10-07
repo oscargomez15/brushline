@@ -1,3 +1,4 @@
+import { showNotice, confirmAction } from "../../../Components/CrmDialog";
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { FiArrowRight, FiSearch, FiUserPlus, FiUsers } from "react-icons/fi";
@@ -288,7 +289,7 @@ export const StartEstimate = ({
         phone: phone.trim(),
       });
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     }
   };
 
@@ -351,8 +352,8 @@ export const StartEstimate = ({
                 <button
                   type="button"
                   className="estimate-draft-discard"
-                  onClick={() => {
-                    if (window.confirm("Discard this saved estimate draft?")) {
+                  onClick={async () => {
+                    if (await confirmAction("Your saved draft will be removed. This cannot be undone.", { title: "Discard draft?", confirmLabel: "Discard draft" })) {
                       onDiscardDraft?.();
                     }
                   }}

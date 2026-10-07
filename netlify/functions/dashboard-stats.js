@@ -57,7 +57,7 @@ exports.handler = async (event, context) => {
       Promise.all(leadBlobs.map((blob) => leadsStore.get(blob.key, { type: "json" }))),
     ]);
     const validItems = items.filter(Boolean);
-    const validLeads = leads.filter(Boolean).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    const validLeads = leads.filter(lead => lead && !lead.deletedAt).sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
     const now = new Date();
     const currentYear = now.getFullYear();

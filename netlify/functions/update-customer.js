@@ -1,3 +1,4 @@
+const { safeActivity, customerChanges } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 
 function safeStr(v) {
@@ -102,7 +103,9 @@ exports.handler = async (event, context) => {
       ...customer,
     });
 
-    return json(200, { ok: true, customer });
+    const changes = customerChanges(existing, customer);
+    const activityRecorded = !changes.length || await safeActivity(customer.id, { type: "customer", title: existing ? "Customer details updated" : "Customer created", actor: user.email || user.sub, changes });
+    return json(200, { ok: true, customer, activityRecorded });
   } catch (err) {
     console.error("update-customer crashed:", err);
     return json(500, {

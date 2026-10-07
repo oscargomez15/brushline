@@ -2065,3 +2065,6 @@ button {
     flex-shrink: 0;
   }
 }
+
+.quote-expiration-notice { margin: 20px 0; padding: 18px 22px; border: 1px solid #fcd34d; border-radius: 12px; background: #fffbeb; color: #92400e; line-height: 1.6; }
+.quote-expiration-notice strong { display: block; }

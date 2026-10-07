@@ -1,3 +1,5 @@
+import CrmModal from "../../Components/CrmModal";
+import CustomerActivity from "./CustomerActivity";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
@@ -35,21 +37,14 @@ function formatPhone(value) {
   return value;
 }
 
-function formatPhoneInput(value) {
-  const cleaned = normalizePhone(value).slice(0, 10);
-
-  if (!cleaned) return "";
-  if (cleaned.length < 4) return `(${cleaned}`;
-  if (cleaned.length < 7) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
-  return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
-}
-
 const mapsUrl = (address) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 
 export default function CustomersList() {
   const navigate = useNavigate();
 
+  const [activityCustomer, setActivityCustomer] = useState(null);
+  const [activityWarning, setActivityWarning] = useState("");
   const [items, setItems] = useState([]);
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(true);
@@ -218,6 +213,7 @@ export default function CustomersList() {
         )
       );
 
+      setActivityWarning(data.activityRecorded === false ? "Customer saved, but the activity log could not be updated." : "");
       closeEditModal();
     } catch (e) {
       setEditErr(e.message || "Failed to update customer");
@@ -225,6 +221,8 @@ export default function CustomersList() {
       setSavingEdit(false);
     }
   };
+
+  if (activityCustomer) return <CustomerActivity customer={activityCustomer} onBack={() => setActivityCustomer(null)} />;
 
   if (loading) {
     return <FindPageSkeleton title="Customers" />;
@@ -269,6 +267,7 @@ export default function CustomersList() {
         </div>
       </div>
 
+      {activityWarning && <p role="status">{activityWarning}</p>}
       {err ? <div className="customers-error">Error: {err}</div> : null}
 
       <div className="customers-card">
@@ -328,6 +327,7 @@ export default function CustomersList() {
                       
                       <td className="right">
                         <div className="customers-table-actions">
+                          <button type="button" className="customers-edit-btn" onClick={() => setActivityCustomer(customer)}>Activity</button>
                           <button type="button" className="customers-edit-btn" onClick={() => openEditModal(customer)}>Edit</button>
                           <button type="button" className="customers-use-btn" onClick={() => handleUseCustomer(customer)}>Start Estimate</button>
                         </div>
@@ -362,7 +362,8 @@ export default function CustomersList() {
                 {customer.email ? <a href={`mailto:${customer.email}`}>{customer.email}</a> : null}
               </div>
               <div className="customers-mobile-actions">
-                <button type="button" className="customers-edit-btn" onClick={() => openEditModal(customer)}>Edit</button>
+                <button type="button" className="customers-edit-btn" onClick={() => setActivityCustomer(customer)}>Activity</button>
+                          <button type="button" className="customers-edit-btn" onClick={() => openEditModal(customer)}>Edit</button>
                 <button type="button" className="customers-use-btn" onClick={() => handleUseCustomer(customer)}>Start Estimate</button>
               </div>
             </article>
@@ -372,7 +373,7 @@ export default function CustomersList() {
       </div>
 
       {editOpen && (
-      <div className="customers-modal-backdrop" onClick={closeEditModal}>
+      <CrmModal label="Edit customer" className="customers-modal-backdrop" onClick={() => { if (!savingEdit) closeEditModal(); }}>
         <div
           className="customers-modal"
           onClick={(e) => e.stopPropagation()}
@@ -387,7 +388,7 @@ export default function CustomersList() {
 
             <button
               type="button"
-              className="customers-modal-close"
+              className="customers-modal-close" disabled={savingEdit}
               onClick={closeEditModal}
             >
               ✕
@@ -401,10 +402,8 @@ export default function CustomersList() {
               <label className="customers-label">First Name</label>
               <input
                 className="customers-input"
-                value={formatPhoneInput(editForm.phone)}
-                onChange={(e) => handleEditField("phone", normalizePhone(e.target.value))}
-                inputMode="tel"
-                placeholder="(555) 555-5555"
+                value={editForm.firstName}
+                onChange={(e) => handleEditField("firstName", e.target.value)}
               />
             </div>
 
@@ -458,7 +457,7 @@ export default function CustomersList() {
           <div className="customers-modal-actions">
             <button
               type="button"
-              className="customers-secondary-btn"
+              className="customers-secondary-btn" disabled={savingEdit}
               onClick={closeEditModal}
             >
               Cancel
@@ -474,7 +473,7 @@ export default function CustomersList() {
             </button>
           </div>
         </div>
-      </div>
+      </CrmModal>
     )}
     </div>
   );

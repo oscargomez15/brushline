@@ -1,3 +1,4 @@
+import CrmModal from "../../Components/CrmModal";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../../Styling/PaintCalculator.css";
@@ -568,7 +569,7 @@ export const Estimator = () => {
         </div>
 
         {customerModalOpen && (
-          <div
+          <CrmModal label="Estimate actions"
             className="estimate-customer-modal-backdrop"
             onMouseDown={() => setCustomerModalOpen(false)}
           >
@@ -597,7 +598,7 @@ export const Estimator = () => {
                 <StartEstimate initialCustomer={null} onNext={handleCustomerChange} />
               </div>
             </div>
-          </div>
+          </CrmModal>
         )}
       </div>
     </section>

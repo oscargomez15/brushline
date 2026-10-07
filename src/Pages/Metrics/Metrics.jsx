@@ -22,10 +22,12 @@ export default function Metrics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [activePoint, setActivePoint] = useState(null);
   useEffect(() => { document.title = "Website Metrics | Brushline CRM"; }, []);
   useEffect(() => {
     let active = true;
     setLoading(true); setError("");
+    setActivePoint(null);
     (async () => {
       try {
         const token = await netlifyIdentity.currentUser()?.jwt();
@@ -53,7 +55,7 @@ export default function Metrics() {
     if (current.visitors >= 20 && current.contactRate < 5) insights.push({ title: "Test a clearer next step", text: "Fewer than 5% of tracked visitors clicked a contact action. Try a more visible phone number and trust signals near it. This is a testing idea, not a proven diagnosis." });
     if (current.sources[0]) insights.push({ title: "Learn which channels bring interest", text: `Your largest source is ${current.sources[0].name}. Compare the mix after social posts or local search improvements. Direct also includes visits where the referrer is unavailable.` });
   } else insights.push({ title: "Your measurement starts here", text: "Visitor history starts when tracking is deployed. Check back after your first traffic arrives; older visitor totals cannot be reconstructed." });
-  const points = current ? days === 1 ? current.hourly.map((hour) => ({ label: `${String(hour.hour).padStart(2, "0")}:00`, value: hour.pageviews })) : current.daily.map((day) => ({ label: day.day.slice(5), value: day.visitors })) : [];
+  const points = current ? days === 1 ? current.hourly.map((hour) => ({ label: `${String(hour.hour).padStart(2, "0")}:00`, date: `${data.end} ${String(hour.hour).padStart(2, "0")}:00 Eastern`, value: hour.pageviews })) : current.daily.map((day) => ({ label: day.day.slice(5), date: day.day, value: day.visitors })) : [];
   const max = Math.max(1, ...points.map((point) => point.value));
   const poly = points.map((point, index) => `${30 + index / Math.max(1, points.length - 1) * 920},${190 - point.value / max * 150}`).join(" ");
   return <div className="metrics-page">
@@ -73,6 +75,15 @@ export default function Metrics() {
           {[0, .5, 1].map((fraction) => <g key={fraction}><line x1="30" x2="950" y1={190 - fraction * 150} y2={190 - fraction * 150} stroke="#e2e8f0" /><text x="0" y={194 - fraction * 150} fill="#64748b" fontSize="12">{Math.round(fraction * max)}</text></g>)}
           <polygon points={`30,190 ${poly} 950,190`} fill="#dbeafe" opacity=".65" /><polyline points={poly} fill="none" stroke="#2563eb" strokeWidth="3" strokeLinejoin="round" />
           {points.map((point, index) => index === 0 || index === points.length - 1 || index === Math.floor(points.length / 2) ? <text key={point.label} x={30 + index / Math.max(1, points.length - 1) * 920} y="220" textAnchor={index === 0 ? "start" : index === points.length - 1 ? "end" : "middle"} fontSize="12" fill="#64748b">{point.label}</text> : null)}
+          {points.map((point, index) => {
+            const x = 30 + index / Math.max(1, points.length - 1) * 920;
+            const width = 920 / Math.max(1, points.length - 1);
+            return <g key={point.date} tabIndex="0" role="button" aria-label={`${point.date}: ${number(point.value)} ${days === 1 ? "page views" : "visitors"}`} onMouseEnter={() => setActivePoint(index)} onMouseLeave={() => setActivePoint(null)} onFocus={() => setActivePoint(index)} onBlur={() => setActivePoint(null)} onClick={() => setActivePoint(index)}>
+              <rect x={Math.max(0, x - width / 2)} y="25" width={width} height="180" fill="transparent" />
+              <circle cx={x} cy={190 - point.value / max * 150} r={activePoint === index ? 6 : 3} fill="#2563eb" pointerEvents="none" />
+            </g>;
+          })}
+          {activePoint !== null && points[activePoint] && <g pointerEvents="none" className="metrics-chart-tooltip"><rect x={Math.min(730, Math.max(10, 30 + activePoint / Math.max(1, points.length - 1) * 920 - 105))} y="0" width="240" height="54" rx="10" fill="#0f172a" /><text x={Math.min(730, Math.max(10, 30 + activePoint / Math.max(1, points.length - 1) * 920 - 105)) + 12} y="21" fill="white" fontSize="13">{points[activePoint].date}</text><text x={Math.min(730, Math.max(10, 30 + activePoint / Math.max(1, points.length - 1) * 920 - 105)) + 12} y="41" fill="#bfdbfe" fontSize="14">{number(points[activePoint].value)} {days === 1 ? "page views" : "visitors"}</text></g>}
         </svg>
         {!current.pageviews && <p className="metrics-empty">No tracked visits in this period yet. Your chart will fill in as visitors arrive.</p>}
       </section>

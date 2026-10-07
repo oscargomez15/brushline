@@ -13,10 +13,12 @@ async function listRecords(source) {
 function notificationsFrom(leads, quotes, events) {
   const items = [...events];
   for (const lead of leads) {
+    if (lead.deletedAt) continue;
     items.push({ id: notificationId("lead:" + lead.id), type: "lead", title: "New lead", detail: `${lead.fullName || "Customer"} · ${lead.service || "Estimate request"}`, createdAt: lead.createdAt, href: "/crm/leads" });
     if (lead.appointment?.status === "booked") items.push({ id: notificationId("booking:" + lead.appointment.calendarEventId), type: "booking", title: "New estimate booked", detail: `${lead.fullName} · ${lead.preferredAppointment}`, createdAt: lead.createdAt, href: "/crm/leads" });
   }
   for (const quote of quotes) if (quote.approvedAt) items.push({ id: notificationId("quote-approved:" + quote.id), type: "approval", title: "Quote approved", detail: `${quote.clientName || "Customer"} · ${quote.quoteNumber || quote.id}`, createdAt: quote.approvedAt, href: "/crm/estimates/find" });
+  for (const quote of quotes) if (quote.firstViewedAt) items.push({ id: notificationId("quote-viewed:" + quote.id), type: "view", title: "Quote viewed", detail: `${quote.clientName || "Customer"} · ${quote.quoteNumber || quote.id}`, createdAt: quote.firstViewedAt, href: "/crm/estimates/find" });
   const unique = new Map(items.filter(item => /^[a-f0-9]{64}$/.test(item.id) && Number.isFinite(Date.parse(item.createdAt)) && /^\/crm\//.test(item.href)).map(item => [item.id, item]));
   return [...unique.values()].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }
@@ -39,4 +41,7 @@ async function updateDeliveryNotification(record) {
     else await events.setJSON(id, { id, type: "booking", title: "Appointment email needs attention", detail: `${record.lead.fullName} · Booking confirmed; ${record.result.clientEmailSent ? "owner" : record.result.ownerEmailSent ? "client" : "client and owner"} email pending`, createdAt: record.createdAt || new Date().toISOString(), href: "/crm/calendar" });
   } catch { console.error("Appointment email status notification unavailable", record.eventId); }
 }
-module.exports = { store, notificationId, listRecords, notificationsFrom, recordNotification, recordContactLead, updateDeliveryNotification };
+async function recordQuoteFollowUp(quote, { deliveryId, mode = "manual", recipient }) {
+  await recordNotification("quote-follow-up:" + deliveryId, { type: "follow_up", title: "Quote follow-up sent", detail: `${quote.clientName || "Customer"} · ${quote.quoteNumber || quote.id} · ${mode === "automated" ? "Automated" : "Manual"} · ${recipient}`, createdAt: new Date().toISOString(), href: "/crm/estimates/find" });
+}
+module.exports = { store, notificationId, listRecords, notificationsFrom, recordNotification, recordContactLead, updateDeliveryNotification, recordQuoteFollowUp };

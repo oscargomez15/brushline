@@ -1,3 +1,4 @@
+import CrmModal from "../../Components/CrmModal";
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
@@ -83,7 +84,7 @@ export default function EstimateActionModal({ action, onClose, onComplete }) {
       onComplete(data);
     } catch (failure) { setError(failure.message); setBusy(false); }
   }
-  return <div className="modal-backdrop" onClick={close}>
+  return <CrmModal label="Estimate actions" className="modal-backdrop" onClick={close}>
     <form ref={dialog} className="modal-card fe-action-modal" role="dialog" aria-modal="true" aria-labelledby="estimate-action-title" onKeyDown={onKeyDown} onClick={(event) => event.stopPropagation()} onSubmit={submit}>
       <div className="modal-head">
         <h2 id="estimate-action-title">{forwarding ? `Forward ${quotes.length === 1 ? "estimate" : `${quotes.length} estimates`}` : "Create change order"}</h2>
@@ -115,5 +116,5 @@ export default function EstimateActionModal({ action, onClose, onComplete }) {
         </div>
       </div>
     </form>
-  </div>;
+  </CrmModal>;
 }

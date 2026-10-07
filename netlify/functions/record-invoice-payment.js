@@ -1,3 +1,4 @@
+const { trackEmail } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 const { Resend } = require("resend");
 
@@ -72,19 +73,19 @@ function buildPaymentEmailHtml({ invoice, payment, invoiceUrl }) {
     : `Your remaining balance is ${fmtMoney(invoice.balanceDue)}.`;
 
   return `
-<div style="background:#f3f4f6;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+<div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
   <div style="max-width:680px;margin:0 auto;">
-    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;box-shadow:0 14px 36px rgba(15,23,42,.08);">
-      <div style="background:#071533;padding:28px 20px;text-align:center;">
-        <img src="https://brushlineservices.com/logo.png" alt="Brushline Services" style="height:110px;width:auto;display:block;margin:0 auto;" />
+    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(15,23,42,.08);">
+      <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:20px;text-align:center;">
+        <img src="https://brushlineservices.com/logo.png" alt="Brushline Services" style="height:104px;width:auto;display:block;margin:0 auto;" />
       </div>
 
       <div style="padding:16px 20px;border-bottom:1px solid rgba(15,23,42,.08);">
         <div style="font-size:14px;font-weight:800;color:#6b7280;letter-spacing:.02em;">Payment Received</div>
       </div>
 
-      <div style="padding:28px 20px 24px;">
-        <h1 style="margin:0 0 10px;font-size:32px;line-height:1.15;letter-spacing:-.03em;color:#0f172a;">
+      <div style="padding:22px 20px;">
+        <h1 style="margin:0 0 10px;font-size:20px;line-height:1.25;letter-spacing:-.02em;color:#0f172a;">
           Thank you for your payment, ${escapeHtml(customer)}!
         </h1>
         <p style="margin:0 0 22px;font-size:16px;line-height:1.65;color:#4b5563;">
@@ -119,7 +120,7 @@ function buildPaymentEmailHtml({ invoice, payment, invoiceUrl }) {
           ${payment.note ? `<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(15,23,42,.08);font-size:13px;color:#64748b;"><strong>Payment note:</strong> ${escapeHtml(payment.note)}</div>` : ""}
         </div>
 
-        ${invoiceUrl ? `<div style="text-align:center;margin-bottom:16px;"><a href="${escapeHtml(invoiceUrl)}" style="display:inline-block;background:#0b1633;color:#fff;text-decoration:none;font-weight:900;font-size:16px;padding:16px 24px;border-radius:14px;">View Updated Invoice</a></div>` : ""}
+        ${invoiceUrl ? `<div style="text-align:center;margin-bottom:16px;"><a href="${escapeHtml(invoiceUrl)}" style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 16px;border-radius:12px;">View Updated Invoice</a></div>` : ""}
         <p style="margin:0;text-align:center;font-size:13px;line-height:1.6;color:#6b7280;">Please keep this email as confirmation of your payment.</p>
       </div>
 
@@ -167,7 +168,7 @@ async function sendPaymentReceipt(invoice, payment) {
     safeStr(invoice.companyName) || "Brushline Services",
   ].filter(Boolean).join("\n");
 
-  const resend = new Resend(apiKey);
+  const resend = trackEmail(new Resend(apiKey), { customerId: invoice.customerId, documentId: invoice.id, documentType: "invoice", title: "Payment receipt" });
   const result = await resend.emails.send({
     from,
     to,

@@ -11,7 +11,7 @@ function getLeadsStore() {
 
 async function listAllLeads(store) {
   const { blobs } = await store.list();
-  const leads = (await Promise.all(blobs.map((blob) => store.get(blob.key, { type: "json" })))).filter(Boolean);
+  const leads = (await Promise.all(blobs.map((blob) => store.get(blob.key, { type: "json" })))).filter(lead => lead && !lead.deletedAt);
   return leads.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 }
 

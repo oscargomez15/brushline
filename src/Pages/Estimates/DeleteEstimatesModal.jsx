@@ -1,3 +1,4 @@
+import CrmModal from "../../Components/CrmModal";
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 import { getQuoteNumber } from "../../utils/quoteNumber";
@@ -29,7 +30,7 @@ export default function DeleteEstimatesModal({ quotes, onClose, onDeleted }) {
     } catch (failure) { setError(failure.message); }
     finally { setBusy(false); }
   }
-  return <div className="modal-backdrop" onClick={() => { if (!busy) onClose(); }}>
+  return <CrmModal label="Delete estimates" className="modal-backdrop" onClick={() => { if (!busy) onClose(); }}>
     <div ref={dialog} className="modal-card fe-action-modal" role="dialog" aria-modal="true" aria-labelledby="delete-estimates-title" onClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => {
         if (event.key === "Escape" && !busy) onClose();
@@ -50,5 +51,5 @@ export default function DeleteEstimatesModal({ quotes, onClose, onDeleted }) {
           <button type="button" className="fe-danger-btn" disabled={busy} onClick={remove}>{busy ? "Deleting…" : "Delete estimates"}</button></div>
       </div>
     </div>
-  </div>;
+  </CrmModal>;
 }

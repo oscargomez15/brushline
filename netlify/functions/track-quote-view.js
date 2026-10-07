@@ -89,6 +89,7 @@ exports.handler = async (event) => {
 
     const updatedQuote = {
       ...quote,
+      firstViewedAt: quote.firstViewedAt || viewEvents[0]?.at || quote.viewedAt || now,
       viewEvents: nextEvents,
       viewCount: nextCount,
       viewedAt: now, // keep updated for "last viewed"
@@ -102,6 +103,9 @@ exports.handler = async (event) => {
       ...prevIndex,
       id,
       viewed: true,
+      firstViewedAt: updatedQuote.firstViewedAt,
+      clientName: quote.clientName || quote.customer?.fullName || prevIndex?.clientName || "Customer",
+      quoteNumber: quote.quoteNumber || prevIndex?.quoteNumber || id,
       lastViewedAt: now,
       viewCount: nextCount,
     });

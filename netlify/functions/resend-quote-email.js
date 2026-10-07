@@ -1,8 +1,11 @@
+const { trackEmail } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 const { getQuoteNumber } = require("./_quote-number");
 const { buildQuotePdfBase64 } = require("./_pdf");
 
 const { Resend } = require("resend");
+const { recordQuoteFollowUp } = require("./_crm-notifications");
+const { randomUUID } = require("node:crypto");
 
 function safeStr(v) {
   return (v || "").toString().trim();
@@ -163,7 +166,7 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
   });
 
 if (quote.documentType === "change_order") html = html.replaceAll("your quote", "your change order").replaceAll("Quote Ready", "Change Order Ready").replaceAll("View Detailed Quote", "Review Change Order");
-const resend = new Resend(apiKey);
+const resend = trackEmail(new Resend(apiKey), { customerId: quote.customerId, documentId: quote.id, documentType: "quote", title: "Quote resend / forward" });
 
 const result = await resend.emails.send({
   from,
@@ -255,6 +258,7 @@ exports.handler = async (event, context) => {
       publicUrl: linkToSend,
       pdfBase64,
     });
+    if (body.forwardTo === undefined) await recordQuoteFollowUp(quote, { deliveryId: randomUUID(), mode: "manual", recipient });
 
     return json(200, {
       ok: true,

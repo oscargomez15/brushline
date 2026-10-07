@@ -1,3 +1,4 @@
+const { quoteExpiration } = require("../../src/utils/quoteExpiration");
 // netlify/functions/_pdf.js
 const { getStore } = require("@netlify/blobs");
 const PDFDocument = require("pdfkit");
@@ -130,6 +131,8 @@ function buildQuotePdfBuffer(quote) {
       doc.fontSize(9).fillColor("#64748B").text(projectAddress || "No project address", leftX + 14, metaY + 46, { width: 300 });
       doc.fontSize(9).fillColor("#64748B").text(`Proposal #  ${proposalNum}`, rightX, metaY + 17, { align: "right", width: 230 });
       doc.text(`Issued  ${created}`, rightX, metaY + 36, { align: "right", width: 230 });
+      const expiration = quoteExpiration(quote);
+      doc.text(`${expiration.expired ? "Expired on" : "Expires on"}  ${expiration.label}`, rightX, metaY + 55, { align: "right", width: 230 });
       doc.y = metaY + 98;
       doc.fillColor("#000");
 

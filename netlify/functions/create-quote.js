@@ -1,3 +1,4 @@
+const { trackEmail } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 const { DEFAULT_TERMS_TEXT, DEFAULT_TERMS_VERSION } = require("./_terms");
 const { buildQuotePdfBase64 } = require("./_pdf");
@@ -166,7 +167,7 @@ async function sendQuoteEmail({ to, quote, publicUrl, pdfBase64 }) {
     deposit,
     quoteUrl: publicUrl,
   });
-  const resend = new Resend(apiKey);
+  const resend = trackEmail(new Resend(apiKey), { customerId: quote.customerId, documentId: quote.id, documentType: "quote", title: "Quote email" });
 
   await resend.emails.send({
     from,

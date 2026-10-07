@@ -1,3 +1,4 @@
+import CrmDialogHost from "./Components/CrmDialog";
 import "./App.css";
 import { useEffect, lazy, Suspense } from "react";
 import FindPageSkeleton from "./Components/FindPageSkeleton";
@@ -102,7 +103,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
-
+      <CrmDialogHost />
       <WebsiteAnalytics />
 
       <Suspense fallback={<FindPageSkeleton title="Page" />}>
@@ -154,4 +155,3 @@ function App() {
 }
 
 export default App;
-

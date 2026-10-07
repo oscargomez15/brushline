@@ -392,3 +392,4 @@
     bottom: 10px;
   }
 }
+.crm-sidebar{transition:width .22s ease,min-width .22s ease}.crm-main{min-width:0}@media(prefers-reduced-motion:reduce){.crm-sidebar{transition:none}}

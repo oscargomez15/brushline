@@ -1,3 +1,4 @@
+const { quoteExpiration } = require("../../src/utils/quoteExpiration");
 const { getStore } = require("@netlify/blobs");
 const { recordNotification } = require("./_crm-notifications");
 const { getQuoteNumber } = require("./_quote-number");
@@ -84,22 +85,23 @@ async function sendApprovalEmail(updatedQuote, quoteId) {
 
   const html = `
   <div style="margin:0;padding:0;background:#f6f7fb;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
-    <div style="max-width:720px;margin:0 auto;padding:24px 16px;">
-      <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;box-shadow:0 12px 30px rgba(15,23,42,.08);">
+    <div style="max-width:680px;margin:0 auto;padding:24px 16px;">
+      <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(15,23,42,.08);">
         
-        <div style="background:#0f172a;padding:24px 28px;">
-          <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:700;">
+        <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:20px;text-align:center;"><img src="https://brushlineservices.com/logo.png" alt="Brushline Services" style="height:104px;width:auto;display:block;margin:0 auto;" /></div>
+        <div style="background:#ffffff;padding:14px 20px;border-bottom:1px solid #e2e8f0;">
+          <div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#64748b;font-weight:700;">
             Brushline Services CRM
           </div>
-          <div style="margin-top:10px;font-size:28px;line-height:1.2;font-weight:800;color:#ffffff;">
+          <div style="margin-top:10px;font-size:20px;line-height:1.25;font-weight:800;color:#0f172a;">
             Quote Approved 🎉
           </div>
-          <div style="margin-top:8px;font-size:15px;line-height:1.6;color:rgba(255,255,255,.82);">
-            Congratulations! <strong style="color:#ffffff;">${customerName}</strong> has approved their quote.
+          <div style="margin-top:8px;font-size:15px;line-height:1.6;color:#475569;">
+            Congratulations! <strong style="color:#0f172a;">${customerName}</strong> has approved their quote.
           </div>
         </div>
 
-        <div style="padding:24px 28px;">
+        <div style="padding:22px 20px;">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
             <div style="padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid rgba(15,23,42,.06);">
               <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;">Quote #</div>
@@ -222,12 +224,14 @@ exports.handler = async (event) => {
     const index = getStore("quotes_index", { siteID, token });
     const signatures = getStore("quote_signatures", { siteID, token });
 
-    const quote = await quotes.get(id, { type: "json" });
+    const quote = await quotes.get(id, { type: "json", consistency: "strong" });
     if (!quote) return json(404, { error: "Quote not found" });
 
     if (quote.status === "approved") {
     return json(400, { error: "Quote already approved" });
     }
+    const expiration = quoteExpiration(quote);
+    if (!expiration.canApprove) return json(409, { error: expiration.expired ? "This quote has expired. Please contact Brushline for an updated quote." : "This quote cannot be approved. Please contact Brushline.", code: expiration.expired ? "QUOTE_EXPIRED" : "QUOTE_UNAVAILABLE" });
     let quoteToApprove = { ...quote };
 
     if (quote.jobType === "exterior") {

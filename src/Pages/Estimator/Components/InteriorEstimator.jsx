@@ -1,3 +1,4 @@
+import { showNotice } from "../../../Components/CrmDialog";
 import React, { useEffect, useMemo, useState } from "react";
 import SortableAreaCard from "./SortableAreaCard";
 
@@ -328,7 +329,7 @@ function detectPackageKey(areas) {
     const token = user ? await user.jwt() : null;
 
   if (!token) {
-    alert("You must be logged in to generate a quote.");
+    showNotice("You must be logged in to generate a quote.");
     return;
   }
   const scopeItems = buildScopeItems(areas);
@@ -425,7 +426,7 @@ function detectPackageKey(areas) {
 
   const data = await res.json();
   if (!res.ok) {
-    alert(data?.error || "Failed to create quote");
+    showNotice(data?.error || "Failed to create quote");
     return;
   }
 

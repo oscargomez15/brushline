@@ -1,3 +1,4 @@
+const { trackEmail } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 const { Resend } = require("resend");
 const { buildInvoicePdfBase64 } = require("./_invoice-pdf");
@@ -57,17 +58,17 @@ function buildInvoiceEmailHtml({
   };
 
   return `
-<div style="background:#f3f4f6;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+<div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
   <div style="max-width:680px;margin:0 auto;">
 
-    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:20px;overflow:hidden;box-shadow:0 14px 36px rgba(15,23,42,.08);">
+    <div style="background:#ffffff;border:1px solid rgba(15,23,42,.08);border-radius:16px;overflow:hidden;box-shadow:0 12px 34px rgba(15,23,42,.08);">
 
       <!-- TOP BRAND BAR -->
-      <div style="background:#071533;padding:28px 20px;text-align:center;">
+      <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:20px;text-align:center;">
         <img
           src="https://brushlineservices.com/logo.png"
           alt="Brushline Services"
-          style="height:110px;width:auto;display:block;margin:0 auto;"
+          style="height:104px;width:auto;display:block;margin:0 auto;"
         />
       </div>
 
@@ -79,8 +80,8 @@ function buildInvoiceEmailHtml({
       </div>
 
       <!-- MAIN BODY -->
-      <div style="padding:28px 20px 24px;">
-        <h1 style="margin:0 0 10px;font-size:32px;line-height:1.15;letter-spacing:-.03em;color:#0f172a;">
+      <div style="padding:22px 20px;">
+        <h1 style="margin:0 0 10px;font-size:20px;line-height:1.25;letter-spacing:-.02em;color:#0f172a;">
           Hi ${safe(customerName || "there")}, your invoice is ready
         </h1>
 
@@ -145,7 +146,7 @@ function buildInvoiceEmailHtml({
         <div style="text-align:center;margin:0 0 16px;">
           <a
             href="${safe(invoiceUrl)}"
-            style="display:inline-block;background:#0b1633;color:#ffffff;text-decoration:none;font-weight:900;font-size:16px;line-height:1;padding:16px 24px;border-radius:14px;">
+            style="display:inline-block;background:#0f172a;color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;line-height:1.4;padding:12px 16px;border-radius:12px;">
             View Invoice
           </a>
         </div>
@@ -271,7 +272,7 @@ exports.handler = async (event, context) => {
     const invoiceFileNumber = safeStr(invoice.invoiceNumber || invoice.id)
       .replace(/[^a-zA-Z0-9_-]+/g, "-");
 
-    const resend = new Resend(apiKey);
+    const resend = trackEmail(new Resend(apiKey), { customerId: invoice.customerId, documentId: invoice.id, documentType: "invoice", title: "Invoice email" });
 
     const emailResult = await resend.emails.send({
       to,

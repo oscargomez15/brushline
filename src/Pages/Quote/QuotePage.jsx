@@ -1,3 +1,6 @@
+import { quoteExpiration } from "../../utils/quoteExpiration";
+import CrmModal from "../../Components/CrmModal";
+import { showNotice } from "../../Components/CrmDialog";
 import React, {useRef, useState, useEffect, useCallback } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import "../../Styling/QuotePage.css";
@@ -142,6 +145,14 @@ export default function QuotePage() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const isApproved = quote?.status === "approved";
+  const [expirationClock, setExpirationClock] = useState(Date.now());
+  useEffect(() => {
+    const refresh = () => setExpirationClock(Date.now());
+    const timer = setInterval(refresh, 15000);
+    window.addEventListener("focus", refresh);
+    return () => { clearInterval(timer); window.removeEventListener("focus", refresh); };
+  }, []);
+  const expiration = quoteExpiration(quote, expirationClock);
 
   const [excludedAddOns, setExcludedAddOns] = useState({});
 
@@ -238,7 +249,7 @@ const signatureUrl =
 
       setQuote(data.quote);
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setTogglingLineIndex(null);
     }
@@ -267,7 +278,7 @@ const signatureUrl =
 
       window.location.href = data.url;
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setStartingDeposit(false);
     }
@@ -286,6 +297,11 @@ const signatureUrl =
   }, [id, t]);
 
   const handleApprove = async (signatureDataUrl, typedName) => {
+    if (!quoteExpiration(quote).canApprove) {
+      setExpirationClock(Date.now()); setSigOpen(false);
+      showNotice("This quote is no longer available for approval. Please contact Brushline for an updated quote.", { title: "Quote unavailable" });
+      return;
+    }
     setApproving(true);
 
     const selectedExteriorPaintProduct = EXTERIOR_PAINT_OPTIONS.find(
@@ -343,7 +359,7 @@ const signatureUrl =
       setTypedName("");
       sigRef.current?.clear?.();
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setApproving(false);
     }
@@ -361,7 +377,7 @@ const signatureUrl =
       if (!res.ok) throw new Error(data?.error || "Failed to change scope");
       setQuote(data.quote);
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     }
   };
 
@@ -386,7 +402,7 @@ const signatureUrl =
       const blob = await fetchPdf(request.url, request.options);
       downloadPdfBlob(blob, `Quote-${getQuoteNumber(quote || { id })}.pdf`);
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     }
   };
 
@@ -398,7 +414,7 @@ const signatureUrl =
       if (printPreviewUrl) window.URL.revokeObjectURL(printPreviewUrl);
       setPrintPreviewUrl(window.URL.createObjectURL(blob));
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setPreparingPrint(false);
     }
@@ -611,14 +627,14 @@ const paintOptions = allowedPaintKeys
         console.log("apply-paint response:", data);
 
         if (!res.ok) {
-          alert(data?.error || data?.message || "Unable to update paint selection.");
+          showNotice(data?.error || data?.message || "Unable to update paint selection.");
           return;
         }
 
         setQuote(data.quote || data);
       } catch (e) {
         console.error("apply-paint request failed:", e);
-        alert(e.message || "Unable to update paint selection.");
+        showNotice(e.message || "Unable to update paint selection.");
       }
     }
 
@@ -632,17 +648,17 @@ const paintOptions = allowedPaintKeys
     const pad = sigRef.current;
 
     if (!pad) {
-      alert("Signature pad is not ready yet.");
+      showNotice("Signature pad is not ready yet.");
       return;
     }
 
     if (typeof pad.isEmpty === "function" && pad.isEmpty()) {
-      alert("Please sign before submitting.");
+      showNotice("Please sign before submitting.");
       return;
     }
 
     if (!typedName.trim()) {
-      alert("Please type your name.");
+      showNotice("Please type your name.");
       return;
     }
 
@@ -658,7 +674,7 @@ const paintOptions = allowedPaintKeys
       }
     } catch (e) {
       console.error("Signature export failed:", e, pad);
-      alert("Could not capture signature. Please try again.");
+      showNotice("Could not capture signature. Please try again.");
       return;
     }
 
@@ -748,7 +764,7 @@ const stripeTotal =
             </button>
 
             <div className={`quote-status-pill ${quote.status === "approved" ? "approved" : ""}`}>
-              {quote.status === "approved" ? "APPROVED" : "AWAITING APPROVAL"}
+              {isApproved ? "APPROVED" : expiration.expired ? "EXPIRED" : "AWAITING APPROVAL"}
             </div>
           </div>
 
@@ -773,8 +789,8 @@ const stripeTotal =
             <div className="quote-meta-value">{new Date(quote.createdAt).toLocaleDateString()}</div>
           </div>
           <div className="quote-meta-item">
-            <div className="quote-meta-label">VALID FOR</div>
-            <div className="quote-meta-value">{quote.validForDays || 30} Days</div>
+            <div className="quote-meta-label">{expiration.expired ? "EXPIRED ON" : "EXPIRES ON"}</div>
+            <div className="quote-meta-value">{expiration.label}</div>
           </div>
           <div className="quote-meta-item">
             <div className="quote-meta-label">SERVICE</div>
@@ -782,6 +798,7 @@ const stripeTotal =
           </div>
         </section>
 
+        {expiration.expired && <div role="status" className="quote-expiration-notice"><strong>This quote expired on {expiration.label}.</strong> Approval is no longer available. Please contact Brushline for an updated quote.</div>}
         <section className="quote-body">
           <div className="quote-details">
             <div className="quote-detail-card">
@@ -1288,10 +1305,10 @@ const stripeTotal =
                   <button
                     type="button"
                     className="pkg-approve"
-                    onClick={() => setSigOpen(true)}
-                    disabled={approving || quote.status === "approved"}
+                    onClick={() => { if (quoteExpiration(quote).canApprove) setSigOpen(true); else setExpirationClock(Date.now()); }}
+                    disabled={approving || !expiration.canApprove}
                   >
-                    {quote.status === "approved" ? "Approved" : "Approve"}
+                    {isApproved ? "Approved" : expiration.expired ? "Expired" : "Approve"}
                   </button>
 
                 {quote.status === "approved" && (
@@ -1364,8 +1381,8 @@ const stripeTotal =
           </section>
         ) : null}
       </div>
-      {sigOpen && (
-      <div className="sig-backdrop" onClick={closeSignatureModal}>
+      {sigOpen && expiration.canApprove && (
+      <CrmModal label="Quote actions" className="sig-backdrop" onClick={closeSignatureModal}>
         <div className="sig-modal" onClick={(e) => e.stopPropagation()}>
           <div className="sig-modal-head">
             <h3 className="sig-modal-title">Approve Estimate</h3>
@@ -1437,11 +1454,11 @@ const stripeTotal =
             By submitting, you confirm approval of the selected quote and its terms.
           </div>
         </div>
-      </div>
+      </CrmModal>
       )}
 
         {paymentModalOpen && !depositPaid && (
-          <div className="sig-backdrop" onClick={() => setPaymentModalOpen(false)}>
+          <CrmModal label="Quote actions" className="sig-backdrop" onClick={() => setPaymentModalOpen(false)}>
             <div className="sig-modal payment-modal" onClick={(e) => e.stopPropagation()}>
               <div className="sig-modal-head">
                 <h3 className="sig-modal-title">Choose Payment Method</h3>
@@ -1510,7 +1527,7 @@ const stripeTotal =
                 </div>
               </div>
             </div>
-          </div>
+          </CrmModal>
         )}
 
         <PdfPrintPreview open={Boolean(printPreviewUrl)} url={printPreviewUrl} title={`Estimate ${getQuoteNumber(quote || { id })}`} onClose={closePrintPreview} />

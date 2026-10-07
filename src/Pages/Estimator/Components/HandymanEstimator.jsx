@@ -1,3 +1,5 @@
+import CrmModal from "../../../Components/CrmModal";
+import { showNotice } from "../../../Components/CrmDialog";
 import React, { useEffect, useMemo, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
 
@@ -166,7 +168,7 @@ export default function HandymanEstimator({
         )
       );
     } catch (error) {
-      alert(error.message || "Failed to upload photo.");
+      showNotice(error.message || "Failed to upload photo.");
     } finally {
       setUploadingPhotoId(null);
     }
@@ -227,7 +229,7 @@ export default function HandymanEstimator({
     const token = user ? await user.jwt() : null;
 
     if (!token) {
-      alert("You must be logged in.");
+      showNotice("You must be logged in.");
       return;
     }
 
@@ -286,7 +288,7 @@ export default function HandymanEstimator({
       localStorage.removeItem("editingQuoteData");
       
     } catch (err) {
-      alert(err.message || "Something went wrong.");
+      showNotice(err.message || "Something went wrong.");
     } finally {
       setSaving(false);
     }
@@ -437,7 +439,7 @@ export default function HandymanEstimator({
       </div>
 
       {pendingDeleteItem && (
-        <div
+        <CrmModal label="Estimate actions"
           className="handyman-delete-overlay"
           onMouseDown={() => setPendingDeleteId(null)}
         >
@@ -472,7 +474,7 @@ export default function HandymanEstimator({
               </button>
             </div>
           </div>
-        </div>
+        </CrmModal>
       )}
     </div>
   );

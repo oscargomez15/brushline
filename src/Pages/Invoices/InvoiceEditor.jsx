@@ -1,3 +1,5 @@
+import CrmModal from "../../Components/CrmModal";
+import { showNotice } from "../../Components/CrmDialog";
 import SendConfirmationModal from "../../Components/SendConfirmationModal";
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -271,9 +273,9 @@ try {
       }));
       setPaymentOpen(false);
       if (data.emailSent) {
-        alert(`Payment recorded and receipt emailed to ${data.emailSentTo}.`);
+        showNotice(`Payment recorded and receipt emailed to ${data.emailSentTo}.`, { title: "Payment recorded", tone: "success" });
       } else {
-        alert(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`);
+        showNotice(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`, { title: "Payment recorded — receipt needs attention", tone: "info" });
       }
     } catch (e) {
       setErr(e.message || "Failed to record payment");
@@ -376,7 +378,7 @@ try {
       }
 
       setInvoice((prev) => ({ ...prev, ...payload }));
-      alert("Invoice saved.");
+      showNotice("Your invoice changes have been saved.", { title: "Invoice saved", tone: "success" });
     } catch (e) {
       setErr(e.message || "Failed to save invoice");
     } finally {
@@ -1289,7 +1291,7 @@ const previewUrl = invoice?.id
           </div>
         </div>
         {paymentOpen ? (
-          <div className="payment-backdrop" onMouseDown={closePaymentModal}>
+          <CrmModal label="Record payment" className="payment-backdrop" onMouseDown={closePaymentModal}>
             <div className="payment-dialog" role="dialog" aria-modal="true" aria-labelledby="record-payment-title" onMouseDown={(e) => e.stopPropagation()}>
               <div className="payment-dialog-head">
                 <div>
@@ -1372,10 +1374,10 @@ const previewUrl = invoice?.id
                 </div>
               </div>
             </div>
-          </div>
+          </CrmModal>
         ) : null}
         {previewOpen ? (
-          <div
+          <CrmModal label="Invoice preview"
             className="invoice-preview-backdrop"
             onMouseDown={() => setPreviewOpen(false)}
           >
@@ -1406,7 +1408,7 @@ const previewUrl = invoice?.id
                 title="Client invoice preview"
               />
             </div>
-          </div>
+          </CrmModal>
         ) : null}
       </div>
     </div>

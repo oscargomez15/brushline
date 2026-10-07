@@ -1,3 +1,4 @@
+const { safeActivity, customerChanges } = require("./_customer-activity");
 const {
   safeStr,
   normalizePhone,
@@ -64,7 +65,9 @@ exports.handler = async (event, context) => {
     const customer = toCustomerRecord(body, existing);
     await store.set(customer.id, JSON.stringify(customer));
 
-    return json(200, { ok: true, customer });
+    const changes = customerChanges(existing, customer);
+    const activityRecorded = !changes.length || await safeActivity(customer.id, { type: "customer", title: existing ? "Customer details updated" : "Customer created", actor: user.email || user.sub, changes });
+    return json(200, { ok: true, customer, activityRecorded });
   } catch (e) {
     console.error("save-customer failed:", e);
     return json(500, { error: "save-customer failed", message: e?.message || String(e) });

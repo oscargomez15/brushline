@@ -15,11 +15,15 @@ import {
   FiDollarSign,
   FiChevronRight,
   FiChevronDown,
-  FiUsers
+  FiUsers,
+  FiUserPlus
 } from "react-icons/fi";
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(true);
+  const [pinned, setPinned] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const collapsed = !pinned && !hovered && !focused;
   const [openMenu, setOpenMenu] = useState(null); // "estimates" | "invoices" | null
   const [email, setEmail] = useState("");
   const [mobileMenu, setMobileMenu] = useState(null); // "estimates" | "invoices" | null
@@ -58,7 +62,7 @@ export default function Sidebar() {
 
   const toggleMenu = (key) => {
     setOpenMenu((prev) => (prev === key ? null : key));
-    if (collapsed) setCollapsed(false);
+    if (collapsed) setPinned(true);
   };
 
   const signOut = () => {
@@ -74,15 +78,16 @@ export default function Sidebar() {
 
   return (
     <>
-      <aside className={`crm-sidebar ${collapsed ? "collapsed" : ""}`}>
+      <aside className={`crm-sidebar ${collapsed ? "collapsed" : ""}`} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onFocus={() => setFocused(true)} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}>
         {/* Top */}
         <div className="crm-top">
           <button
             type="button"
             className="crm-collapse-btn"
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand" : "Collapse"}
+            onClick={() => setPinned(value => !value)}
+            aria-label={pinned ? "Unpin sidebar" : "Pin sidebar open"}
+            title={pinned ? "Unpin" : "Pin open"}
+            aria-pressed={pinned}
           >
             {collapsed ? "»" : "«"}
           </button>
@@ -165,7 +170,7 @@ export default function Sidebar() {
           <NavItem
             to="/crm/leads"
             label="Leads"
-            icon={<FiUsers />}
+            icon={<FiUserPlus />}
             collapsed={collapsed}
           />
 
@@ -254,7 +259,7 @@ export default function Sidebar() {
         aria-label="Leads"
         onClick={() => setMobileMenu(null)}
       >
-        <span className="crm-mobile-icon"><FiUsers /></span>
+        <span className="crm-mobile-icon"><FiUserPlus /></span>
       </NavLink>
 
       <NavLink

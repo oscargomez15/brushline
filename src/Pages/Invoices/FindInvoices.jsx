@@ -1,3 +1,5 @@
+import CrmModal from "../../Components/CrmModal";
+import { showNotice, confirmAction } from "../../Components/CrmDialog";
 import "../../Styling/FindEstimate.css";
 import netlifyIdentity from "netlify-identity-widget";
 import React, { useEffect, useMemo, useState } from "react";
@@ -160,19 +162,19 @@ export default function FindInvoices() {
 
         closePaymentModal();
         if (data.emailSent) {
-          alert(`Payment recorded and receipt emailed to ${data.emailSentTo}.`);
+          showNotice(`Payment recorded and receipt emailed to ${data.emailSentTo}.`, { title: "Payment recorded", tone: "success" });
         } else {
-          alert(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`);
+          showNotice(`Payment recorded. Receipt email was not sent: ${data.emailError || "customer email unavailable"}`, { title: "Payment recorded — receipt needs attention", tone: "info" });
         }
     } catch (e) {
-        alert(e.message);
+        showNotice(e.message);
     } finally {
         setRecordingPayment(false);
     }
     };
 
   const handleDeleteInvoice = async (id) => {
-    const ok = window.confirm("Delete this invoice? This can’t be undone.");
+    const ok = await confirmAction("This invoice will be permanently removed. This cannot be undone.", { title: "Delete invoice?", confirmLabel: "Delete invoice" });
     if (!ok) return;
 
     try {
@@ -194,7 +196,7 @@ export default function FindInvoices() {
 
       setItems((prev) => prev.filter((x) => x.id !== id));
     } catch (e) {
-      alert(e.message);
+      showNotice(e.message);
     } finally {
       setDeletingId(null);
     }
@@ -448,7 +450,7 @@ export default function FindInvoices() {
         </div>
       </div>
       {paymentOpen && paymentInvoice && (
-        <div className="modal-backdrop" onClick={closePaymentModal}>
+        <CrmModal label="Record payment" className="modal-backdrop" onClick={() => { if (!recordingPayment) closePaymentModal(); }}>
             <div className="modal-card payment-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-head">
                 <div>
@@ -458,7 +460,7 @@ export default function FindInvoices() {
                 </div>
                 </div>
 
-                <button className="modal-close" onClick={closePaymentModal}>✕</button>
+                <button className="modal-close" disabled={recordingPayment} onClick={closePaymentModal}>✕</button>
             </div>
 
             <div className="modal-body">
@@ -520,7 +522,7 @@ export default function FindInvoices() {
                 </div>
 
                 <div className="payment-actions">
-                <button className="quote-action-btn" onClick={closePaymentModal}>
+                <button className="quote-action-btn" disabled={recordingPayment} onClick={closePaymentModal}>
                     Cancel
                 </button>
                 <button
@@ -533,7 +535,7 @@ export default function FindInvoices() {
                 </div>
             </div>
             </div>
-        </div>
+        </CrmModal>
         )}
     </div>
   );

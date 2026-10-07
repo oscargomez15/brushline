@@ -7,7 +7,7 @@ const path = require("node:path");
 function fixture(filename, parent = {}) {
   const stores = new Map();
   const sent = [];
-  const base = { id: "original", quoteNumber: "Q-100", status: "approved", grandTotal: 1000, email: "customer@example.com", customer: { email: "customer@example.com" }, viewToken: "secret", ...parent };
+  const base = { createdAt: new Date().toISOString(), id: "original", quoteNumber: "Q-100", status: "approved", grandTotal: 1000, email: "customer@example.com", customer: { email: "customer@example.com" }, viewToken: "secret", ...parent };
   function getStore(name) {
     if (!stores.has(name)) stores.set(name, new Map());
     const rows = stores.get(name);
@@ -16,14 +16,19 @@ function fixture(filename, parent = {}) {
   getStore("quotes").setJSON(base.id, base);
   getStore("invoices").setJSON(base.id, base);
   const mocks = {
+    "./_crm-notifications": { recordNotification: async () => {}, recordQuoteFollowUp: async () => {} },
     "@netlify/blobs": { getStore },
     "./_pdf": { buildQuotePdfBase64: async () => "cGRm" },
     "./_invoice-pdf": { buildInvoicePdfBase64: async () => "cGRm" },
     "./_quote-number": { getQuoteNumber: (quote) => quote.quoteNumber },
     "./_terms": {},
+    "../../src/utils/quoteExpiration": require("../src/utils/quoteExpiration"),
     "./resend-quote-email": { handler: async () => ({ statusCode: 200 }) },
     resend: { Resend: class { constructor() { this.emails = { send: async (payload) => { sent.push(payload); return parent.emailFailure ? { error: { message: "Rejected" } } : { data: { id: "sent" } }; } }; } } },
   };
+  const activityModule = { exports: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../netlify/functions/_customer-activity.js"), "utf8"), { module: activityModule, require: (id) => mocks[id] || require(id), process: { env: {} }, console });
+  mocks["./_customer-activity"] = activityModule.exports;
   const sandbox = { exports: {}, Buffer, console: { log() {}, warn() {}, error() {} }, process: { env: { NETLIFY_SITE_ID: "site", NETLIFY_AUTH_TOKEN: "token", RESEND_API_KEY: "key", QUOTE_NOTIFY_FROM: "sender@example.com", PUBLIC_QUOTE_BASE_URL: "https://example.com/quote", PUBLIC_INVOICE_BASE_URL: "https://example.com/invoice" } }, require: (id) => mocks[id] || require(id) };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../netlify/functions", filename), "utf8"), sandbox);
   return { handler: sandbox.exports.handler, stores, sent, base };
@@ -102,4 +107,12 @@ test("successful invoice email returns its recipient", async () => {
   const result = await f.handler(post({ invoiceId: "original" }), auth);
   assert.equal(result.statusCode, 200);
   assert.equal(JSON.parse(result.body).sentTo, "customer@example.com");
+});
+
+test("expired quote approval is rejected without saving a signature or changing status", async () => {
+ const f = fixture("approve-quote.js", { createdAt: "2020-01-01T12:00:00Z", status: "awaiting_approval" });
+ const result = await f.handler({ ...post({ id: "original", typedName: "Customer", signatureDataUrl: "data:image/png;base64," + Buffer.alloc(150).toString("base64") }), headers: {} });
+ assert.equal(result.statusCode,409); assert.equal(JSON.parse(result.body).code,"QUOTE_EXPIRED");
+ assert.equal(f.stores.get("quotes").get("original").status,"awaiting_approval");
+ assert.equal(f.stores.get("quote_signatures").size,0);
 });

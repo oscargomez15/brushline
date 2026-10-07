@@ -20,3 +20,15 @@ test('report failures show an error instead of invented traffic', async()=>{
   expect(screen.getByText('Metrics unavailable')).toBeTruthy();
   expect(screen.queryByText('Visitor trend')).toBeNull();
 });
+
+test('chart tooltip shows the selected date and visitor count on hover and focus', async () => {
+  global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ ...result, current: { ...empty, daily: [{ day: '2026-10-03', visitors: 17, pageviews: 21 }] } }) });
+  render(<Metrics />);
+  const point = await screen.findByRole('button', { name: '2026-10-03: 17 visitors' });
+  fireEvent.mouseEnter(point);
+  expect(screen.getByText('17 visitors')).toBeTruthy();
+  fireEvent.mouseLeave(point);
+  expect(screen.queryByText('17 visitors')).toBeNull();
+  fireEvent.focus(point);
+  expect(screen.getByText('17 visitors')).toBeTruthy();
+});

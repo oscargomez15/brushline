@@ -1,3 +1,4 @@
+const { trackEmail } = require("./_customer-activity");
 const { getStore } = require("@netlify/blobs");
 const { DEFAULT_TERMS_TEXT, DEFAULT_TERMS_VERSION } = require("./_terms");
 const { buildQuotePdfBase64 } = require("./_pdf");
@@ -134,8 +135,8 @@ function buildPriceUpdateEmail({ quote, changes, quoteUrl }) {
   const html = `
   <div style="background:#f6f7fb;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
     <div style="max-width:680px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
-      <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:18px;text-align:center;">
-        <img src="https://brushlineservices.com/logo.png" alt="Brushline Services" style="height:96px;width:auto;display:block;margin:0 auto;" />
+      <div style="background:#2563eb;border-bottom:5px solid #f4c928;padding:20px;text-align:center;">
+        <img src="https://brushlineservices.com/logo.png" alt="Brushline Services" style="height:104px;width:auto;display:block;margin:0 auto;" />
       </div>
       <div style="padding:24px 22px;">
         <div style="font-size:13px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.08em;">Quote updated</div>
@@ -182,7 +183,7 @@ async function sendPriceUpdateEmail({ quote, changes, quoteUrl, pdfBase64 }) {
   }
 
   const { html, text } = buildPriceUpdateEmail({ quote, changes, quoteUrl });
-  const resend = new Resend(apiKey);
+  const resend = trackEmail(new Resend(apiKey), { customerId: quote.customerId, documentId: quote.id, documentType: "quote", title: "Quote update email" });
   const result = await resend.emails.send({
     from,
     to,

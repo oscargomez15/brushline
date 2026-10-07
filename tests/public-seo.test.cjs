@@ -37,7 +37,7 @@ test('private shell is noindex, unknown routes are 404, and search crawler retai
   const config = fs.readFileSync('netlify.toml','utf8');
   assert.ok(config.includes('status = 404'));
   assert.ok(config.includes('to = "/spa.html"'));
-  const robots=fs.readFileSync('public/robots.txt','utf8');
+  const robots=fs.readFileSync('public/robots.txt','utf8').replace(/\r\n/g, '\n');
   assert.ok(robots.includes('User-agent: OAI-SearchBot\nAllow: /'));
   assert.ok(robots.includes('Disallow: /quote/'));
   const sitemap=fs.readFileSync('build/sitemap.xml','utf8');

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
-import { Bell, CalendarCheck, CheckCheck, FileCheck2, Users, X } from "lucide-react";
+import { Bell, CalendarCheck, CheckCheck, Eye, FileCheck2, MailCheck, UserPlus, X } from "lucide-react";
 import "../Styling/CRMNotifications.css";
 
-const labels = { all: "All", lead: "Leads", approval: "Approvals", booking: "Bookings" };
+const labels = { all: "All", lead: "Leads", approval: "Approvals", booking: "Bookings", view: "Views", follow_up: "Follow-ups" };
 export default function CRMNotifications() {
   const [open, setOpen] = useState(false), [items, setItems] = useState([]), [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(""), [filter, setFilter] = useState("all"), [saving, setSaving] = useState(false);
@@ -58,7 +58,7 @@ export default function CRMNotifications() {
       <div className="crm-notification-filters" aria-label="Notification categories">{Object.entries(labels).map(([key, label]) => <button key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}>{label}</button>)}</div>
       {error && <p className="crm-notification-error" role="alert">{error}</p>}
       <div className="crm-notification-list">{!loaded && !error ? <p className="crm-notification-empty">Loading notifications…</p> : visible.length ? visible.map(item => {
-        const Icon = item.type === "booking" ? CalendarCheck : item.type === "approval" ? FileCheck2 : Users;
+        const Icon = item.type === "booking" ? CalendarCheck : item.type === "approval" ? FileCheck2 : item.type === "view" ? Eye : item.type === "follow_up" ? MailCheck : UserPlus;
         return <button key={item.id} className={`crm-notification-item ${item.read ? "" : "unread"}`} onClick={async () => { await markRead([item.id]); setOpen(false); navigate(item.href); }}><span className={`crm-notification-icon ${item.type}`}><Icon size={20} /></span><span><strong>{item.title}</strong><span>{item.detail}</span><time dateTime={item.createdAt}>{new Date(item.createdAt).toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })} Eastern</time></span>{!item.read && <i aria-label="Unread" />}</button>;
       }) : loaded && <p className="crm-notification-empty">No {filter === "all" ? "notifications" : labels[filter].toLowerCase()} yet.</p>}</div>
     </section>}
