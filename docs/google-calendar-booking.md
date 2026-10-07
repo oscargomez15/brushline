@@ -15,6 +15,7 @@ For local OAuth testing, set `GOOGLE_CALENDAR_SITE_URL=http://localhost:8888` an
 
 ## Behavior
 
+- Appointment confirmations and booking notifications use `Brushline Services <appointments@brushlineservices.com>` through Resend. Verify `brushlineservices.com` in Resend; the sender does not inherit personal addresses from other email settings. Client replies go to `oscargomez@brushlineservices.com`. Google Calendar invitations still identify the connected Google account as organizer.
 - The public picker exposes openings only, never existing calendar event titles or guests.
 - Availability fails closed if Google is unreachable. The assistant can still save a preferred-time request for manual confirmation.
 - Day-level conditional Blobs leases serialize website bookings. Availability is rechecked immediately before insertion. Busy events made by someone else directly in Google can still race the final check; Calendar API has no atomic “insert only if free” operation.

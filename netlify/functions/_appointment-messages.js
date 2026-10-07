@@ -1,5 +1,6 @@
 const { Resend } = require("resend");
 const OWNER_EMAIL = "oscargomez@brushlineservices.com";
+const APPOINTMENT_SENDER = "Brushline Services <appointments@brushlineservices.com>";
 const escape = value => String(value || "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
 function payloads(record) {
   const lead = record.lead;
@@ -15,7 +16,7 @@ function payloads(record) {
 async function sendAppointmentMessages(store, bookingKey, record) {
   record.messages ||= {};
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.APPOINTMENT_NOTIFY_FROM || process.env.CONTACT_NOTIFY_FROM || process.env.APPROVAL_NOTIFY_FROM || process.env.QUOTE_NOTIFY_FROM;
+  const from = APPOINTMENT_SENDER;
   if (!apiKey || !from) { record.result.clientEmailSent = false; record.result.ownerEmailSent = false; await store.setJSON(bookingKey, record); return; }
   const resend = new Resend(apiKey);
   for (const { kind, ...payload } of payloads(record)) {
