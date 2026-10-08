@@ -1,7 +1,7 @@
 import { showNotice, confirmAction } from "../../../Components/CrmDialog";
 import React, { useEffect, useRef, useState } from "react";
 import netlifyIdentity from "netlify-identity-widget";
-import { FiArrowRight, FiSearch, FiUserPlus, FiUsers } from "react-icons/fi";
+import { FiArrowRight, FiMapPin, FiSearch, FiUserPlus, FiUsers } from "react-icons/fi";
 import "../../../Styling/StartEstimate.css";
 import { getJobTypeLabel } from "../../../utils/jobTypeLabel";
 
@@ -491,6 +491,7 @@ export const StartEstimate = ({
 
               {showPredictions && predictions.length > 0 && (
                 <div className="addr-dd">
+                  <div className="addr-dd-heading">Suggested addresses</div>
                   {predictions.map((p) => (
                     <button
                       key={p.place_id}
@@ -499,7 +500,12 @@ export const StartEstimate = ({
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => selectPrediction(p)}
                     >
-                      {p.description}
+                      <span className="addr-dd-icon" aria-hidden="true"><FiMapPin /></span>
+                      <span className="addr-dd-copy">
+                        <strong>{p.structured_formatting?.main_text || p.description}</strong>
+                        {p.structured_formatting?.secondary_text && <small>{p.structured_formatting.secondary_text}</small>}
+                      </span>
+                      <FiArrowRight className="addr-dd-arrow" aria-hidden="true" />
                     </button>
                   ))}
                 </div>

@@ -8,7 +8,7 @@ export const Privacy = () => {
 
   <h1 className='section-subtitle'>Privacy Policy</h1>
   <p><strong>Effective Date:</strong> 06/01/2025<br />
-     <strong>Last Updated:</strong>  10/03/2026</p>
+     <strong>Last Updated:</strong>  10/08/2026</p>
 
   <p>At <strong>Brushline LLC </strong> ("we", "our", or "us"), your privacy is important to us. This Privacy Policy explains how we collect, use, and protect the personal information you provide on our website <strong>www.brushlineservices.com</strong>.</p>
   
@@ -57,6 +57,7 @@ export const Privacy = () => {
 
     <div className="privacy-section">
         <h2>6. Cookies and Tracking</h2>
+        <p>We also use the OpenAI Pixel on our public landing pages to measure advertising visits and successful estimate or contact requests. The Pixel uses first-party cookies and advertising attribution identifiers to associate these actions with ads. Our event calls do not include your name, email, phone number, address, or project details. We disable this measurement when your browser sends Do Not Track or Global Privacy Control signals.</p>
         <p>We use browser storage to assign a random visitor identifier and measure visits to public website pages, device categories, referring domains, scroll engagement, and clicks on phone, email, and project-assistant links. These metrics help us improve the website. We do not store IP addresses, page query strings, or contact-link contents in these analytics. We respect Do Not Track and Global Privacy Control signals. Blocking browser storage or enabling these signals disables this visitor tracking.</p>
     </div>
 

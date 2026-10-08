@@ -4,12 +4,14 @@ import { Navigation } from "../Components/Navigation";
 import { Footer } from "../Components/Footer";
 import AssistantLauncher from "../Components/AssistantLauncher";
 import AssistantModal from "../Components/AssistantModal";
+import OpenAIPixel from "../Components/OpenAIPixel";
 import "../Styling/PublicPalette.css";
 import "../Styling/PublicMobile.css";
 
 export default function PublicLayout() {
   return (
     <div className="background-wrapper public-site">
+      <OpenAIPixel />
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>

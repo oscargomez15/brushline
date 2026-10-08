@@ -2,7 +2,7 @@ import CrmDialogHost from "./Components/CrmDialog";
 import "./App.css";
 import { useEffect, lazy, Suspense } from "react";
 import FindPageSkeleton from "./Components/FindPageSkeleton";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate, useLocation } from "react-router-dom";
 import netlifyIdentity from "netlify-identity-widget";
 
 import ScrollToTop from "./Components/ScrollToTop";
@@ -40,6 +40,10 @@ const PublicInvoicePage = lazy(() => import("./Pages/Invoices/PublicInvoicePage"
 const FindInvoices = lazy(() => import("./Pages/Invoices/FindInvoices"));
 const VoiceAssistantTest = lazy(() => import("./Pages/VoiceAssistantTest/VoiceAssistantTest"));
 const Calendar = lazy(() => import("./Pages/Calendar/Calendar"));
+function LegacyCalendarSettings() {
+  const location = useLocation();
+  return <Navigate to={`/crm/settings${location.search}`} replace />;
+}
 const Metrics = lazy(() => import("./Pages/Metrics/Metrics"));
 const LeadsList = lazy(() => import("./Pages/Leads/LeadsList"));
 
@@ -125,7 +129,8 @@ function App() {
 
         <Route path="/crm" element={<RequireAuth />}>
           <Route element={<CRMLayout />}>
-            <Route path="calendar" element={<Calendar />} />
+            <Route path="calendar" element={<LegacyCalendarSettings />} />
+            <Route path="settings" element={<Calendar />} />
             <Route path="metrics" element={<Metrics />} />
             <Route path="dashboard" element={<Dashboard />} />
 

@@ -213,6 +213,66 @@
   box-shadow: 0 0 0 4px rgba(37, 99, 235, .1);
 }
 
+/* Keep the address menu styled even before the estimator stylesheet loads. */
+.start-estimate-page .addr-dd {
+  position: absolute;
+  inset: calc(100% + 8px) 0 auto;
+  z-index: 30;
+  padding: 6px;
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #fff;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, .12);
+}
+.start-estimate-page .addr-dd-heading {
+  padding: 7px 10px 9px;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.start-estimate-page .addr-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  padding: 11px 10px;
+  margin: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #0f172a;
+  box-shadow: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.start-estimate-page .addr-dd-item:hover,
+.start-estimate-page .addr-dd-item:focus-visible { background: #eff6ff; }
+.start-estimate-page .addr-dd-item:focus-visible { outline: 2px solid #2563eb; outline-offset: -2px; }
+.start-estimate-page .addr-dd-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 17px;
+}
+.start-estimate-page .addr-dd-copy { flex: 1; min-width: 0; }
+.start-estimate-page .addr-dd-copy strong { display: block; font-size: 13px; font-weight: 650; line-height: 1.45; overflow-wrap: anywhere; }
+.start-estimate-page .addr-dd-copy small { display: block; margin-top: 3px; font-size: 12px; line-height: 1.45; color: #64748b; overflow-wrap: anywhere; }
+.start-estimate-page .addr-dd-arrow { flex-shrink: 0; color: #94a3b8; font-size: 15px; }
+@media (prefers-reduced-motion: reduce) { .start-estimate-page .addr-dd-item { transition: none; } }
+
 .new-customer-continue {
   grid-column: 1 / -1;
   min-height: 48px;

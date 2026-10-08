@@ -673,6 +673,16 @@
 .db-appointments-card{grid-column:span 12}.db-appointments-card .db-card-title{display:flex;align-items:center;gap:9px}.db-appointments-card button{border:1px solid #e2e8f0;background:#fff;border-radius:10px;padding:9px 12px;color:#334155;cursor:pointer}.db-appointment-days{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:8px;margin:20px 0}.db-appointment-days button{display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 4px}.db-appointment-days small,.db-appointment-days span{font-size:11px;color:#64748b}.db-appointment-days strong{font-size:22px}.db-appointment-days button[aria-pressed=true]{background:#eff6ff;border-color:#2563eb}.db-appointment-list-heading{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px}.db-appointment-list-heading>a{margin-left:auto}.db-appointment-list{max-height:330px;overflow:auto;margin-top:14px}.db-appointment-list article{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid #e2e8f0;padding:16px 0}.db-appointment-list h3{margin:8px 0;font-size:15px}.db-appointment-list time,.db-appointment-list p{font-size:13px;color:#64748b}.db-appointment-list p{display:flex;gap:6px}.db-appointment-type{font-size:11px;border-radius:6px;padding:4px 7px;background:#f1f5f9;color:#475569}.db-appointment-type.estimate{background:#eff6ff;color:#2563eb}.db-appointment-type.job{background:#ecfdf5;color:#047857}@media(max-width:900px){.db-appointment-days{grid-template-columns:repeat(7,minmax(0,1fr))}}@media(max-width:600px){.db-appointment-days{grid-template-columns:repeat(5,minmax(0,1fr))}.db-appointment-days small{font-size:9px}.db-appointment-list-heading>a{margin-left:0}}
 
 /* Dashboard grouping and compact KPI rhythm */
+.db-availability-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:12px;color:#475569}
+.db-availability-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:#94a3b8}
+.db-availability-legend .available::before{background:#16a34a}.db-availability-legend .partial::before{background:#eab308}.db-availability-legend .full::before{background:#dc2626}
+.db-availability-note{font-size:12px;color:#64748b;line-height:1.5}
+.db-appointment-days .availability-available{background:#f0fdf4;border-color:#86efac;color:#166534}
+.db-appointment-days .availability-partial{background:#fefce8;border-color:#fde047;color:#854d0e}
+.db-appointment-days .availability-full{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+.db-appointment-days .availability-closed{background:#f1f5f9;border-color:#cbd5e1;color:#64748b}
+.db-appointment-days button span,.db-appointment-days button small{color:inherit}
+.db-appointment-days button[aria-pressed=true]{outline:3px solid #2563eb;outline-offset:2px}
 .db-section-heading{grid-column:1/-1;margin:24px 0 0;font-size:20px;color:#0f172a;letter-spacing:-.02em}
 .db-pipeline-heading{order:0;margin-top:0}
 .db-pipeline-card,.db-leads-card,.db-close-card{order:1;grid-column:span 4}

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { trackPixelLead } from '../utils/openaiPixel';
 const empty = { name: '', phone: '', zip: '', projectType: '', email: '', message: '', company: '' };
 const configurations = {
  painting: { label: 'What needs painting?', button: 'Get My Free Painting Estimate', options: [['interior','Interior'],['exterior','Exterior'],['both','Interior and exterior'],['other','Other / not sure']] },
@@ -18,6 +19,7 @@ export default function PaintingEstimateForm({ service = 'painting' }) {
    const response=await fetch('/.netlify/functions/send-contact-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...values,source:service==='painting'?'painting_landing':'service_landing',service})});
    const data=await response.json().catch(()=>({}));
    if(!response.ok || !data.ok)throw Error(data.error || 'We could not send your request. Please try again or call (239) 777-3713.');
+   if (!values.company) trackPixelLead();
    setValues(empty);setStatus({type:'success',text:'Your estimate request was sent. We’ll contact you within 24 hours to discuss your project and arrange the next step.'});
    try { window.gtag?.('event','generate_lead',{form_name:service+'_estimate',service}); } catch { /* Tracking must not affect a successful request. */ }
   } catch(error){setStatus({type:'error',text:error.message});}

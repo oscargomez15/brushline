@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { trackPixelLead } from '../utils/openaiPixel';
 import '../Styling/Contact.css'
 import fullBodyMascot from '../Assets/Transparent-03.webp'
 import {AnimatePresence, motion } from 'framer-motion'
@@ -68,7 +69,8 @@ export const Contact = () => {
                 body: JSON.stringify(form)
             });
             const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || 'Failed to send message.');
+            if (!response.ok || !data.ok) throw new Error(data.error || 'Failed to send message.');
+            trackPixelLead();
 
             setShowModal(true);
             resetForm();

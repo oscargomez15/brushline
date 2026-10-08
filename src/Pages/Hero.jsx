@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { trackPixelLead } from '../utils/openaiPixel';
 import { motion } from 'framer-motion';
 import {
   FaArrowRight,
@@ -29,7 +30,8 @@ export const Hero = () => {
         body: JSON.stringify(Object.fromEntries(formData.entries())),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'Failed to send request.');
+      if (!response.ok || !data.ok) throw new Error(data.error || 'Failed to send request.');
+      trackPixelLead();
 
       formElement.reset();
       setContactStatus({

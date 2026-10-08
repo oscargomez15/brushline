@@ -16,6 +16,7 @@ export default function Calendar() {
     return result;
   }
   useEffect(() => {
+    document.title = "Settings | Brushline CRM";
     let active = true;
     request().then(result => { if (active) setData(result); }).catch(failure => { if (active) setError(failure.message); });
     return () => { active = false; };
@@ -33,12 +34,12 @@ export default function Calendar() {
   }
   const callback = new URLSearchParams(window.location.search).get("connection");
   return <div className="calendar-page">
-    <header><span className="calendar-eyebrow">BRUSHLINE CRM</span><h1><CalendarDays /> Estimate calendar</h1><p>Let clients choose a real opening while speaking with your AI assistant.</p></header>
+    <header><span className="calendar-eyebrow">BRUSHLINE CRM</span><h1>Settings</h1><p>Manage your calendar connection and appointment availability.</p></header>
     {error && <p className="calendar-error" role="alert">{error}</p>}
     {callback && <p className={callback === "connected" ? "calendar-success" : "calendar-error"} role="status">{callback === "connected" ? "Google Calendar connected successfully." : callback === "wrong_account" ? "Choose murdexchannel@gmail.com when connecting Google." : "Connection was not completed. Please try again and grant the requested calendar permissions."}</p>}
     <div className="calendar-grid"><section className="calendar-panel">
       <span className="calendar-status">{data?.connected ? <CheckCircle2 /> : <Link2 />}{data?.connected ? "Connected" : "Connection needed"}</span>
-      <h2>Google Calendar</h2><p><strong>murdexchannel@gmail.com</strong></p>
+      <h2><CalendarDays size={20} /> Google Calendar</h2><p><strong>murdexchannel@gmail.com</strong></p>
       <p>Bookings appear on this calendar with the client’s name, project address, phone, and service details. Google sends the client a calendar invitation.</p>
       <button disabled={busy || !data?.configured} onClick={connect}>{busy ? "Please wait…" : data?.connected ? "Reconnect Google Calendar" : "Connect Google Calendar"}</button>
       {data?.connected && <details><summary>Disconnect calendar</summary><p>This stops new online bookings. Existing appointments remain on Google Calendar.</p><button className="calendar-secondary" disabled={busy} onClick={disconnect}>Disconnect and revoke access</button></details>}
