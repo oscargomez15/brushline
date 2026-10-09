@@ -1,9 +1,87 @@
 /* Phone layouts use natural content height and comfortable controls. */
+/* Service-page rules below are scoped so desktop and the CRM keep their layout. */
 .public-site{overflow-x:clip}
 @media(min-width:641px) and (max-width:980px){
  .public-site .service-area-hero-copy h1{font-size:clamp(40px,6.2vw,58px);line-height:1.1;letter-spacing:-.035em}
  .public-site .painting-hero-copy h1,.public-site .other-service-page .section-title{font-size:clamp(38px,5.7vw,52px);line-height:1.12}
  .public-site .painting-estimate-form :is(input,select,textarea){font-size:16px;min-height:48px}
+}
+@media(max-width:640px){
+ .public-site .page.painting-funnel-page :is(.painting-conversion-hero,.landing-hero){padding:116px 18px 32px;min-height:0;gap:24px}
+ .public-site .painting-funnel-page :is(.painting-hero-copy h1,.contact-mini-container .section-title){font-size:clamp(28px,7.7vw,34px);line-height:1.14;margin:16px 0;letter-spacing:-.035em}
+ .public-site .painting-funnel-page :is(.painting-hero-copy>p,.contact-mini-container>p){font-size:16px;line-height:1.5;margin:0 0 16px}
+ .public-site .painting-funnel-page .painting-hero-actions{margin:16px 0;gap:8px}
+ .public-site .painting-funnel-page .painting-review-card{margin-top:16px;padding:12px}
+ .public-site .painting-funnel-page .painting-review-controls{margin-top:8px;gap:4px;display:grid;grid-template-columns:1fr 44px auto 44px;align-items:center}
+ .public-site .painting-funnel-page .painting-review-controls>a{grid-column:1/-1;margin:0;min-height:32px;display:flex;align-items:center}
+ .public-site .painting-funnel-page .painting-review-controls button{min-width:44px;min-height:44px}
+ .public-site .painting-funnel-page .painting-estimate-form{padding:20px 16px;border-radius:18px;display:block}
+ .public-site .painting-funnel-page .painting-estimate-form h2{font-size:22px;line-height:1.25;margin:12px 0}
+ .public-site .painting-funnel-page .painting-estimate-form>p{font-size:14px;line-height:1.5;margin:0 0 16px}
+ .public-site .painting-funnel-page .painting-estimate-form fieldset{margin-top:18px}
+ .public-site .painting-funnel-page .painting-form-grid{gap:12px}
+ .public-site .painting-funnel-page .painting-estimate-form :is(input,select,textarea){font-size:16px;min-height:48px;margin-top:5px;padding:10px 12px}
+ .public-site .painting-funnel-page .painting-extra{margin:12px 0}
+ .public-site .painting-funnel-page .painting-extra summary{min-height:44px;align-content:center}
+ .public-site .painting-funnel-page .painting-estimate-form .painting-form-privacy{font-size:12px;line-height:1.5;margin:12px 0 0}
+ .public-site .painting-funnel-page .painting-or-divider{margin:16px 8px}
+ .public-site .painting-funnel-page .painting-assistant-option{padding:18px 16px;border-radius:18px}
+ .public-site .painting-funnel-page .painting-assistant-option h2{font-size:18px;line-height:1.35;margin-bottom:12px}
+ .public-site .painting-funnel-page .painting-assistant-option>a{min-height:48px;padding:12px;font-size:14px;gap:8px}
+ .public-site .painting-funnel-page :is(.painting-services-section,.reviews-section,.service-area-modern,.paint-showcase-section,.faq-wrapper,.cta-wrapper){padding:36px 18px}
+ .public-site .painting-funnel-page :is(.painting-services-header,.reviews-header,.service-area-header){margin-bottom:24px}
+ .public-site .painting-funnel-page :is(.painting-services-header,.reviews-header,.service-area-header,.paint-showcase-copy,.cta-content,.cta-card,.faq .sub-heading) h2{font-size:26px;line-height:1.2;letter-spacing:-.03em;margin:0 0 12px}
+ .public-site .painting-funnel-page :is(.painting-services-header,.reviews-header,.service-area-header,.paint-showcase-copy,.cta-content,.cta-card) p{font-size:16px;line-height:1.5;margin:0 0 16px}
+ .public-site .painting-funnel-page :is(.painting-services-header,.reviews-header,.service-area-header)>span{font-size:12px;margin-bottom:10px}
+ .public-site .painting-funnel-page :is(.painting-services-grid,.home-services-grid){gap:20px}
+ .public-site .painting-funnel-page .painting-video{height:auto;aspect-ratio:16/9;object-fit:cover}
+ .public-site .painting-funnel-page :is(.painting-card-content,.home-service-card){padding:20px}
+ .public-site .painting-funnel-page .painting-card-top{margin-bottom:18px}
+ .public-site .painting-funnel-page :is(.painting-card-top h2,.home-service-card h3){font-size:22px;line-height:1.25;margin:0 0 12px;letter-spacing:-.025em}
+ .public-site .painting-funnel-page :is(.painting-card-top p,.home-service-card p){font-size:16px;line-height:1.5;margin:0 0 16px}
+ .public-site .painting-funnel-page .painting-services-list{gap:10px}
+ .public-site .painting-funnel-page .painting-services-list li{gap:10px}
+ .public-site .painting-funnel-page .painting-services-list span{font-size:14px;line-height:1.5}
+ .public-site .painting-funnel-page .home-service-card>svg{width:44px;height:44px;padding:10px;margin-bottom:14px}
+ .public-site .painting-funnel-page .home-service-card li{font-size:14px;line-height:1.5;margin:10px 0}
+ .public-site .painting-funnel-page .reviews-layout{gap:16px}
+ .public-site .painting-funnel-page .reviews-summary-card{padding:18px;display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;border-radius:18px}
+ .public-site .painting-funnel-page .reviews-summary-card .google-badge{grid-column:1/-1;margin:0;padding:6px 10px;font-size:13px}
+ .public-site .painting-funnel-page .reviews-summary-card h3{font-size:40px;line-height:1}
+ .public-site .painting-funnel-page .reviews-summary-card .reviews-stars{margin:0}
+ .public-site .painting-funnel-page .reviews-summary-card p{grid-column:1/-1;margin:0;font-size:14px;line-height:1.5}
+ .public-site .painting-funnel-page .reviews-cta{grid-column:1/-1;min-height:44px;box-sizing:border-box;align-items:center;font-size:14px;padding:12px}
+ .public-site .painting-funnel-page .brushline-review{padding:18px;border-radius:18px}
+ .public-site .painting-funnel-page .brushline-review header{margin-bottom:12px}
+ .public-site .painting-funnel-page .brushline-review blockquote{margin:12px 0;font-size:14px;line-height:1.6}
+ .public-site .painting-funnel-page .brushline-review .review-expand{min-height:44px;margin:0}
+ .public-site .painting-funnel-page .brushline-review>a{min-height:44px;display:inline-flex;align-items:center}
+ .public-site .painting-funnel-page .city-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .public-site .painting-funnel-page .city-card{min-height:160px;height:160px;border-radius:16px}
+ .public-site .painting-funnel-page .city-content{padding:14px}
+ .public-site .painting-funnel-page .city-content h3{font-size:18px;line-height:1.25;letter-spacing:-.02em}
+ .public-site .painting-funnel-page .city-link{font-size:12px}
+ .public-site .painting-funnel-page :is(.cta-card-modern,.cta-card){padding:26px 20px;border-radius:20px}
+ .public-site .painting-funnel-page .cta-button-group{gap:10px;margin-top:18px}
+ .public-site .painting-funnel-page .cta-tag{font-size:11px;padding:8px 12px;margin-bottom:16px}
+ .public-site .painting-funnel-page .paint-showcase-slider .compare-image-container{height:280px}
+ .public-site .painting-funnel-page :is(.painting-color-help,.painting-final-action,.service-questions){width:calc(100% - 36px);margin:20px auto;padding:22px 18px;gap:12px;border-radius:18px}
+ .public-site .painting-funnel-page :is(.painting-color-help,.painting-final-action,.service-questions) h2{font-size:22px;line-height:1.3}
+ .public-site .painting-funnel-page .questions-title{padding:16px;min-height:52px;box-sizing:border-box}
+ .public-site .painting-funnel-page .questions-title h2{font-size:17px;line-height:1.4}
+ .public-site .painting-funnel-page .questions-wrapper{gap:12px}
+ .public-site .painting-funnel-page .faq .sub-heading{margin-bottom:20px}
+ .public-site .painting-funnel-page>.premium-divider{display:none}
+ .public-site .painting-funnel-page :is(.whyus-section,.contact-page){padding:36px 18px}
+ .public-site .painting-funnel-page .whyus-header{margin-bottom:24px}
+ .public-site .painting-funnel-page :is(.whyus-header h2,.contact-form .sub-heading h1,.faq .sub-heading h1){font-size:26px;line-height:1.2;letter-spacing:-.03em;margin:0 0 12px}
+ .public-site .painting-funnel-page :is(.whyus-header p,.whyus-card-content p){font-size:16px;line-height:1.5}
+ .public-site .painting-funnel-page .whyus-grid{gap:16px}
+ .public-site .painting-funnel-page .whyus-card{padding:20px;gap:14px;border-radius:18px}
+ .public-site .painting-funnel-page .whyus-icon{width:44px;height:44px;min-width:44px;border-radius:12px}
+ .public-site .painting-funnel-page .whyus-card-content h3{font-size:20px;line-height:1.25;margin-bottom:10px}
+ .public-site .painting-funnel-page .contact-card-modern{padding:22px 18px;gap:20px;border-radius:20px}
+ .public-site .painting-funnel-page .mascot-contact{max-width:120px}
 }
 @media(max-width:640px){
  .public-site .modern-hero{padding:128px 20px 44px;min-height:100svh}
