@@ -27,6 +27,9 @@ exports.handler = async (event, context) => {
       }
       pageToken = page.nextPageToken;
     } while (pageToken);
-    return calendar.json(200, { connected: true, appointments, days: calendarWorkload(calendarEvents, now) });
+    // Use the same Google free/busy query and policy as client booking.
+    let slots = null;
+    try { slots = await calendar.availability(access, now); } catch { /* Keep the agenda usable if free/busy is unavailable. */ }
+    return calendar.json(200, { connected: true, appointments, slots, days: calendarWorkload(calendarEvents, now) });
   } catch { return calendar.json(503, { error: "Appointments could not be loaded. Check your Google Calendar connection and try again." }); }
 };

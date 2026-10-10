@@ -677,6 +677,11 @@
 .db-availability-legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:#94a3b8}
 .db-availability-legend .available::before{background:#16a34a}.db-availability-legend .partial::before{background:#eab308}.db-availability-legend .full::before{background:#dc2626}
 .db-availability-note{font-size:12px;color:#64748b;line-height:1.5}
+.db-calendar-preview{position:relative}
+.db-booking-tooltip{position:absolute;z-index:20;bottom:100%;left:0;box-sizing:border-box;width:min(480px,100%);padding:18px;background:#0f172a;color:#f8fafc;border:1px solid #334155;border-radius:14px;box-shadow:0 12px 32px #0f172a30;font-size:13px;line-height:1.6}
+.db-booking-tooltip p,.db-booking-selected p{margin:8px 0;line-height:1.8}
+.db-booking-tooltip small{color:#cbd5e1;font-size:11px}
+.db-booking-selected{padding:14px 16px;margin:0 0 18px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;font-size:13px;color:#0c4a6e}
 .db-appointment-days .availability-available{background:#f0fdf4;border-color:#86efac;color:#166534}
 .db-appointment-days .availability-partial{background:#fefce8;border-color:#fde047;color:#854d0e}
 .db-appointment-days .availability-full{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
