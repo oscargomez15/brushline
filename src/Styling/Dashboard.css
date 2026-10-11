@@ -704,3 +704,15 @@
 @media(max-width:1100px){.dashboard-grid .db-appointments-card,.dashboard-grid .db-recent-card{grid-column:span 12}}
 @media(max-width:700px){.dashboard-grid .db-stat-card{grid-column:span 12}}
 .dashboard-grid{align-items:start}.db-card-label{margin-bottom:4px}.db-card-value,.db-close-rate-main,.db-revenue-main{margin-top:0;font-size:32px;line-height:1.05}.db-revenue-card,.db-chart-card{border-top:4px solid #2563eb}.db-revenue-card{grid-column:span 4}.db-chart-card{grid-column:span 8}.db-appointments-card{border-top:4px solid #7c3aed}.db-appointment-list time{display:block}.db-recent-card{border-top:4px solid #059669}@media(max-width:900px){.db-revenue-card,.db-chart-card,.db-appointments-card,.db-recent-card{grid-column:span 12}}
+
+/* Anchor availability to the active date, keeping slots reachable by pointer. */
+.db-calendar-preview .db-booking-tooltip { bottom:auto; max-height:320px; overflow:auto; }
+.db-time-slots { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+.db-time-slots button { padding:9px 12px; border:1px solid #93c5fd; border-radius:9px; background:#eff6ff; color:#1e40af; cursor:pointer; font:inherit; font-weight:600; }
+.db-time-slots button:hover { background:#dbeafe; }
+.db-time-slots button:focus-visible { outline:3px solid #60a5fa; outline-offset:2px; }
+.db-booking-modal { width:540px; padding:28px; }
+.db-booking-modal p { line-height:1.6; margin:12px 0 20px; }
+.db-booking-modal fieldset { border:0; padding:0; margin:0; display:grid; gap:14px; }
+.db-booking-modal label { display:grid; gap:6px; font-size:14px; font-weight:600; }
+.db-booking-modal [role=alert] { color:#b91c1c; }
