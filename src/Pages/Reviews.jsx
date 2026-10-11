@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import reviews from '../Components/paintingReviews.json';
 import '../Styling/Reviews.css';
 import { FaGoogle, FaStar } from 'react-icons/fa';
+import GoogleReviewLink from '../Components/GoogleReviewLink';
 
 export const Reviews = () => {
   const [page, setPage] = useState(0);
@@ -49,9 +50,9 @@ export const Reviews = () => {
               <div className="reviews-stars" aria-label={`${review.rating} out of 5 stars`}>{Array.from({length:review.rating},(_,i)=><FaStar key={i} aria-hidden="true"/>)}</div>
               <blockquote className={!expanded[review.url] ? 'review-collapsed' : ''}>{review.text}</blockquote>
               {review.text.length > 220 && <button className="review-expand" type="button" aria-expanded={Boolean(expanded[review.url])} onClick={()=>setExpanded(current=>({...current,[review.url]:!current[review.url]}))}>{expanded[review.url]?'Show less':'Read more'}</button>}
-              <a href={review.url} target="_blank" rel="noopener noreferrer">Read on Google ↗</a>
+              <GoogleReviewLink href={review.url}>Read on Google</GoogleReviewLink>
             </article>)}</div>
-            <div className="brushline-review-navigation"><a href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9" target="_blank" rel="noopener noreferrer">See more on Google ↗</a><div><button type="button" aria-label="Previous reviews" onClick={()=>setPage((page+totalPages-1)%totalPages)}>←</button><span role="status">{page+1} / {totalPages}</span><button type="button" aria-label="Next reviews" onClick={()=>setPage((page+1)%totalPages)}>→</button></div></div>
+            <div className="brushline-review-navigation"><GoogleReviewLink href="https://maps.app.goo.gl/nScSNDEyUSUgrR8q9">See all Google reviews</GoogleReviewLink><div><button type="button" aria-label="Previous reviews" onClick={()=>setPage((page+totalPages-1)%totalPages)}>←</button><span role="status">{page+1} / {totalPages}</span><button type="button" aria-label="Next reviews" onClick={()=>setPage((page+1)%totalPages)}>→</button></div></div>
           </div>
         </div>
       </div>

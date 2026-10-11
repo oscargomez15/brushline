@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import reviews from './paintingReviews.json';
+import GoogleReviewLink from './GoogleReviewLink';
 
 export default function PaintingReviewCard() {
   const [index, setIndex] = useState(0);
@@ -34,7 +35,7 @@ export default function PaintingReviewCard() {
         <div className="painting-review-body"><div className="painting-review-heading"><strong>{review.name}</strong><span className="painting-review-stars" role="img" aria-label={`${review.rating} out of 5 stars`}>{'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}</span></div><blockquote>{review.text}</blockquote></div>
       </div>
       <div className="painting-review-controls">
-        <a href={review.url} target="_blank" rel="noreferrer">Full review on Google ↗</a>
+        <GoogleReviewLink href={review.url} compact>Full review on Google</GoogleReviewLink>
         <span>{index + 1} / {reviews.length}</span>
         <button type="button" aria-label="Previous review" onClick={() => setIndex(value => (value - 1 + reviews.length) % reviews.length)}>←</button>
         {!reducedMotion && <button type="button" aria-pressed={paused} onClick={() => setPaused(value => !value)}>{paused ? 'Play' : 'Pause'}</button>}
