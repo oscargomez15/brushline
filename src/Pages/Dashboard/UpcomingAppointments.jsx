@@ -54,6 +54,7 @@ export default function UpcomingAppointments() {
   }, [refresh]);
   const dates = Array.from({ length: 30 }, (_, index) => { const date = new Date(); date.setUTCDate(date.getUTCDate() + index); return date; });
   const events = data?.appointments || [];
+  const hoveredEvents = hovered ? events.filter(event => onDay(event, hovered)) : [];
   const visible = selected ? events.filter(event => onDay(event, selected)) : events;
   const availabilityText = key => {
     if (!Array.isArray(data?.slots)) return "Live availability could not be checked. Please refresh.";
@@ -67,8 +68,15 @@ export default function UpcomingAppointments() {
       <div className="db-availability-legend"><span className="available">Available</span><span className="partial">Half day or more busy</span><span className="full">No availability</span><span className="closed">Closed</span></div>
       <p className="db-availability-note">Workload during 9 AM–5 PM Eastern, including travel buffers. Online estimates require 24 hours’ notice.</p>
       <div ref={preview} className="db-calendar-preview" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setHovered(null); }} onMouseLeave={() => setHovered(null)} onKeyDown={event => { if (event.key === "Escape") setHovered(null); }}>
-        {hovered && <div id="booking-times-tooltip" role="region" aria-label="Available appointment times" className="db-booking-tooltip" style={position}><strong>{hovered} · Available start times</strong><div>{availabilityText(hovered)}</div><small>Eastern time · 45-minute estimates · Refresh for latest availability</small></div>}
-        <div className="db-appointment-days" aria-label="Upcoming appointment dates">{dates.map(date => { const key = dayKey(date), count = events.filter(event => onDay(event, key)).length; const availability = data.days?.find(day => day.day === key); return <button key={key} className={`availability-${availability?.status || "unknown"}`} onMouseEnter={event => show(key, event.currentTarget)} onFocus={event => show(key, event.currentTarget)} aria-controls={hovered === key ? "booking-times-tooltip" : undefined} aria-pressed={selected === key} aria-label={`${key}, ${count} appointments${availability ? `, ${availability.label}` : ""}`} onClick={event => { setSelected(key); show(key, event.currentTarget); }}><small>{date.toLocaleDateString("en-US", { timeZone: zone, weekday: "short", month: "short" })}</small><strong>{date.toLocaleDateString("en-US", { timeZone: zone, day: "numeric" })}</strong><span>{count ? `${count} booked` : availability?.label || "—"}</span></button>; })}</div>
+        {hovered && <div id="booking-times-tooltip" role="tooltip" className="db-booking-tooltip" style={position}>
+          <strong>{hovered} · Appointments</strong>
+          {hoveredEvents.length ? <ul className="db-hover-appointments">{hoveredEvents.map(appointment => <li key={appointment.id}>
+            <strong>{appointment.title}</strong>
+            <span>{appointment.allDay ? "All day" : <>{new Date(appointment.start).toLocaleTimeString("en-US", { timeZone: zone, hour: "numeric", minute: "2-digit" })}{appointment.end && <> – {new Date(appointment.end).toLocaleTimeString("en-US", { timeZone: zone, hour: "numeric", minute: "2-digit" })}</>}</>}{!appointment.allDay && <> · {duration(appointment)}</>}</span>
+          </li>)}</ul> : <p>No appointments booked for this day.</p>}
+          <small>Eastern time · Click the date for available booking times below.</small>
+        </div>}
+        <div className="db-appointment-days" aria-label="Upcoming appointment dates">{dates.map(date => { const key = dayKey(date), count = events.filter(event => onDay(event, key)).length; const availability = data.days?.find(day => day.day === key); return <button key={key} className={`availability-${availability?.status || "unknown"}`} onMouseEnter={event => show(key, event.currentTarget)} onFocus={event => show(key, event.currentTarget)} aria-describedby={hovered === key ? "booking-times-tooltip" : undefined} aria-pressed={selected === key} aria-label={`${key}, ${count} appointments${availability ? `, ${availability.label}` : ""}`} onClick={() => { setSelected(key); setHovered(null); }}><small>{date.toLocaleDateString("en-US", { timeZone: zone, weekday: "short", month: "short" })}</small><strong>{date.toLocaleDateString("en-US", { timeZone: zone, day: "numeric" })}</strong><span>{count ? `${count} booked` : availability?.label || "—"}</span></button>; })}</div>
       </div>
       {selected && <div className="db-booking-selected"><strong>Available start times · 45-minute estimates · Eastern time</strong><div>{availabilityText(selected)}</div></div>}
       <div className="db-appointment-list-heading"><strong>{selected || "All upcoming appointments"}</strong>{selected && <button onClick={() => setSelected(null)}>Show all</button>}<a href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noreferrer">Schedule a job in Google Calendar ↗</a></div>
